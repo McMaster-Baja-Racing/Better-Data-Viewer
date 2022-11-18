@@ -1,0 +1,30 @@
+package storage;
+
+public abstract class Storer {
+    private String buf;
+    private int bufSize;
+
+    public Storer() {
+        buf = "";
+        bufSize = 0;
+    }
+
+    public void store(String s) {
+        buf += s;
+        bufSize += s.length();
+
+        if (bufSize > 1000) {
+            flush();
+        }
+    }
+
+    public void flush() {
+        if (bufSize > 0) {
+            write(buf);
+            buf = "";
+            bufSize = 0;
+        }
+    }
+
+    public abstract void write(String s);
+}
