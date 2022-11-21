@@ -1,13 +1,13 @@
 package storage.csv;
 
-import storage.Reader;
+import storage.Writer;
 
-public class CSVStorer extends Storer {
+public class CSVWriter extends Writer {
     private String buf;
     private int bufSize;
     private String file;
 
-    public CSVStorer(String file) {
+    public CSVWriter(String file) {
         this.file = file;
         buf = "";
         bufSize = 0;

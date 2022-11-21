@@ -1,10 +1,10 @@
 package storage;
 
-public abstract class Storer {
+public abstract class Writer {
     private String buf;
     private int bufSize;
 
-    public Storer() {
+    public Writer() {
         buf = "";
         bufSize = 0;
     }
