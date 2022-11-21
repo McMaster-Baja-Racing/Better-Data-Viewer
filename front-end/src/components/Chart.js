@@ -19,7 +19,7 @@ const Chart = () => {
                 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
         },
         xAxis: {
-            type: 'time'
+            type: 'datetime'
         },
         yAxis: {
             title: {
@@ -91,7 +91,7 @@ const Chart = () => {
                     'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
             },
             xAxis: {
-                type: 'time'
+                type: 'datetime'
             },
             yAxis: {
                 title: {
