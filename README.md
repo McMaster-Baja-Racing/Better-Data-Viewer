@@ -23,7 +23,16 @@ a lot of support, should be easy to use.
 ### Storage
 CSV/CSV+SQL/IDK - talk to prof
 
+## TODO
+
+### Front-End
+- Rizeable graphs, option to make new graph and move around seamlessly, resize, etc
+- Add more graphs, types of graphs
+
 
 ## Sources
 https://jar-download.com/artifacts/org.openmuc/jrxtx/1.0.1/source-code/gnu/io/SerialPort.java
 https://www.thingsconnected.io/java-serial-tools/
+https://www.papaparse.com/docs
+https://medium.com/how-to-react/how-to-parse-or-read-csv-files-in-reactjs-81e8ee4870b0
+https://github.com/highcharts/highcharts-react
