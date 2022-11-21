@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "convert-csv-to-json": "^1.4.0",
+    "react-slideshow-image": "^4.0.5"
+  }
+}
