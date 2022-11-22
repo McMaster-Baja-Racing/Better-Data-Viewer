@@ -28,6 +28,7 @@ CSV/CSV+SQL/IDK - talk to prof
 ### Front-End
 - Rizeable graphs, option to make new graph and move around seamlessly, resize, etc
 - Add more graphs, types of graphs
+- saveable views 
 
 
 ## Sources
@@ -36,3 +37,4 @@ https://www.thingsconnected.io/java-serial-tools/
 https://www.papaparse.com/docs
 https://medium.com/how-to-react/how-to-parse-or-read-csv-files-in-reactjs-81e8ee4870b0
 https://github.com/highcharts/highcharts-react
+https://dzone.com/articles/how-to-read-a-big-csv-file-with-java-8-and-stream

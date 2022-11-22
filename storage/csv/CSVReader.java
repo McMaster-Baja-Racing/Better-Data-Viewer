@@ -1,40 +1,40 @@
 package storage.csv;
 
-import storage.Reader;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+
 
 public class CSVReader extends Reader {
-    private String buf;
-    private int bufSize;
-    private int bufPos;
     private String file; // Some type of file object
 
     public CSVReader(String file) {
-        this.file = file;
-        buf = "";
-        bufSize = 0;
-        bufPos = 0;
+        super(file);
     }
 
-    public String read(String regex) {
-        String result = "";
-        int i = 0;
-        while (i < regex.length()) {
-            if (bufPos >= bufSize) {
-                buf = file.readline();
-                bufSize = buf.length();
-                bufPos = 0;
+    public List<String> read() {
+
+        List<String> records = new ArrayList<String>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                records.add(line);
             }
-            if (bufPos >= bufSize) {
-                return result;
-            }
-            if (regex.charAt(i) == buf.charAt(bufPos)) {
-                result += buf.charAt(bufPos);
-                bufPos++;
-                i++;
-            } else {
-                return result;
-            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
         }
-        return result;
+    
+        return records;
+    }
+
+    public static void main(String[] args) {
+        CSVReader reader = new CSVReader("../../data/F_GPS_LATITUDE.csv");
+        List<String> records = reader.read();
+        for (String record : records) {
+            System.out.println(record);
+        }
     }
 }

@@ -3,9 +3,9 @@ package storage;
 public abstract class Writer {
     private String buf;
     private int bufSize;
-    private File file;
+    private String file;
 
-    public Writer(File file) {
+    public Writer(String file) {
         this.file = file;
         buf = "";
         bufSize = 0;
