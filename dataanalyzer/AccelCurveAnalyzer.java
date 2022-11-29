@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class AccelCurveAnalyzer extends DataAnalyzer {
+    private List<List<String>>[] preparedData;
     
     public AccelCurveAnalyzer(List<List<String>>[] data) {
         super(data);
     }
 
-    //This was the first attempt, but should be moved to prepareData method an optimized heavily
+    // This was the first attempt, but should be moved to prepareData method an optimized heavily
     // Analyze will be used to sort the data afterwards, so only accel curves are gotten instead of deccel curves
     public List<List<String>> analyze() { // Where data[0] is excel for Primary and data[1] is excel for Secondary
         // Primary has both Timestamp (ms) and F_RPM_PRIM, Secondary has both Timestamp (ms) and F_GPS_SPEED
@@ -88,6 +89,8 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         // Taking the two files, run through and interpolate them to the same time
         return null;
     }
+
+
     static public void main(String[] args) {
         //test the above code
         Reader readerPrim = new CSVReader("data/F_RPM_PRIM.csv");
@@ -96,6 +99,8 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         List<List<String>>[] data = new List[2];
         data[0] = readerPrim.read();
         data[1] = readerSec.read();
+
+        System.out.println("Here");
 
         AccelCurveAnalyzer analyzer = new AccelCurveAnalyzer(data);
         List<List<String>> dataPoints = analyzer.analyze();
