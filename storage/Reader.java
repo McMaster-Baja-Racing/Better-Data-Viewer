@@ -1,22 +1,18 @@
 package storage;
 
+import java.io.File;
 import java.util.List;
 
 public abstract class Reader {
-    private String file;
+    protected String filePath;
 
     //Constructor
-    public Reader(String file) {
-        this.file = file;
+    public Reader(String filePath) {
+        this.filePath = filePath;
     }
 
-    //Reader that can specify constraints of regular expressions
-    public abstract List<String> read();
-
-    //public abstract String readline();
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
-    }
+    //Reader which returns a List of every line in the file
+    public abstract List<List<String>> read();
 }
 
 // TODO: Decide how we will store the data (SQL, CSV, etc)
