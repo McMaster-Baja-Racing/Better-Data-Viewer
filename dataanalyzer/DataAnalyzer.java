@@ -1,16 +1,14 @@
 package dataanalyzer;
 
-import storage.Reader;
-
 import java.util.List;
 
 public abstract class DataAnalyzer {
-    private Reader reader;
+    protected List<List<String>>[] data;
 
-    public DataAnalyzer(Reader reader) {
-        this.reader = reader;
+    public DataAnalyzer(List<List<String>>[] data) {
+        this.data = data;
     }
 
-    public abstract List<List<String>> analyze(List<List<String>>[] data);
+    public abstract List<List<String>> analyze();
     
 }

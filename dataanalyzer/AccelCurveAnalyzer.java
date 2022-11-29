@@ -8,11 +8,13 @@ import java.util.ArrayList;
 
 public class AccelCurveAnalyzer extends DataAnalyzer {
     
-    public AccelCurveAnalyzer(Reader reader) {
-        super(reader);
+    public AccelCurveAnalyzer(List<List<String>>[] data) {
+        super(data);
     }
 
-    public List<List<String>> analyze(List<List<String>>[] data) { // Where data[0] is excel for Primary and data[1] is excel for Secondary
+    //This was the first attempt, but should be moved to prepareData method an optimized heavily
+    // Analyze will be used to sort the data afterwards, so only accel curves are gotten instead of deccel curves
+    public List<List<String>> analyze() { // Where data[0] is excel for Primary and data[1] is excel for Secondary
         // Primary has both Timestamp (ms) and F_RPM_PRIM, Secondary has both Timestamp (ms) and F_GPS_SPEED
         // We need to find one time in the shorter file, then linearly interpolate the other file to that time
         // Then we can compare the two values at that time and add it to the list of data points, in the form of (F_RPM_PRIM, F_GPS_SPEED)
@@ -82,6 +84,10 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         return dataPoints;
     }
 
+    public List<List<String>> prepareData() {
+        // Taking the two files, run through and interpolate them to the same time
+        return null;
+    }
     static public void main(String[] args) {
         //test the above code
         Reader readerPrim = new CSVReader("data/F_RPM_PRIM.csv");
@@ -91,8 +97,8 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         data[0] = readerPrim.read();
         data[1] = readerSec.read();
 
-        AccelCurveAnalyzer analyzer = new AccelCurveAnalyzer(readerPrim);
-        List<List<String>> dataPoints = analyzer.analyze(data);
+        AccelCurveAnalyzer analyzer = new AccelCurveAnalyzer(data);
+        List<List<String>> dataPoints = analyzer.analyze();
 
         for (int i = 0; i < dataPoints.size(); i++) {
             System.out.println(dataPoints.get(i).get(0) + ", " + dataPoints.get(i).get(1));

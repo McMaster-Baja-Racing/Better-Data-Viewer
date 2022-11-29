@@ -15,7 +15,6 @@ public class CSVReader extends Reader {
         super(filePath);
     }
 
-
     public List<List<String>> read() {
         // Initialize list and file
         List<List<String>> records = new ArrayList<List<String>>();
