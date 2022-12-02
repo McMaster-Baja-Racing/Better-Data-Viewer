@@ -135,16 +135,6 @@ const Chart = () => {
 
     return (
         <div>
-            <div>
-                {/* File Uploader */}
-                <input
-                    type="file"
-                    name="file"
-                    accept=".csv"
-                    onChange={changeHandler}
-                    style={{ display: "block", margin: "10px auto" }}
-                />
-            </div>
             <div className='chart'>
                 <HighchartsReact
                     highcharts={Highcharts}

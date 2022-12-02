@@ -1,10 +1,15 @@
 import '../styles/App.css';
-// import useState
-import React, { useState, useEffect } from 'react';
+import '../styles/styles.css';
+import { Modal } from "./Modal";
+import React, { useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
 
+
 function App() {
+  const [showModal, setShowModal] = useState(false);
+const openModal = () => {
+    setShowModal(true);
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -29,13 +34,14 @@ function App() {
   return (
     <><Topbar />
     <div className="App">
-      
-      <header className="App-header">
-      <Chart />
-      </header>
-      <p className="App-intro">{data}</p>
-    </div></>
+    <header className="App-header">
+      <button onClick={openModal}>Create Graph</button>
+      {showModal ? <Modal setShowModal={setShowModal} /> : null}
+      <Chart /> <p className="App-intro">{data}</p>
+    </header>
+      </div>
+      </>
   );
 }
-
+}
 export default App;
