@@ -8,12 +8,14 @@ import Topbar from './Topbar';
 
 function App() {
 
+  // All for popup
   const [showModal, setShowModal] = useState(false);
 
   const openModal = () => {
     setShowModal(true);
   }
 
+  //This stuff is for api fetching
   const [data, setData] = useState(null);
 
   useEffect(() => {
