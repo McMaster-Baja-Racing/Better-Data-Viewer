@@ -2,8 +2,6 @@
 
 import { useRef } from "react";
 import ReactDom from "react-dom";
-import { Dropdown } from './Dropdown.js'
-import { Element } from './Element.js';
 import '../styles/styles.css';
 import { useState, useEffect } from 'react';
 
@@ -31,11 +29,6 @@ export const Modal = ({ setShowModal }) => {
             onChange={changeHandler}
             style={{ display: "block", margin: "10px auto" }}
           />
-
-          <Dropdown>
-            <Element />
-          </Dropdown>
-
         </div>
         <div classname="small">
           <input
