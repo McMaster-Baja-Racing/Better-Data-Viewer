@@ -1,0 +1,21 @@
+
+
+const express = require('express');
+const app = express(); 
+const port = process.env.PORT || 5000; 
+
+//import local java modules, like "../dataanalyzer/AccelCurveAnalyzer.java"
+const {AccelCurveAnalyzer} = require('./dataanalyzer/AccelCurveAnalyzer.java');
+
+// This displays message that the server running and listening to specified port
+app.listen(port, () => console.log(`Listening on port ${port}`)); //Line 6
+
+// create a GET route
+app.get('/express_backend', (req, res) => { 
+  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
+});
+
+//
+app.get('/bananas', (req, res) => {
+    res.send({ csv: 'bananas' });
+});
