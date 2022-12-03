@@ -3,6 +3,7 @@ package dataanalyzer;
 import storage.Reader;
 import storage.csv.CSVReader;
 
+import java.io.FileWriter;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -22,25 +23,30 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         // Then we can repeat this process for the rest of the data points in the shorter file
 
         //Initialize variables
-        List<List<String>> dataPoints = new ArrayList<List<String>>();
-        List<String> dataPoint = new ArrayList<String>();
+        List<List<String>> dataPoints;
+        List<String> dataPoint = new ArrayList<String>(2);
 
         //Find shorter file
         List<List<String>> shorterFile;
         List<List<String>> longerFile;
+        int time;
 
-        if (data[0].size() < data[1].size()) {
+        int size0 = data[0].size();
+        int size1 = data[1].size();
+        if (size0 < size1) {
             shorterFile = data[0];
             longerFile = data[1];
+            dataPoints = new ArrayList<List<String>>(size0);
         } else {
             shorterFile = data[1];
             longerFile = data[0];
+            dataPoints = new ArrayList<List<String>>(size1);
         }
 
         //Begin loop
         for (int i = 43000; i < 45000; i++) {
             //Find time in shorter file
-            int time = Integer.parseInt(shorterFile.get(i).get(0));
+            time = Integer.parseInt(shorterFile.get(i).get(0));
 
             //Use linear interpolation to find value in longer file
             int index = 1;
@@ -79,7 +85,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
             dataPoints.add(dataPoint);
 
             //Reset dataPoint
-            dataPoint = new ArrayList<String>();
+            dataPoint = new ArrayList<String>(2);
         }
 
         return dataPoints;
@@ -91,7 +97,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
     }
 
 
-    static public void main(String[] args) {
+    static public void main(String[] args) throws Exception {
         //test the above code
         Reader readerPrim = new CSVReader("data/F_RPM_PRIM.csv");
         Reader readerSec = new CSVReader("data/F_GPS_SPEED.csv");
@@ -100,15 +106,19 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         data[0] = readerPrim.read();
         data[1] = readerSec.read();
 
-        System.out.println("Here");
+        System.out.println("Analysing Data");
 
         AccelCurveAnalyzer analyzer = new AccelCurveAnalyzer(data);
         List<List<String>> dataPoints = analyzer.analyze();
 
+        FileWriter writer = new FileWriter("./interpolated.csv");
+        for (int i = 0; i < dataPoints.size(); i++) {
+            writer.write(dataPoints.get(i).get(0) + "," + dataPoints.get(i).get(1) + "\n");
+        }
+        writer.close();
+
         for (int i = 0; i < dataPoints.size(); i++) {
             System.out.println(dataPoints.get(i).get(0) + ", " + dataPoints.get(i).get(1));
         }
-
     }
-
 }
