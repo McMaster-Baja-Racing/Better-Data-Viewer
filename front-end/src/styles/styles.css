@@ -28,7 +28,7 @@
   .container .modal {
     z-index: 1;
     width: 550px;
-    height: 120px;
+    height: 220px;
     background: white;
     display: flex;
     flex-direction: row;
