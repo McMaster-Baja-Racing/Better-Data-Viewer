@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official'
 // import f gps speed
 import Papa from "papaparse";
 
-const Chart = () => {
+const Chart = ({fileInformation}) => {
     const [chartOptions, setChartOptions] = useState({
         chart: {
             zoomType: 'x',
@@ -59,9 +59,23 @@ const Chart = () => {
 
     const [parsedData, setParsedData] = useState([]);
 
+
+    // useEffect(() => {
+    //     if (fileInformation[0].length > 0) {
+    //         Papa.parse(fileInformation[0][0], {
+    //             header: true,
+    //             skipEmptyLines: true,
+    //             complete: function (results) {
+    //                 setParsedData(results.data);
+    //             },
+    //         });
+    //     }
+        
+    // }, [fileInformation]);
+
     const changeHandler = (event) => {
         // Passing file data (event.target.files[0]) to parse using Papa.parse
-        Papa.parse(event.target.files[0], {
+        Papa.parse(fileInformation[0][0], {
             header: true,
             skipEmptyLines: true,
             complete: function (results) {
@@ -75,13 +89,13 @@ const Chart = () => {
         // Format the data to be used in the chart (2D array), the format being an array of objects with a key and value
         var formattedData = [];
         for (var i = 0; i < parsedData.length; i++) {
-            formattedData.push([parseInt(parsedData[i]['Timestamp (ms)']), parseFloat(parsedData[i]['F_GPS_SPEED'])]);
+            formattedData.push([parseFloat(parsedData[i][fileInformation[2][0]]), parseFloat(parsedData[i][fileInformation[2][1]])]);
         }
         // Update the chart options with the new data
         setChartOptions({
             chart: {
-                zoomType: 'x',
-                width: 1000,
+                type: 'scatter',
+                zoomType: 'xy'
             },
             title: {
                 text: 'Forward GPS Speed'
@@ -91,7 +105,9 @@ const Chart = () => {
                     'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
             },
             xAxis: {
-                type: 'datetime'
+                title: {
+                    text: 'Yeah'
+                }
             },
             yAxis: {
                 title: {
@@ -131,10 +147,13 @@ const Chart = () => {
                 { data: formattedData }
             ]
         })
+
+        
     }, [parsedData]);
 
     return (
         <div>
+            <button className='button' onClick={changeHandler}>Load Data</button>
             <div className='chart'>
                 <HighchartsReact
                     highcharts={Highcharts}

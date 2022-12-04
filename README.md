@@ -39,4 +39,6 @@ https://medium.com/how-to-react/how-to-parse-or-read-csv-files-in-reactjs-81e8ee
 https://github.com/highcharts/highcharts-react
 https://dzone.com/articles/how-to-read-a-big-csv-file-with-java-8-and-stream
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+pass info from child to parent - https://bobbyhadz.com/blog/react-pass-data-from-child-to-parent#:~:text=To%20pass%20data%20from%20child,the%20function%20in%20the%20Parent%20.
+
 

@@ -18,11 +18,18 @@ function App() {
   //This stuff is for api fetching
   const [data, setData] = useState(null);
 
-  useEffect(() => {
-    callBackendAPI()
-      .then(res => setData(res.express))
-      .catch(err => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   callBackendAPI()
+  //     .then(res => setData(res.express))
+  //     .catch(err => console.log(err));
+  // }, []);
+
+  const [fileInformation, setFileInformation] = useState([]);
+
+  const handleFileTransfer = (e) => {
+    console.log(e);
+    setFileInformation(e);
+  }
 
   // fetching the GET route from the Express server which matches the GET route from server.js
   const callBackendAPI = async () => {
@@ -42,8 +49,8 @@ function App() {
       <div className="App">
         <header className="App-header">
           <button onClick={openModal}>Create Graph</button>
-          {showModal ? <Modal setShowModal={setShowModal} /> : null}
-          <Chart /> <p className="App-intro">{data}</p>
+          {showModal ? <Modal setShowModal={setShowModal} func={handleFileTransfer}/> : null}
+          <Chart fileInformation={fileInformation}/> <p className="App-intro">{data}</p>
         </header>
       </div>
     </>

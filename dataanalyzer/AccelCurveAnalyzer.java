@@ -19,6 +19,8 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
     // This was the first attempt, but should be moved to prepareData method an optimized heavily
     // Analyze will be used to sort the data afterwards, so only accel curves are gotten instead of deccel curves
+
+    // Currently it uses a sliding window + interpolation to get the dataRPM
     public List<List<String>> analyze() { 
         // WAYS TO IMPROVE: Indexing of second file instead of looping through it every time (O(n^2) -> O(2n)) (I just did this :) )
         //                  Implement binary search based on ratio of files (HARD) (O(2n) -> O(n))
@@ -95,8 +97,9 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         // time this
         Date start = new Date();
         //test the above code
-        Reader readerPrim = new CSVReader("data/F_RPM_PRIM.csv");
-        Reader readerSec = new CSVReader("data/F_GPS_SPEED.csv");
+        System.out.println("Combining " + args[0] + " and " + args[1]);
+        Reader readerPrim = new CSVReader(args[0]);
+        Reader readerSec = new CSVReader(args[1]);
 
         List<List<String>>[] data = new List[2];
         data[0] = readerPrim.read();
