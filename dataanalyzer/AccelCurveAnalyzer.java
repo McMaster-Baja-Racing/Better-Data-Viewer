@@ -43,10 +43,19 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
             longerFile = data[1];
         }
 
+        //Average the first 30 lines of the longer file to get the initial RPM
+        double rollSum = 0;
+        for (int i = 1; i <= 30; i++) {
+            rollSum += Double.parseDouble(longerFile.get(i).get(1));
+        }
+
         int indexShort = 1;
         // Begin loop
         int limit = longerFile.size();
-        for (int i = 1; i < limit; i++) {
+        for (int i = 31; i < limit; i++) {
+            // Rolling average stuff
+            rollSum -= Double.parseDouble(longerFile.get(i - 30).get(1));
+            rollSum += Double.parseDouble(longerFile.get(i).get(1));
             // Find time in longer file
             int timeLong = Integer.parseInt(longerFile.get(i).get(0));
 
@@ -67,7 +76,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
             // Create new datapoint that lines up with the longer file via linear interpolation
             dataPoint.add(longerFile.get(i).get(0)); // Add time
-            dataPoint.add(longerFile.get(i).get(1)); // Add x
+            dataPoint.add(Double.toString(rollSum / 30)); // Add x
             // Using data at indexOfShorterFile and indexOfShorterFile - 1, interpolate the value
             
             double val1 = Double.parseDouble(shorterFile.get(indexShort - 1).get(1));
