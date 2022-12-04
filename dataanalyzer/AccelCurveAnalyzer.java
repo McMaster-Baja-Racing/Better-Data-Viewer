@@ -1,6 +1,8 @@
 package dataanalyzer;
 
 //import a way to time the program
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 
 import storage.Reader;
@@ -91,6 +93,83 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         return null;
     }
 
+    //gets start and end timestamps of accel runs based on GPS speed
+     public static List<List<Integer>> getAccelTimestamp(List<List<String>> dataPoints) {
+        float rollingAv = 0;
+        int initialTime = 0;
+        int endTime = 0;
+        float next = 0;
+        float curr;
+        boolean inAccel = false;
+        List<List<Integer>> timestamp = new ArrayList<List<Integer>>();
+        /*
+         for (int j = 0; j < 31; j++) {
+             rollingAv += Float.parseFloat(dataPoints.get(j).get(1));
+         }
+         rollingAv/=31;*/
+
+        for (int i = 15; i < dataPoints.size() - 15; i++) {
+            curr = Float.parseFloat(dataPoints.get(i).get(2));
+            if(curr >= 35 && !inAccel) {
+                inAccel = true;
+                next = Float.parseFloat(dataPoints.get(i).get(2));
+                while(next>=curr) {
+                    i++;
+                    curr = next;
+                    next = Float.parseFloat(dataPoints.get(i).get(2));
+
+                    endTime = Integer.parseInt(dataPoints.get(i).get(0));
+                }
+
+                int j = i;
+                while (curr > 2.5) {
+                    j--;
+                    curr = Float.parseFloat(dataPoints.get(j).get(2));
+                }
+                initialTime = Integer.parseInt(dataPoints.get(j).get(0));
+
+                timestamp.add(Arrays.asList(initialTime, endTime));
+
+            } else if (inAccel) {
+                while (curr > 2.5) {
+                    i++;
+                    curr = Float.parseFloat(dataPoints.get(i).get(2));
+                }
+                inAccel = false;
+            }
+
+
+            /*rollingAv -= Float.parseFloat(dataPoints.get(i-15).get(1))/31;
+            rollingAv += Float.parseFloat(dataPoints.get(i+15).get(1))/31;
+
+            for (int j = i; j < 30 + i; j++) {
+                rollingAv += Float.parseFloat(dataPoints.get(i).get(1));
+            }
+            rollingAv/=30;*/
+
+        }
+        return timestamp;
+     }
+
+     public static void timestampToCSV(List<List<Integer>> accelTimes, List<List<String>> dataPoints) throws IOException {
+         //print to separate csv, will be removed if/when frontend can go to specified points
+         for (int j = 0; j < accelTimes.size(); j++) {
+             FileWriter w = new FileWriter("./data/run" + j + ".csv");
+             for (int i = 0; i < dataPoints.size(); i++) {
+
+                 int time = Integer.parseInt(dataPoints.get(i).get(0));
+                 int accel[] = { accelTimes.get(j).get(0), accelTimes.get(j).get(1) };
+
+                 if (time >= accel[0]) {
+                     w.write(dataPoints.get(i).get(0) + "," + dataPoints.get(i).get(1) + "," + dataPoints.get(i).get(2) + "\n");
+                     if (time > accel[1]) {
+                         w.close();
+                         break;
+                     }
+                 }
+             }
+         }
+     }
     static public void main(String[] args) throws Exception {
         // time this
         Date start = new Date();
@@ -113,6 +192,16 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
             writer.write(dataPoints.get(i).get(0) + "," + dataPoints.get(i).get(1) + "," + dataPoints.get(i).get(2) + "\n");
         }
         writer.close();
+        System.out.println("Done writing interpolated file");
+
+        //print accel curve timestamps
+        List<List<Integer>> accelTimes = getAccelTimestamp(dataPoints);
+        for (int i = 0; i < accelTimes.size(); i++) {
+            System.out.println(accelTimes.get(i));
+        }
+
+        //temporary
+        timestampToCSV(accelTimes, dataPoints);
 
         System.out.println("Done");
         // time this
