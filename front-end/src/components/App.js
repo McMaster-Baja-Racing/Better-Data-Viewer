@@ -48,10 +48,13 @@ function App() {
     <><Topbar />
       <div className="App">
         <header className="App-header">
+          
           <button onClick={openModal}>Create Graph</button>
           {showModal ? <Modal setShowModal={setShowModal} func={handleFileTransfer}/> : null}
           <Chart fileInformation={fileInformation}/> <p className="App-intro">{data}</p>
+          
         </header>
+        
       </div>
     </>
   );

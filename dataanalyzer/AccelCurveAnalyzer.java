@@ -12,6 +12,10 @@ import java.io.FileWriter;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
 public class AccelCurveAnalyzer extends DataAnalyzer {
     private List<List<String>> preparedData;
     
@@ -180,6 +184,24 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
              }
          }
      }
+
+
+    //Combine [] of CSV
+    public static void combineCSV(String[] files) throws IOException {
+        FileWriter w = new FileWriter("./data/combined.csv");
+        for (int i = 0; i < files.length; i++) {
+            BufferedReader r = new BufferedReader(new FileReader(files[i]));
+            String line = r.readLine();
+            while (line != null) {
+                w.write(line + "\n");
+                line = r.readLine();
+            }
+            r.close();
+        }
+        w.close();
+    }
+    //my mother is a fish
+
     static public void main(String[] args) throws Exception {
         // time this
         Date start = new Date();
@@ -213,6 +235,14 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
         //temporary
         timestampToCSV(accelTimes, dataPoints);
+
+        //combine csv
+        String[] files = new String[accelTimes.size()];
+        for (int i = 0; i < accelTimes.size(); i++) {
+            files[i] = "./data/run" + i + ".csv";
+        }
+
+        combineCSV(files);
 
         System.out.println("Done");
         // time this
