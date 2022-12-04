@@ -128,7 +128,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
                     curr = next;
                     next = Float.parseFloat(dataPoints.get(i).get(2));
 
-                    endTime = Integer.parseInt(dataPoints.get(i+100).get(0));
+                    endTime = Integer.parseInt(dataPoints.get(i).get(0));
                 }
 
                 int j = i;
