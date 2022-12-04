@@ -27,3 +27,7 @@ app.get('/bananas', (req, res) => {
       })
 
 });
+
+app.get('/*', (req, res) => {
+    res.send({ express: '404' });
+});
