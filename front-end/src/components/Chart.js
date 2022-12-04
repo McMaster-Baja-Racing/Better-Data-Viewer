@@ -152,7 +152,7 @@ const Chart = ({fileInformation}) => {
     }, [parsedData]);
 
     return (
-        <div>
+        <div className="container">
             <button className='button' onClick={changeHandler}>Load Data</button>
             <div className='chart'>
                 <HighchartsReact

@@ -83,7 +83,6 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
             double val2 = Double.parseDouble(shorterFile.get(indexShort).get(1));
             double time1 = Double.parseDouble(shorterFile.get(indexShort - 1).get(0));
             double time2 = Double.parseDouble(shorterFile.get(indexShort).get(0));
-            //System.out.println("time1: " + time1 + " time2: " + time2 + " timeLong: " + timeLong);
 
             double slope = (val2 - val1) / (time2 - time1);
             String val = Double.toString(slope * (timeLong - time1) + val1);
