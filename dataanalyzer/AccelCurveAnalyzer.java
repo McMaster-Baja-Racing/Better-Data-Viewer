@@ -169,37 +169,25 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
          //print to separate csv, will be removed if/when frontend can go to specified points
          for (int j = 0; j < accelTimes.size(); j++) {
              FileWriter w = new FileWriter("./data/run" + j + ".csv");
+             FileWriter wCombined = new FileWriter("./data/combined.csv");
              for (int i = 0; i < dataPoints.size(); i++) {
 
                  int time = Integer.parseInt(dataPoints.get(i).get(0));
-                 int accel[] = { accelTimes.get(j).get(0), accelTimes.get(j).get(1) };
+                 int accel[] = {accelTimes.get(j).get(0), accelTimes.get(j).get(1)};
 
                  if (time >= accel[0]) {
                      w.write(dataPoints.get(i).get(0) + "," + dataPoints.get(i).get(1) + "," + dataPoints.get(i).get(2) + "\n");
+                     //wCombined.write(dataPoints.get(i).get(0) + "," + dataPoints.get(i).get(1) + "," + dataPoints.get(i).get(2) + "\n");
                      if (time > accel[1]) {
                          w.close();
                          break;
                      }
                  }
              }
+             wCombined.close();
          }
      }
 
-
-    //Combine [] of CSV
-    public static void combineCSV(String[] files) throws IOException {
-        FileWriter w = new FileWriter("./data/combined.csv");
-        for (int i = 0; i < files.length; i++) {
-            BufferedReader r = new BufferedReader(new FileReader(files[i]));
-            String line = r.readLine();
-            while (line != null) {
-                w.write(line + "\n");
-                line = r.readLine();
-            }
-            r.close();
-        }
-        w.close();
-    }
     //my mother is a fish
 
     static public void main(String[] args) throws Exception {
@@ -241,9 +229,6 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         for (int i = 0; i < accelTimes.size(); i++) {
             files[i] = "./data/run" + i + ".csv";
         }
-
-        combineCSV(files);
-
         System.out.println("Done");
         // time this
         Date end = new Date();
