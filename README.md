@@ -10,7 +10,7 @@ This will create a modular view, ready to have different items added on
 See `UML.drawio` for the class diagram
 
 ### Input
-Serial/Wifi/Idk - TBD By Ariel Wolle... smh
+Serial/Wifi/Idk - TBD By Ariel Wolle... smh --hurry_up_pls
 
 ### Front-end
 We chose React as the front-end for its modularity, wide=spread support and client-side rendering in order to speed up not only our server 
@@ -25,10 +25,38 @@ CSV/CSV+SQL/IDK - talk to prof
 
 ## TODO
 
-### Front-End
-- Rizeable graphs, option to make new graph and move around seamlessly, resize, etc
-- Add more graphs, types of graphs
-- saveable views 
+### Front End
+#### MANDATORY FEATURES:
+- Shift curve working best awesome
+- XY graph working with automatic axis names
+- Multiple graphs at same time
+- Redo create graph for specifics
+
+#### MANDATORY BUG FIXES:
+- Offline front end
+- Slow after 1 use (data loading probably)
+
+#### Would be cool:
+- Make it ~pretty~
+- Re-sizeable, move-able, etc (Z-index)
+- Live data
+- Warning for intense data (too big, too slow)
+- Cookies - Remember users previous setup and autoload
+
+### Back End
+#### MANDATORY FEATURES:
+- Connecting API, so front end can talk to back end, Should maybe conform to REST
+- Unify backend
+- X-Y Graph
+- Added information for shift curve
+
+#### MANDATORY BUG FIXES:
+- Back-end round values
+
+#### Would be cool:
+- Live data
+- More dynamic parameters
+- Single script to start it all
 
 
 ## Sources
@@ -40,5 +68,5 @@ https://github.com/highcharts/highcharts-react
 https://dzone.com/articles/how-to-read-a-big-csv-file-with-java-8-and-stream
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 pass info from child to parent - https://bobbyhadz.com/blog/react-pass-data-from-child-to-parent#:~:text=To%20pass%20data%20from%20child,the%20function%20in%20the%20Parent%20.
-install maven you numbnut
+spring boot stuff - https://spring.io/guides/gs/uploading-files/
 
