@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/styles.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Papa from "papaparse";
 
 export const Modal = ({ setShowModal, func }) => {
