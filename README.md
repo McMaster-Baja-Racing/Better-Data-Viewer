@@ -58,6 +58,10 @@ CSV/CSV+SQL/IDK - talk to prof
 - More dynamic parameters
 - Single script to start it all
 
+## Known errors
+https://stackoverflow.com/questions/43362431/uncaught-in-promise-syntaxerror-unexpected-end-of-json-input
+this is a whole big along with sending and receiving protocols. Im moving forward as is, since it works, but sends an error response.
+
 
 ## Sources
 https://jar-download.com/artifacts/org.openmuc/jrxtx/1.0.1/source-code/gnu/io/SerialPort.java
