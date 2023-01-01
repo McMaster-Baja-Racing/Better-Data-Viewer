@@ -26,5 +26,5 @@ public class CSVWriter extends Writer {
             buf = "";
             bufSize = 0;
         }
-    }
+    } 
 }
