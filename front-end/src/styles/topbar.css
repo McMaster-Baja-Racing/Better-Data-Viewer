@@ -1,11 +1,24 @@
-.topbar {
-    background: #000000;
+.topbar { 
+    background: #343434;
     display: flex;
     justify-content: space-between;
-    padding: 0.5rem 0rem 1rem 2rem;
+    padding: 1rem 0rem 1rem 0rem;
     color: whitesmoke;
     font-size: 2rem;
     position: fixed;
     z-index: 1;
     width: 100%;
+}
+
+.topbar > * {
+    margin: 0 1rem 0 1rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons > * {
+    margin: 0 0 0 1rem;
 }

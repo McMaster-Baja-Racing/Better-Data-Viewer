@@ -7,7 +7,7 @@ import Chart from './Chart';
 import Topbar from './Topbar';
 
 
-function App() {
+const App = () => {
 
   // All for popup
   const [showModal, setShowModal] = useState(false);
@@ -22,6 +22,8 @@ function App() {
     console.log(e);
     setFileInformation(e);
   }
+
+  //This stuff is for backend API
 
   const { register, handleSubmit } = useForm();
 
@@ -38,14 +40,14 @@ function App() {
   };
 
   return (
-    <><Topbar />
+    <>
       <div className="App">
+      <Topbar openModal={openModal}/>
         <header className="App-header">
 
-          <button onClick={openModal}>Create Graph</button>
-          {showModal ? <Modal setShowModal={setShowModal} func={handleFileTransfer} /> : null}
-          <Chart fileInformation={fileInformation} /> <p className="App-intro">AAA</p>
-          <button onClick={onSubmit}> Hey ;)</button>
+          {showModal ? <Modal setShowModal={setShowModal} fileTransfer={handleFileTransfer} /> : null}
+          
+          <Chart fileInformation={fileInformation} />
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <input type="file" {...register("file")} />

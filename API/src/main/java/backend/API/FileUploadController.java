@@ -41,6 +41,7 @@ public class FileUploadController {
 		this.storageService = storageService;
 	}
 
+	//This is the method that shows the upload form page
 	@GetMapping("/")
 	public String listUploadedFiles(Model model) throws IOException {
 
@@ -52,15 +53,51 @@ public class FileUploadController {
 		return "uploadForm";
 	}
 
+	//This is the method that returns information about all the files
+	@GetMapping("/files")
+	@ResponseBody
+	public ResponseEntity<String> listUploadedFiles() throws IOException{
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		//allow access control origin to all
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		//allow access control allow credentials to true
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(storageService.loadAll().map(
+				path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+						"serveFile", path.getFileName().toString()).build().toUri().toString())
+				.collect(Collectors.toList()).toString());
+		// return storageService.loadAll().map(
+		// 		path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+		// 				"serveFile", path.getFileName().toString()).build().toUri().toString())
+		// 		.collect(Collectors.toList()).toString();
+		// write this code above but add headers to allow access control origin to all and allow access control allow credentials to true
+
+
+		
+	}
+
+	//This is the method that returns the file itself
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 
 		Resource file = storageService.loadAsResource(filename);
-		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+    	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+		"attachment; filename=\"" + file.getFilename() + "\"");
+		//allow access control origin to all
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		//allow access control allow credentials to true
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(file);
 	}
 
+	//This is the method that uploads the file
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {

@@ -2,10 +2,10 @@
 import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/styles.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Papa from "papaparse";
 
-export const Modal = ({ setShowModal, func }) => {
+export const Modal = ({ setShowModal, fileTransfer }) => {
 
   const [dimensions, setDimensions] = useState(1);
 
@@ -56,28 +56,66 @@ export const Modal = ({ setShowModal, func }) => {
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(document.getElementsByClassName(i)[0].value);
     }
-    func([uploadedFiles, dimensions, selectColumns]);
+    fileTransfer([uploadedFiles, dimensions, selectColumns]);
     setShowModal(false);
   }
 
   // close the modal when clicking outside the modal.
   const modalRef = useRef();
-
-  const options = [
-    { value: '1', label: 'one' },
-    { value: '2', label: 'two' },
-    { value: '3', label: 'three' }
-  ];
+  
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
       setShowModal(false);
     }
   };
+
+  const onSubmitt = async (data) => {
+
+    const res = await fetch("http://localhost:8080/files/F_GPS_SPEED.csv", {
+      mode: 'no-cors',
+      method: "GET"
+    }).then((res) => {
+      res.json()
+      console.log(res)
+    });
+
+    alert(JSON.stringify(`${res.message}, status: ${res.status}`));
+  };
+
+
+  const getSingleFile = () => {
+    fetch('http://localhost:8080/files/F_GPS_SPEED.csv')
+        .then(response => {
+          console.log(response)
+          // the data is in csv format, print it out
+          response.text().then(text => {
+            console.log(text)
+            //do the data stuff here
+          });
+        })
+  }
+
+  const [files, setFiles] = useState([])
+
+  const listFiles = () => {
+    fetch('http://localhost:8080/files')
+        .then(response => {
+          console.log(response)
+          // the data is in csv format, print it out
+          response.text().then(text => {
+            console.log(text)
+            //do the data stuff here
+            setFiles(text)
+          });
+        })
+  }
+
+
   //render the modal JSX in the portal div.
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
-        <div classname="small">
+        <div className="small">
           <input
             type="file"
             name="file"
@@ -85,13 +123,16 @@ export const Modal = ({ setShowModal, func }) => {
             onChange={handleFileEvent}
             style={{ display: "block", margin: "10px auto" }}
           />
+          <button onClick={listFiles}>Fetch uploaded files!</button>
+          <p>{files}</p>
           
           {uploadedFiles.map((file, i) => (
             <div key={file.name}>
               {file.name}
             </div>
           ))}
-          <label for="Dimensions">Choose a Dimension:</label>
+          
+          <label htmlFor="Dimensions">Choose a Dimension:</label>
           <select className="dimensions" onChange={handleSelect}>
             <option value="1">1</option>
             <option value="2">2</option>
