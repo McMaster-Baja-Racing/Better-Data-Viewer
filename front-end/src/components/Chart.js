@@ -93,6 +93,15 @@ const Chart = ({ fileInformation }) => {
     }
 
     useEffect(() => {
+        //print all fileInformation
+        fileInformation.map(file => {
+            console.log(JSON.stringify(file))
+            console.log(file.headers);
+            console.log(file.filename);
+        })
+    }, [fileInformation]);
+
+    useEffect(() => {
         console.log(parsedData);
         // Format the data to be used in the chart (2D array), the format being an array of objects with a key and value
         var formattedData = [];
