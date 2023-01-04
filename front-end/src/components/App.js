@@ -12,7 +12,7 @@ const App = () => {
   // All for popup
   const [showModal, setShowModal] = useState(false);
 
-  const openModal = () => {
+  const openCreateGraphModal = () => {
     setShowModal(true);
   }
 
@@ -42,7 +42,7 @@ const App = () => {
   return (
     <>
       <div className="App">
-      <Topbar openModal={openModal}/>
+      <Topbar openModal={openCreateGraphModal}/>
         <header className="App-header">
 
           {showModal ? <Modal setShowModal={setShowModal} fileTransfer={handleFileTransfer} /> : null}
