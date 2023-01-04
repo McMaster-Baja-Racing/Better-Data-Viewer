@@ -1,5 +1,5 @@
 import '../styles/App.css';
-import '../styles/styles.css';
+import '../styles/modalStyles.css';
 import { Modal } from "./Modal";
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";

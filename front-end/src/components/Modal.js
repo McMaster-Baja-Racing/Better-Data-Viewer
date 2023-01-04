@@ -1,7 +1,7 @@
 //Modal.js
 import { useRef } from "react";
 import ReactDom from "react-dom";
-import '../styles/styles.css';
+import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
 import Papa from "papaparse";
 
