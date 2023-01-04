@@ -102,4 +102,16 @@ public class FileSystemStorageService implements StorageService {
 			throw new StorageException("Could not initialize storage", e);
 		}
 	}
+
+	@Override
+	public String readHeaders(String filename) {
+		String headers = null;
+		try {
+			Path file = load(filename);
+			headers = Files.readAllLines(file).get(0);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return headers;
+	}
 }

@@ -27,9 +27,9 @@
     background: rgba(0, 0, 0, 0.6);
   }
   .container .modal {
+    padding: 3rem;
     z-index: 1;
-    width: 550px;
-    height: 220px;
+    height: 20rem;
     background: white;
     display: flex;
     flex-direction: row;
@@ -46,8 +46,8 @@
   }
   .closeButton {
     position: absolute;
-    top: 7px;
-    right: 7px;
+    top: 0.5em;
+    right: 0.5em;
     padding: 8px 11px;
     background: crimson;
     color: white;

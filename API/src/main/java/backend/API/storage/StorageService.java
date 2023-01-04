@@ -20,4 +20,6 @@ public interface StorageService {
 
 	void deleteAll();
 
+	String readHeaders(String filename);
+
 }

@@ -1,7 +1,6 @@
 .container {
-    padding: 15px;
+    padding: 1rem;
     width: 1000px;
-
 }
 
 .container > * {

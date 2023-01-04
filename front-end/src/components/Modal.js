@@ -25,7 +25,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     return arr;
   }
 
-  const [columns, setColumns] = useState([]);
+  
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
@@ -41,7 +41,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     Papa.parse(e.target.files[0], {
       header: true,
       skipEmptyLines: true,
-      complete: function (results) {
+      complete: (results) => {
         var col = columns;
         for (var i = 0; i < Object.keys(results.data[0]).length; i++) {
           col.push(Object.keys(results.data[0])[i]);
@@ -104,10 +104,45 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           // the data is in csv format, print it out
           response.text().then(text => {
             console.log(text)
-            //do the data stuff here
-            setFiles(text)
+            //add each individual file to the files array
+            setFiles(text.split(", "))
           });
         })
+  }
+
+  const [columns, setColumns] = useState([]);
+
+  const getHeaders = async () => {
+    var col = [];
+
+    //wrap logic in promise
+    await new Promise((resolve, reject) => {
+      var c = 0;
+      for (const file of files) {
+        const result = fetch(`http://localhost:8080/files/${file}/info`)
+          .then(response => {
+  
+            // the data is in csv format, print it out
+            response.text().then(text => {
+  
+              //append it to columns
+              for (var i = 0; i < text.split(",").length; i++) {
+                col.push(text.split(",")[i]);
+              }
+
+              //logic for the promise, increment each time a thread finishes
+              c++;
+              if (c == files.length) {
+                resolve();
+              }
+  
+            });
+          })
+      }
+    })
+    
+    setColumns(col);
+    
   }
 
 
@@ -116,21 +151,24 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="small">
-          <input
+          {/* <input
             type="file"
             name="file"
             accept=".csv"
             onChange={handleFileEvent}
             style={{ display: "block", margin: "10px auto" }}
-          />
+          /> */}
           <button onClick={listFiles}>Fetch uploaded files!</button>
           <p>{files}</p>
+
+          <button onClick={getHeaders}>Fetch headers!</button>
+          <p>{columns}</p>
           
-          {uploadedFiles.map((file, i) => (
+          {/* {uploadedFiles.map((file, i) => (
             <div key={file.name}>
               {file.name}
             </div>
-          ))}
+          ))} */}
           
           <label htmlFor="Dimensions">Choose a Dimension:</label>
           <select className="dimensions" onChange={handleSelect}>
@@ -138,7 +176,10 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
             <option value="2">2</option>
             <option value="3">3</option>
           </select>
-          {dimensional(dimensions)}
+          <div>
+            {dimensional(dimensions)}
+          </div>
+          
           
         </div>
         <button onClick={handleSubmit}>Submit!</button>

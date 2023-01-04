@@ -66,16 +66,27 @@ public class FileUploadController {
 
 		return ResponseEntity.ok().headers(responseHeaders).body(storageService.loadAll().map(
 				path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-						"serveFile", path.getFileName().toString()).build().toUri().toString())
-				.collect(Collectors.toList()).toString());
-		// return storageService.loadAll().map(
-		// 		path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-		// 				"serveFile", path.getFileName().toString()).build().toUri().toString())
-		// 		.collect(Collectors.toList()).toString();
-		// write this code above but add headers to allow access control origin to all and allow access control allow credentials to true
+						"serveFile", path.getFileName().toString()).build().toUri().toString().substring(28))
+				.collect(Collectors.toList()).toString().substring(1).replace("]", ""));
 
+		// I added some trims to remove the exact address of the file from the response, and the brackets
+	}
 
-		
+	//This method returns information about a specific file, given the filename.
+	//It should return the first row of the file (the header row)
+	@GetMapping("/files/{filename:.+}/info")
+	@ResponseBody
+	public ResponseEntity<String> listUploadedFile(@PathVariable String filename) throws IOException{
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		//allow access control origin to all
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		//allow access control allow credentials to true
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		String fileinfo = storageService.readHeaders(filename);
+
+		return ResponseEntity.ok().headers(responseHeaders).body(fileinfo);
 	}
 
 	//This is the method that returns the file itself
