@@ -2,48 +2,43 @@
 import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
-import { useState, useEffect } from 'react';
-import Papa from "papaparse";
-export const uploadModal = setShowModal => {
+import { useForm } from "react-hook-form";
+export const UploadModal = ({setShowUploadModal}) => {
     // close the modal when clicking outside the modal.
   const modalRef = useRef();
   
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setShowModal(false);
+      setShowUploadModal(false);
     }
+  };
+  const { register, handleSubmit } = useForm();
+  //This stuff is for backend API
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("file", data.file[0]);
+
+    const res = await fetch("http://localhost:8080", {
+      mode: 'no-cors',
+      method: "POST",
+      body: formData,
+    }).then((res) => res.json());
+    alert(JSON.stringify(`${res.message}, status: ${res.status}`));
+    setShowUploadModal(false);
   };
 
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="small">
-          <button onClick={listFiles}>Fetch uploaded files!</button>
-          <p>{files}</p>
+            <h1>Upload Files</h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
+            <input type="file" {...register("file")} />
 
-          <button onClick={getHeaders}>Fetch headers!</button>
-          {columns.map((column, index) => {
-            return (
-              <div key={index}>
-                {column.header} - {column.filename}
-              </div>
-            )
-          })}
-          
-          <label htmlFor="Dimensions">Choose a Dimension:</label>
-          <select className="dimensions" onChange={handleSelect}>
-            <option value="1">1</option>
-            <option value="2" selected="selected">2</option>
-            <option value="3">3</option>
-          </select>
-          <div>
-            {dimensional(dimensions)}
-          </div>
-          
-          
+            <input type="submit" />
+          </form>
         </div>
-        <button onClick={handleSubmit}>Submit!</button>
-        <button className="closeButton" onClick={() => setShowModal(false)}>X</button>
+        <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
       </div>
     </div>,
     document.getElementById("portal")

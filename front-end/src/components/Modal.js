@@ -3,7 +3,6 @@ import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
-import Papa from "papaparse";
 
 export const Modal = ({ setShowModal, fileTransfer }) => {
 
