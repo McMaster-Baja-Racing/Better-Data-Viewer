@@ -7,7 +7,7 @@ import Papa from "papaparse";
 
 export const Modal = ({ setShowModal, fileTransfer }) => {
 
-  const [dimensions, setDimensions] = useState(1);
+  const [dimensions, setDimensions] = useState(2);
 
   const handleSelect = (e) => {
     setDimensions(e.target.value);
@@ -18,7 +18,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     for (let i = 0; i < n; i++) {
       arr.push(<select className={i}>
         {columns.map(column => (
-          <option value={column}>{column}</option>
+          <option value={column}>{column.filename} - {column.header}</option>
         ))}
       </select>);
     }
@@ -56,7 +56,8 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(document.getElementsByClassName(i)[0].value);
     }
-    fileTransfer([uploadedFiles, dimensions, selectColumns]);
+    console.log(selectColumns)
+    fileTransfer(selectColumns);
     setShowModal(false);
   }
 
@@ -68,20 +69,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       setShowModal(false);
     }
   };
-
-  const onSubmitt = async (data) => {
-
-    const res = await fetch("http://localhost:8080/files/F_GPS_SPEED.csv", {
-      mode: 'no-cors',
-      method: "GET"
-    }).then((res) => {
-      res.json()
-      console.log(res)
-    });
-
-    alert(JSON.stringify(`${res.message}, status: ${res.status}`));
-  };
-
 
   const getSingleFile = () => {
     fetch('http://localhost:8080/files/F_GPS_SPEED.csv')
@@ -113,6 +100,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   const [columns, setColumns] = useState([]);
 
   const getHeaders = async () => {
+    //Columns should have an additional attribute for the file name
     var col = [];
 
     //wrap logic in promise
@@ -127,7 +115,10 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   
               //append it to columns
               for (var i = 0; i < text.split(",").length; i++) {
-                col.push(text.split(",")[i]);
+                col.push({
+                  "header": text.split(",")[i],
+                  "filename": file
+                });
               }
 
               //logic for the promise, increment each time a thread finishes
@@ -140,6 +131,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           })
       }
     })
+    
     
     setColumns(col);
     
@@ -162,7 +154,13 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           <p>{files}</p>
 
           <button onClick={getHeaders}>Fetch headers!</button>
-          <p>{columns}</p>
+          {columns.map((column, index) => {
+            return (
+              <div key={index}>
+                {column.header} - {column.filename}
+              </div>
+            )
+          })}
           
           {/* {uploadedFiles.map((file, i) => (
             <div key={file.name}>
@@ -173,7 +171,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           <label htmlFor="Dimensions">Choose a Dimension:</label>
           <select className="dimensions" onChange={handleSelect}>
             <option value="1">1</option>
-            <option value="2">2</option>
+            <option value="2" selected="selected">2</option>
             <option value="3">3</option>
           </select>
           <div>
