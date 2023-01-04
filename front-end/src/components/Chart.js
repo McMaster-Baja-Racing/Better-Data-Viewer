@@ -5,7 +5,8 @@ import HighchartsReact from 'highcharts-react-official'
 // import f gps speed
 import Papa from "papaparse";
 
-const Chart = ({fileInformation}) => {
+const Chart = ({ fileInformation }) => {
+    //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
             zoomType: 'x',
@@ -59,37 +60,45 @@ const Chart = ({fileInformation}) => {
 
     const [parsedData, setParsedData] = useState([]);
 
-
-    // useEffect(() => {
-    //     if (fileInformation[0].length > 0) {
-    //         Papa.parse(fileInformation[0][0], {
-    //             header: true,
-    //             skipEmptyLines: true,
-    //             complete: function (results) {
-    //                 setParsedData(results.data);
-    //             },
-    //         });
-    //     }
-        
-    // }, [fileInformation]);
-
     const changeHandler = (event) => {
-        // Passing file data (event.target.files[0]) to parse using Papa.parse
-        Papa.parse(fileInformation[0][0], {
-            header: true,
-            skipEmptyLines: true,
-            complete: function (results) {
-                setParsedData(results.data);
-            },
-        });
+        getSingleFile("F_GPS_SPEED.csv");
     };
+
+    const getSingleFile = (filename) => {
+        fetch(`http://localhost:8080/files/${filename}`)
+            .then(response => {
+                console.log(response)
+                console.log(response.body) //use this to get a stream (efficient)
+
+                response.text().then(text => { //or this to get all text at once
+
+                    //trim the very first line
+                    var lines = text.split("\n");
+                    lines.shift();
+                    var trimmedText = lines.join("\n");
+                    //This is not the most efficient way to do this, a better way would be to use a stream (as above)
+
+                    //Now convert such that each line is an array
+                    var data = Papa.parse(text, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: function (results) {
+                            setParsedData(results.data);
+                            console.log(results.data)
+                        },
+                    }).data;
+
+                })
+            })
+    }
 
     useEffect(() => {
         console.log(parsedData);
         // Format the data to be used in the chart (2D array), the format being an array of objects with a key and value
         var formattedData = [];
+
         for (var i = 0; i < parsedData.length; i++) {
-            formattedData.push([parseFloat(parsedData[i][fileInformation[2][0]]), parseFloat(parsedData[i][fileInformation[2][1]])]);
+            formattedData.push([parseFloat(parsedData[i]["Timestamp (ms)"]), parseFloat(parsedData[i]["F_GPS_SPEED"])]);
         }
         // Update the chart options with the new data
         setChartOptions({
@@ -148,8 +157,12 @@ const Chart = ({fileInformation}) => {
             ]
         })
 
-        
+
     }, [parsedData]);
+
+    useEffect(() => {
+
+    })
 
     return (
         <div className="container">

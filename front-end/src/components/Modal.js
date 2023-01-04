@@ -25,32 +25,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     return arr;
   }
 
-  
-
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-
-  const handleFileEvent = (e) => {
-    console.log(e.target.files[0]);
-    const chosenFiles = Array.prototype.slice.call(e.target.files)
-    var uploaded = uploadedFiles;
-    chosenFiles.some((file) => {
-      uploaded.push(file);
-    })
-    setUploadedFiles(uploaded);
-    // Read the first row, split along commas, and use the resulting array as the column names
-    Papa.parse(e.target.files[0], {
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        var col = columns;
-        for (var i = 0; i < Object.keys(results.data[0]).length; i++) {
-          col.push(Object.keys(results.data[0])[i]);
-        }
-        setColumns(col);
-      }
-    });
-  }
-
   const handleSubmit = (e) => {
     var selectColumns = [];
     for (let i = 0; i < dimensions; i++) {
@@ -69,18 +43,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       setShowModal(false);
     }
   };
-
-  const getSingleFile = () => {
-    fetch('http://localhost:8080/files/F_GPS_SPEED.csv')
-        .then(response => {
-          console.log(response)
-          // the data is in csv format, print it out
-          response.text().then(text => {
-            console.log(text)
-            //do the data stuff here
-          });
-        })
-  }
 
   const [files, setFiles] = useState([])
 
@@ -132,7 +94,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       }
     })
     
-    
     setColumns(col);
     
   }
@@ -143,13 +104,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="small">
-          {/* <input
-            type="file"
-            name="file"
-            accept=".csv"
-            onChange={handleFileEvent}
-            style={{ display: "block", margin: "10px auto" }}
-          /> */}
           <button onClick={listFiles}>Fetch uploaded files!</button>
           <p>{files}</p>
 
@@ -161,12 +115,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
               </div>
             )
           })}
-          
-          {/* {uploadedFiles.map((file, i) => (
-            <div key={file.name}>
-              {file.name}
-            </div>
-          ))} */}
           
           <label htmlFor="Dimensions">Choose a Dimension:</label>
           <select className="dimensions" onChange={handleSelect}>
