@@ -55,20 +55,31 @@ const Chart = ({ fileInformation }) => {
                 },
                 threshold: null
             }
+        },
+        accessibility: {
+            enabled: false
         }
     });
 
+    //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
 
-    const changeHandler = (event) => {
-        getSingleFile("F_GPS_SPEED.csv");
+    const changeHandler = async (event) => {
+        //check if fileInformation is empty
+        if (fileInformation.length === 0) {
+            console.log("Pick file first")
+            return;
+        }
+
+        console.log(fileInformation)
+        getSingleFile(fileInformation[0].filename);
     };
 
-    const getSingleFile = (filename) => {
+    const getSingleFile = async (filename) => {
         fetch(`http://localhost:8080/files/${filename}`)
             .then(response => {
-                console.log(response)
-                console.log(response.body) //use this to get a stream (efficient)
+                //console.log(response)
+                //console.log(response.body) //use this to get a stream (efficient)
 
                 response.text().then(text => { //or this to get all text at once
 
@@ -79,35 +90,24 @@ const Chart = ({ fileInformation }) => {
                     //This is not the most efficient way to do this, a better way would be to use a stream (as above)
 
                     //Now convert such that each line is an array
-                    var data = Papa.parse(text, {
+                    Papa.parse(text, {
                         header: true,
                         skipEmptyLines: true,
                         complete: function (results) {
                             setParsedData(results.data);
-                            console.log(results.data)
                         },
-                    }).data;
+                    })
 
                 })
             })
     }
 
     useEffect(() => {
-        //print all fileInformation
-        fileInformation.map(file => {
-            console.log(JSON.stringify(file))
-            console.log(file.headers);
-            console.log(file.filename);
-        })
-    }, [fileInformation]);
-
-    useEffect(() => {
-        console.log(parsedData);
         // Format the data to be used in the chart (2D array), the format being an array of objects with a key and value
         var formattedData = [];
 
         for (var i = 0; i < parsedData.length; i++) {
-            formattedData.push([parseFloat(parsedData[i]["Timestamp (ms)"]), parseFloat(parsedData[i]["F_GPS_SPEED"])]);
+            formattedData.push([parseFloat(parsedData[i][fileInformation[0].header]), parseFloat(parsedData[i][fileInformation[1].header])]);
         }
         // Update the chart options with the new data
         setChartOptions({
@@ -163,15 +163,13 @@ const Chart = ({ fileInformation }) => {
             },
             series: [
                 { data: formattedData }
-            ]
+            ],
+            //disable accesibility
+            accessibility: {
+                enabled: false
+            }
         })
-
-
     }, [parsedData]);
-
-    useEffect(() => {
-
-    })
 
     return (
         <div className="container">
