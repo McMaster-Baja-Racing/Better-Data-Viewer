@@ -18,7 +18,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     for (let i = 0; i < n; i++) {
       arr.push(<select className={i}>
         {columns.map(column => (
-          <option value={column.filename}>{column.filename} - {column.header}</option>
+          <option value={JSON.stringify(column)}>{column.filename} - {column.header}</option>
         ))}
       </select>);
     }
@@ -28,11 +28,8 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   const handleSubmit = (e) => {
     var selectColumns = [];
     for (let i = 0; i < dimensions; i++) {
-      selectColumns.push(document.getElementsByClassName(i)[0].value);
-      console.log("HAHA")
-      console.log(document.getElementsByClassName(i)[0].value)
+      selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
-    console.log(selectColumns)
     fileTransfer(selectColumns);
     setShowModal(false);
   }

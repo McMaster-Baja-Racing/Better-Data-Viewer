@@ -19,7 +19,7 @@ const App = () => {
   const [fileInformation, setFileInformation] = useState([]);
 
   const handleFileTransfer = (e) => {
-    console.log(e);
+    console.log("APPJS", e);
     setFileInformation(e);
   }
 
