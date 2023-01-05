@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "convert-csv-to-json": "^1.4.0",
-    "react-hook-form": "^7.41.3",
-    "react-slideshow-image": "^4.0.5"
-  }
-}

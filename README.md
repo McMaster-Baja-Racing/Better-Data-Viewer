@@ -46,7 +46,7 @@ CSV/CSV+SQL/IDK - talk to prof
 ### Back End
 #### MANDATORY FEATURES:
 - ~~Connecting API, so front end can talk to back end, Should maybe conform to REST~~
-- Unify backend - gavin
+- Unify backend - gavin, Kai!
 - X-Y Graph
 - Added information for shift curve
 
