@@ -16,9 +16,3 @@
 .App-header > * {
   padding: 0rem;
 }
-
-.chart {
-  min-height: 50vh;
-  width: 80%;
-  background-color: whitesmoke;
-}

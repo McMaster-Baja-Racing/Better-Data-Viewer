@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export const Modal = ({ setShowModal, fileTransfer }) => {
 
@@ -15,9 +15,9 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   const dimensional = (n) => {
     let arr = [];
     for (let i = 0; i < n; i++) {
-      arr.push(<select className={i}>
+      arr.push(<select className={i} key={i}>
         {columns.map(column => (
-          <option value={JSON.stringify(column)}>{column.filename} - {column.header}</option>
+          <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
         ))}
       </select>);
     }
@@ -25,6 +25,11 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   }
 
   const handleSubmit = (e) => {
+    //Check if they are empty
+    if (document.getElementsByClassName(0)[0].value === "") {
+      alert("Please select a column for the x-axis.");
+      return;
+    }
     var selectColumns = [];
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
@@ -50,7 +55,11 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           console.log(response)
           // the data is in csv format, print it out
           response.text().then(text => {
-            console.log(text)
+            //Catch empty response
+            if (text === "") {
+              setFiles([])
+              return;
+            }
             //add each individual file to the files array
             setFiles(text.split(", "))
           });
@@ -67,7 +76,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     await new Promise((resolve, reject) => {
       var c = 0;
       for (const file of files) {
-        const result = fetch(`http://localhost:8080/files/${file}/info`)
+        fetch(`http://localhost:8080/files/${file}/info`)
           .then(response => {
   
             // the data is in csv format, print it out
@@ -83,7 +92,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
               //logic for the promise, increment each time a thread finishes
               c++;
-              if (c == files.length) {
+              if (c === files.length) {
                 resolve();
               }
   
@@ -108,16 +117,16 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           <button onClick={getHeaders}>Fetch headers!</button>
           {columns.map((column, index) => {
             return (
-              <div key={index}>
+              <div key={column.filename + column.header}>
                 {column.header} - {column.filename}
               </div>
             )
           })}
           
           <label htmlFor="Dimensions">Choose a Dimension:</label>
-          <select className="dimensions" onChange={handleSelect}>
+          <select className="dimensions" defaultValue={2} onChange={handleSelect}>
             <option value="1">1</option>
-            <option value="2" selected="selected">2</option>
+            <option value="2">2</option>
             <option value="3">3</option>
           </select>
           <div>

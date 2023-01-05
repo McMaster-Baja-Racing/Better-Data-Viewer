@@ -2,7 +2,6 @@ import '../styles/chart.css'
 import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-// import f gps speed
 import Papa from "papaparse";
 
 const Chart = ({ fileInformation }) => {
@@ -10,7 +9,6 @@ const Chart = ({ fileInformation }) => {
     const [chartOptions, setChartOptions] = useState({
         chart: {
             zoomType: 'x',
-            width: 1000,
         },
         title: {
             text: 'Forward GPS Speed'
@@ -64,17 +62,6 @@ const Chart = ({ fileInformation }) => {
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
 
-    const changeHandler = async (event) => {
-        //check if fileInformation is empty
-        if (fileInformation.length === 0) {
-            console.log("Pick file first")
-            return;
-        }
-
-        console.log(fileInformation)
-        getSingleFile(fileInformation[0].filename);
-    };
-
     const getSingleFile = async (filename) => {
         fetch(`http://localhost:8080/files/${filename}`)
             .then(response => {
@@ -82,12 +69,6 @@ const Chart = ({ fileInformation }) => {
                 //console.log(response.body) //use this to get a stream (efficient)
 
                 response.text().then(text => { //or this to get all text at once
-
-                    //trim the very first line
-                    var lines = text.split("\n");
-                    lines.shift();
-                    var trimmedText = lines.join("\n");
-                    //This is not the most efficient way to do this, a better way would be to use a stream (as above)
 
                     //Now convert such that each line is an array
                     Papa.parse(text, {
@@ -103,7 +84,15 @@ const Chart = ({ fileInformation }) => {
     }
 
     useEffect(() => {
-        // Format the data to be used in the chart (2D array), the format being an array of objects with a key and value
+        // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
+        if (fileInformation.length === 0) {
+            return;
+        }
+        getSingleFile(fileInformation[0].filename);
+    }, [fileInformation]);
+
+    useEffect(() => {
+        // Once necessary data is fetched, format it for the chart
         var formattedData = [];
 
         for (var i = 0; i < parsedData.length; i++) {
@@ -169,11 +158,44 @@ const Chart = ({ fileInformation }) => {
                 enabled: false
             }
         })
-    }, [parsedData]);
+    }, [parsedData])
+
+    function throttle(f, delay) {
+        let timer = 0;
+        return function(...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => f.apply(this, args), delay);
+        }
+    }
+
+    // Observe the chartContainer div and resize the chart when it changes size
+    // Keep in mind this will need to change when we have multiple charts
+    useEffect(() => {
+        const chartContainer = document.querySelector('.chartContainer');
+        const resizeObserver = new ResizeObserver(throttle(entries => {
+            for (let entry of entries) {
+                const cr = entry.contentRect;
+                //console.log('Element:', entry.target);
+                //console.log(`Element size: ${cr.width}px x ${cr.height}px`);
+                //console.log(`Element padding: ${cr.top}px ; ${cr.left}px`);
+                //console.log(Highcharts.charts)
+                for (var i = 0; i < Highcharts.charts.length; i++) {
+                    if (Highcharts.charts[i] !== undefined) {
+                        Highcharts.charts[i].setSize(cr.width, cr.height);
+                    }
+                }
+            }
+        }, 1));
+        //run observer with a delay
+        setTimeout(() => {
+            resizeObserver.observe(chartContainer);
+        }, 1000);
+    }, [])
 
     return (
-        <div className="container">
-            <button className='button' onClick={changeHandler}>Load Data</button>
+
+        <div className="chartContainer">
+
             <div className='chart'>
                 <HighchartsReact
                     highcharts={Highcharts}
@@ -181,6 +203,7 @@ const Chart = ({ fileInformation }) => {
                 />
             </div>
         </div>
+
     )
 }
 

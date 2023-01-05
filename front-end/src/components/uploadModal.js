@@ -3,15 +3,16 @@ import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import { useForm } from "react-hook-form";
-export const UploadModal = ({setShowUploadModal}) => {
-    // close the modal when clicking outside the modal.
+export const UploadModal = ({ setShowUploadModal }) => {
+  // close the modal when clicking outside the modal.
   const modalRef = useRef();
-  
+
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
       setShowUploadModal(false);
     }
   };
+  
   const { register, handleSubmit } = useForm();
   //This stuff is for backend API
   const onSubmit = async (data) => {
@@ -31,12 +32,13 @@ export const UploadModal = ({setShowUploadModal}) => {
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="small">
-            <h1>Upload Files</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" {...register("file")} />
+          <h1>Upload Files</h1>
 
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input type="file" {...register("file")} />
             <input type="submit" />
           </form>
+
         </div>
         <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
       </div>

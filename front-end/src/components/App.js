@@ -21,16 +21,14 @@ const App = () => {
   const openUploadModal = () => {
     setShowUploadModal(true);
   }
+
+  // All for information transfer between children and parent
   const [fileInformation, setFileInformation] = useState([]);
 
   const handleFileTransfer = (e) => {
-    console.log("APPJS", e);
+    console.log("here")
     setFileInformation(e);
   }
-
-  //This stuff is for backend API
-
-
 
   return (
     <>
