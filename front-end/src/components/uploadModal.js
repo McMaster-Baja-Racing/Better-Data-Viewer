@@ -19,13 +19,15 @@ export const UploadModal = ({ setShowUploadModal }) => {
     const formData = new FormData();
     formData.append("file", data.file[0]);
 
-    const res = await fetch("http://localhost:8080", {
-      mode: 'no-cors',
+    const res = fetch("http://localhost:8080/upload", {
       method: "POST",
       body: formData,
-    }).then((res) => res.json());
-    alert(JSON.stringify(`${res.message}, status: ${res.status}`));
-    setShowUploadModal(false);
+    }).then((res) => {
+      res.text().then(text => {
+        alert(JSON.stringify(`${text}, status: ${res.status}`))
+      })
+    });
+    //setShowUploadModal(false); Dont need to do this neccesarily
   };
 
   return ReactDom.createPortal(

@@ -120,6 +120,21 @@ public class FileUploadController {
 		return "redirect:/";
 	}
 
+	@PostMapping("/upload")
+	public ResponseEntity<String> handleFileUploadAPI(@RequestParam("file") MultipartFile file) {
+
+		storageService.store(file);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		//allow access control origin to all
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		//allow access control allow credentials to true
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+		
+		return ResponseEntity.ok().headers(responseHeaders).body(String.format("%s uploaded", file.getOriginalFilename()));
+	}
+	
+
 	@ExceptionHandler(StorageFileNotFoundException.class)
 	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
 		return ResponseEntity.notFound().build();
