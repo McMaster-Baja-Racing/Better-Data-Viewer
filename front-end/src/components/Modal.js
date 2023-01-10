@@ -50,7 +50,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   const [files, setFiles] = useState([])
 
   const listFiles = () => {
-    fetch('http://localhost:8080/files')
+    fetch(`http://${window.location.hostname}:8080/files`)
         .then(response => {
           console.log(response)
           // the data is in csv format, print it out
@@ -74,9 +74,10 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
     //wrap logic in promise
     await new Promise((resolve, reject) => {
+      //catch errors
       var c = 0;
       for (const file of files) {
-        fetch(`http://localhost:8080/files/${file}/info`)
+        fetch(`http://${window.location.hostname}:8080/files/${file}/info`)
           .then(response => {
   
             // the data is in csv format, print it out
@@ -97,6 +98,8 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
               }
   
             });
+          }).catch(e => {
+            alert(e)
           })
       }
     })

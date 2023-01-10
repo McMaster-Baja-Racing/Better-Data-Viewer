@@ -19,14 +19,16 @@ export const UploadModal = ({ setShowUploadModal }) => {
     const formData = new FormData();
     formData.append("file", data.file[0]);
 
-    const res = fetch("http://localhost:8080/upload", {
+    fetch(`http://${window.location.hostname}:8080/upload`, {
       method: "POST",
       body: formData,
     }).then((res) => {
       res.text().then(text => {
         alert(JSON.stringify(`${text}, status: ${res.status}`))
       })
-    });
+    }).catch(e => {
+      alert(e)
+    })
     //setShowUploadModal(false); Dont need to do this neccesarily
   };
 

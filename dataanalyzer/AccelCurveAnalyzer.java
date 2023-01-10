@@ -109,7 +109,6 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
     //gets start and end timestamps of accel runs based on GPS speed
      public static List<List<Integer>> getAccelTimestamp(List<List<String>> dataPoints) {
-        float rollingAv = 0;
         int initialTime = 0;
         int endTime = 0;
         float next = 0;

@@ -26,7 +26,8 @@ const App = () => {
   const [fileInformation, setFileInformation] = useState([]);
 
   const handleFileTransfer = (e) => {
-    console.log("here")
+    alert(JSON.stringify(window.location))
+    alert(window.location.hostname)
     setFileInformation(e);
   }
 

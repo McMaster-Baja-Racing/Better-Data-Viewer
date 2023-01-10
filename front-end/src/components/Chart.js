@@ -8,22 +8,15 @@ const Chart = ({ fileInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            zoomType: 'x',
+            type: 'line',
+            zoomType: 'x'
         },
         title: {
-            text: 'Forward GPS Speed'
+            text: 'Template'
         },
         subtitle: {
             text: document.ontouchstart === undefined ?
                 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-        },
-        xAxis: {
-            type: 'datetime'
-        },
-        yAxis: {
-            title: {
-                text: 'Speed (km/h)'
-            }
         },
         legend: {
             enabled: false
@@ -63,7 +56,7 @@ const Chart = ({ fileInformation }) => {
     const [parsedData, setParsedData] = useState([]);
 
     const getSingleFile = async (filename) => {
-        fetch(`http://localhost:8080/files/${filename}`)
+        fetch(`http://${window.location.hostname}:8080/files/${filename}`)
             .then(response => {
                 //console.log(response)
                 //console.log(response.body) //use this to get a stream (efficient)
@@ -93,69 +86,36 @@ const Chart = ({ fileInformation }) => {
 
     useEffect(() => {
         // Once necessary data is fetched, format it for the chart
+        if (fileInformation.length === 0) {
+            return;
+        }
         var formattedData = [];
 
         for (var i = 0; i < parsedData.length; i++) {
             formattedData.push([parseFloat(parsedData[i][fileInformation[0].header]), parseFloat(parsedData[i][fileInformation[1].header])]);
         }
         // Update the chart options with the new data
-        setChartOptions({
-            chart: {
-                type: 'scatter',
-                zoomType: 'xy'
-            },
-            title: {
-                text: 'Forward GPS Speed'
-            },
-            subtitle: {
-                text: document.ontouchstart === undefined ?
-                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-            },
-            xAxis: {
+        setChartOptions( (prevState) => {
+            return {
+                ...prevState,
+                series: [
+                    { data: formattedData }
+                ],
                 title: {
-                    text: 'Yeah'
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Speed (km/h)'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            plotOptions: {
-                area: {
-                    fillColor: {
-                        linearGradient: {
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 1
-                        },
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                        ]
-                    },
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    threshold: null
-                }
-            },
-            series: [
-                { data: formattedData }
-            ],
-            //disable accesibility
-            accessibility: {
-                enabled: false
+                    text: fileInformation[0].header + " vs " + fileInformation[1].header
+                },
+                xAxis: {
+                    title: {
+                        //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
+                        type: fileInformation[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+                        text: fileInformation[0].header
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: fileInformation[1].header
+                    }
+                },
             }
         })
     }, [parsedData])
@@ -185,11 +145,9 @@ const Chart = ({ fileInformation }) => {
                     }
                 }
             }
-        }, 1));
+        }, 1000));
         //run observer with a delay
-        setTimeout(() => {
-            resizeObserver.observe(chartContainer);
-        }, 1000);
+        resizeObserver.observe(chartContainer);
     }, [])
 
     return (

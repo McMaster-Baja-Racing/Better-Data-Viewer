@@ -30,7 +30,7 @@ CSV/CSV+SQL/IDK - talk to prof
 - Shift curve working best awesome
 - XY graph working with automatic axis names
 - Multiple graphs at same time - travis
-- Redo create graph for specifics - Kai
+- ~~Redo create graph for specifics - Kai~~
 
 #### MANDATORY BUG FIXES:
 - Offline front end
@@ -45,13 +45,14 @@ CSV/CSV+SQL/IDK - talk to prof
 
 ### Back End
 #### MANDATORY FEATURES:
-- ~~Connecting API, so front end can talk to back end, Should maybe conform to REST~~
+- ~~Connecting API, so front end can talk to back end, Should maybe conform to REST - Kai~~
 - Unify backend - gavin, Kai!
 - X-Y Graph
-- Added information for shift curve
+- Added information for shift curve -graham
 
 #### MANDATORY BUG FIXES:
 - Back-end round values
+- Mobile / Other device errors
 
 #### Would be cool:
 - Live data
