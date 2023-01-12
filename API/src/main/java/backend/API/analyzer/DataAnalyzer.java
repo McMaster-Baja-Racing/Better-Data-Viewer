@@ -1,4 +1,4 @@
-package dataanalyzer;
+package backend.API.analyzer;
 
 public abstract class DataAnalyzer {
     protected String[] filepaths;

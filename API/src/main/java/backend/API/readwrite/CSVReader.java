@@ -1,4 +1,4 @@
-package storage.csv;
+package backend.API.readwrite;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,18 +7,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import storage.Reader;
-
 public class CSVReader extends Reader {
-    // Constructor
-    public CSVReader(String filePath) {
-        super(filePath);
+    
+    public CSVReader(String filepath) {
+        super(filepath);
     }
 
+    @Override
     public List<List<String>> read() {
         // Initialize list and file
         List<List<String>> records = new ArrayList<List<String>>();
-        File file = new File(filePath);
+        File file = new File(filepath);
 
         if (file.exists()) {
             try {
@@ -40,9 +39,14 @@ public class CSVReader extends Reader {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
+    public Integer getSize() {
+        //make this efficient
+        List<List<String>> records = read();
+        return records.size();
+    }
 
+    // For testing purposes only
+    public static void main(String[] args) {
         String file = "data/F_GPS_LATITUDE.csv";
 
         CSVReader reader = new CSVReader(file);
