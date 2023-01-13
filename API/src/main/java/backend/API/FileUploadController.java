@@ -72,7 +72,6 @@ public class FileUploadController {
 				path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
 						"serveFile", path.getFileName().toString()).build().toUri().toString().substring(28))
 				.collect(Collectors.toList()).toString().substring(1).replace("]", ""));
-
 		// I added some trims to remove the exact address of the file from the response, and the brackets
 	}
 

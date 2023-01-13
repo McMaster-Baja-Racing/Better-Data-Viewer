@@ -1,3 +1,10 @@
+// Author: Kai Arseneau
+// This code is a file storage service implemented in Java using the Spring framework. 
+// The service implements the StorageService interface and uses the file system to store and retrieve files. 
+// The root location of the files is specified in a StorageProperties class that is passed to the constructor. 
+// The service provides methods to store, load, and delete files, as well as to read the headers of a file. 
+// Exceptions are thrown in the case of errors, such as IOException or StorageException, specified in the StorageException class.
+
 package backend.API.storage;
 
 import java.io.IOException;

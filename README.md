@@ -34,7 +34,8 @@ CSV/CSV+SQL/IDK - talk to prof
 
 #### MANDATORY BUG FIXES:
 - Offline front end
-- Slow after 1 use (data loading probably)
+- ~~Slow after 1 use (data loading probably)~~
+- Only accept .bin and .csv files
 
 #### Would be cool:
 - Make it ~pretty~
