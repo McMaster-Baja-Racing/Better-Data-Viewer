@@ -4,21 +4,25 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
 
-class BinaryTOCSV {
-    private static native void toCSV(String filename, String outputDir, boolean folder);
+import java.nio.file.Paths;
+import java.nio.file.Path;
+
+public class BinaryTOCSV {
+    
+    public static native void toCSV(String filename, String outputDir, boolean folder);
+
+    private static String relativePath = "/src/main/java/backend/API/binary_csv/";
 
     static {
         String path = System.getProperty("user.dir");
-        path += "\\binary_to_csv_lib.dll";
-        System.out.println("PATH  " + path);
-        System.load(path);
+        path += relativePath + "/binary_to_csv_lib.dll";
+        System.out.println("PATH  " + path.toString());
+        System.load(path.toString());
     }
 
     public static void main(String[] args) {
-        
-        String currentpath = System.getProperty("user.dir");
-        System.out.println("current path is: " + currentpath);
-        toCSV(currentpath+"\\151408.bin", currentpath + "\\..\\..\\..\\..\\..\\..\\upload-dir\\", false);
+        System.out.println(Paths.get("upload-dir").toAbsolutePath().toString() + "\\");
+        toCSV(Paths.get(relativePath + "/151408.bin").toAbsolutePath().toString(), Paths.get("API/upload-dir").toAbsolutePath().toString() + "\\", false);
         System.out.println("Done");
     }
 }

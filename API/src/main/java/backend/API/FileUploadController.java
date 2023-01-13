@@ -31,6 +31,9 @@ import backend.API.storage.StorageFileNotFoundException;
 import backend.API.storage.StorageProperties;
 import backend.API.storage.StorageService;
 
+import backend.API.binary_csv.BinaryTOCSV;
+
+
 @Controller
 public class FileUploadController {
 
@@ -39,6 +42,7 @@ public class FileUploadController {
 	@Autowired
 	public FileUploadController(StorageService storageService) {
 		this.storageService = storageService;
+		//System.load("X:/Code/Projects/Baja/Better-Data-Viewer/API/src/main/java/backend/API/binary_csv/binary_to_csv_lib.dll");
 	}
 
 	//This is the method that shows the upload form page
@@ -113,7 +117,15 @@ public class FileUploadController {
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {
 
-		storageService.store(file);
+		String filename = file.getOriginalFilename();
+		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
+			storageService.store(file);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
+			storageService.delete(filename);
+		} else {
+			storageService.store(file);
+		}
+
 		redirectAttributes.addFlashAttribute("message",
 				"You successfully uploaded " + file.getOriginalFilename() + "!");
 
@@ -123,7 +135,16 @@ public class FileUploadController {
 	@PostMapping("/upload")
 	public ResponseEntity<String> handleFileUploadAPI(@RequestParam("file") MultipartFile file) {
 
-		storageService.store(file);
+
+		//Check type of file, either CSV or bin
+		String filename = file.getOriginalFilename();
+		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
+			storageService.store(file);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
+			storageService.delete(filename);
+		} else {
+			storageService.store(file);
+		}
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		//allow access control origin to all

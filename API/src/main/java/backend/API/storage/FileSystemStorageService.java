@@ -109,4 +109,14 @@ public class FileSystemStorageService implements StorageService {
 		}
 		return headers;
 	}
+
+	@Override
+	public void delete(String filename) {
+		try {
+			Path file = load(filename);
+			Files.delete(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
