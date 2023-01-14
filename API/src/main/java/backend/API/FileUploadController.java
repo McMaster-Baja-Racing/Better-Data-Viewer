@@ -146,6 +146,28 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(file);
 	}
 
+
+	//This next method is for live data! Ideally you can feed it any of the basic filenames that the car might output
+	//And this will send the csv right back! Neat, huh?
+	@GetMapping("/live/{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveLiveFile(@PathVariable String filename) {
+
+		filename = "live_" + filename;
+
+		Resource file = storageService.loadAsResource(filename);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+		"attachment; filename=\"" + file.getFilename() + "\"");
+		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(file);
+	}
+
 	//This is the method that uploads the file
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,

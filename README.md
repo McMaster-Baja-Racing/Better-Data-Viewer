@@ -69,6 +69,18 @@ CSV/CSV+SQL/IDK - talk to prof
 I fixed this :) I'm so smart -- kai
 
 
+### Post laval ready changes
+All of these are not crucial, but are important for a better user experience
+
+#### Front End
+- Add more feedback, such as a loading screen, success messages, etc
+- Multiple graphs at same time
+
+#### Back End
+- Refactor code such that all files are only saved once, and only by the storage service
+- Incorporate folders into the storage service, have a folder for live data, separate for saved data, etc
+
+
 ## Sources
 https://jar-download.com/artifacts/org.openmuc/jrxtx/1.0.1/source-code/gnu/io/SerialPort.java
 https://www.thingsconnected.io/java-serial-tools/
