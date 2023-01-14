@@ -44,6 +44,9 @@ CSV/CSV+SQL/IDK - talk to prof
 - Warning for intense data (too big, too slow)
 - Cookies - Remember users previous setup and autoload
 
+#### Silly bugs
+- Resize graphs is going oddly, it kinda shapes itself sometimes? -- kai
+
 ### Back End
 #### MANDATORY FEATURES:
 - ~~Connecting API, so front end can talk to back end, Should maybe conform to REST - Kai~~
@@ -61,8 +64,9 @@ CSV/CSV+SQL/IDK - talk to prof
 - Single script to start it all
 
 ## Known errors
-https://stackoverflow.com/questions/43362431/uncaught-in-promise-syntaxerror-unexpected-end-of-json-input
-this is a whole big along with sending and receiving protocols. Im moving forward as is, since it works, but sends an error response.
+~~https://stackoverflow.com/questions/43362431/uncaught-in-promise-syntaxerror-unexpected-end-of-json-input~~
+~~this is a whole big along with sending and receiving protocols. Im moving forward as is, since it works, but sends an error response.~~
+I fixed this :) I'm so smart -- kai
 
 
 ## Sources
@@ -75,4 +79,11 @@ https://dzone.com/articles/how-to-read-a-big-csv-file-with-java-8-and-stream
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 pass info from child to parent - https://bobbyhadz.com/blog/react-pass-data-from-child-to-parent#:~:text=To%20pass%20data%20from%20child,the%20function%20in%20the%20Parent%20.
 spring boot stuff - https://spring.io/guides/gs/uploading-files/
+
+
+## Kai's list of possible changes
+- Backend API should have one method that can handle all file requests (any number of files, any number of analyzers)
+- DataAnalyzer uses Path instead of strings
+- DataAnalyzers can be called statically
+- REFACTOR EVERYTHING, all backend should go through storage service, not save it on its own...
 

@@ -31,12 +31,12 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         Reader readerSec = new CSVReader(filepaths[1]);
 
         System.out.println("Analysing Data");
-        List<List<String>> dataPoints = InterpolateAndRollAverage(readerPrim.read(), readerSec.read()); // longerFile is
-                                                                                                        // prim
-
+        List<List<String>> dataPoints = InterpolateAndRollAverage(readerPrim.read(), readerSec.read()); // longerFile isprim
         // Writing File
         System.out.println("Writing to file");
-        String output = "data/accelCurve.csv";
+
+        String path = System.getProperty("user.dir");
+        String output = path + "/upload-dir/accelCurve.csv"; // This is bad for concurrency
 
         Writer writer = new CSVWriter(output);
         writer.write(dataPoints);
