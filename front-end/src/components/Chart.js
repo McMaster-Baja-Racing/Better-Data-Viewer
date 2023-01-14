@@ -174,7 +174,6 @@ const Chart = ({ fileInformation }) => {
     return (
 
         <div className="chartContainer">
-            <button onClick={fetchAccelCurve}>Accel Curve</button>
             <div className='chart'>
                 <HighchartsReact
                     highcharts={Highcharts}

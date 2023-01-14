@@ -45,7 +45,7 @@ CSV/CSV+SQL/IDK - talk to prof
 - Cookies - Remember users previous setup and autoload
 
 #### Silly bugs
-- Resize graphs is going oddly, it kinda shapes itself sometimes? -- kai
+- ~~Resize graphs is going oddly, it kinda shapes itself sometimes? -- kai -- nvm this was instantly fixed -- kai~~
 
 ### Back End
 #### MANDATORY FEATURES:
