@@ -2,8 +2,38 @@
 import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
+import '../styles/dragNdrop.css';
 import { useForm } from "react-hook-form";
+import React, { useState } from 'react';
 export const UploadModal = ({ setShowUploadModal }) => {
+  const [dragActive, setDragActive] = React.useState(false);  
+  // handle drag events
+  const handleDrag = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+  // triggers when file is dropped
+  const handleDrop = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      // at least one file has been selected so do something
+      // handleFiles(e.dataTransfer.files);
+    }
+  };
+  const handleChange = function(e) {
+    e.preventDefault();
+    if (e.target.files && e.target.files[0]) {
+      // at least one file has been selected so do something
+      // handleFiles(e.target.files);
+    }
+  };  
   // close the modal when clicking outside the modal.
   const modalRef = useRef();
 
@@ -16,8 +46,11 @@ export const UploadModal = ({ setShowUploadModal }) => {
   const { register, handleSubmit } = useForm();
   //This stuff is for backend API
   const onSubmit = async (data) => {
+    //upload multiple files
     const formData = new FormData();
-    formData.append("file", data.file[0]);
+    for (let i = 0; i < data.file.length; i++) {
+      formData.append("file", data.file[i]);
+    }
 
     fetch(`http://${window.location.hostname}:8080/upload`, {
       method: "POST",
@@ -31,22 +64,26 @@ export const UploadModal = ({ setShowUploadModal }) => {
     })
     //setShowUploadModal(false); Dont need to do this neccesarily
   };
-
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="small">
-          <h1>Upload Files</h1>
-
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" {...register("file")} />
-            <input type="submit" />
+          <h1>Upload Files</h1>    
+          <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
+          <input type="file" id="input-file-upload" multiple={true} onChange={handleChange} {...register("file")} />
+            <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : "" }>
+            <div>
+                <p>Drag and drop your file here or</p>
+              </div>
+            </label>
+            { dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div> }
+          <input type="submit" />    
           </form>
-
         </div>
-        <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
+      <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
       </div>
     </div>,
     document.getElementById("portal")
   );
+  
 };
