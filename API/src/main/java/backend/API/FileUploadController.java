@@ -31,6 +31,12 @@ import backend.API.storage.StorageFileNotFoundException;
 import backend.API.storage.StorageProperties;
 import backend.API.storage.StorageService;
 
+import backend.API.binary_csv.BinaryTOCSV;
+
+import backend.API.analyzer.DataAnalyzer;
+import backend.API.analyzer.AccelCurveAnalyzer;
+
+
 @Controller
 public class FileUploadController {
 
@@ -58,17 +64,15 @@ public class FileUploadController {
 	@ResponseBody
 	public ResponseEntity<String> listUploadedFiles() throws IOException{
 
+		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
-		//allow access control origin to all
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		//allow access control allow credentials to true
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
 		return ResponseEntity.ok().headers(responseHeaders).body(storageService.loadAll().map(
 				path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
 						"serveFile", path.getFileName().toString()).build().toUri().toString().substring(28))
 				.collect(Collectors.toList()).toString().substring(1).replace("]", ""));
-
 		// I added some trims to remove the exact address of the file from the response, and the brackets
 	}
 
@@ -78,10 +82,9 @@ public class FileUploadController {
 	@ResponseBody
 	public ResponseEntity<String> listUploadedFile(@PathVariable String filename) throws IOException{
 
+		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
-		//allow access control origin to all
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		//allow access control allow credentials to true
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
 		String fileinfo = storageService.readHeaders(filename);
@@ -100,9 +103,66 @@ public class FileUploadController {
 
     	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
 		"attachment; filename=\"" + file.getFilename() + "\"");
-		//allow access control origin to all
+		//Set these headers so that you can access from LocalHost
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		//allow access control allow credentials to true
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(file);
+	}
+
+	//This method takes in two file names, and returns a single file of which is some combination of the two
+	//This should most likely be adapted to merge with the above method such that it can take in a variable number of files
+	@GetMapping("/filess/{primaryFile:.+}/{secondaryFile:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveFile(@PathVariable String primaryFile, @PathVariable String secondaryFile, @RequestParam(value = "analysis", required = false, defaultValue = "interpolate") String analysis) {
+
+		String[] files = {storageService.load(primaryFile).toAbsolutePath().toString(), storageService.load(secondaryFile).toAbsolutePath().toString()};
+		String[] analyses = analysis.split(",");
+		String filename = "";
+
+		DataAnalyzer da;
+		for (int i = 0; i < analyses.length; i++) {
+			if (analyses[i].equals("interpolate")) {
+				// This will be used when Graham finishes this, for now skip it
+			}
+			else if (analyses[i].equals("AccelCurve")) {
+				da = new AccelCurveAnalyzer(files);
+				filename = da.analyze();
+			}
+		}
+
+		filename = "AccelCurve.csv";
+
+		Resource file = storageService.loadAsResource(filename);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+    	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+		"attachment; filename=\"" + file.getFilename() + "\"");
+		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(file);
+	}
+
+
+	//This next method is for live data! Ideally you can feed it any of the basic filenames that the car might output
+	//And this will send the csv right back! Neat, huh?
+	@GetMapping("/live/{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveLiveFile(@PathVariable String filename) {
+
+		filename = "live_" + filename;
+
+		Resource file = storageService.loadAsResource(filename);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+		"attachment; filename=\"" + file.getFilename() + "\"");
+		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
 		return ResponseEntity.ok().headers(responseHeaders).body(file);
@@ -113,22 +173,38 @@ public class FileUploadController {
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {
 
-		storageService.store(file);
+		String filename = file.getOriginalFilename();
+		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
+			storageService.store(file);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
+			storageService.delete(filename);
+		} else {
+			storageService.store(file);
+		}
+
 		redirectAttributes.addFlashAttribute("message",
 				"You successfully uploaded " + file.getOriginalFilename() + "!");
 
 		return "redirect:/";
 	}
 
+	//Upload file without redirect
 	@PostMapping("/upload")
 	public ResponseEntity<String> handleFileUploadAPI(@RequestParam("file") MultipartFile file) {
 
-		storageService.store(file);
+		//Check type of file, either CSV or bin
+		String filename = file.getOriginalFilename();
+		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
+			storageService.store(file);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
+			storageService.delete(filename);
+		} else {
+			storageService.store(file);
+		}
 
+		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
-		//allow access control origin to all
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		//allow access control allow credentials to true
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 		
 		return ResponseEntity.ok().headers(responseHeaders).body(String.format("%s uploaded", file.getOriginalFilename()));

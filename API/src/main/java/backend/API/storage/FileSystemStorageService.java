@@ -1,3 +1,10 @@
+// Author: Kai Arseneau
+// This code is a file storage service implemented in Java using the Spring framework. 
+// The service implements the StorageService interface and uses the file system to store and retrieve files. 
+// The root location of the files is specified in a StorageProperties class that is passed to the constructor. 
+// The service provides methods to store, load, and delete files, as well as to read the headers of a file. 
+// Exceptions are thrown in the case of errors, such as IOException or StorageException, specified in the StorageException class.
+
 package backend.API.storage;
 
 import java.io.IOException;
@@ -43,10 +50,9 @@ public class FileSystemStorageService implements StorageService {
 			}
 			try (InputStream inputStream = file.getInputStream()) {
 				Files.copy(inputStream, destinationFile,
-					StandardCopyOption.REPLACE_EXISTING);
+						StandardCopyOption.REPLACE_EXISTING);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);
 		}
 	}
@@ -55,10 +61,9 @@ public class FileSystemStorageService implements StorageService {
 	public Stream<Path> loadAll() {
 		try {
 			return Files.walk(this.rootLocation, 1)
-				.filter(path -> !path.equals(this.rootLocation))
-				.map(this.rootLocation::relativize);
-		}
-		catch (IOException e) {
+					.filter(path -> !path.equals(this.rootLocation))
+					.map(this.rootLocation::relativize);
+		} catch (IOException e) {
 			throw new StorageException("Failed to read stored files", e);
 		}
 
@@ -76,14 +81,12 @@ public class FileSystemStorageService implements StorageService {
 			Resource resource = new UrlResource(file.toUri());
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
-			}
-			else {
+			} else {
 				throw new StorageFileNotFoundException(
 						"Could not read file: " + filename);
 
 			}
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			throw new StorageFileNotFoundException("Could not read file: " + filename, e);
 		}
 	}
@@ -97,8 +100,7 @@ public class FileSystemStorageService implements StorageService {
 	public void init() {
 		try {
 			Files.createDirectories(rootLocation);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new StorageException("Could not initialize storage", e);
 		}
 	}
@@ -113,5 +115,15 @@ public class FileSystemStorageService implements StorageService {
 			e.printStackTrace();
 		}
 		return headers;
+	}
+
+	@Override
+	public void delete(String filename) {
+		try {
+			Path file = load(filename);
+			Files.delete(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

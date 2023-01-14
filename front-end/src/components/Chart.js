@@ -76,6 +76,27 @@ const Chart = ({ fileInformation }) => {
             })
     }
 
+    const fetchAccelCurve = () => {
+        fetch(`http://${window.location.hostname}:8080/filess/F_RPM_PRIM.csv/F_GPS_SPEED.csv?analysis=AccelCurve`)
+            .then(response => {
+                console.log(response)
+
+                response.text().then(text => { //or this to get all text at once
+
+                    //Now convert such that each line is an array
+                    Papa.parse(text, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: function (results) {
+                            setParsedData(results.data);
+
+                        },
+                    })
+
+                })
+            })
+    }
+
     useEffect(() => {
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
         if (fileInformation.length === 0) {
@@ -153,7 +174,6 @@ const Chart = ({ fileInformation }) => {
     return (
 
         <div className="chartContainer">
-
             <div className='chart'>
                 <HighchartsReact
                     highcharts={Highcharts}
