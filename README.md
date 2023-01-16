@@ -1,27 +1,25 @@
 # Better-Data-Viewer
 This is the second iteration of a telemetry viewer headed by Kai, Travis, Ariel and Gavin
 
-## Philosphy
-The construction behind this application is meant to make use of the OPEN/CLOSE principle, as well as the other SOLID design choices.
+## How to run
+### Required tools:
 
-This will create a modular view, ready to have different items added on
+NodeJS and NPM
+JDK (probably)
 
-## Approach
-See `UML.drawio` for the class diagram
+### To setup:
 
-### Input
-Serial/Wifi/Idk - TBD By Ariel Wolle... smh --hurry_up_pls
+1. Clone repository.
+2. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command npm i
+3. Inside a terminal, navigate to the folder Better-Data-Viewer\API, then run the command ./mvnw spring-boot:run
+4. Set `JAVA_HOME` environment variable to the JDK path
+Setup complete!
 
-### Front-end
-We chose React as the front-end for its modularity, wide=spread support and client-side rendering in order to speed up not only our server 
-but interactions with the site and its different functions
+### To run:
 
-### Graphing
-We decided Highcharts was the way to go. Not only do they have very interactive graphing tools, but it has high compatibility with react and
-a lot of support, should be easy to use.
-
-### Storage
-CSV/CSV+SQL/IDK - talk to prof
+1. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command npm start. Do not close this terminal.
+2. In another terminal, navigate to the folder Better-Data-Viewer\API, then run the command ./mvnw spring-boot:run. Do not close this terminal
+3. Go to localhost:3000 to begin.
 
 ## TODO
 

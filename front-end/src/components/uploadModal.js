@@ -29,10 +29,13 @@ export const UploadModal = ({ setShowUploadModal }) => {
   };
 
   const handleChange = function (e) {
+    console.log(e)
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
       // at least one file has been selected so do something
       // handleFiles(e.target.files);
+      onSubmit(e.target.files);
+      console.log(e)
     }
   };
 
