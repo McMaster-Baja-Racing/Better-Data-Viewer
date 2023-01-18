@@ -5,21 +5,21 @@ This is the second iteration of a telemetry viewer headed by Kai, Travis, Ariel 
 ### Required tools:
 
 NodeJS and NPM
-JDK (probably)
+JDK
 
 ### To setup:
 
 1. Clone repository.
-2. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command npm i
-3. Inside a terminal, navigate to the folder Better-Data-Viewer\API, then run the command ./mvnw spring-boot:run
+2. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command `npm i`
+3. Inside a terminal, navigate to the folder Better-Data-Viewer\API, then run the command `./mvnw spring-boot:run`
 4. Set `JAVA_HOME` environment variable to the JDK path
 Setup complete!
 
 ### To run:
 
-1. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command npm start. Do not close this terminal.
-2. In another terminal, navigate to the folder Better-Data-Viewer\API, then run the command ./mvnw spring-boot:run. Do not close this terminal
-3. Go to localhost:3000 to begin.
+1. Inside a terminal, navigate to the folder `Better-Data-Viewer\front-end`, then run the command npm start. Do not close this terminal.
+2. In another terminal, navigate to the folder `Better-Data-Viewer\API`, then run the command `./mvnw spring-boot:run`. Do not close this terminal
+3. Go to `localhost:3000` to begin.
 
 ## TODO
 

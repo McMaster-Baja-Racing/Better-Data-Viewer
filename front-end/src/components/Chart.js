@@ -21,32 +21,6 @@ const Chart = ({ fileInformation }) => {
         legend: {
             enabled: false
         },
-        plotOptions: {
-            area: {
-                fillColor: {
-                    linearGradient: {
-                        x1: 0,
-                        y1: 0,
-                        x2: 0,
-                        y2: 1
-                    },
-                    stops: [
-                        [0, Highcharts.getOptions().colors[0]],
-                        [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                    ]
-                },
-                marker: {
-                    radius: 2
-                },
-                lineWidth: 1,
-                states: {
-                    hover: {
-                        lineWidth: 1
-                    }
-                },
-                threshold: null
-            }
-        },
         accessibility: {
             enabled: false
         }
@@ -156,17 +130,13 @@ const Chart = ({ fileInformation }) => {
         const resizeObserver = new ResizeObserver(throttle(entries => {
             for (let entry of entries) {
                 const cr = entry.contentRect;
-                //console.log('Element:', entry.target);
-                //console.log(`Element size: ${cr.width}px x ${cr.height}px`);
-                //console.log(`Element padding: ${cr.top}px ; ${cr.left}px`);
-                //console.log(Highcharts.charts)
                 for (var i = 0; i < Highcharts.charts.length; i++) {
                     if (Highcharts.charts[i] !== undefined) {
                         Highcharts.charts[i].setSize(cr.width, cr.height);
                     }
                 }
             }
-        }, 1000));
+        }, 100));
         //run observer with a delay
         resizeObserver.observe(chartContainer);
     }, [])

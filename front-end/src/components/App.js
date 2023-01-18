@@ -5,6 +5,7 @@ import { UploadModal } from "./uploadModal";
 import React, { useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
+import LiveChart from './LiveChart';
 
 
 const App = () => {
@@ -26,8 +27,6 @@ const App = () => {
   const [fileInformation, setFileInformation] = useState([]);
 
   const handleFileTransfer = (e) => {
-    alert(JSON.stringify(window.location))
-    alert(window.location.hostname)
     setFileInformation(e);
   }
 
@@ -40,7 +39,8 @@ const App = () => {
           {showModal ? <Modal setShowModal={setShowModal} fileTransfer={handleFileTransfer} /> : null}
           {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} fileTransfer={handleFileTransfer} /> : null}
           
-          <Chart fileInformation={fileInformation} />
+          {/* <Chart fileInformation={fileInformation} /> */}
+          <LiveChart/>
         </header>
 
       </div>

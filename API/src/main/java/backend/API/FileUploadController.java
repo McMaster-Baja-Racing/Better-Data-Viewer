@@ -209,7 +209,22 @@ public class FileUploadController {
 		
 		return ResponseEntity.ok().headers(responseHeaders).body(String.format("%s uploaded", file.getOriginalFilename()));
 	}
-	
+
+	//This method lets the backend know to collect live data and from which port
+	@PostMapping("/live")
+	public ResponseEntity<String> handleLiveUpload(@RequestParam("port") String port) {
+
+		//Set these headers so that you can access from LocalHost
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		//Start the live data collection
+		LiveDataCollector ldc = new LiveDataCollector(port);
+		ldc.start();
+
+		return ResponseEntity.ok().headers(responseHeaders).body(String.format("Live data collection started on port %s", port));
+	}
 
 	@ExceptionHandler(StorageFileNotFoundException.class)
 	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
