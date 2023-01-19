@@ -107,6 +107,31 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     setColumns(col);
     
   }
+  
+  const visibilityfunction = () => {
+    var x = document.getElementById("one");
+    var y = document.getElementById("two");
+    var z = document.getElementById("three");
+    x.style.display = "block";
+    y.style.display = "none";
+    z.style.display = "none";
+  }
+  const visibilityfunction2 = () => {
+    var x = document.getElementById("one");
+    var y = document.getElementById("two");
+    var z = document.getElementById("three");
+    x.style.display = "none";
+    y.style.display = "block";
+    z.style.display = "none";
+  }
+  const visibilityfunction3 = () => {
+    var x = document.getElementById("one");
+    var y = document.getElementById("two");
+    var z = document.getElementById("three");
+    x.style.display = "none";
+    y.style.display = "none";
+    z.style.display = "block";
+  }
   const pageOne = () => (
     <div>
       <input type="checkbox" id="liveData" name="liveData" value="yes"></input>
@@ -121,7 +146,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     )
   const pageTwo = () => (
     <div>
-          <p>{files}</p>
+          <p>{attachFiles()}{files}</p>
           <button onClick={() =>{visibilityfunction3();getHeaders()}} >Next</button>
         <button onClick={visibilityfunction}>Back</button>
     </div>
@@ -147,40 +172,28 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
             {dimensional(dimensions)}
           </div>
         <button onClick={visibilityfunction2}>Back</button>
+        <button onClick={handleSubmit}>Submit</button>
     </div>
   )
-  const visibilityfunction = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "block";
-    y.style.display = "none";
-    z.style.display = "none";
-  }
-  const visibilityfunction2 = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "none";
-    y.style.display = "block";
-    z.style.display = "none";
-  }
-  const visibilityfunction3 = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "none";
-    y.style.display = "none";
-    z.style.display = "block";
+
+  const attachFiles = () => {
+    //get the names of the files that are uploaded
+    files.map((file, index) => {
+      return (
+        <div key={file}>
+          {file}
+        </div>
+      )
+    })
   }
   //render the modal JSX in the portal div.
+
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div id = "one" >{pageOne()} </div>
         <div id = "two" hidden >{pageTwo()}</div>
         <div id = "three" hidden> {pageThree()}</div>
-        <button onClick={handleSubmit}>Submit</button>
         <button className="closeButton" onClick={() => setShowModal(false)}>X</button>
       </div>
     </div>,
