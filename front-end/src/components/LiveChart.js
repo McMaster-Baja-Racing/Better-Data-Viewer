@@ -24,9 +24,9 @@ const LiveChart = () => {
         }]
     });
 
-    const fetchData = async () => {
+    const fetchData = async (filename) => {
         // Fetch the data from the server
-        fetch("https://demo-live-data.highcharts.com/time-data.csv").then((response) => {
+        fetch(`http://${window.location.hostname}:8080/live/accelCurve.csv`).then((response) => {
             response.text().then((text) => {
                 console.log(text)
                 // Parse the data
@@ -34,7 +34,7 @@ const LiveChart = () => {
                     .trim()
                     .split("\n")
                     .map((line) => line.split(","))
-                    .map((line) => [Date.parse(line[0]), parseFloat(line[1])]);
+                    .map((line) => [parseFloat(line[0]), parseFloat(line[2])]);
                     
                 // Update the chart
                 setChartOptions({
@@ -49,7 +49,7 @@ const LiveChart = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             fetchData();
-        }, 1000);
+        }, 10000);
         return () => clearInterval(interval);
     }, []);
     

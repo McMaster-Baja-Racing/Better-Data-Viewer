@@ -38,9 +38,9 @@ const App = () => {
 
           {showModal ? <Modal setShowModal={setShowModal} fileTransfer={handleFileTransfer} /> : null}
           {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} fileTransfer={handleFileTransfer} /> : null}
-          
-          {/* <Chart fileInformation={fileInformation} /> */}
-          <LiveChart/>
+
+          <Chart fileInformation={fileInformation} />
+          {/* <LiveChart/> */}
         </header>
 
       </div>
