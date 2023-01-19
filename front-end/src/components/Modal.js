@@ -135,7 +135,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   const pageOne = () => (
     <div>
       <input type="checkbox" id="liveData" name="liveData" value="yes"></input>
-      <label for="liveData"> would you like Live Data</label><br></br>
+      <label htmlFor="liveData"> would you like Live Data</label><br></br>
       <select>
         <option value="actual value 1">X Y Graph</option>
         <option value="actual value 2">Temp</option>
@@ -146,7 +146,13 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     )
   const pageTwo = () => (
     <div>
-          <p>{attachFiles()}{files}</p>
+          {files.map((file) => {
+            return (
+              <div key={file}>
+                {file}
+              </div>
+            )
+          })}
           <button onClick={() =>{visibilityfunction3();getHeaders()}} >Next</button>
         <button onClick={visibilityfunction}>Back</button>
     </div>
