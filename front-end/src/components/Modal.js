@@ -116,20 +116,19 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         <option value="actual value 2">Temp</option>
         <option value="actual value 3">Temp</option>
       </select>
-      <button onClick={visibilityfunction2}>Next</button>
+      <button onClick={() =>{visibilityfunction2();listFiles()}} >Next</button>
     </div>
     )
   const pageTwo = () => (
     <div>
-      <button onClick={listFiles}>Fetch uploaded files!</button>
           <p>{files}</p>
-          <button onClick={visibilityfunction3}>Next</button>
+          <button onClick={() =>{visibilityfunction3();getHeaders()}} >Next</button>
         <button onClick={visibilityfunction}>Back</button>
     </div>
   )
   const pageThree = () => (
     <div>
-      <button onClick={getHeaders}>Fetch headers!</button>
+      <button >Fetch headers!</button>
           {columns.map((column, index) => {
             return (
               <div key={column.filename + column.header}>
