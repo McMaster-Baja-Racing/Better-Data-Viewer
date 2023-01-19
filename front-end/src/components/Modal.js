@@ -107,17 +107,29 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     setColumns(col);
     
   }
-
-
-  //render the modal JSX in the portal div.
-  return ReactDom.createPortal(
-    <div className="container" ref={modalRef} onClick={closeModal}>
-      <div className="modal">
-        <div className="small">
-          <button onClick={listFiles}>Fetch uploaded files!</button>
+  const pageOne = () => (
+    <div>
+      <input type="checkbox" id="liveData" name="liveData" value="yes"></input>
+      <label for="liveData"> would you like Live Data</label><br></br>
+      <select>
+        <option value="actual value 1">X Y Graph</option>
+        <option value="actual value 2">Temp</option>
+        <option value="actual value 3">Temp</option>
+      </select>
+      <button onClick={visibilityfunction2}>Next</button>
+    </div>
+    )
+  const pageTwo = () => (
+    <div>
+      <button onClick={listFiles}>Fetch uploaded files!</button>
           <p>{files}</p>
-
-          <button onClick={getHeaders}>Fetch headers!</button>
+          <button onClick={visibilityfunction3}>Next</button>
+        <button onClick={visibilityfunction}>Back</button>
+    </div>
+  )
+  const pageThree = () => (
+    <div>
+      <button onClick={getHeaders}>Fetch headers!</button>
           {columns.map((column, index) => {
             return (
               <div key={column.filename + column.header}>
@@ -135,10 +147,41 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           <div>
             {dimensional(dimensions)}
           </div>
-          
-          
-        </div>
-        <button onClick={handleSubmit}>Submit!</button>
+        <button onClick={visibilityfunction2}>Back</button>
+    </div>
+  )
+  const visibilityfunction = () => {
+    var x = document.getElementById("one");
+    var y = document.getElementById("two");
+    var z = document.getElementById("three");
+    x.style.display = "block";
+    y.style.display = "none";
+    z.style.display = "none";
+  }
+  const visibilityfunction2 = () => {
+    var x = document.getElementById("one");
+    var y = document.getElementById("two");
+    var z = document.getElementById("three");
+    x.style.display = "none";
+    y.style.display = "block";
+    z.style.display = "none";
+  }
+  const visibilityfunction3 = () => {
+    var x = document.getElementById("one");
+    var y = document.getElementById("two");
+    var z = document.getElementById("three");
+    x.style.display = "none";
+    y.style.display = "none";
+    z.style.display = "block";
+  }
+  //render the modal JSX in the portal div.
+  return ReactDom.createPortal(
+    <div className="container" ref={modalRef} onClick={closeModal}>
+      <div className="modal">
+        <div id = "one" >{pageOne()} </div>
+        <div id = "two" hidden >{pageTwo()}</div>
+        <div id = "three" hidden> {pageThree()}</div>
+        <button onClick={handleSubmit}>Submit</button>
         <button className="closeButton" onClick={() => setShowModal(false)}>X</button>
       </div>
     </div>,
