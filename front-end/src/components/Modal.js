@@ -76,7 +76,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     await new Promise((resolve, reject) => {
       //catch errors
       var c = 0;
-      for (const file of files) {
+      for (const file of selectedFiles) {
         fetch(`http://${window.location.hostname}:8080/files/${file}/info`)
           .then(response => {
   
@@ -93,7 +93,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
               //logic for the promise, increment each time a thread finishes
               c++;
-              if (c === files.length) {
+              if (c === selectedFiles.length) {
                 resolve();
               }
   
@@ -116,6 +116,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     y.style.display = "none";
     z.style.display = "none";
   }
+
   const visibilityfunction2 = () => {
     var x = document.getElementById("one");
     var y = document.getElementById("two");
@@ -124,6 +125,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     y.style.display = "block";
     z.style.display = "none";
   }
+
   const visibilityfunction3 = () => {
     var x = document.getElementById("one");
     var y = document.getElementById("two");
@@ -132,6 +134,22 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     y.style.display = "none";
     z.style.display = "block";
   }
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+  const filesCheck = () => {
+
+    files.map((file) => {
+      if (document.getElementById("Check_"+file).checked) {
+        var temp = selectedFiles;
+        temp.push(file);
+        setSelectedFiles(temp);
+      }
+      
+    }
+      )
+    getHeaders();
+  }
+
   const pageOne = () => (
     <div>
       <input type="checkbox" id="liveData" name="liveData" value="yes"></input>
@@ -149,49 +167,28 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           {files.map((file) => {
             return (
               <div key={file}>
-                {file}
+                <input type="checkbox" id={"Check_"+file} name={file} value={file}></input>
+                <label htmlFor="{file}"> {file}</label><br></br>
               </div>
             )
           })}
-          <button onClick={() =>{visibilityfunction3();getHeaders()}} >Next</button>
-        <button onClick={visibilityfunction}>Back</button>
+          <button onClick={visibilityfunction}>Back</button>
+          <button onClick={() =>{visibilityfunction3();filesCheck();}} >Next</button>
+        
     </div>
   )
   const pageThree = () => (
     <div>
-      <button >Fetch headers!</button>
-          {columns.map((column, index) => {
-            return (
-              <div key={column.filename + column.header}>
-                {column.header} - {column.filename}
-              </div>
-            )
-          })}
-          
-          <label htmlFor="Dimensions">Choose a Dimension:</label>
-          <select className="dimensions" defaultValue={2} onChange={handleSelect}>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
+          <p>Select Axis</p>
           <div>
             {dimensional(dimensions)}
           </div>
+          
         <button onClick={visibilityfunction2}>Back</button>
         <button onClick={handleSubmit}>Submit</button>
     </div>
   )
 
-  const attachFiles = () => {
-    //get the names of the files that are uploaded
-    files.map((file, index) => {
-      return (
-        <div key={file}>
-          {file}
-        </div>
-      )
-    })
-  }
   //render the modal JSX in the portal div.
 
   return ReactDom.createPortal(
