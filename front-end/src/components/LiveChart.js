@@ -4,6 +4,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
 const LiveChart = () => {
+    const [data2, setData2] = useState([5, 2, 1]);
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
@@ -19,8 +20,15 @@ const LiveChart = () => {
         accessibility: {
             enabled: false
         },
+        plotOptions: {
+            spline: {
+                marker: {
+                    enabled: false
+                }
+            }
+        },
         series: [{
-            data: []
+            data: data2
         }]
     });
 
@@ -37,9 +45,14 @@ const LiveChart = () => {
                     .map((line) => [parseFloat(line[0]), parseFloat(line[2])]);
                     
                 // Update the chart
+
+                //Add one more point to data2
+                var data3 = data2
+                data3.push(Math.random() * 4)
+                
                 setChartOptions({
                     series: [{
-                        data: data
+                        data: data2
                     }]
                 });
             })
@@ -49,7 +62,7 @@ const LiveChart = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             fetchData();
-        }, 10000);
+        }, 1000);
         return () => clearInterval(interval);
     }, []);
     
