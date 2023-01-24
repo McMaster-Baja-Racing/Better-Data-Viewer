@@ -30,8 +30,8 @@ public class Serial {
         FileWriter fw2 = null;
         try {
             //print the current path
-            fw = new FileWriter("../data/live_F_RPM_PRIM.csv");
-            fw2 = new FileWriter("../data/live_F_RPM_SEC.csv");
+            fw = new FileWriter("./upload-dir/live_F_RPM_PRIM.csv");
+            fw2 = new FileWriter("./upload-dir/live_F_RPM_SEC.csv");
             fw.write("Timestamp (ms),F_RPM_PRIM\n");
             fw2.write("Timestamp (ms),F_RPM_SEC\n");
         } catch (Exception e) { e.printStackTrace(); }
