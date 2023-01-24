@@ -41,6 +41,10 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         Writer writer = new CSVWriter(output);
         writer.write(dataPoints);
 
+        return output;
+
+        /* 
+
         List<List<Integer>> accelTimes = getAccelTimestamp(dataPoints);
         for (int i = 0; i < accelTimes.size(); i++) {
             System.out.println(accelTimes.get(i));
@@ -57,7 +61,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
             files[i] = "./data/run" + i + ".csv";
         }
 
-        return output;
+        return output;*/
     }
 
     // Currently it uses a sliding window + interpolation to get the dataRPM, and
