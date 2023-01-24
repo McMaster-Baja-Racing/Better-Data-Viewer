@@ -32,6 +32,7 @@ import backend.API.storage.StorageProperties;
 import backend.API.storage.StorageService;
 
 import backend.API.binary_csv.BinaryTOCSV;
+import backend.API.live.Serial;
 
 import backend.API.analyzer.DataAnalyzer;
 import backend.API.analyzer.AccelCurveAnalyzer;
@@ -217,10 +218,23 @@ public class FileUploadController {
 		//LiveDataCollector ldc = new LiveDataCollector(port);
 		//ldc.start();
 
+		//call the readLive function in Serial.java
+		if (Serial.exit == false) {
+			Serial.exit = true;
+		} else {
+			new Thread(() -> {
+				Serial.readLive();
+			}).start();
+		}
+		
+
+
+
 		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
 
 		return ResponseEntity.ok().headers(responseHeaders).body(String.format("Live data collection started on port %s", port));
 	}
