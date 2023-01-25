@@ -6,6 +6,7 @@ import '../styles/dragNdrop.css';
 import { useForm } from "react-hook-form";
 import React, { useState } from 'react';
 export const UploadModal = ({ setShowUploadModal }) => {
+  
   const [dragActive, setDragActive] = React.useState(false);
   // handle drag events
   const handleDrag = function (e) {
