@@ -34,25 +34,29 @@ const LiveChart = () => {
 
     const fetchData = async (filename) => {
         // Fetch the data from the server
-        fetch(`http://${window.location.hostname}:8080/live/accelCurve.csv`).then((response) => {
+        fetch(`http://${window.location.hostname}:8080/filess/live_F_RPM_PRIM.csv/live_F_RPM_SEC.csv?analysis=AccelCurve`).then((response) => {
             response.text().then((text) => {
-                console.log(text)
-                // Parse the data
+                //console.log(text)
+                // Parse the data 
+                // skip first line
                 const data = text
                     .trim()
                     .split("\n")
+                    .slice(1)
                     .map((line) => line.split(","))
-                    .map((line) => [parseFloat(line[0]), parseFloat(line[2])]);
+                    .map((line) => [parseFloat(line[2]), parseFloat(line[1])]);
                     
+
+                console.log(data)
                 // Update the chart
 
                 //Add one more point to data2
-                var data3 = data2
-                data3.push(Math.random() * 4)
+                // var data3 = data2
+                // data3.push(Math.random() * 4)
                 
                 setChartOptions({
                     series: [{
-                        data: data2
+                        data: data
                     }]
                 });
             })
@@ -62,7 +66,7 @@ const LiveChart = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             fetchData();
-        }, 1000);
+        }, 5000);
         return () => clearInterval(interval);
     }, []);
     
