@@ -48,7 +48,7 @@ Setup complete!
 ### Back End
 #### MANDATORY FEATURES:
 - ~~Connecting API, so front end can talk to back end, Should maybe conform to REST - Kai~~
-- Unify backend - gavin, Kai!
+- ~~Unify backend - gavin, Kai!~~
 - X-Y Graph
 - Added information for shift curve -graham
 

@@ -6,12 +6,10 @@ import { useState } from 'react';
 
 export const Modal = ({ setShowModal, fileTransfer }) => {
 
+  // Handles how many axes are selected
   const [dimensions, setDimensions] = useState(2);
 
-  const handleSelect = (e) => {
-    setDimensions(e.target.value);
-  };
-
+  // Generates the columns for the dropdowns
   const dimensional = (n) => {
     let arr = [];
     for (let i = 0; i < n; i++) {
@@ -24,6 +22,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     return arr;
   }
 
+  // Handles the submission of all data 
   const handleSubmit = (e) => {
     //Check if they are empty
     if (document.getElementsByClassName(0)[0].value === "") {
