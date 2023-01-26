@@ -215,8 +215,6 @@ public class FileUploadController {
 	@PostMapping("/live")
 	public ResponseEntity<String> handleLive(@RequestParam(name = "port", required = false) String port) {
 		//Start the live data collection
-		//LiveDataCollector ldc = new LiveDataCollector(port);
-		//ldc.start();
 
 		//call the readLive function in Serial.java
 		if (Serial.exit == false) {
@@ -226,8 +224,6 @@ public class FileUploadController {
 				Serial.readLive();
 			}).start();
 		}
-		
-
 
 
 		//Set these headers so that you can access from LocalHost
