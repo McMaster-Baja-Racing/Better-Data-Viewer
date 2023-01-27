@@ -213,8 +213,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         <div className="rowFlexBox">
           <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>
           <label htmlFor="linerInterp"> <h4>Linear Interpolation</h4> </label><br></br>
-        </div>
-        <div className="rowFlexBox">
           <input type="checkbox" id="AccelCurve" name="AccelCurve" value="true"></input>
           <label htmlFor="AccelCurve"> <h4>Accel Curve Analyzer</h4> </label><br></br>
         </div>
