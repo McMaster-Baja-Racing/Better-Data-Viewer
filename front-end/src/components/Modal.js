@@ -36,7 +36,8 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     fileTransfer({
       "columns": selectColumns,
       "live": document.getElementById("liveDataCheckbox").checked,
-      "analysis": getAnalysis()
+      "analysis": getAnalysis(),
+      "type": document.getElementById("graphTypeSelect").value
     })
     setShowModal(false);
   }
@@ -171,10 +172,10 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     <div className="colFlexBox">
       <div className="rowFlexBox">
         <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
-        <label htmlFor="liveData"> would you like Live Data</label><br></br>
+        <label htmlFor="liveData"> Would you like Live Data</label><br></br>
       </div>
       <div className="rowFlexBox">
-        <select>
+        <select id="graphTypeSelect">
           <option value="XYGraph">X-Y Graph</option>
           <option value="AccelCurve">AccelCurve</option>
           <option value="Gauge">1D Gauge</option>
