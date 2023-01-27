@@ -172,7 +172,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     <div className="colFlexBox">
       <div className="rowFlexBox">
         <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
-        <label htmlFor="liveData"> Would you like Live Data</label><br></br>
+        <label htmlFor="liveData"> <h2>Would you like Live Data?</h2> </label><br></br>
       </div>
       <div className="rowFlexBox">
         <select id="graphTypeSelect">
@@ -182,46 +182,46 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         </select>
       </div>
       <div className="rowFlexBox">
-      <button onClick={() => { showPage2(); listFiles(); } }>Next</button>
+      <button className="submitbutton" onClick={() => { showPage2(); listFiles(); } }>Next</button>
       </div>
     </div>
   )
   const pageTwo = () => (
     
     <div className="colFlexBox">
-      Choose Files
+      <h2>Choose Files</h2>
       {files.map((file) => {
         return (
           <div key={file}>
-            <input type="checkbox" id={"Check_" + file} name={file} value={file}></input>
+            <input type="checkbox" class="bigcheck" id={"Check_" + file} name={file} value={file}></input>
             <label htmlFor="{file}"> {file}</label><br></br>
           </div>
         )
       })}
       <div className="rowFlexBox">
-        <button onClick={showPage1}>Back</button>
-        <button onClick={() => { showPage3(); getSelectedFiles() }} >Next</button>
+        <button className="submitbutton" onClick={showPage1}>Back</button>
+        <button className="submitbutton" onClick={() => { showPage3(); getSelectedFiles() }} >Next</button>
       </div>
     </div>
   )
   const pageThree = () => (
     <div>
       <div className="colFlexBox">
-        Select Axis
+      <h2>Select Axis</h2>
         <div className="rowFlexBox">{columnGenerator(dimensions)}</div>
-        Select Analyzers
+        <h2>Select Analyzers</h2>
         <div className="rowFlexBox">
           <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>
-          <label htmlFor="linerInterp"> Linear Interpolation</label><br></br>
+          <label htmlFor="linerInterp"> <h4>Linear Interpolation</h4> </label><br></br>
         </div>
         <div className="rowFlexBox">
           <input type="checkbox" id="AccelCurve" name="AccelCurve" value="true"></input>
-          <label htmlFor="AccelCurve"> Accel Curve Analyzer</label><br></br>
+          <label htmlFor="AccelCurve"> <h4>Accel Curve Analyzer</h4> </label><br></br>
         </div>
       </div>
       <div className="rowFlexBox">
-        <button onClick={showPage2}>Back</button>
-        <button onClick={()=> {handleSubmit();}}>Submit</button>
+        <button className="submitbutton" onClick={showPage2}>Back</button>
+        <button className="submitbutton" onClick={()=> {handleSubmit();}}>Submit</button>
       </div>
     </div>
   )

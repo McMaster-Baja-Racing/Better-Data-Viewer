@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 
-public class BinaryTOCSV {
+public class BinaryToCSV {
     
     public static native void toCSV(String filename, String outputDir, boolean folder);
 
