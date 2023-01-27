@@ -37,6 +37,7 @@
     border-radius: 5px;
     position: relative;
     animation: animate 0.3s;
+    min-width: 35rem;
   }
   .small{
     display: flex;
@@ -56,6 +57,18 @@
     outline: none;
     border-radius: 2px;
     cursor: pointer;
+  }
+  .colFlexBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+  }
+  .rowFlexBox{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: left;
   }
   @keyframes animate {
     from {

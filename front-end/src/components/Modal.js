@@ -36,7 +36,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     fileTransfer({
       "columns": selectColumns,
       "live": document.getElementById("liveDataCheckbox").checked,
-      "analysis": "none" //TODO: add analysis
+      "analysis": getAnalysis()
     })
     setShowModal(false);
   }
@@ -104,15 +104,15 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   // Method for checking which files are selected
   const [selectedFiles, setSelectedFiles] = useState([]);
   const getSelectedFiles = async () => {
-    var temp = [];
+    var filesSelected = [];
 
     files.forEach(file => {
       if (document.getElementById("Check_" + file).checked) {
-        temp.push(file);
+        filesSelected.push(file);
       }
     })
 
-    setSelectedFiles(temp);
+    setSelectedFiles(filesSelected);
   }
 
   // Handles fetching of headers based on selected files, once the files are selected
@@ -154,20 +154,41 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     getHeaders();
   }, [selectedFiles]);
 
+  // Handles the selection of the analysis
+  const getAnalysis = () => {
+    var analNames = ["linerInterp","AccelCurve"];
+    var selectedAnals = [];
+    for (var i = 0; i < analNames.length; i++) {
+      if (document.getElementById(analNames[i]).checked) {
+        selectedAnals.push(analNames[i]);
+      }
+    }
+    console.log(selectedAnals)
+    return selectedAnals;
+  }
+
   const pageOne = () => (
-    <div>
-      <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
-      <label htmlFor="liveData"> would you like Live Data</label><br></br>
-      <select>
-        <option value="XYGraph">X-Y Graph</option>
-        <option value="AccelCurve">AccelCurve</option>
-        <option value="Gauge">1D Gauge</option>
-      </select>
-      <button onClick={() => { showPage2(); listFiles() }} >Next</button>
+    <div className="colFlexBox">
+      <div className="rowFlexBox">
+        <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
+        <label htmlFor="liveData"> would you like Live Data</label><br></br>
+      </div>
+      <div className="rowFlexBox">
+        <select>
+          <option value="XYGraph">X-Y Graph</option>
+          <option value="AccelCurve">AccelCurve</option>
+          <option value="Gauge">1D Gauge</option>
+        </select>
+      </div>
+      <div className="rowFlexBox">
+      <button onClick={() => { showPage2(); listFiles(); } }>Next</button>
+      </div>
     </div>
   )
   const pageTwo = () => (
-    <div>
+    
+    <div className="colFlexBox">
+      Choose Files
       {files.map((file) => {
         return (
           <div key={file}>
@@ -176,20 +197,31 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           </div>
         )
       })}
-      <button onClick={showPage1}>Back</button>
-      <button onClick={() => { showPage3(); getSelectedFiles() }} >Next</button>
-
+      <div className="rowFlexBox">
+        <button onClick={showPage1}>Back</button>
+        <button onClick={() => { showPage3(); getSelectedFiles() }} >Next</button>
+      </div>
     </div>
   )
   const pageThree = () => (
     <div>
-      <p>Select Axis</p>
-      <div>
-        {columnGenerator(dimensions)}
+      <div className="colFlexBox">
+        Select Axis
+        <div className="rowFlexBox">{columnGenerator(dimensions)}</div>
+        Select Analyzers
+        <div className="rowFlexBox">
+          <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>
+          <label htmlFor="linerInterp"> Linear Interpolation</label><br></br>
+        </div>
+        <div className="rowFlexBox">
+          <input type="checkbox" id="AccelCurve" name="AccelCurve" value="true"></input>
+          <label htmlFor="AccelCurve"> Accel Curve Analyzer</label><br></br>
+        </div>
       </div>
-
-      <button onClick={showPage2}>Back</button>
-      <button onClick={handleSubmit}>Submit</button>
+      <div className="rowFlexBox">
+        <button onClick={showPage2}>Back</button>
+        <button onClick={()=> {handleSubmit();}}>Submit</button>
+      </div>
     </div>
   )
 
