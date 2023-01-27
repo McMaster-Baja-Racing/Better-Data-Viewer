@@ -25,10 +25,16 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
     @Override
     public String analyze() {
-        System.out.println("Combining " + filepaths[0] + " and " + filepaths[1]);
+        System.out.println("Combining \"" + filepaths[0] + "\" and \"" + filepaths[1] + "\"");
 
         Reader readerPrim = new CSVReader(filepaths[0]);
         Reader readerSec = new CSVReader(filepaths[1]);
+
+        if (readerPrim.getSize() < 0) {
+            return null;
+        } else if (readerSec.getSize() < 0) {
+            return null;
+        }
 
         System.out.println("Analysing Data");
         List<List<String>> dataPoints = InterpolateAndRollAverage(readerPrim.read(), readerSec.read()); // longerFile isprim

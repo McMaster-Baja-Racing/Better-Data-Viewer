@@ -7,44 +7,39 @@ import Chart from './Chart';
 import Topbar from './Topbar';
 import LiveChart from './LiveChart';
 
-
 const App = () => {
 
   // All for create graph popup
   const [showModal, setShowModal] = useState(false);
-
   const openCreateGraphModal = () => {
     setShowModal(true);
   }
-    // All for upload popup
+  // All for upload popup
   const [showUploadModal, setShowUploadModal] = useState(false);
-
   const openUploadModal = () => {
     setShowUploadModal(true);
   }
 
   // All for information transfer between children and parent
-  const [fileInformation, setFileInformation] = useState([]);
-
+  const [fileInformation, setFileInformation] = useState({ columns: [], live: false, analysis: "none" });
   const handleFileTransfer = (e) => {
+    console.log(e)
     setFileInformation(e);
   }
 
   return (
-    <>
-      <div className="App">
-      <Topbar openModal={openCreateGraphModal} openModal1={openUploadModal}/>
-        <header className="App-header">
+    <div className="App">
+      <Topbar openModal={openCreateGraphModal} openModal1={openUploadModal} />
+      <header className="App-header">
 
-          {showModal ? <Modal setShowModal={setShowModal} fileTransfer={handleFileTransfer} /> : null}
-          {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} fileTransfer={handleFileTransfer} /> : null}
+        {showModal ? <Modal setShowModal={setShowModal} fileTransfer={handleFileTransfer} /> : null}
+        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} fileTransfer={handleFileTransfer} /> : null}
 
-          {/* <Chart fileInformation={fileInformation} /> */}
-          <LiveChart/>
-        </header>
+        {fileInformation.live ? <LiveChart fileInformation={fileInformation.columns}/> : <Chart fileInformation={fileInformation.columns} />}
 
-      </div>
-    </>
+      </header>
+
+    </div>
   );
 }
 

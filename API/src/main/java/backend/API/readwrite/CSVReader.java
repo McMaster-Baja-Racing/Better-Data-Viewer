@@ -29,17 +29,23 @@ public class CSVReader extends Reader {
                 reader.close();
                 return records;
             } catch (Exception e) {
-                System.err.format("Exception occurred trying to read '%s'.", file);
+                System.err.format("Exception occurred trying to read '%s'.\n", file);
                 e.printStackTrace();
                 return null;
             }
         } else {
-            System.err.format("'%s' does not exist.", file);
+            System.err.format("'%s' does not exist.\n", file);
             return null;
         }
     }
 
     public Integer getSize() {
+        // Check if file exists
+        File file = new File(filepath);
+        if (!file.exists()) {
+            System.err.format("'%s' does not exist.\n", file);
+            return -1;
+        }
         //make this efficient
         List<List<String>> records = read();
         return records.size();

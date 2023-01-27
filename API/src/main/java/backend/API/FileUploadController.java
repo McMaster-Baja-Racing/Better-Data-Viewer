@@ -97,7 +97,7 @@ public class FileUploadController {
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-
+		// Catch the exception if the file is not found
 		Resource file = storageService.loadAsResource(filename);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -225,12 +225,10 @@ public class FileUploadController {
 			}).start();
 		}
 
-
 		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
 
 		return ResponseEntity.ok().headers(responseHeaders).body(String.format("Live data collection started on port %s", port));
 	}
