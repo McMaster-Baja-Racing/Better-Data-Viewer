@@ -117,10 +117,13 @@ public class FileUploadController {
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String primaryFile, @PathVariable String secondaryFile, @RequestParam(value = "analysis", required = false, defaultValue = "interpolate") String analysis) {
 
+		// Load both files into an array
 		String[] files = {storageService.load(primaryFile).toAbsolutePath().toString(), storageService.load(secondaryFile).toAbsolutePath().toString()};
+		// Split the analysis string into an array of analyzers
 		String[] analyses = analysis.split(",");
 		String filename = "";
 
+		// Loop through the analyzers and run them on the data
 		DataAnalyzer da;
 		for (int i = 0; i < analyses.length; i++) {
 			if (analyses[i].equals("interpolate")) {
