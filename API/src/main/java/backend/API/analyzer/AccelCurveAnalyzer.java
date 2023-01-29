@@ -216,8 +216,8 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         Date start = new Date();
 
         String[] files = new String[2];
-        files[0] = "./data/F_RPM_PRIM.csv";
-        files[1] = "./data/F_GPS_SPEED.csv";
+        files[0] = "X:/Code/Projects/Baja/Better-Data-Viewer/data/F_RPM_PRIM.csv";
+        files[1] = "X:/Code/Projects/Baja/Better-Data-Viewer/data/F_GPS_SPEED.csv";
         DataAnalyzer d = new AccelCurveAnalyzer(files);
 
         String dataPoints = d.analyze();

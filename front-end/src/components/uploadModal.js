@@ -75,7 +75,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
         <div className="small">
           <h1>Upload Files</h1>
           <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" id="input-file-upload" multiple={true} onChange={handleChange} {...register("file")} />
+            <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} onChange={handleChange} {...register("file")} />
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : ""}>
               <div>
                 <p>Drag and drop your file here or click to browse your files</p>

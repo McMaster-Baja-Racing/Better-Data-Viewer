@@ -8,7 +8,7 @@ const Chart = ({ fileInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            type: 'spline',
+            type: 'line',
             zoomType: 'x'
         },
         title: {
@@ -97,7 +97,7 @@ const Chart = ({ fileInformation }) => {
         var formattedData = [];
 
         for (var i = 0; i < parsedData.length; i++) {
-            formattedData.push([parseFloat(parsedData[i][fileInformation.columns[0].header]), parseFloat(parsedData[i][fileInformation.columns[1].header])]);
+            formattedData.push([Math.round(parseFloat(parsedData[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][fileInformation.columns[1].header])*100.0)/100]);
         }
         // Update the chart options with the new data
         setChartOptions( (prevState) => {

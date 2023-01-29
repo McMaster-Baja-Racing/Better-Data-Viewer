@@ -33,7 +33,7 @@ Setup complete!
 #### MANDATORY BUG FIXES:
 - Offline front end
 - ~~Slow after 1 use (data loading probably)~~
-- Only accept .bin and .csv files
+- ~~Only accept .bin and .csv files~~ - Kai
 
 #### Would be cool:
 - Make it ~pretty~ (working on it)
@@ -59,12 +59,13 @@ Setup complete!
 #### Would be cool:
 - Live data
 - More dynamic parameters
-- Single script to start it all
+- ~~Single script to start it all - gavin~~
 
 ## Known errors
-~~https://stackoverflow.com/questions/43362431/uncaught-in-promise-syntaxerror-unexpected-end-of-json-input~~
-~~this is a whole big along with sending and receiving protocols. Im moving forward as is, since it works, but sends an error response.~~
+- ~~https://stackoverflow.com/questions/43362431/uncaught-in-promise-syntaxerror-unexpected-end-of-json-input~~
+- ~~this is a whole big along with sending and receiving protocols. Im moving forward as is, since it works, but sends an error response.~~
 I fixed this :) I'm so smart -- kai
+- Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
 
 
 ### Post laval ready changes
