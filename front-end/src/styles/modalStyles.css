@@ -33,7 +33,7 @@
     background: white;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     border-radius: 5px;
     position: relative;
     animation: animate 0.3s;
