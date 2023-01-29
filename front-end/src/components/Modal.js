@@ -193,7 +193,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       {files.map((file) => {
         return (
           <div key={file}>
-            <input type="checkbox" class="bigcheck" id={"Check_" + file} name={file} value={file}></input>
+            <input type="checkbox" className="bigcheck" id={"Check_" + file} name={file} value={file}></input>
             <label htmlFor="{file}"> {file}</label><br></br>
           </div>
         )

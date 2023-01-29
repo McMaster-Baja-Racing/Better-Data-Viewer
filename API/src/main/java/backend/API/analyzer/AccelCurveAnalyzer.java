@@ -58,6 +58,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
             e.printStackTrace();
         }
 
+
         String[] files = new String[accelTimes.size()];
         for (int i = 0; i < accelTimes.size(); i++) {
             files[i] = "./data/run" + i + ".csv";
@@ -153,7 +154,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
             if (curr >= 35 && !inAccel) {
                 inAccel = true;
                 next = Float.parseFloat(dataPoints.get(i).get(2));
-                while (next >= curr) {
+                while (next >= curr && i < dataPoints.size() - 1) {
                     i++;
                     curr = next;
                     next = Float.parseFloat(dataPoints.get(i).get(2));
@@ -162,11 +163,11 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
                 }
 
                 int j = i;
-                while (curr > 2.5) {
+                while (curr > 2.5 && j > 1) {
                     j--;
                     curr = Float.parseFloat(dataPoints.get(j).get(2));
                 }
-                initialTime = Integer.parseInt(dataPoints.get(j - 100).get(0));
+                initialTime = Integer.parseInt(dataPoints.get(j).get(0));
 
                 timestamp.add(Arrays.asList(initialTime, endTime));
 
@@ -216,8 +217,8 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         Date start = new Date();
 
         String[] files = new String[2];
-        files[0] = "X:/Code/Projects/Baja/Better-Data-Viewer/data/F_RPM_PRIM.csv";
-        files[1] = "X:/Code/Projects/Baja/Better-Data-Viewer/data/F_GPS_SPEED.csv";
+        files[0] = "./data/F_RPM_PRIM.csv";
+        files[1] = "./data/F_GPS_SPEED.csv";
         DataAnalyzer d = new AccelCurveAnalyzer(files);
 
         String dataPoints = d.analyze();
