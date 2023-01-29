@@ -17,7 +17,7 @@ public class Serial {
     public static volatile boolean exit = true;
 
     public static void readLive() {
-        String port = "COM5";
+        String port = "COM4";
         SerialPort comPort = SerialPort.getCommPort(port);
         comPort.setBaudRate(115200);
         comPort.openPort();

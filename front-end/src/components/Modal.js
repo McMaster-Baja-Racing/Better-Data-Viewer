@@ -120,6 +120,23 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   const [columns, setColumns] = useState([]);
   useEffect(() => {
     const getHeaders = async () => {
+      if (document.getElementById("liveDataCheckbox").checked) {
+        setColumns([
+          {
+            "header": "F_GPS_SPEED.csv",
+            "filename": "F_GPS_SPEED.csv"
+          },
+          {
+            "header": "F_RPM_PRIM.csv",
+            "filename": "F_RPM_PRIM.csv"
+          },
+          {
+            "header": "F_RPM_SEC.csv",
+            "filename": "F_RPM_SEC.csv"
+          }
+        ])
+        return;
+      }
       //Columns should have an additional attribute for the file name
       var col = [];
 

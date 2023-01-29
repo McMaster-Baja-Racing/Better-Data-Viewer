@@ -30,9 +30,11 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         Reader readerPrim = new CSVReader(filepaths[0]);
         Reader readerSec = new CSVReader(filepaths[1]);
 
-        if (readerPrim.getSize() < 0) {
+        if (readerPrim.getSize() < 31) {
+            System.out.println("File 1 (Primary RPM) is too small");
             return null;
-        } else if (readerSec.getSize() < 0) {
+        } else if (readerSec.getSize() < 31) {
+            System.out.println("File 2 (Secondary RPM) is too small");
             return null;
         }
 
