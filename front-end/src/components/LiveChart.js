@@ -4,7 +4,6 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
 const LiveChart = () => {
-    const [data2, setData2] = useState([5, 2, 1]);
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
@@ -28,7 +27,7 @@ const LiveChart = () => {
             }
         },
         series: [{
-            data: data2
+            data: [5, 2, 1]
         }]
     });
 
@@ -36,23 +35,13 @@ const LiveChart = () => {
         // Fetch the data from the server
         fetch(`http://${window.location.hostname}:8080/filess/live_F_RPM_PRIM.csv/live_F_RPM_SEC.csv?analysis=AccelCurve`).then((response) => {
             response.text().then((text) => {
-                //console.log(text)
-                // Parse the data 
-                // skip first line
+                // Parse the data into an array of arrays
                 const data = text
                     .trim()
                     .split("\n")
                     .slice(1)
                     .map((line) => line.split(","))
                     .map((line) => [parseFloat(line[2]), parseFloat(line[1])]);
-                    
-
-                console.log(data)
-                // Update the chart
-
-                //Add one more point to data2
-                // var data3 = data2
-                // data3.push(Math.random() * 4)
                 
                 setChartOptions({
                     series: [{
@@ -66,7 +55,7 @@ const LiveChart = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             fetchData();
-        }, 5000);
+        }, 3000);
         return () => clearInterval(interval);
     }, []);
     
@@ -78,7 +67,6 @@ const LiveChart = () => {
             timer = setTimeout(() => f.apply(this, args), delay);
         }
     }
-
     // Observe the chartContainer div and resize the chart when it changes size
     // Keep in mind this will need to change when we have multiple charts
     useEffect(() => {
@@ -98,7 +86,6 @@ const LiveChart = () => {
     }, [])
 
     return (
-
         <div className="chartContainer">
             <div className='chart'>
                 <HighchartsReact
@@ -107,7 +94,6 @@ const LiveChart = () => {
                 />
             </div>
         </div>
-
     )
 }
 

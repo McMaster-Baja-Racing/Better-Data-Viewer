@@ -97,7 +97,7 @@ public class FileUploadController {
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-
+		// Catch the exception if the file is not found
 		Resource file = storageService.loadAsResource(filename);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -117,10 +117,13 @@ public class FileUploadController {
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String primaryFile, @PathVariable String secondaryFile, @RequestParam(value = "analysis", required = false, defaultValue = "interpolate") String analysis) {
 
+		// Load both files into an array
 		String[] files = {storageService.load(primaryFile).toAbsolutePath().toString(), storageService.load(secondaryFile).toAbsolutePath().toString()};
+		// Split the analysis string into an array of analyzers
 		String[] analyses = analysis.split(",");
 		String filename = "";
 
+		// Loop through the analyzers and run them on the data
 		DataAnalyzer da;
 		for (int i = 0; i < analyses.length; i++) {
 			if (analyses[i].equals("interpolate")) {
@@ -215,8 +218,6 @@ public class FileUploadController {
 	@PostMapping("/live")
 	public ResponseEntity<String> handleLive(@RequestParam(name = "port", required = false) String port) {
 		//Start the live data collection
-		//LiveDataCollector ldc = new LiveDataCollector(port);
-		//ldc.start();
 
 		//call the readLive function in Serial.java
 		if (Serial.exit == false) {
@@ -226,15 +227,11 @@ public class FileUploadController {
 				Serial.readLive();
 			}).start();
 		}
-		
-
-
 
 		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
 
 		return ResponseEntity.ok().headers(responseHeaders).body(String.format("Live data collection started on port %s", port));
 	}

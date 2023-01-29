@@ -25,10 +25,16 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
     @Override
     public String analyze() {
-        System.out.println("Combining " + filepaths[0] + " and " + filepaths[1]);
+        System.out.println("Combining \"" + filepaths[0] + "\" and \"" + filepaths[1] + "\"");
 
         Reader readerPrim = new CSVReader(filepaths[0]);
         Reader readerSec = new CSVReader(filepaths[1]);
+
+        if (readerPrim.getSize() < 0) {
+            return null;
+        } else if (readerSec.getSize() < 0) {
+            return null;
+        }
 
         System.out.println("Analysing Data");
         List<List<String>> dataPoints = InterpolateAndRollAverage(readerPrim.read(), readerSec.read()); // longerFile isprim
@@ -40,10 +46,6 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
         Writer writer = new CSVWriter(output);
         writer.write(dataPoints);
-
-        return output;
-
-        /* 
 
         List<List<Integer>> accelTimes = getAccelTimestamp(dataPoints);
         for (int i = 0; i < accelTimes.size(); i++) {
@@ -61,7 +63,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
             files[i] = "./data/run" + i + ".csv";
         }
 
-        return output;*/
+        return output;
     }
 
     // Currently it uses a sliding window + interpolation to get the dataRPM, and
@@ -188,7 +190,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         for (int i = 0; i < accelTimes.size(); i++) {
             int initialTime = accelTimes.get(i).get(0);
             int endTime = accelTimes.get(i).get(1);
-            String fileName = "./data/run" + Integer.toString(i) + ".csv";
+            String fileName = "./upload-dir/run" + Integer.toString(i) + ".csv";
             File file = new File(fileName);
             if (!file.exists()) {
                 file.createNewFile();

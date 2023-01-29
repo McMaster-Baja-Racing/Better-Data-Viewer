@@ -26,7 +26,7 @@ Setup complete!
 ### Front End
 #### MANDATORY FEATURES:
 - Shift curve working best awesome
-- XY graph working with automatic axis names
+- ~~XY graph working with automatic axis names~~
 - Multiple graphs at same time - travis
 - ~~Redo create graph for specifics - Kai~~
 
@@ -36,8 +36,8 @@ Setup complete!
 - Only accept .bin and .csv files
 
 #### Would be cool:
-- Make it ~pretty~
-- Re-sizeable, move-able, etc (Z-index)
+- Make it ~pretty~ (working on it)
+- ~~Re-sizeable~~, move-able, etc (Z-index)
 - Live data
 - Warning for intense data (too big, too slow)
 - Cookies - Remember users previous setup and autoload
