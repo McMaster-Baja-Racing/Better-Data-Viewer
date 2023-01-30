@@ -31,7 +31,7 @@ Setup complete!
 - ~~Redo create graph for specifics - Kai~~
 
 #### MANDATORY BUG FIXES:
-- Offline front end
+- ~~Offline front end~~ - ez
 - ~~Slow after 1 use (data loading probably)~~
 - ~~Only accept .bin and .csv files~~ - Kai
 
@@ -67,6 +67,13 @@ Setup complete!
 I fixed this :) I'm so smart -- kai
 - Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
 
+## DRIVEDAY 2023-01-30
+- GAVIN Round to 2 in ddl rust
+- GAVIN Serial connects properly without unplugging
+- KAI Get all the analyzers (intepolate, roll average, etc) working
+- KAI Boost performance of the highcharts graph using BOOST
+- TRAVIS Scroll through all available files instead of listing them all
+- KAI + GAVIN + TRAVIS + SALMA Optimize the frontend to be more user friendly and pass data properly to live / saved data (Specifically for the dyno demo).o
 
 ### Post laval ready changes
 All of these are not crucial, but are important for a better user experience

@@ -107,7 +107,7 @@ const Chart = ({ fileInformation }) => {
                     { data: formattedData }
                 ],
                 title: {
-                    text: fileInformation.columns[0].header + " vs " + fileInformation.columns[1].header
+                    text: fileInformation.columns[1].header + " vs " + fileInformation.columns[0].header
                 },
                 xAxis: {
                     title: {

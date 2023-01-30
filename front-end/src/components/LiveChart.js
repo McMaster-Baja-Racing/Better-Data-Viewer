@@ -55,7 +55,7 @@ const LiveChart = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             fetchData();
-        }, 3000);
+        }, 250);
         return () => clearInterval(interval);
     }, []);
     

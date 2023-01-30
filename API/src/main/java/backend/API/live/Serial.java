@@ -20,7 +20,8 @@ public class Serial {
         String port = "COM4";
         SerialPort comPort = SerialPort.getCommPort(port);
         comPort.setBaudRate(115200);
-        comPort.openPort();
+        boolean connected = comPort.openPort();
+        System.out.println(connected);
         //comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 10000, 0);
         comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 20000, 0);
         exit = false;
@@ -91,7 +92,7 @@ public class Serial {
             fw42.close();
         } catch (Exception e) { e.printStackTrace(); }
         
-        exit = false;
+        //exit = false;
     }
  /*  
     
