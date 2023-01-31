@@ -103,10 +103,10 @@ public class FileUploadController {
 		String[] analyses = analysis.split(",");
 		for (String a : analyses) {
 			if (a.equals("rollAvg")) {
-				BinaryTOCSV.convert(filename);
+				//BinaryTOCSV.convert(filename);
 			}
 			if (a.equals("placeholder")) {
-				AccelCurveAnalyzer.analyze(filename);
+				//AccelCurveAnalyzer.analyze(filename);
 			}
 		}
 
