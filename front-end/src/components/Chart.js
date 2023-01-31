@@ -50,7 +50,7 @@ const Chart = ({ fileInformation }) => {
             })
     }
 
-    const fetchAccelCurve = (primary, secondary) => {
+    const fetchAccelCurve = (secondary, primary) => {
         fetch(`http://${window.location.hostname}:8080/filess/${primary}/${secondary}?analysis=AccelCurve`)
             .then(response => {
                 console.log(response)

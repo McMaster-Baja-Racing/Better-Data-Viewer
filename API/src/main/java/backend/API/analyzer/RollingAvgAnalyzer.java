@@ -36,7 +36,7 @@ public class RollingAvgAnalyzer extends DataAnalyzer {
 
         // Add header
         dataPoint.add(data.get(0).get(0));
-        dataPoint.add("Rolling Averaged " + data.get(0).get(1));
+        dataPoint.add(data.get(0).get(1));
         dataPoints.add(dataPoint);
 
         // Reset
