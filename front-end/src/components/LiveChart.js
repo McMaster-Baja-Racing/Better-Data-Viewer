@@ -2,6 +2,9 @@ import '../styles/chart.css'
 import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import Boost from 'highcharts/modules/boost';
+
+Boost(Highcharts);
 
 const LiveChart = () => {
     //File information is array of column names and associated file names
