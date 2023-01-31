@@ -17,14 +17,32 @@ public class Serial {
     public static volatile boolean exit = true;
 
     public static void readLive() {
+        exit = false;
         String port = "COM4";
         SerialPort comPort = SerialPort.getCommPort(port);
+        boolean setPort = false;
+
+        
+        while (!setPort) {
+            SerialPort portList[] = SerialPort.getCommPorts();
+            for (int i = 0; i < portList.length; i++) {
+                //check if the comport desciption contains the word arduino
+                if (portList[i].getDescriptivePortName().contains("Arduino")) {
+                    //if it does, set the comport to the current port
+                    comPort = portList[i];
+                    //break out of the loop
+                    setPort = true;
+                    break;
+                }
+            }
+        }
+
         comPort.setBaudRate(115200);
         boolean connected = comPort.openPort();
         System.out.println(connected);
         //comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 10000, 0);
-        comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 20000, 0);
-        exit = false;
+        comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
+        
 
         FileWriter fw = null;
         FileWriter fw2 = null;
