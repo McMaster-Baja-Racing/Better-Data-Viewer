@@ -96,9 +96,19 @@ public class FileUploadController {
 	//This is the method that returns the file itself
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+	public ResponseEntity<Resource> serveFile(@PathVariable String filename, @RequestParam(value = "analysis", required = false) String analysis) {
 		// Catch the exception if the file is not found
 		Resource file = storageService.loadAsResource(filename);
+
+		String[] analyses = analysis.split(",");
+		for (String a : analyses) {
+			if (a.equals("rollAvg")) {
+				BinaryTOCSV.convert(filename);
+			}
+			if (a.equals("placeholder")) {
+				AccelCurveAnalyzer.analyze(filename);
+			}
+		}
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 

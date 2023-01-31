@@ -11,7 +11,7 @@ const Chart = ({ fileInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            type: 'scatter',
+            type: 'spline',
             zoomType: 'x'
         },
         title: {
