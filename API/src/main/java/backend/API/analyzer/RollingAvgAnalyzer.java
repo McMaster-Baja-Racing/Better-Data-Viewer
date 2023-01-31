@@ -26,8 +26,7 @@ public class RollingAvgAnalyzer extends DataAnalyzer {
     }
 
 
-    // Currently it uses a sliding window + interpolation to get the dataRPM, and
-    // further uses a rolling average on the longer file
+    // Currently it uses a sliding window 
     public List<List<String>> rollingAverage(List<List<String>> data, int windowSize) {
 
         double rollSum = 0;
@@ -37,7 +36,7 @@ public class RollingAvgAnalyzer extends DataAnalyzer {
 
         // Add header
         dataPoint.add(data.get(0).get(0));
-        dataPoint.add("Rolling Averaged " + data.get(0).get(1));
+        dataPoint.add(data.get(0).get(1));
         dataPoints.add(dataPoint);
 
         // Reset

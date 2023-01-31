@@ -81,6 +81,7 @@ All of these are not crucial, but are important for a better user experience
 #### Front End
 - Add more feedback, such as a loading screen, success messages, etc
 - Multiple graphs at same time
+- Flush the graph before re-rendering data to avoid weird line connections, or use scatter
 
 #### Back End
 - Refactor code such that all files are only saved once, and only by the storage service

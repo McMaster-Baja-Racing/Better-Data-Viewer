@@ -2,13 +2,16 @@ import '../styles/chart.css'
 import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import Boost from 'highcharts/modules/boost';
 import Papa from "papaparse";
+
+Boost(Highcharts);
 
 const Chart = ({ fileInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            type: 'line',
+            type: 'scatter',
             zoomType: 'x'
         },
         title: {
@@ -50,7 +53,7 @@ const Chart = ({ fileInformation }) => {
             })
     }
 
-    const fetchAccelCurve = (primary, secondary) => {
+    const fetchAccelCurve = (secondary, primary) => {
         fetch(`http://${window.location.hostname}:8080/filess/${primary}/${secondary}?analysis=AccelCurve`)
             .then(response => {
                 console.log(response)

@@ -26,25 +26,34 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
     @Override
     public String analyze() {
         System.out.println("Combining \"" + filepaths[0] + "\" and \"" + filepaths[1] + "\"");
+        // Roll average first
+        System.out.println("Rolling Average");
 
-        Reader readerPrim = new CSVReader(filepaths[0]);
-        Reader readerSec = new CSVReader(filepaths[1]);
+        String[] filepath = new String[1];
 
-        if (readerPrim.getSize() < 31) {
-            System.out.println("File 1 (Primary RPM) is too small");
-            return null;
-        } else if (readerSec.getSize() < 31) {
-            System.out.println("File 2 (Secondary RPM) is too small");
-            return null;
-        }
+        filepath[0] = filepaths[0];
+        RollingAvgAnalyzer rollingAvg1 = new RollingAvgAnalyzer(filepath);
+        rollingAvg1.analyze();
 
-        System.out.println("Analysing Data");
-        List<List<String>> dataPoints = InterpolateAndRollAverage(readerPrim.read(), readerSec.read()); // longerFile isprim
-        // Writing File
-        System.out.println("Writing to file");
+        filepath[0] = filepaths[1];
+        RollingAvgAnalyzer rollingAvg2 = new RollingAvgAnalyzer(filepath);
+        rollingAvg2.analyze();
+
+        // Then interpolate
+        System.out.println("Interpolating");
+
+        filepaths[0] = filepaths[0] + "_averaged.csv";
+        filepaths[1] = filepaths[1] + "_averaged.csv";
+        LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(filepaths);
+        linearInt.analyze();
+
+        // Here is all the analyzing done for combining the files, the rest concerns finding individual runs
 
         String path = System.getProperty("user.dir");
         String output = path + "/upload-dir/accelCurve.csv"; // This is bad for concurrency
+
+        Reader reader = new CSVReader(filepaths[0] + "_interpolated.csv");
+        List<List<String>> dataPoints = reader.read();
 
         Writer writer = new CSVWriter(output);
         writer.write(dataPoints);
@@ -53,13 +62,11 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         for (int i = 0; i < accelTimes.size(); i++) {
             System.out.println(accelTimes.get(i));
         }
-
         try {
             timestampToCSV(accelTimes, dataPoints);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         String[] files = new String[accelTimes.size()];
         for (int i = 0; i < accelTimes.size(); i++) {
