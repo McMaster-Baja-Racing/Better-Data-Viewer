@@ -37,9 +37,8 @@ Setup complete!
 
 #### Would be cool:
 - Multiple graphs at same time - travis
-- Make it ~pretty~ (working on it)
+- Make it pretty (working on it)
 - ~~Re-sizeable~~, move-able, etc (Z-index)
-- Live data
 - Warning for intense data (too big, too slow)
 - Cookies - Remember users previous setup and autoload
 

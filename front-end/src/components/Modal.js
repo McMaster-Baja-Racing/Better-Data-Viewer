@@ -13,11 +13,13 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   const columnGenerator = (n) => {
     let arr = [];
     for (let i = 0; i < n; i++) {
-      arr.push(<select className={i} key={i}>
-        {columns.map(column => (
-          <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
-        ))}
-      </select>);
+      arr.push(<div><p>x</p>
+        <select className={i} key={i}>
+          {columns.map(column => (
+            <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
+          ))}
+        </select>
+      </div>);
     }
     return arr;
   }
