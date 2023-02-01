@@ -27,6 +27,9 @@ const Topbar = ({ openModal, openModal1 }) => {
     return (
         <div className="topbar">
             <div className="title">McMaster Baja Data Visualizer</div>
+            <logobutton type="logobutton" class="logo">
+                <img role="presentation" src="https://i.imgur.com/hvwSKTd.png" alt="baja logo"></img>
+            </logobutton>
             <div className="buttons">
                 <button className="beginLive" onClick={beginLiveData}>{liveStatus}</button>
                 <button className="createGraph" onClick={openModal}>Create Graph</button>

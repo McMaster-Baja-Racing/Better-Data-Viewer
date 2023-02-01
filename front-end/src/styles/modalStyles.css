@@ -13,6 +13,10 @@
     color: white;
     cursor: pointer;
   }
+  .App logobutton {
+    border: none;
+    outline: none;
+  }
   #portal .container {
     position: fixed;
     top: 0;
