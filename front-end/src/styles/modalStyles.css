@@ -69,6 +69,7 @@
     align-items: left;
     overflow:auto;
     flex: 1;
+    background-color: #f1f1f1;
   }
 
   .colFlexBox{

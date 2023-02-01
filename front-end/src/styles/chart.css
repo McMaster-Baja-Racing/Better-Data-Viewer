@@ -1,16 +1,19 @@
 .chartContainer {
     resize: both;
     overflow: hidden;
-    
+    width: 100%;
+    height: 89vh;
 }
 
 .chartContainer > * {
     /* margin-bottom: 15px; */
+    
 }
 
 .chart {
     position: relative;
     overflow: hidden;
+    
 }
 
 .highcharts-figure,

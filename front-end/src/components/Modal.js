@@ -199,7 +199,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         </select>
       </div>
       <div className="rowFlexBox">
-      <button className="submitbutton" onClick={() => { showPage2(); listFiles(); } }>Next</button>
+      <button className="submitbutton" onClick={() => { listFiles(); showPage2(); } }>Next</button>
       </div>
     </div>
   )
@@ -219,7 +219,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       </div>
       <div className="rowFlexBox">
         <button className="submitbutton" onClick={showPage1}>Back</button>
-        <button className="submitbutton" onClick={() => { showPage3(); getSelectedFiles() }} >Next</button>
+        <button className="submitbutton" onClick={() => { getSelectedFiles(); showPage3(); }} >Next</button>
       </div>
       </div>
     
