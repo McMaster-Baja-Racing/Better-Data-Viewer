@@ -66,9 +66,10 @@ Setup complete!
 - ~~this is a whole big along with sending and receiving protocols. Im moving forward as is, since it works, but sends an error response.~~
 I fixed this :) I'm so smart -- kai
 - Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
+-Optionally, run `Set-ExecutionPolicy unrestricted` in an administrator terminal to set it permanently
 
 ## DRIVEDAY 2023-01-30
-- ~~GAVIN Round to 2 in ddl rust~~
+- ~~GAVIN Round to 2 in ddl rust~~ Lat/Long is rounded to 7, everything else is 2 decimal places
 - GAVIN Serial connects properly without unplugging
 - ~~KAI Get all the analyzers (intepolate, roll average, etc) working~~
 - ~~KAI Boost performance of the highcharts graph using BOOST~~
