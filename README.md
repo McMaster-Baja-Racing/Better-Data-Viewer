@@ -68,10 +68,10 @@ I fixed this :) I'm so smart -- kai
 - Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
 
 ## DRIVEDAY 2023-01-30
-- GAVIN Round to 2 in ddl rust
+- ~~GAVIN Round to 2 in ddl rust~~
 - GAVIN Serial connects properly without unplugging
-- KAI Get all the analyzers (intepolate, roll average, etc) working
-- KAI Boost performance of the highcharts graph using BOOST
+- ~~KAI Get all the analyzers (intepolate, roll average, etc) working~~
+- ~~KAI Boost performance of the highcharts graph using BOOST~~
 - TRAVIS Scroll through all available files instead of listing them all
 - KAI + GAVIN + TRAVIS + SALMA Optimize the frontend to be more user friendly and pass data properly to live / saved data (Specifically for the dyno demo).o
 

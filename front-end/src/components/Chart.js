@@ -32,8 +32,9 @@ const Chart = ({ fileInformation }) => {
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
 
-    const getSingleFile = async (filename) => {
-        fetch(`http://${window.location.hostname}:8080/files/${filename}`)
+    const getSingleFile = async (filename, analyzers) => {
+        console.log(filename, analyzers)
+        fetch(`http://${window.location.hostname}:8080/analyze/${filename}?analysis=${analyzers}`)
             .then(response => {
                 //console.log(response)
                 //console.log(response.body) //use this to get a stream (efficient)
@@ -78,13 +79,13 @@ const Chart = ({ fileInformation }) => {
         }
         // Case where only one file is selected
         if (fileInformation.columns[0].filename === fileInformation.columns[1].filename) {
-            getSingleFile(fileInformation.columns[0].filename);
+            getSingleFile(fileInformation.columns[0].filename, fileInformation.analysis);
             return;
         }
         // Case where two different files are selected
         if (fileInformation.columns[0].filename !== fileInformation.columns[1].filename) {
             console.log("Two files selected")
-            if (fileInformation.type === "AccelCurve") {
+            if (fileInformation.analysis[0] === "AccelCurve") {
                 console.log("Accel Curve")
                 fetchAccelCurve(fileInformation.columns[0].filename, fileInformation.columns[1].filename);
                 return;

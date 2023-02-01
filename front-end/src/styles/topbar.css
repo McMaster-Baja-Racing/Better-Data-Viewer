@@ -24,13 +24,12 @@
     margin: 0 0 0 1rem;
 }
 
-.logo {
+.title {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.logo img {
+.title img {
     width: 150px;
-    padding-right: 60rem;
 }

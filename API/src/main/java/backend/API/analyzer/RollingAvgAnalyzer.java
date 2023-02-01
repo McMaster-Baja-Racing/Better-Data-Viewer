@@ -17,6 +17,8 @@ public class RollingAvgAnalyzer extends DataAnalyzer {
     @Override
     public String analyze() {
 
+        System.out.println("Taking the rolling average of " + filepaths[0]);
+
         Reader r = new CSVReader(filepaths[0]);
         Writer w = new CSVWriter(filepaths[0] + "_averaged.csv");
 

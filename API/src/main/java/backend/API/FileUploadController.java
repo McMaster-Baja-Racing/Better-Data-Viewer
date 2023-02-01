@@ -36,6 +36,7 @@ import backend.API.live.Serial;
 
 import backend.API.analyzer.DataAnalyzer;
 import backend.API.analyzer.AccelCurveAnalyzer;
+import backend.API.analyzer.RollingAvgAnalyzer;
 
 
 @Controller
@@ -96,19 +97,42 @@ public class FileUploadController {
 	//This is the method that returns the file itself
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename, @RequestParam(value = "analysis", required = false) String analysis) {
+	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 		// Catch the exception if the file is not found
+
 		Resource file = storageService.loadAsResource(filename);
 
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+    	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+		"attachment; filename=\"" + file.getFilename() + "\"");
+		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(file);
+
+	}
+
+
+	@GetMapping("/analyze/{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveAnalyzedFile(@PathVariable String filename, @RequestParam(value = "analysis", required = false) String analysis) {
+		// Catch the exception if the file is not found
+		
 		String[] analyses = analysis.split(",");
+		String[] files = new String[1];
+		files[0] = storageService.load(filename).toAbsolutePath().toString();
+		DataAnalyzer da;
 		for (String a : analyses) {
 			if (a.equals("rollAvg")) {
+				da = new RollingAvgAnalyzer(files);
+				files = da.analyze().split(",");
 				//BinaryTOCSV.convert(filename);
 			}
-			if (a.equals("placeholder")) {
-				//AccelCurveAnalyzer.analyze(filename);
-			}
 		}
+
+		Resource file = storageService.loadAsResource(files[0]);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 

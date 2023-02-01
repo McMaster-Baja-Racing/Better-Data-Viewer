@@ -174,7 +174,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
   // Handles the selection of the analysis
   const getAnalysis = () => {
-    var analNames = ["linerInterp","AccelCurve"];
+    var analNames = ["linerInterp","AccelCurve", "rollAvg"];
     var selectedAnals = [];
     for (var i = 0; i < analNames.length; i++) {
       if (document.getElementById(analNames[i]).checked) {
