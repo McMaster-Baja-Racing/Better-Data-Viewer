@@ -23,3 +23,14 @@
 .buttons > * {
     margin: 0 0 0 1rem;
 }
+
+.logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    width: 150px;
+    padding-right: 60rem;
+}
