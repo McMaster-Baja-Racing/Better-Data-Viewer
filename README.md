@@ -27,37 +27,35 @@ Setup complete!
 #### MANDATORY FEATURES:
 - Shift curve working best awesome
 - ~~XY graph working with automatic axis names~~
-- Multiple graphs at same time - travis
 - ~~Redo create graph for specifics - Kai~~
 
 #### MANDATORY BUG FIXES:
 - ~~Offline front end~~ - ez
 - ~~Slow after 1 use (data loading probably)~~
 - ~~Only accept .bin and .csv files~~ - Kai
+- ~~Resize graphs is going oddly, it kinda shapes itself sometimes? -- kai -- nvm this was instantly fixed -- kai~~
 
 #### Would be cool:
+- Multiple graphs at same time - travis
 - Make it ~pretty~ (working on it)
 - ~~Re-sizeable~~, move-able, etc (Z-index)
 - Live data
 - Warning for intense data (too big, too slow)
 - Cookies - Remember users previous setup and autoload
 
-#### Silly bugs
-- ~~Resize graphs is going oddly, it kinda shapes itself sometimes? -- kai -- nvm this was instantly fixed -- kai~~
-
 ### Back End
 #### MANDATORY FEATURES:
 - ~~Connecting API, so front end can talk to back end, Should maybe conform to REST - Kai~~
 - ~~Unify backend - gavin, Kai!~~
-- X-Y Graph
+- ~~X-Y Graph~~
 - Added information for shift curve -graham
 
 #### MANDATORY BUG FIXES:
-- Back-end round values
+- ~~Back-end round values~~
 - Mobile / Other device errors
 
 #### Would be cool:
-- Live data
+- ~~Live data~~
 - More dynamic parameters
 - ~~Single script to start it all - gavin~~
 
@@ -72,7 +70,7 @@ I fixed this :) I'm so smart -- kai
 - GAVIN Serial connects properly without unplugging
 - ~~KAI Get all the analyzers (intepolate, roll average, etc) working~~
 - ~~KAI Boost performance of the highcharts graph using BOOST~~
-- TRAVIS Scroll through all available files instead of listing them all
+- ~~TRAVIS Scroll through all available files instead of listing them all~~
 - KAI + GAVIN + TRAVIS + SALMA Optimize the frontend to be more user friendly and pass data properly to live / saved data (Specifically for the dyno demo).o
 
 ### Post laval ready changes
