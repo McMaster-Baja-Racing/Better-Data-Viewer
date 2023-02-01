@@ -72,7 +72,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
-        <div className="small">
+        <div className="centerFlexBox">
           <h1>Upload Files</h1>
           <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
             <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} onChange={handleChange} {...register("file")} />

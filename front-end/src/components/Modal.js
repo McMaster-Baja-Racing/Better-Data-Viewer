@@ -205,8 +205,9 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   )
   const pageTwo = () => (
     
-    <div className="colFlexBox">
+    <div className="colFlexBox"> 
       <h2>Choose Files</h2>
+      <div className="scrollColFlexBox">
       {files.map((file) => {
         return (
           <div key={file}>
@@ -215,11 +216,13 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           </div>
         )
       })}
+      </div>
       <div className="rowFlexBox">
         <button className="submitbutton" onClick={showPage1}>Back</button>
         <button className="submitbutton" onClick={() => { showPage3(); getSelectedFiles() }} >Next</button>
       </div>
-    </div>
+      </div>
+    
   )
   const pageThree = () => (
     <div>
