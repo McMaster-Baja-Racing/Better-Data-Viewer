@@ -43,7 +43,7 @@
     animation: animate 0.3s;
     min-width: 35rem;
   }
-  .small{
+  .centerFlexBox{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -62,17 +62,29 @@
     border-radius: 2px;
     cursor: pointer;
   }
+  .scrollColFlexBox{
+    display: block;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    overflow:auto;
+    flex: 1;
+  }
+
   .colFlexBox{
     display: flex;
     flex-direction: column;
     justify-content: left;
     align-items: left;
+    flex: 1;
+    height: 100%;
   }
+
   .rowFlexBox{
     display: flex;
     flex-direction: row;
-    justify-content: left;
     align-items: left;
+    justify-content: left;
   }
 
   @keyframes animate {
