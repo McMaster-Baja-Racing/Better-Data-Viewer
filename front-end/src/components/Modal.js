@@ -204,7 +204,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       </div>
 
       <h3>Graph Types</h3>
-        <select id="graphTypeSelect">
+        <select id="graphTypeSelect" className="graphTypeSelect">
           <option value="XYGraph">X-Y Graph</option>
           <option value="AccelCurve">AccelCurve</option>
           <option value="Gauge">1D Gauge</option>
