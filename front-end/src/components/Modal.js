@@ -13,7 +13,8 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   const columnGenerator = (n) => {
     let arr = [];
     for (let i = 0; i < n; i++) {
-      arr.push(<div><p>x</p>
+      arr.push(
+      <div > <div className="boldText">{i === 0 ? "X-Axis" : "Y-Axis"} </div>
         <select className={i} key={i}>
           {columns.map(column => (
             <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
@@ -189,27 +190,35 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
   const pageOne = () => (
     <div className="colFlexBox">
+      <h1>Graph Options</h1><br></br>
       <div className="rowFlexBox">
+        <h3>Live Data</h3><br></br>
         <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
-        <label htmlFor="liveData"> <h2>Would you like Live Data?</h2> </label><br></br>
       </div>
-      <div className="rowFlexBox">
+      
+      <div className="spaceRowFlexBox">
+        Port <input type="text" value="" size="5" ></input>
+      </div>
+      <div className="spaceRowFlexBox">
+        Baud <input type="text" value="" size="5"></input>
+      </div>
+
+      <h3>Graph Types</h3>
         <select id="graphTypeSelect">
           <option value="XYGraph">X-Y Graph</option>
           <option value="AccelCurve">AccelCurve</option>
           <option value="Gauge">1D Gauge</option>
           <option value="XYColour"> X-Y-Colour Graph</option>
         </select>
-      </div>
-      <div className="rowFlexBox">
+      <div className="buttonFlexBox">
       <button className="submitbutton" onClick={() => { listFiles(); showPage2(); } }>Next</button>
       </div>
     </div>
   )
   const pageTwo = () => (
     
-    <div className="colFlexBox"> 
-      <h2>Choose Files</h2>
+    <div className="colFlexBox2"> 
+      <h3>Choose Files</h3>
       <div className="scrollColFlexBox">
       {files.map((file) => {
         return (
@@ -220,7 +229,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         )
       })}
       </div>
-      <div className="rowFlexBox">
+      <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage1}>Back</button>
         <button className="submitbutton" onClick={() => { 
           getSelectedFiles(); 
@@ -236,21 +245,20 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     
   )
   const pageThree = () => (
-    <div>
-      <div className="colFlexBox">
-      <h2>Select Axis</h2>
-        <div className="rowFlexBox">{columnGenerator(dimensions)}</div>
-        <h2>Select Analyzers</h2>
-        <div className="rowFlexBox">
-          <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>
-          <label htmlFor="linerInterp"> <h4>Linear Interpolation</h4> </label><br></br>
-          <input type="checkbox" id="AccelCurve" name="AccelCurve" value="true"></input>
-          <label htmlFor="AccelCurve"> <h4>Accel Curve Analyzer</h4> </label><br></br>
-          <input type="checkbox" id="rollAvg" name="rollAvg" value="true"></input>
-          <label htmlFor="AccelCurve"> <h4>Rolling Average Analyzer</h4> </label><br></br>
-        </div>
+      <div className="colFlexBox2">
+      <h3>Select Axis</h3>
+        {columnGenerator(dimensions)}
+        <h3>Select Analyzers</h3>
+        <div className="scrollColFlexBox">
+          <div className="rowFlexBox"> <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>
+          <label htmlFor="linerInterp"> <div className="boldText">Linear Interpolation</div></label></div>
+          <div className="rowFlexBox"><input type="checkbox" id="AccelCurve" name="AccelCurve" value="true"></input>
+          <label htmlFor="AccelCurve"><div className="boldText">Accel Curve Analyzer</div></label></div>
+          <div className="rowFlexBox"><input type="checkbox" id="rollAvg" name="rollAvg" value="true"></input>
+          <label htmlFor="AccelCurve"> <div className="boldText">Rolling Average Analyzer</div></label></div>
+  
       </div>
-      <div className="rowFlexBox">
+      <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage2}>Back</button>
         <button className="submitbutton" onClick={()=> {handleSubmit();}}>Submit</button>
       </div>
