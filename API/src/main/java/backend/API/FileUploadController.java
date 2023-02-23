@@ -35,6 +35,7 @@ import backend.API.binary_csv.BinaryTOCSV;
 import backend.API.live.Serial;
 
 import backend.API.analyzer.DataAnalyzer;
+import backend.API.analyzer.LinearInterpolaterAnalyzer;
 import backend.API.analyzer.AccelCurveAnalyzer;
 import backend.API.analyzer.RollingAvgAnalyzer;
 
@@ -176,6 +177,48 @@ public class FileUploadController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 
     	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+		"attachment; filename=\"" + file.getFilename() + "\"");
+		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(file);
+	}
+
+	@GetMapping("files/{primaryFile:.+}/{secondaryFile:.+}/{tertiaryFile:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveFile(@PathVariable String primaryFile, @PathVariable String secondaryFile, @PathVariable String tertiaryFile, @RequestParam(value = "analysis", required = false, defaultValue = "interpolate") String analysis) {
+
+		// Load both files into an array
+		String[] files = {storageService.load(primaryFile).toAbsolutePath().toString(), storageService.load(secondaryFile).toAbsolutePath().toString(), storageService.load(tertiaryFile).toAbsolutePath().toString()};
+		// Split the analysis string into an array of analyzers
+		String[] analyses = analysis.split(",");
+		String filename = "";
+
+		// Loop through the analyzers and run them on the data
+		DataAnalyzer da;
+		for (int i = 0; i < analyses.length; i++) {
+			if (analyses[i].equals("interpolate")) {
+				// This will be used when Graham finishes this, for now skip it
+			} else if (analyses[i].equals("AccelCurve")) {
+				da = new AccelCurveAnalyzer(files);
+				filename = da.analyze();
+			} else if (analyses[i].equals("XYColours")) {
+				da = new LinearInterpolaterAnalyzer(files);
+				files[0] = da.analyze();
+				files[1] = files[2];
+				DataAnalyzer da2 = new LinearInterpolaterAnalyzer(files);
+				filename = da2.analyze();
+			}
+		}
+
+		filename = "XYColours.csv";
+
+		Resource file = storageService.loadAsResource(filename);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
 		"attachment; filename=\"" + file.getFilename() + "\"");
 		//Set these headers so that you can access from LocalHost
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");

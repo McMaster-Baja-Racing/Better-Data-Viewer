@@ -27,7 +27,6 @@ public class LinearInterpolaterAnalyzer extends DataAnalyzer {
 
         return output;
     }
-
     // Interpolate data2 to data1
     public List<List<String>> linearInterpolate(List<List<String>> data1, List<List<String>> data2) {
 
