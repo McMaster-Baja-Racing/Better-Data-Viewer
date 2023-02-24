@@ -25,26 +25,26 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
     @Override
     public String analyze() {
-        System.out.println("Combining \"" + filepaths[0] + "\" and \"" + filepaths[1] + "\"");
+        System.out.println("Combining \"" + data[0] + "\" and \"" + data[1] + "\"");
         // Roll average first
         System.out.println("Rolling Average");
 
         String[] filepath = new String[1];
 
-        filepath[0] = filepaths[0];
+        filepath[0] = data[0];
         RollingAvgAnalyzer rollingAvg1 = new RollingAvgAnalyzer(filepath);
         rollingAvg1.analyze();
 
-        filepath[0] = filepaths[1];
+        filepath[0] = data[1];
         RollingAvgAnalyzer rollingAvg2 = new RollingAvgAnalyzer(filepath);
         rollingAvg2.analyze();
 
         // Then interpolate
         System.out.println("Interpolating");
 
-        filepaths[0] = filepaths[0] + "_averaged.csv";
-        filepaths[1] = filepaths[1] + "_averaged.csv";
-        LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(filepaths);
+        data[0] = data[0] + "_averaged.csv";
+        data[1] = data[1] + "_averaged.csv";
+        LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(data);
         linearInt.analyze();
 
         // Here is all the analyzing done for combining the files, the rest concerns finding individual runs
@@ -52,7 +52,7 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         String path = System.getProperty("user.dir");
         String output = path + "/upload-dir/accelCurve.csv"; // This is bad for concurrency
 
-        Reader reader = new CSVReader(filepaths[0] + "_interpolated.csv");
+        Reader reader = new CSVReader(data[0] + "_interpolated.csv");
         List<List<String>> dataPoints = reader.read();
 
         Writer writer = new CSVWriter(output);

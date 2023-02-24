@@ -9,9 +9,11 @@ import backend.API.readwrite.Writer;
 import backend.API.readwrite.CSVWriter;
 
 public class RollingAvgAnalyzer extends DataAnalyzer {
+    private int windowSize;
 
-    public RollingAvgAnalyzer(String[] filepaths) {
+    public RollingAvgAnalyzer(String[] filepaths, int windowSize) {
         super(filepaths);
+        this.windowSize = windowSize;
     }
 
     @Override
