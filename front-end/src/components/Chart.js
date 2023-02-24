@@ -100,6 +100,7 @@ const Chart = ({ fileInformation }) => {
         }
         var formattedData = [];
 
+
         for (var i = 0; i < parsedData.length; i++) {
             formattedData.push([Math.round(parseFloat(parsedData[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][fileInformation.columns[1].header])*100.0)/100]);
         }

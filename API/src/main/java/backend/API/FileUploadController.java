@@ -78,6 +78,22 @@ public class FileUploadController {
 		// I added some trims to remove the exact address of the file from the response, and the brackets
 	}
 
+
+	@GetMapping("/deleteAllFiles")
+	@ResponseBody
+	public ResponseEntity<String> deleteAllFiles() {
+
+		storageService.deleteAll();
+
+		//Set these headers so that you can access from LocalHost
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
+
+	}
+
 	//This method returns information about a specific file, given the filename.
 	//It should return the first row of the file (the header row)
 	@GetMapping("/files/{filename:.+}/info")
@@ -89,6 +105,7 @@ public class FileUploadController {
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
+		// Get size, headers, datetime, etc.
 		String fileinfo = storageService.readHeaders(filename);
 
 		return ResponseEntity.ok().headers(responseHeaders).body(fileinfo);
