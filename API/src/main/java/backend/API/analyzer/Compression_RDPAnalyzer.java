@@ -1,11 +1,13 @@
+import javax.print.attribute.standard.Compression;
+
 public class Compression_RDPAnalyzer extends Analyzer {
 
     // Epsilon is the maximum distance between a point and the line between the start and end points
     // AKA Hausdorff distance
     private double epsilon;
 
-    public Compression_RDPAnalyzer(String[] filepaths, double epsilon) {
-        super(filepaths);
+    public Compression_RDPAnalyzer(String[] inputFiles, String[] outputFiles, double epsilon) {
+        super(inputFiles, outputFiles);
         this.epsilon = epsilon;
     }
 

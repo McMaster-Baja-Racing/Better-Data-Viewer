@@ -37,6 +37,7 @@ import backend.API.live.Serial;
 import backend.API.analyzer.DataAnalyzer;
 import backend.API.analyzer.LinearInterpolaterAnalyzer;
 import backend.API.analyzer.AccelCurveAnalyzer;
+import backend.API.analyzer.Analyzer;
 import backend.API.analyzer.RollingAvgAnalyzer;
 
 
@@ -83,7 +84,7 @@ public class FileUploadController {
 	//It should return the first row of the file (the header row)
 	@GetMapping("/files/{filename:.+}/info")
 	@ResponseBody
-	public ResponseEntity<String> listUploadedFile(@PathVariable String filename) throws IOException{
+	public ResponseEntity<String> listFileInformation(@PathVariable String filename) throws IOException{
 
 		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -115,6 +116,39 @@ public class FileUploadController {
 
 	}
 
+	// This is the be all end all method that should take in any number of file names and analyzers, plus live option and return a file
+	@GetMapping("/analyze")
+	@ResponseBody
+	public ResponseEntity<Resource> handleFileRequest(@RequestParam(value = "inputFiles", required = true) String[] inputFiles,
+		@RequestParam(value = "ouputFiles", required = true) String[] outputFiles,
+		@RequestParam(value = "analyzer", required = false) String[] analyzer, 
+		@RequestParam(value = "liveOptions", required = false) String[] liveOptions) {
+		
+		//Catch exceptions first
+
+
+		// Then check if live is true, and set the options + files accordingly
+		if (liveOptions[0].equals("true")) {
+			// Maybe do the serial stuff here, but definitely look in live folder for data
+		}
+
+		// Then run the selected analyzer
+		Analyzer.createAnalyzer(analyzer[0], inputFiles, outputFiles, Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
+
+		// Then return the final file
+		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1]);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+		"attachment; filename=\"" + file.getFilename() + "\"");
+
+		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(file);
+	}
 
 	@GetMapping("/analyze/{filename:.+}")
 	@ResponseBody
