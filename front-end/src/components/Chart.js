@@ -54,6 +54,30 @@ const Chart = ({ fileInformation }) => {
             })
     }
 
+    const [parsedData2, setParsedData2] = useState([]);
+
+    const getSingleFile2 = async (filename, analyzers) => {
+        console.log(filename, analyzers)
+        fetch(`http://${window.location.hostname}:8080/analyze/${filename}?analysis=${analyzers}`)
+            .then(response => {
+                //console.log(response)
+                //console.log(response.body) //use this to get a stream (efficient)
+
+                response.text().then(text => { //or this to get all text at once
+
+                    //Now convert such that each line is an array
+                    Papa.parse(text, {
+                        header: true,
+                        skipEmptyLines: true,
+                        complete: function (results) {
+                            setParsedData2(results.data);
+                        },
+                    })
+
+                })
+            })
+    }
+
     const fetchAccelCurve = (secondary, primary) => {
         fetch(`http://${window.location.hostname}:8080/filess/${primary}/${secondary}?analysis=AccelCurve`)
             .then(response => {
@@ -79,7 +103,15 @@ const Chart = ({ fileInformation }) => {
         }
         // Case where only one file is selected
         if (fileInformation.columns[0].filename === fileInformation.columns[1].filename) {
-            getSingleFile(fileInformation.columns[0].filename, fileInformation.analysis);
+            
+            if (fileInformation.analysis[0] === "AccelCurve") {
+                console.log("Accel Curve 2")
+                fetchAccelCurve(fileInformation.columns[0].filename, fileInformation.columns[1].filename);
+                return;
+            } else {
+                getSingleFile(fileInformation.columns[0].filename, fileInformation.analysis);
+                getSingleFile2("accelCurve2.csv", fileInformation.analysis);
+            }
             return;
         }
         // Case where two different files are selected
@@ -100,16 +132,33 @@ const Chart = ({ fileInformation }) => {
         }
         var formattedData = [];
 
-
         for (var i = 0; i < parsedData.length; i++) {
             formattedData.push([Math.round(parseFloat(parsedData[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][fileInformation.columns[1].header])*100.0)/100]);
         }
+
+        var formattedData2 = [];
+
+        for (var i = 0; i < parsedData2.length; i++) {
+            formattedData2.push([Math.round(parseFloat(parsedData2[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData2[i][fileInformation.columns[1].header])*100.0)/100]);
+        }
+
+        console.log(formattedData2)
+        
         // Update the chart options with the new data
         setChartOptions( (prevState) => {
             return {
                 ...prevState,
                 series: [
-                    { data: formattedData }
+                    // other data series should be formatteData from 0 to 200
+                    {data : formattedData2,
+                        color: 'blue',
+                        name: "second data series",
+                    opacity: 0.5},
+                    { data: formattedData,
+                    color: 'red',
+                    name: "first data series",
+                    opacity: 0.5},
+                    
                 ],
                 title: {
                     text: fileInformation.columns[1].header + " vs " + fileInformation.columns[0].header
@@ -126,6 +175,9 @@ const Chart = ({ fileInformation }) => {
                         text: fileInformation.columns[1].header
                     }
                 },
+                legend: {
+                    enabled: true
+                }
             }
         })
     }, [parsedData])
