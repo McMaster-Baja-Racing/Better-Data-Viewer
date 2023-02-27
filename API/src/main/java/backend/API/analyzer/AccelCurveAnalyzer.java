@@ -19,8 +19,8 @@ import java.util.Arrays;
 
 public class AccelCurveAnalyzer extends DataAnalyzer {
 
-    public AccelCurveAnalyzer(String[] filepaths) {
-        super(filepaths);
+    public AccelCurveAnalyzer(String[] inputFiles, String[] outputFiles) {
+        super(inputFiles, outputFiles);
     }
 
     @Override

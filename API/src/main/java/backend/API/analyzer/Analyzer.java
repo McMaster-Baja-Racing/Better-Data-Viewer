@@ -19,7 +19,7 @@ public abstract class Analyzer {
     }
     
     // Abstract method to be implemented by subclasses
-    public abstract void analyze() throws IOException;
+    public abstract void analyze();
 
     // I/O methods
     // Streams as they avoid loading the entire file into memory at once
@@ -36,15 +36,23 @@ public abstract class Analyzer {
     public static Analyzer createAnalyzer(String type, String[] inputFiles, String[] outputFiles, Object... params) {
         switch (type) {
             case "accelCurve":
-                return new AccelCurveAnalyzer(inputFiles, outputFiles);
+                //return new AccelCurveAnalyzer(inputFiles, outputFiles);
             case "rollingAvg":
                 int windowSize = (int) params[0];
                 return new RollingAvgAnalyzer(inputFiles, outputFiles, windowSize);
             case "linearInterpolate":
                 return new LinearInterpolateAnalyzer(inputFiles, outputFiles);
             default:
-                return new IllegalArgumentException("Invalid analyzer type: " + type);
+                return null;
         }
+    }
+
+    public static void main(String[] args) {
+        // Test the factory method
+        System.out.println("Hello");
+        String[] inputFiles = {"C:\\Users\\Ariel\\OneDrive\\Documents\\GitHub\\Better-Data-Viewer\\API\\upload-dir\\F_RPM_PRIM.csv"};
+        String[] outputFiles = {"output.csv"};
+        Analyzer.createAnalyzer("rollingAvg", inputFiles, outputFiles, 30).analyze();
     }
 
 }

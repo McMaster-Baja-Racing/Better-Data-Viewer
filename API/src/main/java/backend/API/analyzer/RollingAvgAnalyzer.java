@@ -8,27 +8,24 @@ import backend.API.readwrite.CSVReader;
 import backend.API.readwrite.Writer;
 import backend.API.readwrite.CSVWriter;
 
-public class RollingAvgAnalyzer extends DataAnalyzer {
+public class RollingAvgAnalyzer extends Analyzer {
     private int windowSize;
 
-    public RollingAvgAnalyzer(String[] filepaths, int windowSize) {
-        super(filepaths);
+    public RollingAvgAnalyzer(String[] inputFiles, String[] outputFiles, int windowSize) {
+        super(inputFiles, outputFiles);
         this.windowSize = windowSize;
     }
 
     @Override
-    public String analyze() {
+    public void analyze(){
 
-        System.out.println("Taking the rolling average of " + filepaths[0]);
+        System.out.println("Taking the rolling average of " + super.inputFiles[0]);
 
-        Reader r = new CSVReader(filepaths[0]);
-        Writer w = new CSVWriter(filepaths[0] + "_averaged.csv");
+        Reader r = new CSVReader(super.inputFiles[0]);
+        Writer w = new CSVWriter(super.outputFiles[0]);
 
-        w.write(rollingAverage(r.read(), 30));
-
-        return filepaths[0] + "_averaged.csv";
+        w.write(rollingAverage(r.read(), windowSize));
     }
-
 
     // Currently it uses a sliding window 
     public List<List<String>> rollingAverage(List<List<String>> data, int windowSize) {
@@ -68,8 +65,8 @@ public class RollingAvgAnalyzer extends DataAnalyzer {
     // make a main to test it
     public static void main(String[] args) {
         String[] filepaths = new String[1];
-        filepaths[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM.csv";
-        RollingAvgAnalyzer r = new RollingAvgAnalyzer(filepaths);
+        filepaths[0] = "C:/Users/Ariel/OneDrive/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM.csv";
+        RollingAvgAnalyzer r = new RollingAvgAnalyzer(filepaths, filepaths, 30);
         r.analyze();
     }
     

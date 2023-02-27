@@ -10,8 +10,8 @@ import backend.API.readwrite.CSVWriter;
 
 public class LinearInterpolaterAnalyzer extends DataAnalyzer {
 
-    public LinearInterpolaterAnalyzer(String[] filepaths) {
-        super(filepaths);
+    public LinearInterpolaterAnalyzer(String[] inputFiles, String[] outputFiles) {
+        super(inputFiles, outputFiles);
     }
 
     @Override
