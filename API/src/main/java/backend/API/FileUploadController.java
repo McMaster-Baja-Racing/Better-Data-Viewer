@@ -266,6 +266,19 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(file);
 	}
 
+	@GetMapping("/deleteAll")
+	@ResponseBody
+	public ResponseEntity<String> deleteAll() {
+		storageService.deleteAll();
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
+	}
+
 	//This is the method that uploads the file
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,

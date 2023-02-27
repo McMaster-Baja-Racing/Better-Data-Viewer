@@ -84,7 +84,17 @@ export const UploadModal = ({ setShowUploadModal }) => {
             {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
             <input className="submitbutton" type="submit" />
           </form>
+
+          
         </div>
+        <button onClick={(() => {
+            console.log("babeyy")
+            fetch(`http://${window.location.hostname}:8080/deleteAll`).then((res) => {
+              alert(res)
+            }).catch((err) => {
+              console.log(err)
+            })
+          })}>Delete All</button>
         <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
       </div>
     </div>,
