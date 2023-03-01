@@ -152,7 +152,7 @@ const Chart = ({ fileInformation }) => {
                         series.push({
                             name: fileInformation.columns[i].filename,
                             data: parsedData[i],
-                            colour: colours[random % colours.length - 1],
+                            colour: colours[i],
                             opacity: 0.5
                         })
                     }
