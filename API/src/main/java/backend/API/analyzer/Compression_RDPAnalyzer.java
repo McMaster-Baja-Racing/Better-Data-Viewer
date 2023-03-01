@@ -1,3 +1,4 @@
+/* 
 import javax.print.attribute.standard.Compression;
 
 public class Compression_RDPAnalyzer extends Analyzer {
@@ -82,3 +83,4 @@ public class Compression_RDPAnalyzer extends Analyzer {
     }
     
 }
+*/

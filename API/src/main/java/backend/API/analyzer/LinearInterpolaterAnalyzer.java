@@ -8,24 +8,22 @@ import backend.API.readwrite.CSVReader;
 import backend.API.readwrite.Writer;
 import backend.API.readwrite.CSVWriter;
 
-public class LinearInterpolaterAnalyzer extends DataAnalyzer {
+public class LinearInterpolaterAnalyzer extends Analyzer {
 
     public LinearInterpolaterAnalyzer(String[] inputFiles, String[] outputFiles) {
         super(inputFiles, outputFiles);
     }
 
     @Override
-    public String analyze() {
+    public void analyze() {
+        System.out.println("Interpolating \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
 
-        String output = filepaths[0] + "_interpolated.csv";
-
-        Reader r1 = new CSVReader(filepaths[0]);
-        Reader r2 = new CSVReader(filepaths[1]);
-        Writer w = new CSVWriter(output);
+        Reader r1 = new CSVReader(inputFiles[0]);
+        Reader r2 = new CSVReader(inputFiles[1]);
+        Writer w = new CSVWriter(outputFiles[0]);
 
         w.write(linearInterpolate(r1.read(), r2.read()));
 
-        return output;
     }
     // Interpolate data2 to data1
     public List<List<String>> linearInterpolate(List<List<String>> data1, List<List<String>> data2) {
@@ -86,19 +84,19 @@ public class LinearInterpolaterAnalyzer extends DataAnalyzer {
         filepaths[0] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_PRIM.csv";
         filepaths[1] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_SEC.csv";
 
-        RollingAvgAnalyzer r1 = new RollingAvgAnalyzer(filepaths);
+        RollingAvgAnalyzer r1 = new RollingAvgAnalyzer(filepaths, filepaths, 30);
         r1.analyze();
 
         filepaths[1] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_PRIM.csv";
         filepaths[0] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_SEC.csv";
 
-        RollingAvgAnalyzer r2 = new RollingAvgAnalyzer(filepaths);
+        RollingAvgAnalyzer r2 = new RollingAvgAnalyzer(filepaths, filepaths, 30);
         r2.analyze();
 
         filepaths[0] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_PRIM.csv_averaged.csv";
         filepaths[1] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_SEC.csv_averaged.csv";
 
-        LinearInterpolaterAnalyzer l = new LinearInterpolaterAnalyzer(filepaths);
+        LinearInterpolaterAnalyzer l = new LinearInterpolaterAnalyzer(filepaths, filepaths);
         l.analyze();
     }
     

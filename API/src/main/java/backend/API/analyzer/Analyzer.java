@@ -36,12 +36,12 @@ public abstract class Analyzer {
     public static Analyzer createAnalyzer(String type, String[] inputFiles, String[] outputFiles, Object... params) {
         switch (type) {
             case "accelCurve":
-                //return new AccelCurveAnalyzer(inputFiles, outputFiles);
+                return new AccelCurveAnalyzer(inputFiles, outputFiles);
             case "rollingAvg":
                 int windowSize = (int) params[0];
                 return new RollingAvgAnalyzer(inputFiles, outputFiles, windowSize);
             case "linearInterpolate":
-                return new LinearInterpolateAnalyzer(inputFiles, outputFiles);
+                return new LinearInterpolaterAnalyzer(inputFiles, outputFiles);
             default:
                 return null;
         }
@@ -50,9 +50,14 @@ public abstract class Analyzer {
     public static void main(String[] args) {
         // Test the factory method
         System.out.println("Hello");
-        String[] inputFiles = {"C:\\Users\\Ariel\\OneDrive\\Documents\\GitHub\\Better-Data-Viewer\\API\\upload-dir\\F_RPM_PRIM.csv"};
+        String[] inputFiles = {"X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_PRIM.csv"};
         String[] outputFiles = {"output.csv"};
         Analyzer.createAnalyzer("rollingAvg", inputFiles, outputFiles, 30).analyze();
+
+        // Now test AccelCurveAnalyzer
+        String[] inputFiles2 = {"X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_PRIM.csv", "X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_SEC.csv"};
+        String[] outputFiles2 = {"prim_average.csv", "sec_average.csv", "interpolate.csv", "accel_curve.csv"};
+        Analyzer.createAnalyzer("accelCurve", inputFiles2, outputFiles2).analyze();
     }
 
 }

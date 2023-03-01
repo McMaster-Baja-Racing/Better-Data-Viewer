@@ -17,46 +17,42 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class AccelCurveAnalyzer extends DataAnalyzer {
+public class AccelCurveAnalyzer extends Analyzer {
 
+    // inputFiles are first primary RPM, then secondary RPM
+    // outputFiles are first primary RPM rolling average, then secondary RPM rolling average, then interpolated, then accel curve (runs)
     public AccelCurveAnalyzer(String[] inputFiles, String[] outputFiles) {
         super(inputFiles, outputFiles);
     }
 
     @Override
-    public String analyze() {
-        System.out.println("Combining \"" + data[0] + "\" and \"" + data[1] + "\"");
+    public void analyze() {
+        System.out.println("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
         // Roll average first
         System.out.println("Rolling Average");
 
-        String[] filepath = new String[1];
-
-        filepath[0] = data[0];
-        RollingAvgAnalyzer rollingAvg1 = new RollingAvgAnalyzer(filepath);
+        RollingAvgAnalyzer rollingAvg1 = new RollingAvgAnalyzer(Arrays.copyOfRange(inputFiles, 0, 1), Arrays.copyOfRange(outputFiles, 0, 1), 30);
         rollingAvg1.analyze();
-
-        filepath[0] = data[1];
-        RollingAvgAnalyzer rollingAvg2 = new RollingAvgAnalyzer(filepath);
+        RollingAvgAnalyzer rollingAvg2 = new RollingAvgAnalyzer(Arrays.copyOfRange(inputFiles, 1, 2), Arrays.copyOfRange(outputFiles, 1, 2), 30);
         rollingAvg2.analyze();
 
         // Then interpolate
         System.out.println("Interpolating");
 
-        data[0] = data[0] + "_averaged.csv";
-        data[1] = data[1] + "_averaged.csv";
-        LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(data);
+        LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
         linearInt.analyze();
 
         // Here is all the analyzing done for combining the files, the rest concerns finding individual runs
 
-        String path = System.getProperty("user.dir");
-        String output = path + "/upload-dir/accelCurve.csv"; // This is bad for concurrency
+        //This all was to also write the data to a separate file, but it had the same data as the original file, so unnecessary for now
+        // String path = System.getProperty("user.dir");
+        // String output = path + "/upload-dir/accelCurve.csv"; // This is bad for concurrency
 
-        Reader reader = new CSVReader(data[0] + "_interpolated.csv");
+        Reader reader = new CSVReader(outputFiles[2]);
         List<List<String>> dataPoints = reader.read();
 
-        Writer writer = new CSVWriter(output);
-        writer.write(dataPoints);
+        // Writer writer = new CSVWriter(outputFiles[2]);
+        // writer.write(dataPoints);
 
         List<List<Integer>> accelTimes = getAccelTimestamp(dataPoints);
         for (int i = 0; i < accelTimes.size(); i++) {
@@ -72,10 +68,9 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
         for (int i = 0; i < accelTimes.size(); i++) {
             files[i] = "./data/run" + i + ".csv";
         }
-
-        return output;
     }
 
+    // Outdated
     // Currently it uses a sliding window + interpolation to get the dataRPM, and
     // further uses a rolling average on the longer file
     public List<List<String>> InterpolateAndRollAverage(List<List<String>> longerFile, List<List<String>> shorterFile) {
@@ -224,16 +219,16 @@ public class AccelCurveAnalyzer extends DataAnalyzer {
 
     // my mother is a fish
 
-    static public void main(String[] args) throws Exception {
+    static public void main(String[] args) {
         Date start = new Date();
 
         String[] files = new String[2];
         files[0] = "./data/F_RPM_PRIM.csv";
         files[1] = "./data/F_GPS_SPEED.csv";
-        DataAnalyzer d = new AccelCurveAnalyzer(files);
+        //DataAnalyzer d = new AccelCurveAnalyzer(files);
 
-        String dataPoints = d.analyze();
-        System.out.println(dataPoints);
+        //String dataPoints = d.analyze();
+        //System.out.println(dataPoints);
 
         Date end = new Date();
         System.out.println("Time: " + (end.getTime() - start.getTime()) + "ms");

@@ -9,6 +9,7 @@ package backend.API;
  */
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,9 @@ import backend.API.storage.StorageService;
 import backend.API.binary_csv.BinaryTOCSV;
 import backend.API.live.Serial;
 
-import backend.API.analyzer.DataAnalyzer;
+import backend.API.analyzer.Analyzer;
 import backend.API.analyzer.LinearInterpolaterAnalyzer;
 import backend.API.analyzer.AccelCurveAnalyzer;
-import backend.API.analyzer.Analyzer;
 import backend.API.analyzer.RollingAvgAnalyzer;
 
 
@@ -158,6 +158,8 @@ public class FileUploadController {
 		String[] analyses = analysis.split(",");
 		String[] files = new String[1];
 		files[0] = storageService.load(filename).toAbsolutePath().toString();
+
+		/* 
 		DataAnalyzer da;
 		for (String a : analyses) {
 			if (a.equals("rollAvg")) {
@@ -165,7 +167,7 @@ public class FileUploadController {
 				files = da.analyze().split(",");
 				//BinaryTOCSV.convert(filename);
 			}
-		}
+		}*/
 
 		Resource file = storageService.loadAsResource(files[0]);
 
@@ -192,6 +194,7 @@ public class FileUploadController {
 		String[] analyses = analysis.split(",");
 		String filename = "";
 
+		/* 
 		// Loop through the analyzers and run them on the data
 		DataAnalyzer da;
 		for (int i = 0; i < analyses.length; i++) {
@@ -202,7 +205,7 @@ public class FileUploadController {
 				da = new AccelCurveAnalyzer(files);
 				filename = da.analyze();
 			}
-		}
+		}*/
 
 		filename = "AccelCurve.csv";
 
@@ -229,6 +232,7 @@ public class FileUploadController {
 		String[] analyses = analysis.split(",");
 		String filename = "";
 
+		/* 
 		// Loop through the analyzers and run them on the data
 		DataAnalyzer da;
 		for (int i = 0; i < analyses.length; i++) {
@@ -244,7 +248,7 @@ public class FileUploadController {
 				DataAnalyzer da2 = new LinearInterpolaterAnalyzer(files);
 				filename = da2.analyze();
 			}
-		}
+		}*/
 
 		filename = "XYColours.csv";
 
