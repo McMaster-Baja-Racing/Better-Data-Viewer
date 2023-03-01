@@ -31,7 +31,6 @@ const Chart = ({ fileInformation }) => {
 
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
-
     const getSingleFile = async (filename, analyzers) => {
         console.log(filename, analyzers)
         fetch(`http://${window.location.hostname}:8080/analyze/${filename}?analysis=${analyzers}`)
@@ -130,36 +129,35 @@ const Chart = ({ fileInformation }) => {
         if (fileInformation.columns.length === 0) {
             return;
         }
-        var formattedData = [];
+        // var formattedData = [];
 
-        for (var i = 0; i < parsedData.length; i++) {
-            formattedData.push([Math.round(parseFloat(parsedData[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][fileInformation.columns[1].header])*100.0)/100]);
-        }
+        // for (var i = 0; i < parsedData.length; i++) {
+        //     for (var j = 0; j < parsedData[i].length; j++) {
+        //         if (parsedData[i][j][fileInformation.columns[0].header] == "Timestamp (ms)") {
+        //             formattedData.push([Math.round(Date.parse(parsedData[i][j][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][j][fileInformation.columns[1].header])*100.0)/100]);
+        //         }else{
+        //             formattedData.push([Math.round(parseFloat(parsedData[i][j][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][j][fileInformation.columns[1].header])*100.0)/100]);
+        //         }
+        //     }
+        // }
 
-        var formattedData2 = [];
-
-        for (var i = 0; i < parsedData2.length; i++) {
-            formattedData2.push([Math.round(parseFloat(parsedData2[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData2[i][fileInformation.columns[1].header])*100.0)/100]);
-        }
-
-        console.log(formattedData2)
-        
         // Update the chart options with the new data
         setChartOptions( (prevState) => {
             return {
                 ...prevState,
-                series: [
-                    // other data series should be formatteData from 0 to 200
-                    {data : formattedData2,
-                        color: 'blue',
-                        name: "second data series",
-                    opacity: 0.5},
-                    { data: formattedData,
-                    color: 'red',
-                    name: "first data series",
-                    opacity: 0.5},
-                    
-                ],
+                series: ( () => {
+                    var series = [];
+                    var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
+                    for (var i = 0; i < parsedData.length; i++) {
+                        series.push({
+                            name: fileInformation.columns[i].filename,
+                            data: parsedData[i],
+                            colour: colours[random % colours.length - 1],
+                            opacity: 0.5
+                        })
+                    }
+                    return series;
+                })(),
                 title: {
                     text: fileInformation.columns[1].header + " vs " + fileInformation.columns[0].header
                 },
