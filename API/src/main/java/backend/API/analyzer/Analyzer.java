@@ -1,6 +1,9 @@
 package backend.API.analyzer;
 
 import java.io.IOException;
+
+import backend.API.storage.StorageProperties;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -34,11 +37,22 @@ public abstract class Analyzer {
     // Factory method allows creation of different types of analyzers without having to change the code that calls it
     // When a new analyzer is created, add it to this factory method
     public static Analyzer createAnalyzer(String type, String[] inputFiles, String[] outputFiles, Object... params) {
+        // Before every input and output file location, add the storage directory before it
+        for (int i = 0; i < inputFiles.length; i++) {
+            inputFiles[i] = "./upload-dir/" + inputFiles[i];
+        }
+        for (int i = 0; i < outputFiles.length; i++) {
+            outputFiles[i] = "./upload-dir/" + outputFiles[i];
+        }
         switch (type) {
             case "accelCurve":
                 return new AccelCurveAnalyzer(inputFiles, outputFiles);
-            case "rollingAvg":
-                int windowSize = (int) params[0];
+            case "rollAvg":
+                // Check if passed a window size
+                if (params.length == 0) {
+                    return new RollingAvgAnalyzer(inputFiles, outputFiles);
+                }
+                int windowSize = Integer.parseInt((String) params[0]);
                 return new RollingAvgAnalyzer(inputFiles, outputFiles, windowSize);
             case "linearInterpolate":
                 return new LinearInterpolaterAnalyzer(inputFiles, outputFiles);

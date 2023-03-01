@@ -177,7 +177,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
   // Handles the selection of the analysis
   const getAnalysis = () => {
-    var analNames = ["linerInterp","AccelCurve", "rollAvg"];
+    var analNames = ["linearInterpolate","AccelCurve", "rollAvg"];
     var selectedAnals = [];
     for (var i = 0; i < analNames.length; i++) {
       if (document.getElementById(analNames[i]).checked) {
@@ -250,8 +250,8 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         {columnGenerator(dimensions)}
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-          <div className="rowFlexBox"> <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>
-          <label htmlFor="linerInterp"> <div className="boldText">Linear Interpolation</div></label></div>
+          <div className="rowFlexBox"> <input type="checkbox" id="linearInterpolate" name="linearInterpolate" value="true"></input>
+          <label htmlFor="linearInterpolate"> <div className="boldText">Linear Interpolation</div></label></div>
           <div className="rowFlexBox"><input type="checkbox" id="AccelCurve" name="AccelCurve" value="true"></input>
           <label htmlFor="AccelCurve"><div className="boldText">Accel Curve Analyzer</div></label></div>
           <div className="rowFlexBox"><input type="checkbox" id="rollAvg" name="rollAvg" value="true"></input>

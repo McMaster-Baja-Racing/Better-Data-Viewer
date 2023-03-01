@@ -16,6 +16,11 @@ public class RollingAvgAnalyzer extends Analyzer {
         this.windowSize = windowSize;
     }
 
+    public RollingAvgAnalyzer(String[] inputFiles, String[] outputFiles) {
+        super(inputFiles, outputFiles);
+        this.windowSize = 30;
+    }
+
     @Override
     public void analyze(){
 

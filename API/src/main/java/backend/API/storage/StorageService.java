@@ -24,4 +24,6 @@ public interface StorageService {
 
 	void delete(String filename);
 
+	void copyFile(String filename, String newFilename);
+
 }

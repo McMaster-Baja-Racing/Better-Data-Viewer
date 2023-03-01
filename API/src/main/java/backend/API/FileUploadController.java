@@ -36,10 +36,6 @@ import backend.API.binary_csv.BinaryTOCSV;
 import backend.API.live.Serial;
 
 import backend.API.analyzer.Analyzer;
-import backend.API.analyzer.LinearInterpolaterAnalyzer;
-import backend.API.analyzer.AccelCurveAnalyzer;
-import backend.API.analyzer.RollingAvgAnalyzer;
-
 
 @Controller
 public class FileUploadController {
@@ -51,7 +47,7 @@ public class FileUploadController {
 		this.storageService = storageService;
 	}
 
-	//This is the method that shows the upload form page
+	//This is the method that shows the upload form page, used for debugging
 	@GetMapping("/")
 	public String listUploadedFiles(Model model) throws IOException {
 
@@ -63,7 +59,26 @@ public class FileUploadController {
 		return "uploadForm";
 	}
 
-	//This is the method that returns information about all the files
+	//This is the default method that returns a single file
+	@GetMapping("/files/{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+		// Catch the exception if the file is not found
+
+		Resource file = storageService.loadAsResource(filename);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+    	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+		"attachment; filename=\"" + file.getFilename() + "\"");
+		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		return ResponseEntity.ok().headers(responseHeaders).body(file);
+	}
+
+	//This is the method that returns information about all the files, to be used by fetch
 	@GetMapping("/files")
 	@ResponseBody
 	public ResponseEntity<String> listUploadedFiles() throws IOException{
@@ -81,7 +96,7 @@ public class FileUploadController {
 	}
 
 	//This method returns information about a specific file, given the filename.
-	//It should return the first row of the file (the header row)
+	//It should return the first row of the file (the header row) + [datetime, and the number of rows eventually]
 	@GetMapping("/files/{filename:.+}/info")
 	@ResponseBody
 	public ResponseEntity<String> listFileInformation(@PathVariable String filename) throws IOException{
@@ -96,36 +111,23 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(fileinfo);
 	}
 
-	//This is the method that returns the file itself
-	@GetMapping("/files/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-		// Catch the exception if the file is not found
-
-		Resource file = storageService.loadAsResource(filename);
-
-		HttpHeaders responseHeaders = new HttpHeaders();
-
-    	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
-		//Set these headers so that you can access from LocalHost
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-		return ResponseEntity.ok().headers(responseHeaders).body(file);
-
-	}
-
 	// This is the be all end all method that should take in any number of file names and analyzers, plus live option and return a file
 	@GetMapping("/analyze")
 	@ResponseBody
 	public ResponseEntity<Resource> handleFileRequest(@RequestParam(value = "inputFiles", required = true) String[] inputFiles,
-		@RequestParam(value = "ouputFiles", required = true) String[] outputFiles,
-		@RequestParam(value = "analyzer", required = false) String[] analyzer, 
-		@RequestParam(value = "liveOptions", required = false) String[] liveOptions) {
+		@RequestParam(value = "outputFiles", required = false) String[] outputFiles,
+		@RequestParam(value = "analyzer", required = false) String[] analyzer,
+		@RequestParam(value = "liveOptions", required = false) String[] liveOptions) throws InterruptedException {
 		
 		//Catch exceptions first
+		if (inputFiles == null || inputFiles.length == 0) {
+			throw new IllegalArgumentException("No input files selected");
+		}
 
+		// If no output files are selected, use the input files
+		if (outputFiles == null || outputFiles.length == 0) {
+			outputFiles = inputFiles;
+		}
 
 		// Then check if live is true, and set the options + files accordingly
 		if (liveOptions[0].equals("true")) {
@@ -133,132 +135,19 @@ public class FileUploadController {
 		}
 
 		// Then run the selected analyzer
-		Analyzer.createAnalyzer(analyzer[0], inputFiles, outputFiles, Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
-
+		if (analyzer != null && analyzer.length != 0) {
+			Analyzer.createAnalyzer(analyzer[0], Arrays.copyOf(inputFiles, inputFiles.length), Arrays.copyOf(outputFiles, outputFiles.length), Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
+		} else {
+			// If no analyzer is selected, only one file is selected, copy it
+			storageService.copyFile(inputFiles[0], outputFiles[0]);
+		}
 		// Then return the final file
 		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1]);
 
+		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();
-
 		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
 		"attachment; filename=\"" + file.getFilename() + "\"");
-
-		//Set these headers so that you can access from LocalHost
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-		return ResponseEntity.ok().headers(responseHeaders).body(file);
-	}
-
-	@GetMapping("/analyze/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveAnalyzedFile(@PathVariable String filename, @RequestParam(value = "analysis", required = false) String analysis) {
-		// Catch the exception if the file is not found
-		
-		String[] analyses = analysis.split(",");
-		String[] files = new String[1];
-		files[0] = storageService.load(filename).toAbsolutePath().toString();
-
-		/* 
-		DataAnalyzer da;
-		for (String a : analyses) {
-			if (a.equals("rollAvg")) {
-				da = new RollingAvgAnalyzer(files);
-				files = da.analyze().split(",");
-				//BinaryTOCSV.convert(filename);
-			}
-		}*/
-
-		Resource file = storageService.loadAsResource(files[0]);
-
-		HttpHeaders responseHeaders = new HttpHeaders();
-
-    	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
-		//Set these headers so that you can access from LocalHost
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-		return ResponseEntity.ok().headers(responseHeaders).body(file);
-	}
-
-	//This method takes in two file names, and returns a single file of which is some combination of the two
-	//This should most likely be adapted to merge with the above method such that it can take in a variable number of files
-	@GetMapping("/filess/{primaryFile:.+}/{secondaryFile:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String primaryFile, @PathVariable String secondaryFile, @RequestParam(value = "analysis", required = false, defaultValue = "interpolate") String analysis) {
-
-		// Load both files into an array
-		String[] files = {storageService.load(primaryFile).toAbsolutePath().toString(), storageService.load(secondaryFile).toAbsolutePath().toString()};
-		// Split the analysis string into an array of analyzers
-		String[] analyses = analysis.split(",");
-		String filename = "";
-
-		/* 
-		// Loop through the analyzers and run them on the data
-		DataAnalyzer da;
-		for (int i = 0; i < analyses.length; i++) {
-			if (analyses[i].equals("interpolate")) {
-				// This will be used when Graham finishes this, for now skip it
-			}
-			else if (analyses[i].equals("AccelCurve")) {
-				da = new AccelCurveAnalyzer(files);
-				filename = da.analyze();
-			}
-		}*/
-
-		filename = "AccelCurve.csv";
-
-		Resource file = storageService.loadAsResource(filename);
-
-		HttpHeaders responseHeaders = new HttpHeaders();
-
-    	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
-		//Set these headers so that you can access from LocalHost
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-		return ResponseEntity.ok().headers(responseHeaders).body(file);
-	}
-
-	@GetMapping("files/{primaryFile:.+}/{secondaryFile:.+}/{tertiaryFile:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String primaryFile, @PathVariable String secondaryFile, @PathVariable String tertiaryFile, @RequestParam(value = "analysis", required = false, defaultValue = "interpolate") String analysis) {
-
-		// Load both files into an array
-		String[] files = {storageService.load(primaryFile).toAbsolutePath().toString(), storageService.load(secondaryFile).toAbsolutePath().toString(), storageService.load(tertiaryFile).toAbsolutePath().toString()};
-		// Split the analysis string into an array of analyzers
-		String[] analyses = analysis.split(",");
-		String filename = "";
-
-		/* 
-		// Loop through the analyzers and run them on the data
-		DataAnalyzer da;
-		for (int i = 0; i < analyses.length; i++) {
-			if (analyses[i].equals("interpolate")) {
-				// This will be used when Graham finishes this, for now skip it
-			} else if (analyses[i].equals("AccelCurve")) {
-				da = new AccelCurveAnalyzer(files);
-				filename = da.analyze();
-			} else if (analyses[i].equals("XYColours")) {
-				da = new LinearInterpolaterAnalyzer(files);
-				files[0] = da.analyze();
-				files[1] = files[2];
-				DataAnalyzer da2 = new LinearInterpolaterAnalyzer(files);
-				filename = da2.analyze();
-			}
-		}*/
-
-		filename = "XYColours.csv";
-
-		Resource file = storageService.loadAsResource(filename);
-
-		HttpHeaders responseHeaders = new HttpHeaders();
-
-		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
-		//Set these headers so that you can access from LocalHost
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 

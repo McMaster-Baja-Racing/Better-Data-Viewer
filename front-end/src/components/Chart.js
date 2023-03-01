@@ -32,44 +32,26 @@ const Chart = ({ fileInformation }) => {
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
 
-    const getSingleFile = async (filename, analyzers) => {
-        console.log(filename, analyzers)
-        fetch(`http://${window.location.hostname}:8080/analyze/${filename}?analysis=${analyzers}`)
-            .then(response => {
-                //console.log(response)
-                //console.log(response.body) //use this to get a stream (efficient)
+    const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions) => {
+        console.log(inputFiles, outputFiles, analyzerOptions, liveOptions)
 
-                response.text().then(text => { //or this to get all text at once
+        fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
+            method: 'GET'
+        }).then(response => {
+            console.log(response)
+            response.text().then(text => {
+                console.log(text)
+                //Now convert such that each line is an array
+                Papa.parse(text, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function (results) {
 
-                    //Now convert such that each line is an array
-                    Papa.parse(text, {
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function (results) {
-                            setParsedData(results.data);
-                        },
-                    })
-
+                        setParsedData(results.data);
+                    },
                 })
             })
-    }
-
-    const fetchAccelCurve = (secondary, primary) => {
-        fetch(`http://${window.location.hostname}:8080/filess/${primary}/${secondary}?analysis=AccelCurve`)
-            .then(response => {
-                console.log(response)
-                response.text().then(text => { //or this to get all text at once
-                    //Now convert such that each line is an array
-                    Papa.parse(text, {
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function (results) {
-                            setParsedData(results.data);
-                        },
-                    })
-
-                })
-            })
+        })
     }
 
     useEffect(() => {
@@ -77,20 +59,9 @@ const Chart = ({ fileInformation }) => {
         if (fileInformation.columns.length === 0) {
             return;
         }
-        // Case where only one file is selected
-        if (fileInformation.columns[0].filename === fileInformation.columns[1].filename) {
-            getSingleFile(fileInformation.columns[0].filename, fileInformation.analysis);
-            return;
-        }
-        // Case where two different files are selected
-        if (fileInformation.columns[0].filename !== fileInformation.columns[1].filename) {
-            console.log("Two files selected")
-            if (fileInformation.analysis[0] === "AccelCurve") {
-                console.log("Accel Curve")
-                fetchAccelCurve(fileInformation.columns[0].filename, fileInformation.columns[1].filename);
-                return;
-            }
-        }
+
+        getFile([fileInformation.columns[0].filename],["beebeoop.csv"], [fileInformation.analysis[0]], ["false"])
+
     }, [fileInformation]);
 
     useEffect(() => {

@@ -25,6 +25,7 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
         w.write(linearInterpolate(r1.read(), r2.read()));
 
     }
+    
     // Interpolate data2 to data1
     public List<List<String>> linearInterpolate(List<List<String>> data1, List<List<String>> data2) {
 

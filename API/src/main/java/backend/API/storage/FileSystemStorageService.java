@@ -126,4 +126,15 @@ public class FileSystemStorageService implements StorageService {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public void copyFile(String filename, String newFilename) {
+		try {
+			Path file = load(filename);
+			Path newFile = load(newFilename);
+			Files.copy(file, newFile, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
