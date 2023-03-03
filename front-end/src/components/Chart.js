@@ -29,6 +29,9 @@ const Chart = ({ fileInformation }) => {
         }
     });
 
+    //loading
+    const [loading, setLoading] = useState(false);
+
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
 
@@ -97,10 +100,12 @@ const Chart = ({ fileInformation }) => {
     }
 
     useEffect(() => {
+        
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
         if (fileInformation.columns.length === 0) {
             return;
         }
+        setLoading(true);
         // Case where only one file is selected
         if (fileInformation.columns[0].filename === fileInformation.columns[1].filename) {
             
@@ -180,6 +185,7 @@ const Chart = ({ fileInformation }) => {
                 }
             }
         })
+        setLoading(false);
     }, [parsedData])
 
     function throttle(f, delay) {
@@ -217,6 +223,7 @@ const Chart = ({ fileInformation }) => {
                     options={chartOptions}
                 />
             </div>
+            {loading && <img className="loading" src="https://i.imgur.com/PEP35pk.gif" alt="Loading..." />}
         </div>
 
     )
