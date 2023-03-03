@@ -65,4 +65,13 @@
 
   .submitbutton:active {
     outline: none;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.1)),crimson;}
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.1)),crimson;
+  }
+
+  .loading {
+    position: absolute;
+    left: 0; top: 5rem; right: 0; bottom: 0;
+    width: 28rem;
+  }
+
+

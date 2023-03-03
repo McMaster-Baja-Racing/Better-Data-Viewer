@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 export const UploadModal = ({ setShowUploadModal }) => {
   
   const [dragActive, setDragActive] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   // handle drag events
   const handleDrag = function (e) {
     e.preventDefault();
@@ -54,19 +55,35 @@ export const UploadModal = ({ setShowUploadModal }) => {
   const onSubmit = async (data) => {
     //upload multiple files
     const formData = new FormData();
-    for (let i = 0; i < data.file.length; i++) {
-      formData.set("file", data.file[i]);
-      fetch(`http://${window.location.hostname}:8080/upload`, {
-        method: "POST",
-        body: formData,
-      }).then((res) => {
-        res.text().then(text => {
-          alert(JSON.stringify(`${text}, status: ${res.status}`))
+    //start loading useState
+    setLoading(true);
+    console.log(loading);
+    await new Promise((resolve, reject) => {
+      for (let i = 0; i < data.file.length; i++) {
+        formData.set("file", data.file[i]);
+        fetch(`http://${window.location.hostname}:8080/upload`, {
+          method: "POST",
+          body: formData,
+        }).then((res) => {
+          res.text().then(text => {
+            if(res.status !== 200) {
+              alert(JSON.stringify(`${text}, status: ${res.status}`))
+            }
+            if (i===data.file.length-1) {
+              resolve();
+            }
+          })
+        }).catch(e => { 
+          alert(e)
+          resolve();
         })
-      }).catch(e => {
-        alert(e)
-      })
-    }
+        
+      }
+    });
+    //stop loading useState
+    console.log(loading);
+    setLoading(false);
+
     //setShowUploadModal(false); Dont need to do this neccesarily
   };
   return ReactDom.createPortal(
@@ -82,12 +99,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
               </div>
             </label>
             {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
-            <input className="submitbutton" type="submit" />
-          </form>
-
-          
-        </div>
-        <button onClick={(() => {
+            <button onClick={(() => {
             console.log("babeyy")
             fetch(`http://${window.location.hostname}:8080/deleteAll`).then((res) => {
               alert(res)
@@ -95,6 +107,10 @@ export const UploadModal = ({ setShowUploadModal }) => {
               console.log(err)
             })
           })}>Delete All</button>
+          {loading && <img className="loading" src="https://i.imgur.com/PEP35pk.gif" alt="Loading..."/>}
+          <input className="submitbutton" type="submit" />
+          </form>
+        </div>
         <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
       </div>
     </div>,

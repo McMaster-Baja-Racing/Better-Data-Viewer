@@ -8,6 +8,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
   // Handles how many axes are selected
   const [dimensions, setDimensions] = useState(2);
+  
 
   // Generates the columns for the dropdowns
   const columnGenerator = (n) => {
