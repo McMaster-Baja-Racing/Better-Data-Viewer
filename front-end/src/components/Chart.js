@@ -145,6 +145,7 @@ const Chart = ({ fileInformation }) => {
         setChartOptions( (prevState) => {
             return {
                 ...prevState,
+                //Dyanmic Series Generation based on length of parsedData
                 series: ( () => {
                     var series = [];
                     var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
@@ -205,7 +206,7 @@ const Chart = ({ fileInformation }) => {
         //run observer with a delay
         resizeObserver.observe(chartContainer);
     }, [])
-
+    //Live Data fetch request function 
     const fetchData = async (filename) => {
         // Fetch the data from the server
         fetch(`http://${window.location.hostname}:8080/filess/live_F_RPM_PRIM.csv/live_F_RPM_SEC.csv?analysis=AccelCurve`).then((response) => {
@@ -226,9 +227,10 @@ const Chart = ({ fileInformation }) => {
             })
         });
     }
-
+    //Live Data useEffect function
     useEffect(() => {
         let intervalId;
+        //for loop to loop through file information array to check if live is true
         for (var i =0; i<fileInformation.length; i++) {
             if (fileInformation[i].live){
                 intervalId = setInterval(() => {
