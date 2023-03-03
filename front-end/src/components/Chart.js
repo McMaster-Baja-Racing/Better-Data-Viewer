@@ -206,6 +206,39 @@ const Chart = ({ fileInformation }) => {
         resizeObserver.observe(chartContainer);
     }, [])
 
+    const fetchData = async (filename) => {
+        // Fetch the data from the server
+        fetch(`http://${window.location.hostname}:8080/filess/live_F_RPM_PRIM.csv/live_F_RPM_SEC.csv?analysis=AccelCurve`).then((response) => {
+            response.text().then((text) => {
+                // Parse the data into an array of arrays
+                const data = text
+                    .trim()
+                    .split("\n")
+                    .slice(1)
+                    .map((line) => line.split(","))
+                    .map((line) => [parseFloat(line[2]), parseFloat(line[1])]);
+                
+                setChartOptions({
+                    series: [{
+                        data: data
+                    }]
+                });
+            })
+        });
+    }
+
+    useEffect(() => {
+        let intervalId;
+        for (var i =0; i<fileInformation.length; i++) {
+            if (fileInformation[i].live){
+                intervalId = setInterval(() => {
+                            fetchData();
+                        }, 250);
+            }
+        }
+        return () => clearInterval(intervalId);
+      }, []);
+
     return (
 
         <div className="chartContainer">
