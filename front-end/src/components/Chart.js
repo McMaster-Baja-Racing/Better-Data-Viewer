@@ -29,99 +29,55 @@ const Chart = ({ fileInformation }) => {
         }
     });
 
+    //loading
+    const [loading, setLoading] = useState(false);
+
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
-    const getSingleFile = async (filename, analyzers) => {
-        console.log(filename, analyzers)
-        fetch(`http://${window.location.hostname}:8080/analyze/${filename}?analysis=${analyzers}`)
-            .then(response => {
-                //console.log(response)
-                //console.log(response.body) //use this to get a stream (efficient)
 
-                response.text().then(text => { //or this to get all text at once
+    const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions) => {
+        console.log(inputFiles, outputFiles, analyzerOptions, liveOptions)
 
-                    //Now convert such that each line is an array
-                    Papa.parse(text, {
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function (results) {
-                            setParsedData(results.data);
-                        },
-                    })
+        fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
+            method: 'GET'
+        }).then(response => {
+            console.log(response)
+            response.text().then(text => {
+                console.log(text)
+                //Now convert such that each line is an array
+                Papa.parse(text, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function (results) {
 
+                        setParsedData(results.data);
+                    },
                 })
             })
-    }
-
-    const [parsedData2, setParsedData2] = useState([]);
-
-    const getSingleFile2 = async (filename, analyzers) => {
-        console.log(filename, analyzers)
-        fetch(`http://${window.location.hostname}:8080/analyze/${filename}?analysis=${analyzers}`)
-            .then(response => {
-                //console.log(response)
-                //console.log(response.body) //use this to get a stream (efficient)
-
-                response.text().then(text => { //or this to get all text at once
-
-                    //Now convert such that each line is an array
-                    Papa.parse(text, {
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function (results) {
-                            setParsedData2(results.data);
-                        },
-                    })
-
-                })
-            })
-    }
-
-    const fetchAccelCurve = (secondary, primary) => {
-        fetch(`http://${window.location.hostname}:8080/filess/${primary}/${secondary}?analysis=AccelCurve`)
-            .then(response => {
-                console.log(response)
-                response.text().then(text => { //or this to get all text at once
-                    //Now convert such that each line is an array
-                    Papa.parse(text, {
-                        header: true,
-                        skipEmptyLines: true,
-                        complete: function (results) {
-                            setParsedData(results.data);
-                        },
-                    })
-
-                })
-            })
+        })
     }
 
     useEffect(() => {
+        
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
         if (fileInformation.length === 0) {
             return;
         }
-        // Case where only one file is selected
-        if (fileInformation.columns[0].filename === fileInformation.columns[1].filename) {
-            
-            if (fileInformation.analysis[0] === "AccelCurve") {
-                console.log("Accel Curve 2")
-                fetchAccelCurve(fileInformation.columns[0].filename, fileInformation.columns[1].filename);
-                return;
-            } else {
-                getSingleFile(fileInformation.columns[0].filename, fileInformation.analysis);
-                getSingleFile2("accelCurve2.csv", fileInformation.analysis);
-            }
-            return;
-        }
-        // Case where two different files are selected
-        if (fileInformation.columns[0].filename !== fileInformation.columns[1].filename) {
-            console.log("Two files selected")
-            if (fileInformation.analysis[0] === "AccelCurve") {
-                console.log("Accel Curve")
-                fetchAccelCurve(fileInformation.columns[0].filename, fileInformation.columns[1].filename);
-                return;
+
+        setLoading(true);
+
+        // Set files to be all filenames in fileInformation, without duplicates
+        var files = [];
+        for (var i = 0; i < fileInformation.columns.length; i++) {
+            if (!files.includes(fileInformation.columns[i].filename)) {
+                files.push(fileInformation.columns[i].filename);
             }
         }
+        
+
+
+        getFile(files,[], [fileInformation.analysis[0]], ["false"])
+
     }, [fileInformation]);
 
     useEffect(() => {
@@ -129,6 +85,7 @@ const Chart = ({ fileInformation }) => {
         if (fileInformation.length === 0) {
             return;
         }
+
         // var formattedData = [];
 
         // for (var i = 0; i < parsedData.length; i++) {
@@ -141,10 +98,19 @@ const Chart = ({ fileInformation }) => {
         //     }
         // }
 
+
+        var formattedData = [];
+
+        for (var i = 0; i < parsedData.length; i++) {
+            formattedData.push([Math.round(parseFloat(parsedData[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][fileInformation.columns[1].header])*100.0)/100]);
+        }
+        
+
         // Update the chart options with the new data
         setChartOptions( (prevState) => {
             return {
                 ...prevState,
+
                 //Dyanmic Series Generation based on length of parsedData
                 series: ( () => {
                     var series = [];
@@ -179,6 +145,7 @@ const Chart = ({ fileInformation }) => {
                 }
             }
         })
+        setLoading(false);
     }, [parsedData])
 
     function throttle(f, delay) {
@@ -250,6 +217,7 @@ const Chart = ({ fileInformation }) => {
                     options={chartOptions}
                 />
             </div>
+            {loading && <img className="loading" src="https://i.imgur.com/PEP35pk.gif" alt="Loading..." />}
         </div>
 
     )
