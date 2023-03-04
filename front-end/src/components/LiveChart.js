@@ -30,7 +30,7 @@ const LiveChart = () => {
             }
         },
         series: [{
-            data: [5, 2, 1]
+            data: [[5, 2] , [1,5], [4,5]]
         }]
     });
 

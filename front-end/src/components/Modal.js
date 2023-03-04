@@ -38,10 +38,14 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     }
     if (seriescounter===0){
       fileTransfer({
-      "columns": selectColumns,
-      "live": document.getElementById("liveDataCheckbox").checked,
-      "analysis": getAnalysis(),
-      "type": document.getElementById("graphTypeSelect").value
+        "files": [
+          {
+            "columns": selectColumns,
+            "analysis": getAnalysis(),
+          }
+        ],
+        "live": document.getElementById("liveDataCheckbox").checked,
+        "type": document.getElementById("graphTypeSelect").value
     })
     }else{
       console.log(fileinfo)
@@ -205,7 +209,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
   // Handles the selection of the analysis
   const getAnalysis = () => {
-    var analNames = ["linerInterp","AccelCurve", "rollAvg"];
+    var analNames = ["linearInterpolate","accelCurve", "rollAvg"];
     var selectedAnals = [];
     for (var i = 0; i < analNames.length; i++) {
       if (document.getElementById(analNames[i]).checked) {
@@ -264,7 +268,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           if(document.getElementById("graphTypeSelect").value === "XYColour") {
             setDimensions(3)
           } else {
-            console.log("HE")
             setDimensions(2)
           }
            showPage3(); }} >Next</button>
@@ -279,12 +282,12 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         <button onClick={addSeries}>Add Series</button>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-          <div className="rowFlexBox"> <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>
-          <label htmlFor="linerInterp"> <div className="boldText">Linear Interpolation</div></label></div>
-          <div className="rowFlexBox"><input type="checkbox" id="AccelCurve" name="AccelCurve" value="true"></input>
-          <label htmlFor="AccelCurve"><div className="boldText">Accel Curve Analyzer</div></label></div>
+          <div className="rowFlexBox"> <input type="checkbox" id="linearInterpolate" name="linearInterpolate" value="true"></input>
+          <label htmlFor="linearInterpolate"> <div className="boldText">Linear Interpolation</div></label></div>
+          <div className="rowFlexBox"><input type="checkbox" id="accelCurve" name="accelCurve" value="true"></input>
+          <label htmlFor="accelCurve"><div className="boldText">Accel Curve Analyzer</div></label></div>
           <div className="rowFlexBox"><input type="checkbox" id="rollAvg" name="rollAvg" value="true"></input>
-          <label htmlFor="AccelCurve"> <div className="boldText">Rolling Average Analyzer</div></label></div>
+          <label htmlFor="rollAvg"> <div className="boldText">Rolling Average Analyzer</div></label></div>
   
       </div>
       <div className="buttonFlexBox">

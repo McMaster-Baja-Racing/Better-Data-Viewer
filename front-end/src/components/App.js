@@ -21,7 +21,29 @@ const App = () => {
   }
 
   // All for information transfer between children and parent
-  const [fileInformation, setFileInformation] = useState([{ columns: [], live: false, analysis: "none" }]);
+  // sample format for fileInformation: 
+  // {
+  //    files:
+  //    [
+  //      {
+  //        columns: [
+  //          {header:"RPM", filename:"PRIM_RPM.csv"}, 
+  //          {header:"Timestampt", filename:"PRIM_RPM.csv"}
+  //        ],
+  //        analysis: "none"
+  //      },
+  //      {
+  //        columns: [
+  //          {header:"RPM", filename:"SEC_RPM.csv"},
+  //          {header:"Timestampt", filename:"SEC_RPM.csv"}
+  //        ],
+  //        analysis: "rollAvg"
+  //      }
+  //   ],
+  //   live: false,
+  //   type: "line"
+  // }
+  const [fileInformation, setFileInformation] = useState({files: [], live: false});
   const handleFileTransfer = (e) => {
     console.log(e)
     setFileInformation(e);

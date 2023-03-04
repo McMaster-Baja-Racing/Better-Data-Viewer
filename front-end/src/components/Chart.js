@@ -43,101 +43,85 @@ const Chart = ({ fileInformation }) => {
         }).then(response => {
             console.log(response)
             response.text().then(text => {
-                console.log(text)
-                //Now convert such that each line is an array
-                Papa.parse(text, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: function (results) {
 
-                        setParsedData(results.data);
-                    },
+                const data = text
+                    .trim()
+                    .split("\n")
+                    .slice(1)
+                    .map((line) => line.split(","))
+                    .map((line) => [parseFloat(line[0]), parseFloat(line[1])]);
+                
+                setParsedData (prevState => {
+                    return [...prevState, data]
                 })
             })
         })
     }
 
     useEffect(() => {
-        
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
-        if (fileInformation.length === 0) {
+        if (fileInformation.files.length === 0) {
             return;
         }
 
         setLoading(true);
+        setParsedData([]);
+
+        // Now complete a request for each series
+        for (var i = 0; i < fileInformation.files.length; i++) {
+            var files = [];
+            for (var j = 0; j < fileInformation.files[i].columns.length; j++) {
+                // Create a list of all files in order (formatting for backend)
+                if (!files.includes(fileInformation.files[i].columns[j].filename)) {
+                    files.push(fileInformation.files[i].columns[j].filename);
+                }
+            }
+
+            getFile(files, [], [fileInformation.files[i].analysis/*[0]*/], ["false"])
+        }
 
         // Set files to be all filenames in fileInformation, without duplicates
-        var files = [];
-        for (var i = 0; i < fileInformation.columns.length; i++) {
-            if (!files.includes(fileInformation.columns[i].filename)) {
-                files.push(fileInformation.columns[i].filename);
-            }
-        }
-        
-
-
-        getFile(files,[], [fileInformation.analysis[0]], ["false"])
 
     }, [fileInformation]);
 
     useEffect(() => {
         // Once necessary data is fetched, format it for the chart
-        if (fileInformation.length === 0) {
+        if (fileInformation.files.length === 0) {
             return;
         }
 
-        // var formattedData = [];
-
-        // for (var i = 0; i < parsedData.length; i++) {
-        //     for (var j = 0; j < parsedData[i].length; j++) {
-        //         if (parsedData[i][j][fileInformation.columns[0].header] == "Timestamp (ms)") {
-        //             formattedData.push([Math.round(Date.parse(parsedData[i][j][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][j][fileInformation.columns[1].header])*100.0)/100]);
-        //         }else{
-        //             formattedData.push([Math.round(parseFloat(parsedData[i][j][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][j][fileInformation.columns[1].header])*100.0)/100]);
-        //         }
-        //     }
-        // }
-
-
-        var formattedData = [];
-
-        for (var i = 0; i < parsedData.length; i++) {
-            formattedData.push([Math.round(parseFloat(parsedData[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][fileInformation.columns[1].header])*100.0)/100]);
-        }
-        
-
         // Update the chart options with the new data
-        setChartOptions( (prevState) => {
+        setChartOptions((prevState) => {
+            console.log(parsedData)
             return {
                 ...prevState,
-
-                //Dyanmic Series Generation based on length of parsedData
                 series: ( () => {
                     var series = [];
                     var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
                     for (var i = 0; i < parsedData.length; i++) {
+                        console.log(fileInformation)
                         series.push({
-                            name: fileInformation[i].columns[0].filename,
+                            name: fileInformation.files[i].columns[0].filename,
                             data: parsedData[i],
                             colour: colours[i],
-                            opacity: 0.5
+                            opacity: 0.75
                         })
                     }
                     return series;
                 })(),
                 title: {
-                    text: fileInformation[0].columns[1].header + " vs " + fileInformation[0].columns[0].header
+                    text: fileInformation.files[0].columns[1].header + " vs " + fileInformation.files[0].columns[0].header
                 },
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-                        type: fileInformation[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
-                        text: fileInformation[0].columns[0].header
+                        type: fileInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+                        text: fileInformation.files[0].columns[0].header
                     }
                 },
                 yAxis: {
                     title: {
-                        text: fileInformation[0].columns[1].header
+                        text: fileInformation.files[0].columns[1].header
                     }
                 },
                 legend: {
