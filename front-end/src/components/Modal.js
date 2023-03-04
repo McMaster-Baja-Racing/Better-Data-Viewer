@@ -174,6 +174,22 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     }
     getHeaders();
   }, [selectedFiles]);
+  var fileinfo = []
+  const addSeries = () => {
+    console.log("Adding series");
+    if (document.getElementsByClassName(0)[0].value === "") {
+      alert("Please select a column for the x-axis.");
+      return;
+    }
+    var selectColumns = [];
+    for (let i = 0; i < dimensions; i++) {
+      selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
+    }
+    
+    filetransfer{
+      fileinfo
+    }
+  }
 
   // Handles the selection of the analysis
   const getAnalysis = () => {
