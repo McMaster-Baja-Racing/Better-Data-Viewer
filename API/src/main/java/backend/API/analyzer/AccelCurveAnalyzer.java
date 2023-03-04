@@ -42,7 +42,8 @@ public class AccelCurveAnalyzer extends Analyzer {
         LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
         linearInt.analyze();
 
-        // Here is all the analyzing done for combining the files, the rest concerns finding individual runs
+        // Here is all the analyzing done for combining the files, the rest concerns
+        // finding individual runs
 
         //This all was to also write the data to a separate file, but it had the same data as the original file, so unnecessary for now
         // String path = System.getProperty("user.dir");
@@ -92,7 +93,7 @@ public class AccelCurveAnalyzer extends Analyzer {
         int indexShort = 2;
         // Begin loop
         int limit = longerFile.size();
-        for (int i = 2; i < limit; i++) {          
+        for (int i = 2; i < limit; i++) {
             // Find time in longer file
             int timeLong = Integer.parseInt(longerFile.get(i).get(0));
 
@@ -109,24 +110,26 @@ public class AccelCurveAnalyzer extends Analyzer {
                 }
                 timeShort = Integer.parseInt(shorterFile.get(indexShort).get(0));
 
-            } // Keep going until you have a time that is greater than the time in the longer file
+            } // Keep going until you have a time that is greater than the time in the longer
+              // file
 
-            // Create new datapoint that lines up with the longer file via linear interpolation
+            // Create new datapoint that lines up with the longer file via linear
+            // interpolation
             // Dynamic rolling average
             dataPoint.add(longerFile.get(i).get(0)); // Add time
 
             rollSum += Double.parseDouble(longerFile.get(i).get(1));
             if (i < 12) {
-                dataPoint.add(Double.toString(rollSum/i));
+                dataPoint.add(Double.toString(rollSum / i));
             } else {
-                rollSum -= Double.parseDouble(longerFile.get(i-10).get(1));
+                rollSum -= Double.parseDouble(longerFile.get(i - 10).get(1));
                 dataPoint.add(Double.toString(rollSum / 10));
             }
-            
 
             // Already added the x value
 
-            // Using data at indexOfShorterFile and indexOfShorterFile - 1, interpolate the value
+            // Using data at indexOfShorterFile and indexOfShorterFile - 1, interpolate the
+            // value
             double val1 = Double.parseDouble(shorterFile.get(indexShort - 1).get(1));
             double val2 = Double.parseDouble(shorterFile.get(indexShort).get(1));
             double time1 = Double.parseDouble(shorterFile.get(indexShort - 1).get(0));
@@ -194,6 +197,10 @@ public class AccelCurveAnalyzer extends Analyzer {
             throws IOException {
         // print to separate csv, will be removed if/when frontend can go to specified
         // points
+        FileWriter fw2 = new FileWriter("./upload-dir/combinedAccel.csv");
+        BufferedWriter bw2 = new BufferedWriter(fw2);
+        bw2.write("Timestamp (ms),F_PRIM_RPM,F_GPS_SPEED\n");
+
         for (int i = 0; i < accelTimes.size(); i++) {
             int initialTime = accelTimes.get(i).get(0);
             int endTime = accelTimes.get(i).get(1);
@@ -203,18 +210,24 @@ public class AccelCurveAnalyzer extends Analyzer {
                 file.createNewFile();
             }
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
+
             BufferedWriter bw = new BufferedWriter(fw);
+
             bw.write("Timestamp (ms),F_PRIM_RPM,F_GPS_SPEED\n");
+            
 
             for (int j = 1; j < dataPoints.size(); j++) {
                 int currTime = Integer.parseInt(dataPoints.get(j).get(0));
                 if (currTime >= initialTime && currTime <= endTime) {
                     bw.write(dataPoints.get(j).get(0) + "," + dataPoints.get(j).get(1) + "," + dataPoints.get(j).get(2)
                             + "\n");
+                    bw2.write(dataPoints.get(j).get(0) + "," + dataPoints.get(j).get(1) + "," + dataPoints.get(j).get(2)
+                            + "\n");
                 }
             }
             bw.close();
         }
+        bw2.close();
     }
 
     // my mother is a fish

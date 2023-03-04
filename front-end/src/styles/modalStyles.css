@@ -77,6 +77,7 @@
     flex-direction: column;
     justify-content: left;
     align-items: left;
+    min-width: 30rem;
   }
 
   .colFlexBox2{
@@ -86,6 +87,7 @@
     align-items: left;
     flex: 1;
     height : 100%;
+    min-width: 30rem;
   }
 
   .rowFlexBox{
@@ -95,11 +97,17 @@
     justify-content: left;
   }
 
+  
+
   .spaceRowFlexBox{
     display: flex;
     flex-direction: row;
     align-items: left;
     justify-content: space-between;
+  }
+
+  .graphTypeSelect {
+    margin-bottom: 4em;
   }
 
   .buttonFlexBox{
@@ -111,7 +119,6 @@
   .boldText{
     font-weight: bold;
     margin : 0.5em;
-    
   }
   
   @keyframes animate {
