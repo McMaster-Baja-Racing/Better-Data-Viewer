@@ -151,7 +151,7 @@ const Chart = ({ fileInformation }) => {
                     var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
                     for (var i = 0; i < parsedData.length; i++) {
                         series.push({
-                            name: fileInformation.columns[i].filename,
+                            name: fileInformation[i].columns[0].filename,
                             data: parsedData[i],
                             colour: colours[i],
                             opacity: 0.5
@@ -160,18 +160,18 @@ const Chart = ({ fileInformation }) => {
                     return series;
                 })(),
                 title: {
-                    text: fileInformation.columns[1].header + " vs " + fileInformation.columns[0].header
+                    text: fileInformation[0].columns[1].header + " vs " + fileInformation[0].columns[0].header
                 },
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-                        type: fileInformation.columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
-                        text: fileInformation.columns[0].header
+                        type: fileInformation[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+                        text: fileInformation[0].columns[0].header
                     }
                 },
                 yAxis: {
                     title: {
-                        text: fileInformation.columns[1].header
+                        text: fileInformation[0].columns[1].header
                     }
                 },
                 legend: {

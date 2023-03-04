@@ -36,12 +36,20 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
-    fileTransfer({
+    if (seriescounter===0){
+      fileTransfer({
       "columns": selectColumns,
       "live": document.getElementById("liveDataCheckbox").checked,
       "analysis": getAnalysis(),
       "type": document.getElementById("graphTypeSelect").value
     })
+    }else{
+      console.log(fileinfo)
+      fileTransfer({
+        fileinfo
+      })
+    }
+  
     setShowModal(false);
   }
 
@@ -77,8 +85,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         });
       })
   }
-
-  
   // Handles the display of the pages, TODO: Consolidate into one function and a parameter
   const showPage1 = () => {
     var x = document.getElementById("one");
@@ -174,9 +180,12 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     }
     getHeaders();
   }, [selectedFiles]);
-  var fileinfo = []
+
+  var fileinfo = [[]]
+  var seriescounter = 0;
+  
   const addSeries = () => {
-    console.log("Adding series");
+    
     if (document.getElementsByClassName(0)[0].value === "") {
       alert("Please select a column for the x-axis.");
       return;
@@ -185,10 +194,13 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
-    
-    filetransfer{
-      fileinfo
-    }
+    fileinfo.push([{
+      "columns": selectColumns,
+      "live": document.getElementById("liveDataCheckbox").checked,
+      "analysis": getAnalysis(),
+      "type": document.getElementById("graphTypeSelect").value
+    }])
+    seriescounter++;
   }
 
   // Handles the selection of the analysis
@@ -264,6 +276,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       <div className="colFlexBox2">
       <h3>Select Axis</h3>
         {columnGenerator(dimensions)}
+        <button onClick={addSeries}>Add Series</button>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
           <div className="rowFlexBox"> <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>

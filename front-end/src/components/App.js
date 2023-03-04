@@ -21,7 +21,7 @@ const App = () => {
   }
 
   // All for information transfer between children and parent
-  const [fileInformation, setFileInformation] = useState({ columns: [], live: false, analysis: "none" });
+  const [fileInformation, setFileInformation] = useState([{ columns: [], live: false, analysis: "none" }]);
   const handleFileTransfer = (e) => {
     console.log(e)
     setFileInformation(e);
