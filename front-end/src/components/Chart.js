@@ -43,15 +43,16 @@ const Chart = ({ fileInformation }) => {
         }).then(response => {
             console.log(response)
             response.text().then(text => {
-                console.log(text)
-                //Now convert such that each line is an array
-                Papa.parse(text, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: function (results) {
 
-                        setParsedData(results.data);
-                    },
+                const data = text
+                    .trim()
+                    .split("\n")
+                    .slice(1)
+                    .map((line) => line.split(","))
+                    .map((line) => [parseFloat(line[0]), parseFloat(line[1])]);
+                
+                setParsedData (prevState => {
+                    return [...prevState, data]
                 })
             })
         })
@@ -60,61 +61,68 @@ const Chart = ({ fileInformation }) => {
     useEffect(() => {
         
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
-        if (fileInformation.columns.length === 0) {
+        if (fileInformation.files.length === 0) {
             return;
         }
 
         setLoading(true);
+        setParsedData([]);
+
+        // Now complete a request for each series
+        for (var i = 0; i < fileInformation.files.length; i++) {
+            var files = [];
+            for (var j = 0; j < fileInformation.files[i].columns.length; j++) {
+                // Create a list of all files in order (formatting for backend)
+                if (!files.includes(fileInformation.files[i].columns[j].filename)) {
+                    files.push(fileInformation.files[i].columns[j].filename);
+                }
+            }
+
+            getFile(files, [], [fileInformation.files[i].analysis/*[0]*/], ["false"])
+        }
 
         // Set files to be all filenames in fileInformation, without duplicates
-        var files = [];
-        for (var i = 0; i < fileInformation.columns.length; i++) {
-            if (!files.includes(fileInformation.columns[i].filename)) {
-                files.push(fileInformation.columns[i].filename);
-            }
-        }
-        
-
-
-        getFile(files,[], [fileInformation.analysis[0]], ["false"])
 
     }, [fileInformation]);
 
     useEffect(() => {
         // Once necessary data is fetched, format it for the chart
-        if (fileInformation.columns.length === 0) {
+        if (fileInformation.files.length === 0) {
             return;
         }
-        var formattedData = [];
 
-        for (var i = 0; i < parsedData.length; i++) {
-            formattedData.push([Math.round(parseFloat(parsedData[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][fileInformation.columns[1].header])*100.0)/100]);
-        }
-        
         // Update the chart options with the new data
-        setChartOptions( (prevState) => {
+        setChartOptions((prevState) => {
+            console.log(parsedData)
             return {
                 ...prevState,
-                series: [
-                    { data: formattedData,
-                    color: 'red',
-                    name: "first data series",
-                    opacity: 0.5},
-                    
-                ],
+                series: ( () => {
+                    var series = [];
+                    var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
+                    for (var i = 0; i < parsedData.length; i++) {
+                        console.log(fileInformation)
+                        series.push({
+                            name: fileInformation.files[i].columns[0].filename,
+                            data: parsedData[i],
+                            colour: colours[i],
+                            opacity: 1
+                        })
+                    }
+                    return series;
+                })(),
                 title: {
-                    text: fileInformation.columns[1].header + " vs " + fileInformation.columns[0].header
+                    text: fileInformation.files[0].columns[1].header + " vs " + fileInformation.files[0].columns[0].header
                 },
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-                        type: fileInformation.columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
-                        text: fileInformation.columns[0].header
+                        type: fileInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+                        text: fileInformation.files[0].columns[0].header
                     }
                 },
                 yAxis: {
                     title: {
-                        text: fileInformation.columns[1].header
+                        text: fileInformation.files[0].columns[1].header
                     }
                 },
                 legend: {
@@ -150,6 +158,40 @@ const Chart = ({ fileInformation }) => {
         //run observer with a delay
         resizeObserver.observe(chartContainer);
     }, [])
+    //Live Data fetch request function 
+    const fetchData = async (filename) => {
+        // Fetch the data from the server
+        fetch(`http://${window.location.hostname}:8080/filess/live_F_RPM_PRIM.csv/live_F_RPM_SEC.csv?analysis=AccelCurve`).then((response) => {
+            response.text().then((text) => {
+                // Parse the data into an array of arrays
+                const data = text
+                    .trim()
+                    .split("\n")
+                    .slice(1)
+                    .map((line) => line.split(","))
+                    .map((line) => [parseFloat(line[2]), parseFloat(line[1])]);
+                
+                setChartOptions({
+                    series: [{
+                        data: data
+                    }]
+                });
+            })
+        });
+    }
+    //Live Data useEffect function
+    useEffect(() => {
+        let intervalId;
+        //for loop to loop through file information array to check if live is true
+        for (var i =0; i<fileInformation.length; i++) {
+            if (fileInformation[i].live){
+                intervalId = setInterval(() => {
+                            fetchData();
+                        }, 250);
+            }
+        }
+        return () => clearInterval(intervalId);
+      }, []);
 
     return (
 

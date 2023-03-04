@@ -38,11 +38,11 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
     fileTransfer({
-      "columns": selectColumns,
+      "files": seriesInfo,
       "live": document.getElementById("liveDataCheckbox").checked,
-      "analysis": getAnalysis(),
       "type": document.getElementById("graphTypeSelect").value
     })
+  
     setShowModal(false);
   }
 
@@ -78,8 +78,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         });
       })
   }
-
-  
   // Handles the display of the pages, TODO: Consolidate into one function and a parameter
   const showPage1 = () => {
     var x = document.getElementById("one");
@@ -176,6 +174,33 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     getHeaders();
   }, [selectedFiles]);
 
+  var seriesInfo = []
+  var seriescounter = 0;
+  
+  const addSeries = () => {
+
+    // "files": [
+    //   {
+    //     "columns": selectColumns,
+    //     "analysis": getAnalysis(),
+    //   }
+    // ],
+
+    var selectColumns = [];
+    for (let i = 0; i < dimensions; i++) {
+      selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
+    }
+
+    seriesInfo.push({
+      "columns": selectColumns,
+      "analysis": getAnalysis()
+    })
+
+    seriescounter++;
+
+    console.log(seriesInfo)
+  }
+
   // Handles the selection of the analysis
   const getAnalysis = () => {
     var analNames = ["linearInterpolate","accelCurve", "rollAvg"];
@@ -237,7 +262,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           if(document.getElementById("graphTypeSelect").value === "XYColour") {
             setDimensions(3)
           } else {
-            console.log("HE")
             setDimensions(2)
           }
            showPage3(); }} >Next</button>
@@ -249,6 +273,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       <div className="colFlexBox2">
       <h3>Select Axis</h3>
         {columnGenerator(dimensions)}
+        <button onClick={addSeries}>Add Series</button>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
           <div className="rowFlexBox"> <input type="checkbox" id="linearInterpolate" name="linearInterpolate" value="true"></input>
