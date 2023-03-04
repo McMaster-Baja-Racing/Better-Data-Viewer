@@ -176,25 +176,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     getHeaders();
   }, [selectedFiles]);
 
-  const addSeries = () => {
-    console.log("Adding series");
-    if (document.getElementsByClassName(0)[0].value === "") {
-      alert("Please select a column for the x-axis.");
-      return;
-    }
-    var selectColumns = [];
-    for (let i = 0; i < dimensions; i++) {
-      selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
-    }
-    fileTransfer({
-      "columns": selectColumns,
-      "live": document.getElementById("liveDataCheckbox").checked,
-      "analysis": getAnalysis(),
-      "type": document.getElementById("graphTypeSelect").value
-    })
-    
-  }
-
   // Handles the selection of the analysis
   const getAnalysis = () => {
     var analNames = ["linerInterp","AccelCurve", "rollAvg"];
@@ -268,7 +249,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       <div className="colFlexBox2">
       <h3>Select Axis</h3>
         {columnGenerator(dimensions)}
-        <button onClick={addSeries}>Add Series</button>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
           <div className="rowFlexBox"> <input type="checkbox" id="linerInterp" name="linearInterp" value="true"></input>
