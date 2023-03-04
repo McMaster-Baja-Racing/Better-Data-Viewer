@@ -44,12 +44,34 @@ const Chart = ({ fileInformation }) => {
             console.log(response)
             response.text().then(text => {
 
+                var headers = text.trim().split("\n")[0].split(",");
+
+                console.log(headers)
+                var h1;
+                var h2;
+
+                if (headers.length == 3) {
+                    
+                    if (headers[1] == "F_RPM_PRIM") {
+                        h1 = 1;
+                        h2 = 2;
+                    } else {
+                        h1 = 2;
+                        h2 = 1;
+                    }
+                    console.log("h1: " + h1 + "  h2: " + h2)
+                } else {
+                    h1 = 1;
+                    h2 = 0;
+                }
+                
+
                 const data = text
                     .trim()
                     .split("\n")
                     .slice(1)
                     .map((line) => line.split(","))
-                    .map((line) => [parseFloat(line[0]), parseFloat(line[1])]);
+                    .map((line) => [parseFloat(line[h2]), parseFloat(line[h1])]);
                 
                 setParsedData (prevState => {
                     return [...prevState, data]
