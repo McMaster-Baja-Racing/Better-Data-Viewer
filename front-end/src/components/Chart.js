@@ -104,7 +104,7 @@ const Chart = ({ fileInformation }) => {
                             name: fileInformation.files[i].columns[0].filename,
                             data: parsedData[i],
                             colour: colours[i],
-                            opacity: 0.75
+                            opacity: 1
                         })
                     }
                     return series;

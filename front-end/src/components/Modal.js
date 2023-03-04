@@ -36,23 +36,11 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
-    if (seriescounter===0){
-      fileTransfer({
-        "files": [
-          {
-            "columns": selectColumns,
-            "analysis": getAnalysis(),
-          }
-        ],
-        "live": document.getElementById("liveDataCheckbox").checked,
-        "type": document.getElementById("graphTypeSelect").value
+    fileTransfer({
+      "files": seriesInfo,
+      "live": document.getElementById("liveDataCheckbox").checked,
+      "type": document.getElementById("graphTypeSelect").value
     })
-    }else{
-      console.log(fileinfo)
-      fileTransfer({
-        fileinfo
-      })
-    }
   
     setShowModal(false);
   }
@@ -185,26 +173,31 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     getHeaders();
   }, [selectedFiles]);
 
-  var fileinfo = [[]]
+  var seriesInfo = []
   var seriescounter = 0;
   
   const addSeries = () => {
-    
-    if (document.getElementsByClassName(0)[0].value === "") {
-      alert("Please select a column for the x-axis.");
-      return;
-    }
+
+    // "files": [
+    //   {
+    //     "columns": selectColumns,
+    //     "analysis": getAnalysis(),
+    //   }
+    // ],
+
     var selectColumns = [];
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
-    fileinfo.push([{
+
+    seriesInfo.push({
       "columns": selectColumns,
-      "live": document.getElementById("liveDataCheckbox").checked,
-      "analysis": getAnalysis(),
-      "type": document.getElementById("graphTypeSelect").value
-    }])
+      "analysis": getAnalysis()
+    })
+
     seriescounter++;
+
+    console.log(seriesInfo)
   }
 
   // Handles the selection of the analysis
