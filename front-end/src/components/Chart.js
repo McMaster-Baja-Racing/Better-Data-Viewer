@@ -90,25 +90,12 @@ const Chart = ({ fileInformation }) => {
         for (var i = 0; i < parsedData.length; i++) {
             formattedData.push([Math.round(parseFloat(parsedData[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData[i][fileInformation.columns[1].header])*100.0)/100]);
         }
-
-        var formattedData2 = [];
-
-        for (var i = 0; i < parsedData2.length; i++) {
-            formattedData2.push([Math.round(parseFloat(parsedData2[i][fileInformation.columns[0].header])*100.0) / 100, Math.round(parseFloat(parsedData2[i][fileInformation.columns[1].header])*100.0)/100]);
-        }
-
-        console.log(formattedData2)
         
         // Update the chart options with the new data
         setChartOptions( (prevState) => {
             return {
                 ...prevState,
                 series: [
-                    // other data series should be formatteData from 0 to 200
-                    {data : formattedData2,
-                        color: 'blue',
-                        name: "second data series",
-                    opacity: 0.5},
                     { data: formattedData,
                     color: 'red',
                     name: "first data series",
