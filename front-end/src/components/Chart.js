@@ -64,6 +64,8 @@ const Chart = ({ fileInformation }) => {
             return;
         }
 
+        setLoading(true);
+
         // Set files to be all filenames in fileInformation, without duplicates
         var files = [];
         for (var i = 0; i < fileInformation.columns.length; i++) {
@@ -71,28 +73,7 @@ const Chart = ({ fileInformation }) => {
                 files.push(fileInformation.columns[i].filename);
             }
         }
-        setLoading(true);
-        // Case where only one file is selected
-        if (fileInformation.columns[0].filename === fileInformation.columns[1].filename) {
-            
-            if (fileInformation.analysis[0] === "AccelCurve") {
-                console.log("Accel Curve 2")
-                fetchAccelCurve(fileInformation.columns[0].filename, fileInformation.columns[1].filename);
-                return;
-            } else {
-                getSingleFile(fileInformation.columns[0].filename, fileInformation.analysis);
-                getSingleFile2("accelCurve2.csv", fileInformation.analysis);
-            }
-            return;
-        }
-        // Case where two different files are selected
-        if (fileInformation.columns[0].filename !== fileInformation.columns[1].filename) {
-            console.log("Two files selected")
-            if (fileInformation.analysis[0] === "AccelCurve") {
-                console.log("Accel Curve")
-                fetchAccelCurve(fileInformation.columns[0].filename, fileInformation.columns[1].filename);
-                return;
-
+        
 
 
         getFile(files,[], [fileInformation.analysis[0]], ["false"])
