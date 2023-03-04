@@ -29,7 +29,6 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import backend.API.storage.StorageFileNotFoundException;
-import backend.API.storage.StorageProperties;
 import backend.API.storage.StorageService;
 
 import backend.API.binary_csv.BinaryTOCSV;
@@ -124,9 +123,10 @@ public class FileUploadController {
 			throw new IllegalArgumentException("No input files selected");
 		}
 
-		// If no output files are selected, use the input files
+		// If no output files are selected, give it a single 
 		if (outputFiles == null || outputFiles.length == 0) {
-			outputFiles = inputFiles;
+			// Set output files to empty string
+			outputFiles = new String[10];
 		}
 
 		// Then check if live is true, and set the options + files accordingly
@@ -136,13 +136,14 @@ public class FileUploadController {
 
 		// Then run the selected analyzer
 		if (analyzer != null && analyzer.length != 0) {
-			Analyzer.createAnalyzer(analyzer[0], Arrays.copyOf(inputFiles, inputFiles.length), Arrays.copyOf(outputFiles, outputFiles.length), Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
+			Analyzer.createAnalyzer(analyzer[0], inputFiles, outputFiles, Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
 		} else {
 			// If no analyzer is selected, only one file is selected, copy it
-			storageService.copyFile(inputFiles[0], outputFiles[0]);
+			//storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
+			outputFiles[outputFiles.length - 1] = "./upload-dir/" + inputFiles[0];
 		}
 		// Then return the final file
-		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1]);
+		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1].split("/")[2]);
 
 		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();

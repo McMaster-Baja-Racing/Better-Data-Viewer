@@ -16,7 +16,7 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
 
     @Override
     public void analyze() {
-        System.out.println("Interpolating \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
+        System.out.println("Interpolating \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\" to \"" + outputFiles[0] + "\"");
 
         Reader r1 = new CSVReader(inputFiles[0]);
         Reader r2 = new CSVReader(inputFiles[1]);

@@ -59,8 +59,16 @@ const Chart = ({ fileInformation }) => {
         if (fileInformation.columns.length === 0) {
             return;
         }
+        // Set files to be all filenames in fileInformation, without duplicates
+        var files = [];
+        for (var i = 0; i < fileInformation.columns.length; i++) {
+            if (!files.includes(fileInformation.columns[i].filename)) {
+                files.push(fileInformation.columns[i].filename);
+            }
+        }
 
-        getFile([fileInformation.columns[0].filename],["beebeoop.csv"], [fileInformation.analysis[0]], ["false"])
+
+        getFile(files,[], [fileInformation.analysis[0]], ["false"])
 
     }, [fileInformation]);
 

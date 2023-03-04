@@ -46,8 +46,18 @@ public abstract class Analyzer {
         }
         switch (type) {
             case "accelCurve":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_" + "roll.csv";
+                    outputFiles[1] = inputFiles[1].substring(0, inputFiles[1].length() - 4) + "_" + "roll.csv";
+                    outputFiles[2] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4) + ".csv";
+                    outputFiles[9] = outputFiles[2];
+                }
                 return new AccelCurveAnalyzer(inputFiles, outputFiles);
             case "rollAvg":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_" + "roll.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
                 // Check if passed a window size
                 if (params.length == 0) {
                     return new RollingAvgAnalyzer(inputFiles, outputFiles);
@@ -55,6 +65,10 @@ public abstract class Analyzer {
                 int windowSize = Integer.parseInt((String) params[0]);
                 return new RollingAvgAnalyzer(inputFiles, outputFiles, windowSize);
             case "linearInterpolate":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4) + ".csv";
+                    outputFiles[9] = outputFiles[0];
+                }
                 return new LinearInterpolaterAnalyzer(inputFiles, outputFiles);
             default:
                 return null;

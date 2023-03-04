@@ -24,7 +24,7 @@ public class RollingAvgAnalyzer extends Analyzer {
     @Override
     public void analyze(){
 
-        System.out.println("Taking the rolling average of " + super.inputFiles[0]);
+        System.out.println("Taking the rolling average of " + super.inputFiles[0] + " to " + super.outputFiles[0] + " with a window size of " + windowSize);
 
         Reader r = new CSVReader(super.inputFiles[0]);
         Writer w = new CSVWriter(super.outputFiles[0]);
