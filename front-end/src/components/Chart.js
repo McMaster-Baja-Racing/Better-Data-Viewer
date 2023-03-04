@@ -97,7 +97,7 @@ const Chart = ({ fileInformation }) => {
 
     useEffect(() => {
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
-        if (fileInformation.columns.length === 0) {
+        if (fileInformation.length === 0) {
             return;
         }
         // Case where only one file is selected
@@ -126,7 +126,7 @@ const Chart = ({ fileInformation }) => {
 
     useEffect(() => {
         // Once necessary data is fetched, format it for the chart
-        if (fileInformation.columns.length === 0) {
+        if (fileInformation.length === 0) {
             return;
         }
         // var formattedData = [];
