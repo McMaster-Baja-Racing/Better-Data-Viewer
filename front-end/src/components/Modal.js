@@ -28,6 +28,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
   // Handles the submit button and passes the selected data to the parent component
   const handleSubmit = (e) => {
+    addSeries();
     //Check if they are empty
     if (document.getElementsByClassName(0)[0].value === "") {
       alert("Please select a column for the x-axis.");

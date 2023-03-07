@@ -56,6 +56,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
     //upload multiple files
     const formData = new FormData();
     //start loading useState
+    if (data.file.length!=0){
     setLoading(true);
     console.log(loading);
     await new Promise((resolve, reject) => {
@@ -83,7 +84,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
     //stop loading useState
     console.log(loading);
     setLoading(false);
-
+  }
     //setShowUploadModal(false); Dont need to do this neccesarily
   };
   return ReactDom.createPortal(

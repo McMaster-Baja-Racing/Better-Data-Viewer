@@ -5,13 +5,16 @@ import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import Papa from "papaparse";
 
-Boost(Highcharts);
+import HighchartsColorAxis from "highcharts/modules/coloraxis"; 
+HighchartsColorAxis(Highcharts);
+
+//Boost(Highcharts);
 
 const Chart = ({ fileInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            type: 'spline',
+            type: 'scatter',
             zoomType: 'x'
         },
         title: {
@@ -22,11 +25,17 @@ const Chart = ({ fileInformation }) => {
                 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
         },
         legend: {
-            enabled: false
+            enabled: true
         },
         accessibility: {
             enabled: false
+        },
+        colorAxis: {
+            min: 0,
+            max:50
         }
+
+        
     });
 
     //loading
@@ -50,7 +59,7 @@ const Chart = ({ fileInformation }) => {
                 var h1;
                 var h2;
 
-                if (headers.length == 3) {
+                if (headers.length === 3) {
                     
                     if (headers[1] == "F_RPM_PRIM") {
                         h1 = 1;
@@ -71,8 +80,15 @@ const Chart = ({ fileInformation }) => {
                     .split("\n")
                     .slice(1)
                     .map((line) => line.split(","))
-                    .map((line) => [parseFloat(line[h2]), parseFloat(line[h1])]);
-                
+                    .map((line) => [parseFloat(line[h2]), parseFloat(line[h1]), parseFloat(line[0])]).map(function(x){
+                        return {
+                            x: x[0],
+                            y: x[1],
+                            color: x[2]
+                        }
+                    });
+                console.log("DATA")
+                console.log(data)
                 setParsedData (prevState => {
                     return [...prevState, data]
                 })
@@ -121,14 +137,16 @@ const Chart = ({ fileInformation }) => {
                 ...prevState,
                 series: ( () => {
                     var series = [];
-                    var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
+                    
+                    //var colours = ['green', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'red', 'grey']
                     for (var i = 0; i < parsedData.length; i++) {
                         console.log(fileInformation)
                         series.push({
+                            oolorKey: 'y',
+                            colorAxis:0,
                             name: fileInformation.files[i].columns[0].filename,
                             data: parsedData[i],
-                            colour: colours[i],
-                            opacity: 1
+                            turboThreshold: 10000,
                         })
                     }
                     return series;
@@ -141,7 +159,7 @@ const Chart = ({ fileInformation }) => {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
                         type: fileInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
                         text: fileInformation.files[0].columns[0].header
-                    }
+                    },
                 },
                 yAxis: {
                     title: {
