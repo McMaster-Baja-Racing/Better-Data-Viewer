@@ -1,8 +1,16 @@
-/* 
-import javax.print.attribute.standard.Compression;
+package backend.API.analyzer;
+
+import backend.API.readwrite.CSVReader;
+import backend.API.readwrite.CSVWriter;
+import backend.API.readwrite.Reader;
+import backend.API.readwrite.Writer;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class Compression_RDPAnalyzer extends Analyzer {
 
+    
     // Epsilon is the maximum distance between a point and the line between the start and end points
     // AKA Hausdorff distance
     private double epsilon;
@@ -13,43 +21,30 @@ public class Compression_RDPAnalyzer extends Analyzer {
     }
 
     @Override
-    public String analyze() {
+    public void analyze() {
 
-        System.out.println("Compressing " + filepaths[0]);
+        System.out.println("Compressing " + inputFiles[0]);
 
-        Reader r = new CSVReader(filepaths[0]);
-        Writer w = new CSVWriter(filepaths[0] + "_compressed.csv");
+        Reader r = new CSVReader(inputFiles[0]);
+        Writer w = new CSVWriter(outputFiles[0]);
 
-        w.write(RamerDouglasPeucker(r.read(), epsilon));
+        List<List<String>> data = r.read();
 
-        return filepaths[0] + "_compressed.csv";
+        // Remove headers and store
+        List<String> headers = data.get(0);
+        data.remove(0);
+
+        // Compress
+        data = RamerDouglasPeucker(data, epsilon);
+
+        // Add headers back
+        data.add(0, headers);
+
+        // Write
+        w.write(data);
     }
 
     public List<List<String>> RamerDouglasPeucker(List<List<String>> data, double epsilon) {
-
-        List<List<String>> dataPoints = new ArrayList<List<String>>();
-        List<String> dataPoint = new ArrayList<String>(2);
-
-        // Add header
-        dataPoint.add(data.get(0).get(0));
-        dataPoint.add(data.get(0).get(1));
-        dataPoints.add(dataPoint);
-
-        // Reset
-        dataPoint = new ArrayList<String>(2);
-
-        // Add first and last point
-        dataPoint.add(data.get(0).get(0));
-        dataPoint.add(data.get(0).get(1));
-        dataPoints.add(dataPoint);
-
-        dataPoint = new ArrayList<String>(2);
-        dataPoint.add(data.get(data.size() - 1).get(0));
-        dataPoint.add(data.get(data.size() - 1).get(1));
-        dataPoints.add(dataPoint);
-
-        // Reset
-        dataPoint = new ArrayList<String>(2);
 
         // Find the point with the maximum distance from the line between the first and last point
         double maxDistance = 0;
@@ -64,23 +59,41 @@ public class Compression_RDPAnalyzer extends Analyzer {
 
         // If the maximum distance is greater than epsilon, recursively simplify
         if (maxDistance > epsilon) {
-            List<List<String>> firstHalf = data.subList(0, maxIndex + 1);
-            List<List<String>> secondHalf = data.subList(maxIndex, data.size());
+            // Recursive call
+            List<List<String>> firstLine = RamerDouglasPeucker(data.subList(0, maxIndex + 1), epsilon);
+            List<List<String>> secondLine = RamerDouglasPeucker(data.subList(maxIndex, data.size()), epsilon);
 
-            List<List<String>> firstHalfCompressed = RamerDouglasPeucker(firstHalf, epsilon);
-            List<List<String>> secondHalfCompressed = RamerDouglasPeucker(secondHalf, epsilon);
-
-            // Remove the last point of the first half and the first point of the second half
-            firstHalfCompressed.remove(firstHalfCompressed.size() - 1);
-            secondHalfCompressed.remove(0);
-
-            // Concatenate the two halves
-            firstHalfCompressed.addAll(secondHalfCompressed);
-            dataPoints.addAll(firstHalfCompressed);
+            // Build the result list
+            List<List<String>> result = new ArrayList<List<String>>();
+            result.addAll(firstLine.subList(0, firstLine.size() - 1));
+            result.addAll(secondLine);
+            return result;
+        } else {
+            // Otherwise return the start and end points of the line
+            return new ArrayList<List<String>>(List.of(data.get(0), data.get(data.size() - 1)));
         }
-
-        return dataPoints;
     }
-    
+
+
+    private double perpendicularDistance(List<String> lineStart, List<String> lineEnd, List<String> point) {
+        double x1 = Double.parseDouble(lineStart.get(0));
+        double y1 = Double.parseDouble(lineStart.get(1));
+        double x2 = Double.parseDouble(lineEnd.get(0));
+        double y2 = Double.parseDouble(lineEnd.get(1));
+        double x0 = Double.parseDouble(point.get(0));
+        double y0 = Double.parseDouble(point.get(1));
+
+        return Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1) / Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
+    }
+
+
+    // Set a main to test this
+    public static void main(String[] args) {
+        String[] inputFiles = new String[1];
+        inputFiles[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_SUS_TRAV_FL_roll.csv";
+        String[] outputFiles = new String[1];
+        outputFiles[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/EWOOOOOOOOOOOOOOO.csv";
+        Compression_RDPAnalyzer analyzer = new Compression_RDPAnalyzer(inputFiles, outputFiles,0.2);
+        analyzer.analyze();
+    }
 }
-*/
