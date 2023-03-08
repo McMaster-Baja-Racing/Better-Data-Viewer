@@ -31,8 +31,11 @@ const Chart = ({ fileInformation }) => {
             enabled: false
         },
         colorAxis: {
+            id: "RPM",
             min: 0,
-            max:50
+            max: 35,
+            minColor: "#FF0000",
+            maxColor: "#00FF00"
         }
 
         
@@ -80,11 +83,11 @@ const Chart = ({ fileInformation }) => {
                     .split("\n")
                     .slice(1)
                     .map((line) => line.split(","))
-                    .map((line) => [parseFloat(line[h2]), parseFloat(line[h1]), parseFloat(line[0])]).map(function(x){
+                    .map((line) => [parseFloat(line[0]), parseFloat(line[1]), parseFloat(line[2])]).map(function(x){
                         return {
                             x: x[0],
                             y: x[1],
-                            color: x[2]
+                            z: x[2]
                         }
                     });
                 console.log("DATA")
@@ -142,11 +145,13 @@ const Chart = ({ fileInformation }) => {
                     for (var i = 0; i < parsedData.length; i++) {
                         console.log(fileInformation)
                         series.push({
-                            oolorKey: 'y',
-                            colorAxis:0,
+
+                            
                             name: fileInformation.files[i].columns[0].filename,
                             data: parsedData[i],
-                            turboThreshold: 10000,
+                            colorAxis: 'RPM',
+                            turboThreshold: 0,
+                            colorKey: 'z',
                         })
                     }
                     return series;
@@ -155,6 +160,8 @@ const Chart = ({ fileInformation }) => {
                     text: fileInformation.files[0].columns[1].header + " vs " + fileInformation.files[0].columns[0].header
                 },
                 xAxis: {
+                    min:43.2603475,
+                    max:43.2621475,
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
                         type: fileInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
