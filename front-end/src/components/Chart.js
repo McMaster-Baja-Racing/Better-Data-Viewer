@@ -93,6 +93,7 @@ const Chart = ({ fileInformation }) => {
         // Now complete a request for each series
         for (var i = 0; i < fileInformation.files.length; i++) {
             var files = [];
+
             for (var j = 0; j < fileInformation.files[i].columns.length; j++) {
                 // Create a list of all files in order (formatting for backend)
                 if (!files.includes(fileInformation.files[i].columns[j].filename)) {
@@ -224,7 +225,7 @@ const Chart = ({ fileInformation }) => {
                     options={chartOptions}
                 />
             </div>
-            {loading && <img className="loading" src="https://i.imgur.com/PEP35pk.gif" alt="Loading..." />}
+            {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..." />}
         </div>
 
     )

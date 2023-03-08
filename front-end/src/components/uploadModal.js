@@ -107,7 +107,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
               console.log(err)
             })
           })}>Delete All</button>
-          {loading && <img className="loading" src="https://i.imgur.com/PEP35pk.gif" alt="Loading..."/>}
+          {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..."/>}
           <input className="submitbutton" type="submit" />
           </form>
         </div>
