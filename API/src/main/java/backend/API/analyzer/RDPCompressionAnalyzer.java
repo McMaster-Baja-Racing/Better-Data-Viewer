@@ -8,14 +8,14 @@ import backend.API.readwrite.Writer;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Compression_RDPAnalyzer extends Analyzer {
+public class RDPCompressionAnalyzer extends Analyzer {
 
     
     // Epsilon is the maximum distance between a point and the line between the start and end points
     // AKA Hausdorff distance
     private double epsilon;
 
-    public Compression_RDPAnalyzer(String[] inputFiles, String[] outputFiles, double epsilon) {
+    public RDPCompressionAnalyzer(String[] inputFiles, String[] outputFiles, double epsilon) {
         super(inputFiles, outputFiles);
         this.epsilon = epsilon;
     }
@@ -93,7 +93,7 @@ public class Compression_RDPAnalyzer extends Analyzer {
         inputFiles[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_SUS_TRAV_FL_roll.csv";
         String[] outputFiles = new String[1];
         outputFiles[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/EWOOOOOOOOOOOOOOO.csv";
-        Compression_RDPAnalyzer analyzer = new Compression_RDPAnalyzer(inputFiles, outputFiles,0.2);
+        RDPCompressionAnalyzer analyzer = new RDPCompressionAnalyzer(inputFiles, outputFiles,1);
         analyzer.analyze();
     }
 }

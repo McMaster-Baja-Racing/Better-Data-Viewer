@@ -203,7 +203,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
   // Handles the selection of the analysis
   const getAnalysis = () => {
-    var analNames = ["linearInterpolate","accelCurve", "rollAvg"];
+    var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression"];
     var selectedAnals = [];
     for (var i = 0; i < analNames.length; i++) {
       if (document.getElementById(analNames[i]).checked) {
@@ -232,7 +232,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       <h3>Graph Types</h3>
         <select id="graphTypeSelect" className="graphTypeSelect">
           <option value="XYGraph">X-Y Graph</option>
-          <option value="AccelCurve">AccelCurve</option>
           <option value="Gauge">1D Gauge</option>
           <option value="XYColour"> X-Y-Colour Graph</option>
         </select>
@@ -282,6 +281,8 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           <label htmlFor="accelCurve"><div className="boldText">Accel Curve Analyzer</div></label></div>
           <div className="rowFlexBox"><input type="checkbox" id="rollAvg" name="rollAvg" value="true"></input>
           <label htmlFor="rollAvg"> <div className="boldText">Rolling Average Analyzer</div></label></div>
+          <div className="rowFlexBox"><input type="checkbox" id="RDPCompression" name="RDPCompression" value="true"></input>
+          <label htmlFor="RDPCompression"> <div className="boldText">RDP Compression Analyzer</div></label></div>
   
       </div>
       <div className="buttonFlexBox">
