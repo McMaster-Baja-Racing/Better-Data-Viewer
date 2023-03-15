@@ -203,7 +203,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
 
   // Handles the selection of the analysis
   const getAnalysis = () => {
-    var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression"];
+    var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression","sGolay"];
     var selectedAnals = [];
     for (var i = 0; i < analNames.length; i++) {
       if (document.getElementById(analNames[i]).checked) {
@@ -283,7 +283,8 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
           <label htmlFor="rollAvg"> <div className="boldText">Rolling Average Analyzer</div></label></div>
           <div className="rowFlexBox"><input type="checkbox" id="RDPCompression" name="RDPCompression" value="true"></input>
           <label htmlFor="RDPCompression"> <div className="boldText">RDP Compression Analyzer</div></label></div>
-  
+          <div className="rowFlexBox"><input type="checkbox" id="sGolay" name="sGolay" value="true"></input>
+          <label htmlFor="sGolay"> <div className="boldText">sGolay Filter</div></label></div>
       </div>
       <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage2}>Back</button>
