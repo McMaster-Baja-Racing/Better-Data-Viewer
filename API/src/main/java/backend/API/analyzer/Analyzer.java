@@ -64,6 +64,18 @@ public abstract class Analyzer {
                 }
                 int windowSize = Integer.parseInt((String) params[0]);
                 return new RollingAvgAnalyzer(inputFiles, outputFiles, windowSize);
+            case "sGolay":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_sgolay.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
+                // Check if passed a window size
+                if (params.length == 0) {
+                    return new SGolayFilter(inputFiles, outputFiles);
+                }
+                windowSize = Integer.parseInt((String) params[0]);
+                int polynomialDegree = Integer.parseInt((String) params[1]);
+                return new SGolayFilter(inputFiles, outputFiles, windowSize, polynomialDegree);
             case "linearInterpolate":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4) + ".csv";
