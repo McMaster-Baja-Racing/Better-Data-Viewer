@@ -1,18 +1,17 @@
 import '../styles/App.css';
 import '../styles/modalStyles.css';
-import { Modal } from "./Modal";
+import { CreateGraphModal } from "./CreateGraphModal";
 import { UploadModal } from "./uploadModal";
 import React, { useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
-import LiveChart from './LiveChart';
 
 const App = () => {
 
   // All for create graph popup
-  const [showModal, setShowModal] = useState(false);
+  const [showCreateGraphModal, setShowCreateGraphModal] = useState(false);
   const openCreateGraphModal = () => {
-    setShowModal(true);
+    setShowCreateGraphModal(true);
   }
   // All for upload popup
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -51,13 +50,13 @@ const App = () => {
 
   return (
     <div className="App">
-      <Topbar openModal={openCreateGraphModal} openModal1={openUploadModal} />
+      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} />
       <header className="App-header">
 
-        {showModal ? <Modal setShowModal={setShowModal} fileTransfer={handleFileTransfer} /> : null}
+        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} fileTransfer={handleFileTransfer} /> : null}
         {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} fileTransfer={handleFileTransfer} /> : null}
 
-        {fileInformation.live ? <LiveChart fileInformation={fileInformation}/> : <Chart fileInformation={fileInformation} />}
+        <Chart fileInformation={fileInformation} />
 
       </header>
 

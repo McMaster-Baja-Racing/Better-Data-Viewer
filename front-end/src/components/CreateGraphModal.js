@@ -1,10 +1,10 @@
-//Modal.js
+//CreateGraphModal.js
 import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
 
-export const Modal = ({ setShowModal, fileTransfer }) => {
+export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
   // Handles how many axes are selected
   const [dimensions, setDimensions] = useState(2);
@@ -178,14 +178,7 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   var seriescounter = 0;
   
   const addSeries = () => {
-
-    // "files": [
-    //   {
-    //     "columns": selectColumns,
-    //     "analysis": getAnalysis(),
-    //   }
-    // ],
-
+    
     var selectColumns = [];
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
