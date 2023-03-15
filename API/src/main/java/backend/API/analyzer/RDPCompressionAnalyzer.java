@@ -93,7 +93,7 @@ public class RDPCompressionAnalyzer extends Analyzer {
         inputFiles[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_SUS_TRAV_FL_roll.csv";
         String[] outputFiles = new String[1];
         outputFiles[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/EWOOOOOOOOOOOOOOO.csv";
-        RDPCompressionAnalyzer analyzer = new RDPCompressionAnalyzer(inputFiles, outputFiles,1);
+        RDPCompressionAnalyzer analyzer = new RDPCompressionAnalyzer(inputFiles, outputFiles,10);
         analyzer.analyze();
     }
 }

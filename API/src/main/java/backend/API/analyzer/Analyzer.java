@@ -88,7 +88,7 @@ public abstract class Analyzer {
                     outputFiles[9] = outputFiles[0];
                 }
                 if (params.length == 0) {
-                    return new RDPCompressionAnalyzer(inputFiles, outputFiles, 0.2);
+                    return new RDPCompressionAnalyzer(inputFiles, outputFiles, 15);
                 }
                 double epsilon = Double.parseDouble((String) params[0]);
                 return new RDPCompressionAnalyzer(inputFiles, outputFiles, epsilon);

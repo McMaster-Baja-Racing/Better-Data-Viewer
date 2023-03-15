@@ -23,8 +23,8 @@ public class SGolayFilter extends Analyzer {
 
     public SGolayFilter(String[] inputFiles, String[] outputFiles) {
         super(inputFiles, outputFiles);
-        this.windowSize = 80;
-        this.polynomialDegree = 2;
+        this.windowSize = 300;
+        this.polynomialDegree = 3;
     }
 
     @Override
