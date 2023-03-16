@@ -35,7 +35,7 @@ const Chart = ({ fileInformation }) => {
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
 
-    const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions) => {
+    const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions, columnInfo) => {
         console.log(inputFiles, outputFiles, analyzerOptions, liveOptions)
 
         fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
@@ -45,33 +45,25 @@ const Chart = ({ fileInformation }) => {
             response.text().then(text => {
 
                 var headers = text.trim().split("\n")[0].split(",");
+                headers[headers.length-1] = headers[headers.length-1].replace("\r", "")
+                var h = [];
 
-                console.log(headers)
-                var h1;
-                var h2;
-
-                if (headers.length == 3) {
-                    
-                    if (headers[1] == "F_RPM_PRIM") {
-                        h1 = 1;
-                        h2 = 2;
-                    } else {
-                        h1 = 2;
-                        h2 = 1;
+                // This will find the index of the headers in the file (works for any number of headers)
+                for (var i = 0; i < headers.length; i++) {
+                    for (var j = 0; j < columnInfo.length; j++) {
+                        if (headers[i] == columnInfo[j].header) {
+                            h.push(i);
+                        }
                     }
-                    console.log("h1: " + h1 + "  h2: " + h2)
-                } else {
-                    h1 = 1;
-                    h2 = 0;
                 }
-                
 
+                // Only works for 2 headers atm
                 const data = text
                     .trim()
                     .split("\n")
                     .slice(1)
                     .map((line) => line.split(","))
-                    .map((line) => [parseFloat(line[h2]), parseFloat(line[h1])]);
+                    .map((line) => [parseFloat(line[h[0]]), parseFloat(line[h[1]])]);
                 
                 setParsedData (prevState => {
                     return [...prevState, data]
@@ -101,7 +93,7 @@ const Chart = ({ fileInformation }) => {
                 }
             }
 
-            getFile(files, [], [fileInformation.files[i].analysis/*[0]*/], ["false"])
+            getFile(files, [], [fileInformation.files[i].analysis], ["false"], fileInformation.files[i].columns)
         }
 
         // Set files to be all filenames in fileInformation, without duplicates

@@ -152,7 +152,7 @@ public class FileUploadController {
 		}
 
 		// Then run the selected analyzer
-		if (analyzer != null && analyzer.length != 0) {
+		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
 			Analyzer.createAnalyzer(analyzer[0], inputFiles, outputFiles, Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
 		} else {
 			// If no analyzer is selected, only one file is selected, copy it

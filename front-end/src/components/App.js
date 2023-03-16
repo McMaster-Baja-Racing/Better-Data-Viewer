@@ -27,8 +27,8 @@ const App = () => {
   //    [
   //      {
   //        columns: [
-  //          {header:"RPM", filename:"PRIM_RPM.csv"}, 
-  //          {header:"Timestampt", filename:"PRIM_RPM.csv"}
+  //          {header:"Timestampt", filename:"PRIM_RPM.csv"},
+  //          {header:"RPM", filename:"PRIM_RPM.csv"},
   //        ],
   //        analysis: "none"
   //      },
