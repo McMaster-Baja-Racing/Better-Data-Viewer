@@ -42,7 +42,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       "live": document.getElementById("liveDataCheckbox").checked,
       "type": document.getElementById("graphTypeSelect").value
     })
-  
     setShowModal(false);
   }
 
@@ -186,17 +185,16 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     seriesInfo.push({
       "columns": selectColumns,
-      "analysis": getAnalysis()
+      "analysis": getAnalysis(),
     })
 
     seriescounter++;
 
     console.log(seriesInfo)
   }
-
+  var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression"];
   // Handles the selection of the analysis
   const getAnalysis = () => {
-    var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression"];
     var selectedAnals = [];
     for (var i = 0; i < analNames.length; i++) {
       if (document.getElementById(analNames[i]).checked) {
@@ -207,6 +205,15 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     return selectedAnals;
   }
 
+  const getVariables = () => {
+    var variables = [];
+    var window = document.getElementById("rollavg").value;
+    var epsilon = document.getElementById("epl").value;
+    variables.push(window);
+    variables.push(epsilon);
+    return variables;
+  }
+
   const pageOne = () => (
     <div className="colFlexBox">
       <h1>Graph Options</h1><br></br>
@@ -214,13 +221,11 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         <h3>Live Data</h3><br></br>
         <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
       </div>
-      
-      <div className="spaceRowFlexBox">
-        Port <input type="text" value="" size="5" ></input>
-      </div>
-      <div className="spaceRowFlexBox">
-        Baud <input type="text" value="" size="5"></input>
-      </div>
+    
+      <label for="port">Port</label>
+      <input type="text" id="port" name="port"></input> 
+      <label for="baud">Baud</label>
+      <input type="text" id="baud" name="baud"></input>
 
       <h3>Graph Types</h3>
         <select id="graphTypeSelect" className="graphTypeSelect">
@@ -228,14 +233,14 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           <option value="Gauge">1D Gauge</option>
           <option value="XYColour"> X-Y-Colour Graph</option>
         </select>
-      <div className="buttonFlexBox">
+      <div className="firstPageButton">
       <button className="submitbutton" onClick={() => { listFiles(); showPage2(); } }>Next</button>
       </div>
     </div>
   )
   const pageTwo = () => (
     
-    <div className="colFlexBox2"> 
+    <div className="colFlexBox"> 
       <h3>Choose Files</h3>
       <div className="scrollColFlexBox">
       {files.map((file) => {
@@ -262,21 +267,29 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     
   )
   const pageThree = () => (
-      <div className="colFlexBox2">
+      <div className="colFlexBox">
       <h3>Select Axis</h3>
         {columnGenerator(dimensions)}
-        <button onClick={addSeries}>Add Series</button>
+        <div className="pushLeftFlexBox">
+          <button onClick={addSeries}>Add Series</button>
+        </div>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-          <div className="rowFlexBox"> <input type="checkbox" id="linearInterpolate" name="linearInterpolate" value="true"></input>
-          <label htmlFor="linearInterpolate"> <div className="boldText">Linear Interpolation</div></label></div>
-          <div className="rowFlexBox"><input type="checkbox" id="accelCurve" name="accelCurve" value="true"></input>
-          <label htmlFor="accelCurve"><div className="boldText">Accel Curve Analyzer</div></label></div>
-          <div className="rowFlexBox"><input type="checkbox" id="rollAvg" name="rollAvg" value="true"></input>
-          <label htmlFor="rollAvg"> <div className="boldText">Rolling Average Analyzer</div></label></div>
-          <div className="rowFlexBox"><input type="checkbox" id="RDPCompression" name="RDPCompression" value="true"></input>
-          <label htmlFor="RDPCompression"> <div className="boldText">RDP Compression Analyzer</div></label></div>
-  
+          {analNames.map((anal) => {
+            return (
+              <div key={anal}>
+                <div className="rowFlexBox"><input type="checkbox" id={anal} name={anal} value="true"></input>
+                <label htmlFor={anal}><div className="boldText">{anal}</div></label></div>
+              </div>
+            )
+          }
+          )}
+      </div>
+      <div className="rowFlexBox"> 
+      <label for="rollavg">Rolling Avg Window:</label>
+      <input type="text" id="rollavg" name="rollavg" ></input> 
+      <label for="epl">Eplison Value:</label>
+      <input type="text" id="epl" name="epl" ></input>
       </div>
       <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage2}>Back</button>

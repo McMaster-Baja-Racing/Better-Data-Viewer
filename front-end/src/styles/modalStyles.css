@@ -41,6 +41,7 @@
     position: relative;
     animation: animate 0.3s;
     min-width: 35rem;
+    min-height: 30rem;
   }
   .centerFlexBox{
     display: flex;
@@ -76,17 +77,10 @@
     flex-direction: column;
     justify-content: left;
     align-items: left;
-    min-width: 30rem;
-  }
-
-  .colFlexBox2{
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
     flex: 1;
     height : 100%;
-    min-width: 30rem;
+    min-width: 35rem;
+    min-height: 30rem;
   }
 
   .rowFlexBox{
@@ -95,14 +89,20 @@
     align-items: left;
     justify-content: left;
   }
-
-  
-
   .spaceRowFlexBox{
     display: flex;
     flex-direction: row;
     align-items: left;
     justify-content: space-between;
+  }
+
+  .smallColFlexBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    flex: 1;
+    justify-content: flex-start;
   }
 
   .graphTypeSelect {
@@ -112,9 +112,21 @@
   .buttonFlexBox{
     display: flex;
     flex-direction: row;
-    align-self: flex-end;
     justify-content: space-between;
   }
+  
+  .pushRightFlexBox{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .pushLeftFlexBox{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
   .boldText{
     font-weight: bold;
     margin : 0.5em;
