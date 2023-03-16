@@ -11,7 +11,7 @@ const Chart = ({ fileInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            type: 'scatter',
+            type: 'line',
             zoomType: 'x'
         },
         title: {
@@ -101,7 +101,7 @@ const Chart = ({ fileInformation }) => {
                 }
             }
 
-            getFile(files, [], [fileInformation.files[i].analysis/*[0]*/], ["false"])
+            getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.variable], ["false"])
         }
 
         // Set files to be all filenames in fileInformation, without duplicates
@@ -138,7 +138,8 @@ const Chart = ({ fileInformation }) => {
                 },
 
                 chart: {
-                    type: fileInformation.type
+                    type: fileInformation.type,
+                    zoomType: 'x'
                 },
 
                 xAxis: {

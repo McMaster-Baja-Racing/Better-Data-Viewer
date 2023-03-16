@@ -38,6 +38,7 @@ public abstract class Analyzer {
     // When a new analyzer is created, add it to this factory method
     public static Analyzer createAnalyzer(String type, String[] inputFiles, String[] outputFiles, Object... params) {
         // Before every input and output file location, add the storage directory before it
+        System.out.println(type);
         for (int i = 0; i < inputFiles.length; i++) {
             inputFiles[i] = "./upload-dir/" + inputFiles[i];
         }

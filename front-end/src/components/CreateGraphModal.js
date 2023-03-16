@@ -186,8 +186,11 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     seriesInfo.push({
       "columns": selectColumns,
-      "analysis": getAnalysis(),
-      "variables": getVariables()
+      "analyze": {
+        "analysis": getAnalysis(),
+        "variable": getVariables()
+      }
+      
     })
 
     seriescounter++;
@@ -203,17 +206,20 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         selectedAnals.push(analNames[i]);
       }
     }
-    console.log(selectedAnals)
     return selectedAnals;
   }
 
   const getVariables = () => {
-    var variables = [];
     var window = document.getElementById("rollavg").value;
     var epsilon = document.getElementById("epl").value;
-    variables.push(window);
-    variables.push(epsilon);
-    return variables;
+    if (document.getElementById("rollAvg").checked) {
+      console.log(window)
+      return  window;
+    }else if (document.getElementById("RDPCompression").checked) {
+      console.log(epsilon)
+      return epsilon;
+
+    }
   }
 
   const pageOne = () => (
@@ -228,14 +234,15 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       <input type="text" id="port" name="port"></input> 
       <label for="baud">Baud</label>
       <input type="text" id="baud" name="baud"></input>
-
-      <h3>Graph Types</h3>
+      
+      <h3>Graph Types</h3><div className="pushLeftFlexBox">
         <select id="graphTypeSelect" className="graphTypeSelect">
           <option value="line">line</option>
           <option value="spline">spline</option>
           <option value="scatter"> scatter</option>
         </select>
-      <div className="firstPageButton">
+      </div>
+      <div className="pushRightFlexBox">
       <button className="submitbutton" onClick={() => { listFiles(); showPage2(); } }>Next</button>
       </div>
     </div>
