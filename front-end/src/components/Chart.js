@@ -11,7 +11,7 @@ const Chart = ({ fileInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            type: 'line',
+            type: 'scatter',
             zoomType: 'x'
         },
         title: {
@@ -136,6 +136,11 @@ const Chart = ({ fileInformation }) => {
                 title: {
                     text: fileInformation.files[0].columns[1].header + " vs " + fileInformation.files[0].columns[0].header
                 },
+
+                chart: {
+                    type: fileInformation.type
+                },
+
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
@@ -150,7 +155,7 @@ const Chart = ({ fileInformation }) => {
                 },
                 legend: {
                     enabled: true
-                }
+                },
             }
         })
         setLoading(false);

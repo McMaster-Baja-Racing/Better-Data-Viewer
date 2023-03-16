@@ -231,9 +231,9 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
       <h3>Graph Types</h3>
         <select id="graphTypeSelect" className="graphTypeSelect">
-          <option value="XYGraph">X-Y Graph</option>
-          <option value="Gauge">1D Gauge</option>
-          <option value="XYColour"> X-Y-Colour Graph</option>
+          <option value="line">line</option>
+          <option value="spline">spline</option>
+          <option value="scatter"> scatter</option>
         </select>
       <div className="firstPageButton">
       <button className="submitbutton" onClick={() => { listFiles(); showPage2(); } }>Next</button>
