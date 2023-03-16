@@ -183,12 +183,12 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
-
+    
     seriesInfo.push({
       "columns": selectColumns,
       "analyze": {
         "analysis": getAnalysis(),
-        "variable": getVariables()
+        "analyzerValues": getAnalyzerOptions()
       }
       
     })
@@ -209,7 +209,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     return selectedAnals;
   }
 
-  const getVariables = () => {
+  const getAnalyzerOptions = () => {
     var window = document.getElementById("rollavg").value;
     var epsilon = document.getElementById("epl").value;
     if (document.getElementById("rollAvg").checked) {
@@ -218,7 +218,8 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     }else if (document.getElementById("RDPCompression").checked) {
       console.log(epsilon)
       return epsilon;
-
+    }else{
+      return null;
     }
   }
 

@@ -100,8 +100,11 @@ const Chart = ({ fileInformation }) => {
                     files.push(fileInformation.files[i].columns[j].filename);
                 }
             }
-
-            getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.variable], ["false"])
+            if (fileInformation.files[i].analyze.variable == null) {
+                getFile(files, [], [fileInformation.files[i].analyze.analysis])
+            } else {
+                getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.analyzerValues], ["false"])
+            }
         }
 
         // Set files to be all filenames in fileInformation, without duplicates
