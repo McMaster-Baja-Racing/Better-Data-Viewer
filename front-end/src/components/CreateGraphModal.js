@@ -1,5 +1,4 @@
 //CreateGraphModal.js
-import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
@@ -45,14 +44,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     })
     setShowModal(false);
   }
-
-  // close the modal when clicking outside the modal.
-  const modalRef = useRef();
-  const closeModal = (e) => {
-    if (e.target === modalRef.current) {
-      setShowModal(false);
-    }
-  };
 
   // Handles fetching all files from the server
   const [files, setFiles] = useState([])
@@ -197,7 +188,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     console.log(seriesInfo)
   }
-  var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression","sGolay"];
+  var analNames = ["Linear Interpolate","Accel Curve", "Rolling Average", "RDP Compression","sGolay"];
   // Handles the selection of the analysis
   const getAnalysis = () => {
     var selectedAnals = [];
@@ -279,7 +270,9 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const pageThree = () => (
       <div className="colFlexBox">
       <h3>Select Axis</h3>
+      <div className="rowFlexBox">
         {columnGenerator(dimensions)}
+        </div>
         <div className="pushLeftFlexBox">
           <button onClick={addSeries}>Add Series</button>
         </div>
@@ -311,7 +304,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   //render the modal JSX in the portal div.
 
   return ReactDom.createPortal(
-    <div className="container" ref={modalRef} onClick={closeModal}>
+    <div className="container"  >
       <div className="modal">
         <div id="one" >{pageOne()} </div>
         <div id="two" hidden >{pageTwo()}</div>

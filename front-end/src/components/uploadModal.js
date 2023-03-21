@@ -1,5 +1,4 @@
-//Modal.js
-import { useRef } from "react";
+//UploadModal.js
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import '../styles/dragNdrop.css';
@@ -29,15 +28,6 @@ export const UploadModal = ({ setShowUploadModal }) => {
       fileLists.push(e.dataTransfer.files[i])
     }
     setfileLists(fileLists)
-  };
-
-  // close the modal when clicking outside the modal.
-  const modalRef = useRef();
-
-  const closeModal = (e) => {
-    if (e.target === modalRef.current) {
-      setShowUploadModal(false);
-    }
   };
 
   const { register, handleSubmit } = useForm();
@@ -81,7 +71,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
     //setShowUploadModal(false); Dont need to do this neccesarily
   };
   return ReactDom.createPortal(
-    <div className="container" ref={modalRef} onClick={closeModal}>
+    <div className="container" >
       <div className="modal">
         <div className="centerFlexBox">
           <h1>Upload Files</h1>
