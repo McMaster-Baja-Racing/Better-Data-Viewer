@@ -19,26 +19,16 @@ export const UploadModal = ({ setShowUploadModal }) => {
       setDragActive(false);
     }
   };
+  const [fileLists,setfileLists] = useState([]);
   // triggers when file is dropped
   const handleDrop = function (e) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      // at least one file has been selected so do something
-      // handleFiles(e.dataTransfer.files);
+    for (let i = 0; i < e.dataTransfer.files.length; i++) {
+      fileLists.push(e.dataTransfer.files[i])
     }
-  };
-
-  const handleChange = function (e) {
-    console.log(e)
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      // at least one file has been selected so do something
-      // handleFiles(e.target.files);
-      onSubmit(e.target.files);
-      console.log(e)
-    }
+    setfileLists(fileLists)
   };
 
   // close the modal when clicking outside the modal.
@@ -57,10 +47,14 @@ export const UploadModal = ({ setShowUploadModal }) => {
     const formData = new FormData();
     //start loading useState
     setLoading(true);
-    console.log(loading);
+    //console.log(loading);
     await new Promise((resolve, reject) => {
+      console.log(data.file)
       for (let i = 0; i < data.file.length; i++) {
-        formData.set("file", data.file[i]);
+        fileLists.push(data.file[i])
+      }
+      for (let i = 0; i < fileLists.length; i++) {
+        formData.set("file", fileLists[i]);
         fetch(`http://${window.location.hostname}:8080/upload`, {
           method: "POST",
           body: formData,
@@ -69,7 +63,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
             if(res.status !== 200) {
               alert(JSON.stringify(`${text}, status: ${res.status}`))
             }
-            if (i===data.file.length-1) {
+            if (i===fileLists.length-1) {
               resolve();
             }
           })
@@ -81,7 +75,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
       }
     });
     //stop loading useState
-    console.log(loading);
+    //console.log(loading);
     setLoading(false);
 
     //setShowUploadModal(false); Dont need to do this neccesarily
@@ -92,7 +86,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
         <div className="centerFlexBox">
           <h1>Upload Files</h1>
           <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} onChange={handleChange} {...register("file")} />
+            <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} />
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : ""}>
               <div>
                 <p>Drag and drop your file here or click to browse your files</p>

@@ -134,7 +134,6 @@ public class FileUploadController {
 		@RequestParam(value = "outputFiles", required = false) String[] outputFiles,
 		@RequestParam(value = "analyzer", required = false) String[] analyzer,
 		@RequestParam(value = "liveOptions", required = false) String[] liveOptions) throws InterruptedException {
-		
 		//Catch exceptions first
 		if (inputFiles == null || inputFiles.length == 0) {
 			throw new IllegalArgumentException("No input files selected");
@@ -150,7 +149,7 @@ public class FileUploadController {
 		if (liveOptions[0].equals("true")) {
 			// Maybe do the serial stuff here, but definitely look in live folder for data
 		}
-
+		System.out.println("hello");
 		// Then run the selected analyzer
 		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
 			Analyzer.createAnalyzer(analyzer[0], inputFiles, outputFiles, Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();

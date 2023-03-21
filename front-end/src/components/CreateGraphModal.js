@@ -1,10 +1,10 @@
-//Modal.js
+//CreateGraphModal.js
 import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
 
-export const Modal = ({ setShowModal, fileTransfer }) => {
+export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
   // Handles how many axes are selected
   const [dimensions, setDimensions] = useState(2);
@@ -43,7 +43,6 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
       "live": document.getElementById("liveDataCheckbox").checked,
       "type": document.getElementById("graphTypeSelect").value
     })
-  
     setShowModal(false);
   }
 
@@ -179,40 +178,49 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
   var seriescounter = 0;
   
   const addSeries = () => {
-
-    // "files": [
-    //   {
-    //     "columns": selectColumns,
-    //     "analysis": getAnalysis(),
-    //   }
-    // ],
-
+    
     var selectColumns = [];
     for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
-
+    
     seriesInfo.push({
       "columns": selectColumns,
-      "analysis": getAnalysis()
+      "analyze": {
+        "analysis": getAnalysis(),
+        "analyzerValues": getAnalyzerOptions()
+      }
+      
     })
 
     seriescounter++;
 
     console.log(seriesInfo)
   }
-
+  var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression","sGolay"];
   // Handles the selection of the analysis
   const getAnalysis = () => {
-    var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression","sGolay"];
     var selectedAnals = [];
     for (var i = 0; i < analNames.length; i++) {
       if (document.getElementById(analNames[i]).checked) {
         selectedAnals.push(analNames[i]);
       }
     }
-    console.log(selectedAnals)
     return selectedAnals;
+  }
+
+  const getAnalyzerOptions = () => {
+    var window = document.getElementById("rollavg").value;
+    var epsilon = document.getElementById("epl").value;
+    if (document.getElementById("rollAvg").checked) {
+      console.log(window)
+      return  window;
+    }else if (document.getElementById("RDPCompression").checked) {
+      console.log(epsilon)
+      return epsilon;
+    }else{
+      return null;
+    }
   }
 
   const pageOne = () => (
@@ -222,28 +230,27 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
         <h3>Live Data</h3><br></br>
         <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
       </div>
+    
+      <label for="port">Port</label>
+      <input type="text" id="port" name="port"></input> 
+      <label for="baud">Baud</label>
+      <input type="text" id="baud" name="baud"></input>
       
-      <div className="spaceRowFlexBox">
-        Port <input type="text" value="" size="5" ></input>
-      </div>
-      <div className="spaceRowFlexBox">
-        Baud <input type="text" value="" size="5"></input>
-      </div>
-
-      <h3>Graph Types</h3>
+      <h3>Graph Types</h3><div className="pushLeftFlexBox">
         <select id="graphTypeSelect" className="graphTypeSelect">
-          <option value="XYGraph">X-Y Graph</option>
-          <option value="Gauge">1D Gauge</option>
-          <option value="XYColour"> X-Y-Colour Graph</option>
+          <option value="line">line</option>
+          <option value="spline">spline</option>
+          <option value="scatter"> scatter</option>
         </select>
-      <div className="buttonFlexBox">
+      </div>
+      <div className="pushRightFlexBox">
       <button className="submitbutton" onClick={() => { listFiles(); showPage2(); } }>Next</button>
       </div>
     </div>
   )
   const pageTwo = () => (
     
-    <div className="colFlexBox2"> 
+    <div className="colFlexBox"> 
       <h3>Choose Files</h3>
       <div className="scrollColFlexBox">
       {files.map((file) => {
@@ -270,22 +277,29 @@ export const Modal = ({ setShowModal, fileTransfer }) => {
     
   )
   const pageThree = () => (
-      <div className="colFlexBox2">
+      <div className="colFlexBox">
       <h3>Select Axis</h3>
         {columnGenerator(dimensions)}
-        <button onClick={addSeries}>Add Series</button>
+        <div className="pushLeftFlexBox">
+          <button onClick={addSeries}>Add Series</button>
+        </div>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-          <div className="rowFlexBox"> <input type="checkbox" id="linearInterpolate" name="linearInterpolate" value="true"></input>
-          <label htmlFor="linearInterpolate"> <div className="boldText">Linear Interpolation</div></label></div>
-          <div className="rowFlexBox"><input type="checkbox" id="accelCurve" name="accelCurve" value="true"></input>
-          <label htmlFor="accelCurve"><div className="boldText">Accel Curve Analyzer</div></label></div>
-          <div className="rowFlexBox"><input type="checkbox" id="rollAvg" name="rollAvg" value="true"></input>
-          <label htmlFor="rollAvg"> <div className="boldText">Rolling Average Analyzer</div></label></div>
-          <div className="rowFlexBox"><input type="checkbox" id="RDPCompression" name="RDPCompression" value="true"></input>
-          <label htmlFor="RDPCompression"> <div className="boldText">RDP Compression Analyzer</div></label></div>
-          <div className="rowFlexBox"><input type="checkbox" id="sGolay" name="sGolay" value="true"></input>
-          <label htmlFor="sGolay"> <div className="boldText">sGolay Filter</div></label></div>
+          {analNames.map((anal) => {
+            return (
+              <div key={anal}>
+                <div className="rowFlexBox"><input type="checkbox" id={anal} name={anal} value="true"></input>
+                <label htmlFor={anal}><div className="boldText">{anal}</div></label></div>
+              </div>
+            )
+          }
+          )}
+      </div>
+      <div className="rowFlexBox"> 
+      <label for="rollavg">Rolling Avg Window:</label>
+      <input type="text" id="rollavg" name="rollavg" ></input> 
+      <label for="epl">Eplison Value:</label>
+      <input type="text" id="epl" name="epl" ></input>
       </div>
       <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage2}>Back</button>

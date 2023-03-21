@@ -92,8 +92,11 @@ const Chart = ({ fileInformation }) => {
                     files.push(fileInformation.files[i].columns[j].filename);
                 }
             }
-
-            getFile(files, [], [fileInformation.files[i].analysis], ["false"], fileInformation.files[i].columns)
+            if (fileInformation.files[i].analyze.variable == null) {
+                getFile(files, [], [fileInformation.files[i].analyze.analysis])
+            } else {
+                getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.analyzerValues], ["false"])
+            }
         }
 
         // Set files to be all filenames in fileInformation, without duplicates
@@ -128,6 +131,12 @@ const Chart = ({ fileInformation }) => {
                 title: {
                     text: fileInformation.files[0].columns[1].header + " vs " + fileInformation.files[0].columns[0].header
                 },
+
+                chart: {
+                    type: fileInformation.type,
+                    zoomType: 'x'
+                },
+
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
@@ -142,7 +151,7 @@ const Chart = ({ fileInformation }) => {
                 },
                 legend: {
                     enabled: true
-                }
+                },
             }
         })
         setLoading(false);
