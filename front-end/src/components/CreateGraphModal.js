@@ -197,7 +197,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     console.log(seriesInfo)
   }
-  var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression"];
+  var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression","sGolay"];
   // Handles the selection of the analysis
   const getAnalysis = () => {
     var selectedAnals = [];
