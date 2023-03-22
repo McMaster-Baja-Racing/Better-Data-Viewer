@@ -194,7 +194,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     console.log(seriesInfo)
   }
-  var analNames = ["linearInterpolate","accelCurve", "rollAvg", "RDPCompression","sGolay"];
+  var analNames = ["Linear Interpolate","Accel Curve", "Rolling Average", "RDP Compression","sGolay"];
   // Handles the selection of the analysis
   const getAnalysis = () => {
     var selectedAnals = [];
@@ -209,10 +209,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const getAnalyzerOptions = () => {
     var window = document.getElementById("rollavg").value;
     var epsilon = document.getElementById("epl").value;
-    if (document.getElementById("rollAvg").checked) {
+    if (document.getElementById("Rolling Average").checked) {
       console.log(window)
       return  window;
-    }else if (document.getElementById("RDPCompression").checked) {
+    }else if (document.getElementById("RDP Compression").checked) {
       console.log(epsilon)
       return epsilon;
     }else{
@@ -276,7 +276,9 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const pageThree = () => (
       <div className="colFlexBox">
       <h3>Select Axis</h3>
+      <div className="rowFlexBox">
         {columnGenerator(dimensions)}
+        </div>
         <div className="pushLeftFlexBox">
           <button onClick={addSeries}>Add Series</button>
         </div>
