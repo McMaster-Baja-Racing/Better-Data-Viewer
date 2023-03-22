@@ -2,7 +2,7 @@
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
-
+import { useRef } from 'react';
 export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
   // Handles how many axes are selected
@@ -24,6 +24,13 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     }
     return arr;
   }
+
+  const modalRef = useRef();
+  const closeModal = (e) => {
+    if (e.target === modalRef.current) {
+      setShowModal(false);
+    }
+  };
 
   // Handles the submit button and passes the selected data to the parent component
   const handleSubmit = (e) => {
@@ -203,10 +210,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const getAnalyzerOptions = () => {
     var window = document.getElementById("rollavg").value;
     var epsilon = document.getElementById("epl").value;
-    if (document.getElementById("rollAvg").checked) {
+    if (document.getElementById("Rolling Average").checked) {
       console.log(window)
       return  window;
-    }else if (document.getElementById("RDPCompression").checked) {
+    }else if (document.getElementById("RDP Compression").checked) {
       console.log(epsilon)
       return epsilon;
     }else{
@@ -304,7 +311,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   //render the modal JSX in the portal div.
 
   return ReactDom.createPortal(
-    <div className="container"  >
+    <div className="container" ref={modalRef} onClick={closeModal} >
       <div className="modal">
         <div id="one" >{pageOne()} </div>
         <div id="two" hidden >{pageTwo()}</div>

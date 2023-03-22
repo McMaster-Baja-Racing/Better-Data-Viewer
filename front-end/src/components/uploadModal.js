@@ -3,6 +3,7 @@ import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import '../styles/dragNdrop.css';
 import { useForm } from "react-hook-form";
+import { useRef } from "react";
 import React, { useState } from 'react';
 export const UploadModal = ({ setShowUploadModal }) => {
   
@@ -28,6 +29,13 @@ export const UploadModal = ({ setShowUploadModal }) => {
       fileLists.push(e.dataTransfer.files[i])
     }
     setfileLists(fileLists)
+  };
+
+  const modalRef = useRef();
+  const closeModal = (e) => {
+    if (e.target === modalRef.current) {
+      setShowUploadModal(false);
+    }
   };
 
   const { register, handleSubmit } = useForm();
@@ -71,7 +79,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
     //setShowUploadModal(false); Dont need to do this neccesarily
   };
   return ReactDom.createPortal(
-    <div className="container" >
+    <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="centerFlexBox">
           <h1>Upload Files</h1>
