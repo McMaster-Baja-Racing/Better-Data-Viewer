@@ -287,8 +287,8 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           {analNames.map((anal) => {
             return (
               <div key={anal}>
-                <div className="rowFlexBox"><input type="checkbox" id={anal} name={anal} value="true"></input>
-                <label htmlFor={anal}><div className="boldText">{anal}</div></label></div>
+                <div className="spaceRowFlexBox"><div><input type="checkbox" id={anal} name={anal} value="true"></input>
+                <label htmlFor={anal}>{anal}</label></div><button className="btn">i</button></div>
               </div>
             )
           }
