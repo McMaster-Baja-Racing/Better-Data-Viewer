@@ -145,10 +145,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       //wrap logic in promise
       await new Promise((resolve, reject) => {
         //catch errors
-        var c = 0;
         for (const file of selectedFiles) {
           fetch(`http://${window.location.hostname}:8080/files/${file}/info`)
             .then(response => {
+              var c = 0;
               // the data is in csv format, print it out
               response.text().then(text => {
                 //append it to columns
@@ -175,7 +175,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }, [selectedFiles]);
 
   var seriesInfo = []
-  var seriescounter = 0;
   
   const addSeries = () => {
     
@@ -192,8 +191,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       }
       
     })
-
-    seriescounter++;
 
     console.log(seriesInfo)
   }
@@ -231,9 +228,9 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
       </div>
     
-      <label for="port">Port</label>
+      <label htmlFor="port">Port</label>
       <input type="text" id="port" name="port"></input> 
-      <label for="baud">Baud</label>
+      <label htmlFor="baud">Baud</label>
       <input type="text" id="baud" name="baud"></input>
       
       <h3>Graph Types</h3><div className="pushLeftFlexBox">
@@ -296,9 +293,9 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           )}
       </div>
       <div className="rowFlexBox"> 
-      <label for="rollavg">Rolling Avg Window:</label>
+      <label htmlFor="rollavg">Rolling Avg Window:</label>
       <input type="text" id="rollavg" name="rollavg" ></input> 
-      <label for="epl">Eplison Value:</label>
+      <label htmlFor="epl">Eplison Value:</label>
       <input type="text" id="epl" name="epl" ></input>
       </div>
       <div className="buttonFlexBox">
