@@ -195,25 +195,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     console.log(seriesInfo)
   }
-  var analNamess = [["Linear Interpolate","linearInterpolate",true],["Accel Curve", "accelCurve",true], ["Rolling Average", "rollAvg",true], ["RDP Compression","RDPCompression",true],["sGolay","sGolay",true]];
-  
-  var objectsList = [];
-  const makeAnalObjects = () => {
-
-    for (var i = 0; i < analNamess.length; i++) {
-      var name = analNamess[i][0];
-      var code = analNamess[i][1];
-      var variable = analNamess[i][2];
-      
-      var obj = {
-        name: name,
-        code: code,
-        variable : variable
-      };
-      
-      objectsList.push(obj);
-    }
-  }
+  var objectsList = [{name:"Linear Interpolate",code: "linearInterpolate",variable: true},{name: "Accel Curve",code:  "accelCurve",variable: true}, {name: "Rolling Average",code: "rollAvg",variable: true}, {name: "RDP Compression",code: "RDPCompression",variable: true},{name: "sGolay",code: "sGolay",variable: true}];
 
   // Handles the selection of the analysis
   const getAnalysis = () => {
