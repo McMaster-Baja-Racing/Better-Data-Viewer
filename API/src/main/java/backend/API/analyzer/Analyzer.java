@@ -92,6 +92,28 @@ public abstract class Analyzer {
                 }
                 double epsilon = Double.parseDouble((String) params[0]);
                 return new RDPCompressionAnalyzer(inputFiles, outputFiles, epsilon);
+            case "SplitAnalyzer":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_split.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
+                if (params.length != 2) {
+                    return null;
+                }
+                int start = Integer.parseInt((String) params[0]);
+                int end = Integer.parseInt((String) params[1]);
+                return new SplitAnalyzer(inputFiles, outputFiles, start,end);
+            case "LinearMultiplyAnalyzer":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_split.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
+                if (params.length != 2) {
+                    return null;
+                }
+                double m = Double.parseDouble((String) params[0]);
+                double b = Double.parseDouble((String) params[0]);
+                return new LinearMultiplyAnalyzer(inputFiles, outputFiles, m,b);
             default:
                 return null;
         }
