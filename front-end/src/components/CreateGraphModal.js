@@ -194,13 +194,32 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     console.log(seriesInfo)
   }
-  var analNames = ["Linear Interpolate","Accel Curve", "Rolling Average", "RDP Compression","sGolay"];
+  //make a list of analyzer objects
+   
+  var analNamess = [["Linear Interpolate","linearInterpolate",true],["Accel Curve", "accelCurve",true], ["Rolling Average", "rollAvg",true], ["RDP Compression","RDPCompression",true],["sGolay","sGolay",true]];
+  
+  var objectsList = [];
+
+  for (var i = 0; i < analNamess.length; i++) {
+    var name = analNamess[i][0];
+    var code = analNamess[i][1];
+    var variable = analNamess[i][2];
+    
+    var obj = {
+      name: name,
+      code: code,
+      variable : variable
+    };
+    
+    objectsList.push(obj);
+  }
+
   // Handles the selection of the analysis
   const getAnalysis = () => {
     var selectedAnals = [];
-    for (var i = 0; i < analNames.length; i++) {
-      if (document.getElementById(analNames[i]).checked) {
-        selectedAnals.push(analNames[i]);
+    for (var i = 0; i < objectsList.length; i++) {
+      if (document.getElementById(objectsList[i].code).checked) {
+        selectedAnals.push(objectsList[i].code);
       }
     }
     return selectedAnals;
@@ -209,10 +228,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const getAnalyzerOptions = () => {
     var window = document.getElementById("rollavg").value;
     var epsilon = document.getElementById("epl").value;
-    if (document.getElementById("Rolling Average").checked) {
+    if (document.getElementById("rollAvg").checked) {
       console.log(window)
       return  window;
-    }else if (document.getElementById("RDP Compression").checked) {
+    }else if (document.getElementById("RDPCompression").checked) {
       console.log(epsilon)
       return epsilon;
     }else{
@@ -220,6 +239,28 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     }
   }
 
+  const displayAnalyzers = () => {
+    var elementsList = [];
+    
+    for (var i = 0; i < objectsList.length; i++) {
+      var element = (
+        <div>
+          <div className="spaceRowFlexBox">
+            <div>
+              <input type="checkbox" id={objectsList[i].code} name={objectsList[i].name} value="true" />
+              <label htmlFor={objectsList[i].code}>{objectsList[i].name}</label>
+            </div>
+            <button className="btn">i</button>
+          </div>
+        </div>
+      );
+      
+      elementsList.push(element);
+    }
+    
+    return elementsList;
+  }
+  
   const pageOne = () => (
     <div className="colFlexBox">
       <h1>Graph Options</h1><br></br>
@@ -284,15 +325,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         </div>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-          {analNames.map((anal) => {
-            return (
-              <div key={anal}>
-                <div className="spaceRowFlexBox"><div><input type="checkbox" id={anal} name={anal} value="true"></input>
-                <label htmlFor={anal}>{anal}</label></div><button className="btn">i</button></div>
-              </div>
-            )
-          }
-          )}
+        {displayAnalyzers()}
       </div>
       <div className="rowFlexBox"> 
       <label htmlFor="rollavg">Rolling Avg Window:</label>
