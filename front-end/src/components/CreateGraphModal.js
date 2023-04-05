@@ -242,6 +242,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }
 
   const displayAnalyzers = () => {
+    makeAnalObjects();
     var elementsList = [];
     
     for (var i = 0; i < objectsList.length; i++) {
@@ -306,12 +307,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         <button className="submitbutton" onClick={showPage1}>Back</button>
         <button className="submitbutton" onClick={() => { 
           getSelectedFiles(); 
-          if(document.getElementById("graphTypeSelect").value === "XYColour") {
-            setDimensions(3)
-          } else {
-            setDimensions(2)
-          }
-           showPage3(); }} >Next</button>
+          displayAnalyzers();showPage3(); }} >Next</button>
       </div>
       </div>
     
