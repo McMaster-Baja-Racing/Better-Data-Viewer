@@ -4,7 +4,6 @@ import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
 import { useRef } from 'react';
 export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
-
   // Handles how many axes are selected
   const [dimensions, setDimensions] = useState(2);
   
@@ -143,11 +142,11 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       //wrap logic in promise
       await new Promise((resolve, reject) => {
         //catch errors
-        var c = 0;
+        
         for (const file of selectedFiles) {
           fetch(`http://${window.location.hostname}:8080/files/${file}/info`)
             .then(response => {
-              // the data is in csv format, print it out
+              var c = 0;// the data is in csv format, print it out
               response.text().then(text => {
                 //append it to columns
                 for (var i = 0; i < text.split(",").length; i++) {
@@ -173,7 +172,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }, [selectedFiles]);
 
   var seriesInfo = []
-  var seriescounter = 0;
   
   const addSeries = () => {
     
@@ -190,9 +188,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       }
       
     })
-
-    seriescounter++;
-
     console.log(seriesInfo)
   }
   var objectsList = [{name:"Linear Interpolate",code: "linearInterpolate",variable: true},{name: "Accel Curve",code:  "accelCurve",variable: true}, {name: "Rolling Average",code: "rollAvg",variable: true}, {name: "RDP Compression",code: "RDPCompression",variable: true},{name: "sGolay",code: "sGolay",variable: true}];
@@ -223,7 +218,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }
 
   const displayAnalyzers = () => {
-    makeAnalObjects();
     var elementsList = [];
     
     for (var i = 0; i < objectsList.length; i++) {
