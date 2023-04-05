@@ -199,19 +199,21 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   var analNamess = [["Linear Interpolate","linearInterpolate",true],["Accel Curve", "accelCurve",true], ["Rolling Average", "rollAvg",true], ["RDP Compression","RDPCompression",true],["sGolay","sGolay",true]];
   
   var objectsList = [];
+  const makeAnalObjects = () => {
 
-  for (var i = 0; i < analNamess.length; i++) {
-    var name = analNamess[i][0];
-    var code = analNamess[i][1];
-    var variable = analNamess[i][2];
-    
-    var obj = {
-      name: name,
-      code: code,
-      variable : variable
-    };
-    
-    objectsList.push(obj);
+    for (var i = 0; i < analNamess.length; i++) {
+      var name = analNamess[i][0];
+      var code = analNamess[i][1];
+      var variable = analNamess[i][2];
+      
+      var obj = {
+        name: name,
+        code: code,
+        variable : variable
+      };
+      
+      objectsList.push(obj);
+    }
   }
 
   // Handles the selection of the analysis
