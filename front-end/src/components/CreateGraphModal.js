@@ -1,9 +1,8 @@
 //CreateGraphModal.js
-import { useRef } from "react";
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
-
+import { useRef } from 'react';
 export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
   // Handles how many axes are selected
@@ -26,6 +25,13 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     return arr;
   }
 
+  const modalRef = useRef();
+  const closeModal = (e) => {
+    if (e.target === modalRef.current) {
+      setShowModal(false);
+    }
+  };
+
   // Handles the submit button and passes the selected data to the parent component
   const handleSubmit = (e) => {
     addSeries();
@@ -45,14 +51,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     })
     setShowModal(false);
   }
-
-  // close the modal when clicking outside the modal.
-  const modalRef = useRef();
-  const closeModal = (e) => {
-    if (e.target === modalRef.current) {
-      setShowModal(false);
-    }
-  };
 
   // Handles fetching all files from the server
   const [files, setFiles] = useState([])
@@ -145,10 +143,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       //wrap logic in promise
       await new Promise((resolve, reject) => {
         //catch errors
+        var c = 0;
         for (const file of selectedFiles) {
           fetch(`http://${window.location.hostname}:8080/files/${file}/info`)
             .then(response => {
-              var c = 0;
               // the data is in csv format, print it out
               response.text().then(text => {
                 //append it to columns
@@ -175,6 +173,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }, [selectedFiles]);
 
   var seriesInfo = []
+  var seriescounter = 0;
   
   const addSeries = () => {
     
@@ -192,10 +191,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       
     })
 
+    seriescounter++;
+
     console.log(seriesInfo)
   }
-  //make a list of analyzer objects
-   
   var analNamess = [["Linear Interpolate","linearInterpolate",true],["Accel Curve", "accelCurve",true], ["Rolling Average", "rollAvg",true], ["RDP Compression","RDPCompression",true],["sGolay","sGolay",true]];
   
   var objectsList = [];
@@ -263,7 +262,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     
     return elementsList;
   }
-  
+
   const pageOne = () => (
     <div className="colFlexBox">
       <h1>Graph Options</h1><br></br>
@@ -307,7 +306,12 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         <button className="submitbutton" onClick={showPage1}>Back</button>
         <button className="submitbutton" onClick={() => { 
           getSelectedFiles(); 
-          displayAnalyzers();showPage3(); }} >Next</button>
+          if(document.getElementById("graphTypeSelect").value === "XYColour") {
+            setDimensions(3)
+          } else {
+            setDimensions(2)
+          }
+           showPage3(); }} >Next</button>
       </div>
       </div>
     
@@ -341,7 +345,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   //render the modal JSX in the portal div.
 
   return ReactDom.createPortal(
-    <div className="container" ref={modalRef} onClick={closeModal}>
+    <div className="container" ref={modalRef} onClick={closeModal} >
       <div className="modal">
         <div id="one" >{pageOne()} </div>
         <div id="two" hidden >{pageTwo()}</div>
