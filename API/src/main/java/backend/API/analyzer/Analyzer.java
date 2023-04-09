@@ -70,12 +70,19 @@ public abstract class Analyzer {
                     outputFiles[9] = outputFiles[0];
                 }
                 // Check if passed a window size
-                if (params.length == 0) {
+                if ((String)params[1]=="" && (String)params[0]=="") {
                     return new SGolayFilter(inputFiles, outputFiles);
                 }
-                windowSize = Integer.parseInt((String) params[0]);
-                int polynomialDegree = Integer.parseInt((String) params[1]);
-                return new SGolayFilter(inputFiles, outputFiles, windowSize, polynomialDegree);
+                else if ((String)params[1]==""){
+                    windowSize = Integer.parseInt((String) params[0]);
+                    return new SGolayFilter(inputFiles, outputFiles, windowSize);
+                }
+                else{
+                    windowSize = Integer.parseInt((String) params[0]);
+               
+                    int polynomialDegree = Integer.parseInt((String) params[1]);
+                    return new SGolayFilter(inputFiles, outputFiles, windowSize, polynomialDegree);
+                }
             case "linearInterpolate":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4) + ".csv";
@@ -87,28 +94,29 @@ public abstract class Analyzer {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_rdp.csv";
                     outputFiles[9] = outputFiles[0];
                 }
-                if (params.length == 0) {
+                if ((String)params[0]=="") {
                     return new RDPCompressionAnalyzer(inputFiles, outputFiles, 15);
                 }
                 double epsilon = Double.parseDouble((String) params[0]);
                 return new RDPCompressionAnalyzer(inputFiles, outputFiles, epsilon);
-            case "SplitAnalyzer":
+            case "split":
+                System.out.println("SplitAnalyzer");
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_split.csv";
                     outputFiles[9] = outputFiles[0];
                 }
-                if (params.length != 2) {
+                if ((String)params[1]=="" || (String)params[0]=="") {
                     return null;
                 }
                 int start = Integer.parseInt((String) params[0]);
                 int end = Integer.parseInt((String) params[1]);
                 return new SplitAnalyzer(inputFiles, outputFiles, start,end);
-            case "LinearMultiplyAnalyzer":
+            case "linearMultiply":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_split.csv";
                     outputFiles[9] = outputFiles[0];
                 }
-                if (params.length != 2) {
+                if ((String)params[1]=="" || (String)params[0]=="") {
                     return null;
                 }
                 double m = Double.parseDouble((String) params[0]);

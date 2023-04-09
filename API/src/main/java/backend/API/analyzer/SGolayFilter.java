@@ -20,6 +20,11 @@ public class SGolayFilter extends Analyzer {
         this.windowSize = windowSize;
         this.polynomialDegree = polynomialDegree;
     }
+    public SGolayFilter(String[] inputFiles, String[] outputFiles, int windowSize) {
+        super(inputFiles, outputFiles);
+        this.windowSize = windowSize;
+        this.polynomialDegree = 3;
+    }
 
     public SGolayFilter(String[] inputFiles, String[] outputFiles) {
         super(inputFiles, outputFiles);

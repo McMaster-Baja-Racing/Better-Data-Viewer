@@ -50,7 +50,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
         //loop through the data and multiply the second coloum by m and then add b
         for (int i = 1; i < data.size(); i++) {
             dataPoint.add(data.get(i).get(0));
-            dataPoint.add(df.format(Integer.parseInt(data.get(i).get(1)) * m + b));
+            dataPoint.add(df.format(Double.parseDouble(data.get(i).get(1)) * m + b));
             dataPoints.add(dataPoint);
             dataPoint = new ArrayList<String>(2);
         }

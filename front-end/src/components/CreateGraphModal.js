@@ -195,27 +195,103 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     console.log(seriesInfo)
   }
-  var analNames = ["Linear Interpolate","Accel Curve", "Rolling Average", "RDP Compression","sGolay"];
+  // Handles the selection of the analysis type includes the name and backend ID
+
+  var analNames = {
+    "linearInterpolate": {
+      name:"Linear Interpolation",
+      parameters: []
+    },
+    "rollAvg": {
+      name:"Rolling Average",
+      parameters: ["Window Size"]
+    },
+    "accelCurve": {
+      name:"Acceleration Curve",
+      parameters: []
+    },
+    "RDPCompression": {
+      name:"RDP Compression",
+      parameters: ["Epsilon"]
+    },
+    "sGolay": {
+      name:"S-Golay",
+      parameters: ["Window Size", "Polynomial Order"]
+    },
+    "split": {
+      name:"Split",
+      parameters : ["Start","End"]
+    },
+    "linearMultiply": {
+      name:"Linear Multiply",
+      parameters: ["Multiplier", "Offset"]
+    }
+  };
   // Handles the selection of the analysis
+
+  //what is the output of analNames[0]
+  //the output of the above statement is the key of the first element in the object
   const getAnalysis = () => {
     var selectedAnals = [];
-    for (var i = 0; i < analNames.length; i++) {
-      if (document.getElementById(analNames[i]).checked) {
-        selectedAnals.push(analNames[i]);
+    for (var i = 0; i < Object.keys(analNames).length; i++) {
+      if (document.getElementById(Object.values(analNames)[i].name).checked) {
+        selectedAnals.push(Object.keys(analNames)[i]);
       }
     }
     return selectedAnals;
   }
 
   const getAnalyzerOptions = () => {
-    var window = document.getElementById("rollavg").value;
-    var epsilon = document.getElementById("epl").value;
+    var parameter1;
+    var parameter2;
     if (document.getElementById("Rolling Average").checked) {
-      console.log(window)
-      return  window;
+      //parameter 1 equals the value of the rolling average window size if the value is not "" else it equals null
+      parameter1 = document.getElementById("Rolling Average_param1").value;
+      if (parameter1 === "") {
+        parameter1 = null;
+      }
+      console.log(parameter1)
+      return  parameter1;
     }else if (document.getElementById("RDP Compression").checked) {
-      console.log(epsilon)
-      return epsilon;
+      parameter1 = document.getElementById("RDP Compression_param1").value;
+      if (parameter1 === "") {
+        parameter1 = null;
+      }
+      console.log(parameter1)
+      return parameter1;
+    }else if (document.getElementById("Split").checked) {
+      parameter1 = document.getElementById("Split_param1").value;
+      if (parameter1 === "") {
+        parameter1 = null;
+      }
+      parameter2 = document.getElementById("Split_param2").value;
+      if (parameter2 === "") {
+        parameter2 = null;
+      }
+      console.log([parameter1,parameter2])
+      return [parameter1,parameter2];
+    }else if (document.getElementById("S-Golay").checked) {
+      parameter1 = document.getElementById("S-Golay_param1").value;
+      if (parameter1 === "") {
+        parameter1 = null;
+      }
+      parameter2 = document.getElementById("S-Golay_param2").value;
+      if (parameter2 === "") {
+        parameter2 = null;
+      }
+      console.log([parameter1,parameter2])
+      return [parameter1,parameter2];
+    }else if (document.getElementById("Linear Multiply").checked) {
+      parameter1 = document.getElementById("Linear Multiply_param1").value;
+      if (parameter1 === "") {
+        parameter1 = null;
+      }
+      parameter2 = document.getElementById("Linear Multiply_param2").value;
+      if (parameter2 === "") {
+        parameter2 = null;
+      }
+      console.log([parameter1,parameter2])
+      return [parameter1,parameter2];
     }else{
       return null;
     }
@@ -285,21 +361,29 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         </div>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-          {analNames.map((anal) => {
+        {Object.values(analNames).map((anal) => {
             return (
-              <div key={anal}>
-                <div className="rowFlexBox"><input type="checkbox" id={anal} name={anal} value="true"></input>
-                <label htmlFor={anal}><div className="boldText">{anal}</div></label></div>
+              <div key={anal.name}>
+                <div className="rowFlexBox">
+                  <input type="radio" id={anal.name} name="analyzerChoice" value="true"></input>
+                  <label htmlFor={anal.name}><div className="boldText">{anal.name}</div></label>
+                  <details>
+                    <summary></summary>
+                    <div className="scrollColFlexBox">
+                      <div className="rowFlexBox">
+                        <label htmlFor="param1">{anal.parameters[0]}</label>
+                        <input type="number" id={anal.name+"_param1"} className="param1" style={{display : (anal.parameters.length>=1)? "block" : "none" }} ></input>
+                        <label htmlFor="param2">{anal.parameters[1]}</label>
+                        <input type="number" id={anal.name+"_param2"} className="param2" style={{display : (anal.parameters.length>=2)? "block" : "none" }}></input>
+                      </div>
+                    </div>
+                  </details>
+                  
+                </div>
               </div>
             )
           }
           )}
-      </div>
-      <div className="rowFlexBox"> 
-      <label htmlFor="rollavg">Rolling Avg Window:</label>
-      <input type="text" id="rollavg" name="rollavg" ></input> 
-      <label htmlFor="epl">Eplison Value:</label>
-      <input type="text" id="epl" name="epl" ></input>
       </div>
       <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage2}>Back</button>

@@ -73,7 +73,7 @@ const Chart = ({ fileInformation }) => {
     }
 
     useEffect(() => {
-        
+        console.log(fileInformation)
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
         if (fileInformation.files.length === 0) {
             return;
@@ -92,7 +92,7 @@ const Chart = ({ fileInformation }) => {
                     files.push(fileInformation.files[i].columns[j].filename);
                 }
             }
-            if (fileInformation.files[i].analyze.variable == null) {
+            if (fileInformation.files[i].analyze.analyzerValues == null) {
                 getFile(files, [], [fileInformation.files[i].analyze.analysis], ["false"], fileInformation.files[i].columns)
             } else {
                 getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.analyzerValues], ["false"], fileInformation.files[i].columns)

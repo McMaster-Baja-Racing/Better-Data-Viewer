@@ -86,7 +86,7 @@
   .rowFlexBox{
     display: flex;
     flex-direction: row;
-    align-items: left;
+    align-items: center;
     justify-content: left;
   }
   .spaceRowFlexBox{
@@ -132,6 +132,10 @@
     margin : 0.5em;
   }
   
+  
+
+
+
   @keyframes animate {
     from {
       transform: scale(0.5);
