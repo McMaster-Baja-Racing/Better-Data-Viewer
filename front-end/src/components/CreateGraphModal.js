@@ -142,11 +142,11 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       //wrap logic in promise
       await new Promise((resolve, reject) => {
         //catch errors
-        
+        var c = 0;
         for (const file of selectedFiles) {
           fetch(`http://${window.location.hostname}:8080/files/${file}/info`)
             .then(response => {
-              var c = 0;// the data is in csv format, print it out
+              // the data is in csv format, print it out
               response.text().then(text => {
                 //append it to columns
                 for (var i = 0; i < text.split(",").length; i++) {
@@ -190,104 +190,40 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     })
     console.log(seriesInfo)
   }
-  var analNames = {
-    "linearInterpolate": {
-      name:"Linear Interpolation",
-      parameters: []
-    },
-    "rollAvg": {
-      name:"Rolling Average",
-      parameters: ["Window Size"]
-    },
-    "accelCurve": {
-      name:"Acceleration Curve",
-      parameters: []
-    },
-    "RDPCompression": {
-      name:"RDP Compression",
-      parameters: ["Epsilon"]
-    },
-    "sGolay": {
-      name:"S-Golay",
-      parameters: ["Window Size", "Polynomial Order"]
-    },
-    "split": {
-      name:"Split",
-      parameters : ["Start","End"]
-    },
-    "linearMultiply": {
-      name:"Linear Multiply",
-      parameters: ["Multiplier", "Offset"]
-    }
-  };
+
+  var analyzers = [{name:"Linear Interpolate",code: "linearInterpolate",parameters: []},
+  {name: "Accel Curve",code: "accelCurve",parameters: []}, {name: "Rolling Average",code: "rollAvg",parameters: ["Window Size"]},
+   {name: "RDP Compression",code: "RDPCompression",parameters: ["Epsilon"]},{name: "sGolay",code: "sGolay",parameters: ["Window Size", "Polynomial Order"]},
+   {name: "Split",code: "split",parameters: ["Start","End"]},{name: "Linear Multiply",code: "linearMultiply",parameters: ["Multiplier", "Offset"]}];
   // Handles the selection of the analysis
 
   //what is the output of analNames[0]
   //the output of the above statement is the key of the first element in the object
   const getAnalysis = () => {
-    var selectedAnals = [];
-    for (var i = 0; i < Object.keys(analNames).length; i++) {
-      if (document.getElementById(Object.values(analNames)[i].name).checked) {
-        selectedAnals.push(Object.keys(analNames)[i]);
+    var selectedAnalyzers = [];
+    for (var i = 0; i < analyzers.length; i++) {
+      if (document.getElementById((analyzers[i][1].name).checked)) {
+        selectedAnalyzers.push(analyzers[i][1]);
       }
     }
-    return selectedAnals;
+    return selectedAnalyzers;
   }
 
   const getAnalyzerOptions = () => {
-    var parameter1;
-    var parameter2;
-    if (document.getElementById("Rolling Average").checked) {
-      //parameter 1 equals the value of the rolling average window size if the value is not "" else it equals null
-      parameter1 = document.getElementById("Rolling Average_param1").value;
-      if (parameter1 === "") {
-        parameter1 = null;
+    for (let i = 0; i < analyzers.length; i++) {
+      const analyzer = analyzers[i];
+      if (document.getElementById(analyzer.name).checked) {
+        const parameters = [];
+        for (let j = 0; j < analyzer.parameters.length; j++) {
+          const parameterName = analyzer.parameters[j];
+          const parameterValue = document.getElementById(`${analyzer.code}_${parameterName}`).value;
+          parameters.push(parameterValue === "" ? null : parameterValue);
+        }
+        console.log(parameters);
+        return parameters.length === 1 ? parameters[0] : parameters;
       }
-      console.log(parameter1)
-      return  parameter1;
-    }else if (document.getElementById("RDP Compression").checked) {
-      parameter1 = document.getElementById("RDP Compression_param1").value;
-      if (parameter1 === "") {
-        parameter1 = null;
-      }
-      console.log(parameter1)
-      return parameter1;
-    }else if (document.getElementById("Split").checked) {
-      parameter1 = document.getElementById("Split_param1").value;
-      if (parameter1 === "") {
-        parameter1 = null;
-      }
-      parameter2 = document.getElementById("Split_param2").value;
-      if (parameter2 === "") {
-        parameter2 = null;
-      }
-      console.log([parameter1,parameter2])
-      return [parameter1,parameter2];
-    }else if (document.getElementById("S-Golay").checked) {
-      parameter1 = document.getElementById("S-Golay_param1").value;
-      if (parameter1 === "") {
-        parameter1 = null;
-      }
-      parameter2 = document.getElementById("S-Golay_param2").value;
-      if (parameter2 === "") {
-        parameter2 = null;
-      }
-      console.log([parameter1,parameter2])
-      return [parameter1,parameter2];
-    }else if (document.getElementById("Linear Multiply").checked) {
-      parameter1 = document.getElementById("Linear Multiply_param1").value;
-      if (parameter1 === "") {
-        parameter1 = null;
-      }
-      parameter2 = document.getElementById("Linear Multiply_param2").value;
-      if (parameter2 === "") {
-        parameter2 = null;
-      }
-      console.log([parameter1,parameter2])
-      return [parameter1,parameter2];
-    }else{
-      return null;
     }
+    return null;
   }
 
   const pageOne = () => (
@@ -354,20 +290,20 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         </div>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-        {Object.values(analNames).map((anal) => {
+        {Object.values(analyzers).map((analyzer) => {
             return (
-              <div key={anal.name}>
+              <div key={analyzer.name}>
                 <div className="rowFlexBox">
-                  <input type="radio" id={anal.name} name="analyzerChoice" value="true"></input>
-                  <label htmlFor={anal.name}><div className="boldText">{anal.name}</div></label>
+                  <input type="radio" id={analyzer.name} name="analyzerChoice" value="true"></input>
+                  <label htmlFor={analyzer.name}><div className="boldText">{analyzer.name}</div></label>
                   <details>
                     <summary></summary>
                     <div className="scrollColFlexBox">
                       <div className="rowFlexBox">
-                        <label htmlFor="param1">{anal.parameters[0]}</label>
-                        <input type="number" id={anal.name+"_param1"} className="param1" style={{display : (anal.parameters.length>=1)? "block" : "none" }} ></input>
-                        <label htmlFor="param2">{anal.parameters[1]}</label>
-                        <input type="number" id={anal.name+"_param2"} className="param2" style={{display : (anal.parameters.length>=2)? "block" : "none" }}></input>
+                        <label htmlFor="param1">{analyzer.parameters[0]}</label>
+                        <input type="number" id={analyzer.name+"_param1"} className="param1" style={{display : (analyzer.parameters.length>=1)? "block" : "none" }} ></input>
+                        <label htmlFor="param2">{analyzer.parameters[1]}</label>
+                        <input type="number" id={analyzer.name+"_param2"} className="param2" style={{display : (analyzer.parameters.length>=2)? "block" : "none" }}></input>
                       </div>
                     </div>
                   </details>
