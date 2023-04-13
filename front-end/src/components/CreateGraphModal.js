@@ -202,7 +202,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const getAnalysis = () => {
     var selectedAnalyzers = [];
     for (var i = 0; i < analyzers.length; i++) {
-      if (document.getElementById((analyzers[i][1].name).checked)) {
+      if (document.getElementById((analyzers[i].name).checked)) {
         selectedAnalyzers.push(analyzers[i][1]);
       }
     }
