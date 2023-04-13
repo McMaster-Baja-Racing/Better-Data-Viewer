@@ -86,7 +86,7 @@
   .rowFlexBox{
     display: flex;
     flex-direction: row;
-    align-items: left;
+    align-items: center;
     justify-content: left;
   }
   .spaceRowFlexBox{
