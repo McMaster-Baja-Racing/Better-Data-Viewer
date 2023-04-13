@@ -219,8 +219,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           const parameterValue = document.getElementById(`${analyzer.code}_${parameterName}`).value;
           parameters.push(parameterValue === "" ? null : parameterValue);
         }
-        console.log(parameters);
-        return parameters.length === 1 ? parameters[0] : parameters;
+        return parameters.length > 0 ? parameters : null;
       }
     }
     return null;
