@@ -300,11 +300,15 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
                     <summary></summary>
                     <div className="scrollColFlexBox">
                       <div className="rowFlexBox">
-                        <label htmlFor="param1">{analyzer.parameters[0]}</label>
-                        <input type="number" id={analyzer.name+"_param1"} className="param1" style={{display : (analyzer.parameters.length>=1)? "block" : "none" }} ></input>
-                        <label htmlFor="param2">{analyzer.parameters[1]}</label>
-                        <input type="number" id={analyzer.name+"_param2"} className="param2" style={{display : (analyzer.parameters.length>=2)? "block" : "none" }}></input>
-                      </div>
+                        {analyzer.parameters.map((parameter) => {
+                          return (
+                            <div key={parameter}>
+                              <label htmlFor={parameter}>{parameter}</label>
+                              <input type="number" id={analyzer.code+"_"+parameter} className={parameter}></input>
+                            </div>
+                          )
+                        })}
+                        </div>
                     </div>
                   </details>
                   
