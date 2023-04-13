@@ -1,9 +1,9 @@
-//Modal.js
-import { useRef } from "react";
+//UploadModal.js
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import '../styles/dragNdrop.css';
 import { useForm } from "react-hook-form";
+import { useRef } from "react";
 import React, { useState } from 'react';
 export const UploadModal = ({ setShowUploadModal }) => {
   
@@ -31,9 +31,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
     setfileLists(fileLists)
   };
 
-  // close the modal when clicking outside the modal.
   const modalRef = useRef();
-
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
       setShowUploadModal(false);
