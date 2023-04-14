@@ -203,7 +203,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     var selectedAnalyzers = [];
     for (var i = 0; i < analyzers.length; i++) {
       if (document.getElementById((analyzers[i].name).checked)) {
-        selectedAnalyzers.push(analyzers[i][1]);
+        selectedAnalyzers.push(analyzers[i].code);
       }
     }
     return selectedAnalyzers;
@@ -216,7 +216,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         const parameters = [];
         for (let j = 0; j < analyzer.parameters.length; j++) {
           const parameterName = analyzer.parameters[j];
-          const parameterValue = document.getElementById(`${analyzer.code}_${parameterName}`).value;
+          const parameterValue = document.getElementById(analyzer.code + "_"+parameterName).value;
           parameters.push(parameterValue === "" ? null : parameterValue);
         }
         return parameters.length > 0 ? parameters : null;
