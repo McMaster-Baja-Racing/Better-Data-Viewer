@@ -107,7 +107,7 @@ public abstract class Analyzer {
                 return new SplitAnalyzer(inputFiles, outputFiles, start,end);
             case "linearMultiply":
                 if (outputFiles.length == 10) {
-                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_split.csv";
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_mult.csv";
                     outputFiles[9] = outputFiles[0];
                 }
                 if ((String)params[1]=="" || (String)params[0]=="") {

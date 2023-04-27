@@ -183,7 +183,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     seriesInfo.push({
       "columns": selectColumns,
       "analyze": {
-        "analysis": getAnalysis(),
+        "analysis": analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
         "analyzerValues": getAnalyzerOptions()
       }
       
@@ -191,104 +191,31 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     console.log(seriesInfo)
   }
 
-  var analyzers = [{name:"Linear Interpolate",code: "linearInterpolate",parameters: []},
+  const analyzers = [{name:"Linear Interpolate",code: "linearInterpolate",parameters: []},
   {name: "Accel Curve",code: "accelCurve",parameters: []}, {name: "Rolling Average",code: "rollAvg",parameters: ["WindowSize"]},
    {name: "RDP Compression",code: "RDPCompression",parameters: ["Epsilon"]},{name: "sGolay",code: "sGolay",parameters: ["Window Size", "Polynomial Order"]},
    {name: "Split",code: "split",parameters: ["Start","End"]},{name: "Linear Multiply",code: "linearMultiply",parameters: ["Multiplier", "Offset"]}];
   // Handles the selection of the analysis
 
-  //what is the output of analNames[0]
+ 
   //the output of the above statement is the key of the first element in the object
-  const getAnalysis = () => {
-    var selectedAnalyzers = [];
-    for (var i = 0; i < analyzers.length; i++) {
-      if (document.getElementById((analyzers[i].name).checked)) {
-        selectedAnalyzers.push(analyzers[i].code);
-      }
-    }
-    return selectedAnalyzers;
-  }
-
-  // const getAnalyzerOptions = () => {
-  //   const inputElements = [
-  //     { id: 'Rolling Average', params: ['WindowSize'] },
-  //     { id: 'RDP Compression', params: ['Epsilon'] },
-  //     { id: 'Split', params: ['Start', 'End'] },
-  //     { id: 'sGolay', params: ['Window Size', 'Polynomial Order'] },
-  //     { id: 'Linear Multiply', params: ['Multiplier', 'Offset'] },
-  //   ];
-  
-  //   for (const inputElement of inputElements) {
-  //     if (document.getElementById(inputElement.id).checked) {
-  //       const params = inputElement.params.map(paramId => {
-  //         console.log(paramId)
-  //         const value = document.getElementById(paramId).value;
-  //         return value === '' ? null : value;
-  //       });
-  //       console.log(params);
-  //       return params;
-  //     }
-  //   }
-  
-  //   return null;
-  // };
-
 
   const getAnalyzerOptions = () => {
-    var parameter1;
-    var parameter2;
-    if (document.getElementById("Rolling Average").checked) {
-      //parameter 1 equals the value of the rolling average window size if the value is not "" else it equals null
-      parameter1 = document.getElementById("WindowSize").value;
-      if (parameter1 === "") {
-        parameter1 = null;
+  
+    for (const inputElement of analyzers) {
+      if (document.getElementById(inputElement.name).checked) {
+        const params = inputElement.parameters.map(paramId => {
+          //console.log(paramId)
+          const value = document.getElementById(paramId).value;
+          return value === '' ? null : value;
+        });
+        //console.log(params);
+        return params;
       }
-      console.log(parameter1)
-      return  parameter1;
-    }else if (document.getElementById("RDP Compression").checked) {
-      parameter1 = document.getElementById("Epsilon").value;
-      if (parameter1 === "") {
-        parameter1 = null;
-      }
-      console.log(parameter1)
-      return parameter1;
-    }else if (document.getElementById("Split").checked) {
-      parameter1 = document.getElementById("Start").value;
-      if (parameter1 === "") {
-        parameter1 = null;
-      }
-      parameter2 = document.getElementById("End").value;
-      if (parameter2 === "") {
-        parameter2 = null;
-      }
-      console.log([parameter1,parameter2])
-      return [parameter1,parameter2];
-    }else if (document.getElementById("sGolay").checked) {
-      parameter1 = document.getElementById("Window Size").value;
-      if (parameter1 === "") {
-        parameter1 = null;
-      }
-      parameter2 = document.getElementById("Polynomial Order").value;
-      if (parameter2 === "") {
-        parameter2 = null;
-      }
-      console.log([parameter1,parameter2])
-      return [parameter1,parameter2];
-    }else if (document.getElementById("Linear Multiply").checked) {
-      parameter1 = document.getElementById("Multiplier").value;
-      if (parameter1 === "") {
-        parameter1 = null;
-      }
-      parameter2 = document.getElementById("Offset").value;
-      if (parameter2 === "") {
-        parameter2 = null;
-      }
-      console.log([parameter1,parameter2])
-      return [parameter1,parameter2];
-    }else{
-      return null;
     }
-  }
+  
+    return null;
+  };
   
   const pageOne = () => (
     <div className="colFlexBox">
