@@ -191,16 +191,19 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     console.log(seriesInfo)
   }
 
+
   const analyzers = [{name:"Linear Interpolate",code: "linearInterpolate",parameters: []},
   {name: "Accel Curve",code: "accelCurve",parameters: []}, {name: "Rolling Average",code: "rollAvg",parameters: ["WindowSize"]},
    {name: "RDP Compression",code: "RDPCompression",parameters: ["Epsilon"]},{name: "sGolay",code: "sGolay",parameters: ["Window Size", "Polynomial Order"]},
    {name: "Split",code: "split",parameters: ["Start","End"]},{name: "Linear Multiply",code: "linearMultiply",parameters: ["Multiplier", "Offset"]}];
+
   // Handles the selection of the analysis
 
  
   //the output of the above statement is the key of the first element in the object
 
   const getAnalyzerOptions = () => {
+
   
     for (const inputElement of analyzers) {
       if (document.getElementById(inputElement.name).checked) {
@@ -212,6 +215,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         //console.log(params);
         return params;
       }
+
     }
   
     return null;

@@ -93,6 +93,7 @@ public abstract class Analyzer {
                 }
                 double epsilon = Double.parseDouble((String) params[0]);
                 return new RDPCompressionAnalyzer(inputFiles, outputFiles, epsilon);
+
                 case "split":
                 System.out.println("SplitAnalyzer");
                 if (outputFiles.length == 10) {
@@ -116,6 +117,17 @@ public abstract class Analyzer {
                 double m = Double.parseDouble((String) params[0]);
                 double b = Double.parseDouble((String) params[0]);
                 return new LinearMultiplyAnalyzer(inputFiles, outputFiles, m,b);
+
+            case "average":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_avg.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
+                int[] range = new int[2];
+                range[0] = Integer.parseInt((String) params[0]);
+                range[1] = Integer.parseInt((String) params[1]);
+                return new AverageAnalyzer(inputFiles, outputFiles, range);
+
             default:
                 return null;
         }
@@ -123,15 +135,26 @@ public abstract class Analyzer {
 
     public static void main(String[] args) {
         // Test the factory method
-        System.out.println("Hello");
-        String[] inputFiles = {"X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_PRIM.csv"};
-        String[] outputFiles = {"output.csv"};
-        Analyzer.createAnalyzer("rollingAvg", inputFiles, outputFiles, 30).analyze();
+        // System.out.println("Hello");
+        // String[] inputFiles = {"X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_PRIM.csv"};
+        // String[] outputFiles = {"output.csv"};
+        // Analyzer.createAnalyzer("rollingAvg", inputFiles, outputFiles, 30).analyze();
 
-        // Now test AccelCurveAnalyzer
-        String[] inputFiles2 = {"X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_PRIM.csv", "X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_SEC.csv"};
-        String[] outputFiles2 = {"prim_average.csv", "sec_average.csv", "interpolate.csv", "accel_curve.csv"};
-        Analyzer.createAnalyzer("accelCurve", inputFiles2, outputFiles2).analyze();
+        // // Now test AccelCurveAnalyzer
+        // String[] inputFiles2 = {"X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_PRIM.csv", "X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_SEC.csv"};
+        // String[] outputFiles2 = {"prim_average.csv", "sec_average.csv", "interpolate.csv", "accel_curve.csv"};
+        // Analyzer.createAnalyzer("accelCurve", inputFiles2, outputFiles2).analyze();
+        // System.out.println("Hello");
+
+        // String[] inputFiles3 = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/temp.csv"};
+        // String[] outputFiles3 = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/temp2.csv"};
+        // System.out.println("Hello");
+
+        // String[] range = new String[2];
+        // range[0] = "0";
+        // range[1] = "100";
+
+        // Analyzer.createAnalyzer("average", inputFiles3, outputFiles3, range).analyze();
     }
 
 }
