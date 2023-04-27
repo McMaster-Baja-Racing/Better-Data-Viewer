@@ -4,7 +4,6 @@ import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
 import { useRef } from 'react';
 export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
-
   // Handles how many axes are selected
   const [dimensions, setDimensions] = useState(2);
   
@@ -173,7 +172,6 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }, [selectedFiles]);
 
   var seriesInfo = []
-  var seriescounter = 0;
   
   const addSeries = () => {
     
@@ -185,50 +183,44 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     seriesInfo.push({
       "columns": selectColumns,
       "analyze": {
-        "analysis": getAnalysis(),
+        "analysis": analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
         "analyzerValues": getAnalyzerOptions()
       }
       
     })
-
-    seriescounter++;
-
     console.log(seriesInfo)
   }
-  var analNames = ["Linear Interpolate","Accel Curve", "Rolling Average", "RDP Compression","sGolay","average"];
+
+
+  const analyzers = [{name:"Linear Interpolate",code: "linearInterpolate",parameters: []},
+  {name: "Accel Curve",code: "accelCurve",parameters: []}, {name: "Rolling Average",code: "rollAvg",parameters: ["WindowSize"]},
+   {name: "RDP Compression",code: "RDPCompression",parameters: ["Epsilon"]},{name: "sGolay",code: "sGolay",parameters: ["Window Size", "Polynomial Order"]},
+   {name: "Split",code: "split",parameters: ["Start","End"]},{name: "Linear Multiply",code: "linearMultiply",parameters: ["Multiplier", "Offset"]}];
+
   // Handles the selection of the analysis
-  const getAnalysis = () => {
-    var selectedAnals = [];
-    for (var i = 0; i < analNames.length; i++) {
-      if (document.getElementById(analNames[i]).checked) {
-        selectedAnals.push(analNames[i]);
-      }
-    }
-    return selectedAnals;
-  }
+
+ 
+  //the output of the above statement is the key of the first element in the object
 
   const getAnalyzerOptions = () => {
-    var window = document.getElementById("rollavg").value;
-    var epsilon = document.getElementById("epl").value;
 
-    var lower = document.getElementById("avg1").value;
-    var upper = document.getElementById("avg2").value;
+  
+    for (const inputElement of analyzers) {
+      if (document.getElementById(inputElement.name).checked) {
+        const params = inputElement.parameters.map(paramId => {
+          //console.log(paramId)
+          const value = document.getElementById(paramId).value;
+          return value === '' ? null : value;
+        });
+        //console.log(params);
+        return params;
+      }
 
-    if (document.getElementById("Rolling Average").checked) {
-      console.log(window)
-      return  window;
-    }else if (document.getElementById("RDP Compression").checked) {
-      console.log(epsilon)
-      return epsilon;
-    } else if (document.getElementById("average").checked) {
-      console.log(lower, upper)
-      return [lower, upper];
     }
-    else{
-      return null;
-    }
-  }
-
+  
+    return null;
+  };
+  
   const pageOne = () => (
     <div className="colFlexBox">
       <h1>Graph Options</h1><br></br>
@@ -293,25 +285,28 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         </div>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-          {analNames.map((anal) => {
+        {Object.values(analyzers).map((analyzer) => {
             return (
-              <div key={anal}>
-                <div className="rowFlexBox"><input type="checkbox" id={anal} name={anal} value="true"></input>
-                <label htmlFor={anal}><div className="boldText">{anal}</div></label></div>
+              <div key={analyzer.name}>
+                <div className="rowFlexBox">
+                  <input type="radio" id={analyzer.name} name="analyzerChoice" value="true"></input>
+                  <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
+                  <details>
+                    <summary></summary>
+                    <div className="scrollColFlexBox">
+                      <div className="rowFlexBox">
+                        <label htmlFor="param1">{analyzer.parameters[0]}</label>
+                        <input type="number" id={analyzer.parameters[0]} className="param1" style={{display : (analyzer.parameters.length>=1)? "block" : "none" }} ></input>
+                        <label htmlFor="param2">{analyzer.parameters[1]}</label>
+                        <input type="number" id={analyzer.parameters[1]} className="param2" style={{display : (analyzer.parameters.length>=2)? "block" : "none" }}></input>
+                      </div>
+                    </div>
+                  </details>
+                </div>
               </div>
             )
           }
           )}
-      </div>
-      <div className="rowFlexBox"> 
-      <label htmlFor="rollavg">Rolling Avg Window:</label>
-      <input type="text" id="rollavg" name="rollavg" ></input> 
-      <label htmlFor="epl">Eplison Value:</label>
-      <input type="text" id="epl" name="epl" ></input>
-      <label htmlFor="avg1">Lower Bound:</label>
-      <input type="text" id="avg1" name="avg1" ></input>
-      <label htmlFor="avg2">Upper Bound:</label>
-      <input type="text" id="avg2" name="avg2" ></input>
       </div>
       <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage2}>Back</button>

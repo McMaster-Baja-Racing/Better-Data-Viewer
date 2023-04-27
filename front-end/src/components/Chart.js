@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
-import Papa from "papaparse";
+//import Papa from "papaparse";
 
 Boost(Highcharts);
 
@@ -51,7 +51,7 @@ const Chart = ({ fileInformation }) => {
                 // This will find the index of the headers in the file (works for any number of headers)
                 for (var i = 0; i < headers.length; i++) {
                     for (var j = 0; j < columnInfo.length; j++) {
-                        if (headers[i] == columnInfo[j].header) {
+                        if (headers[i] === columnInfo[j].header) {
                             h.push(i);
                         }
                     }
@@ -92,8 +92,8 @@ const Chart = ({ fileInformation }) => {
                     files.push(fileInformation.files[i].columns[j].filename);
                 }
             }
-            if (fileInformation.files[i].analyze.variable == null) {
-                getFile(files, [], [fileInformation.files[i].analyze.analysis], ["false"], fileInformation.files[i].columns)
+            if (fileInformation.files[i].analyze.analyzerValues == null) {
+                getFile(files, [], [fileInformation.files[i].analyze.analysis],["false"], fileInformation.files[i].columns)
             } else {
                 getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.analyzerValues], ["false"], fileInformation.files[i].columns)
             }

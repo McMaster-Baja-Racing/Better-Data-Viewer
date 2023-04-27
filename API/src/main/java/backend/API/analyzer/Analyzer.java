@@ -37,6 +37,7 @@ public abstract class Analyzer {
     // Factory method allows creation of different types of analyzers without having to change the code that calls it
     // When a new analyzer is created, add it to this factory method
     public static Analyzer createAnalyzer(String type, String[] inputFiles, String[] outputFiles, Object... params) {
+        System.out.println(params+" "+params.length);
         // Before every input and output file location, add the storage directory before it
         for (int i = 0; i < inputFiles.length; i++) {
             inputFiles[i] = "./upload-dir/" + inputFiles[i];
@@ -92,6 +93,31 @@ public abstract class Analyzer {
                 }
                 double epsilon = Double.parseDouble((String) params[0]);
                 return new RDPCompressionAnalyzer(inputFiles, outputFiles, epsilon);
+
+                case "split":
+                System.out.println("SplitAnalyzer");
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_split.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
+                if ((String)params[1]=="" || (String)params[0]=="") {
+                    return null;
+                }
+                int start = Integer.parseInt((String) params[0]);
+                int end = Integer.parseInt((String) params[1]);
+                return new SplitAnalyzer(inputFiles, outputFiles, start,end);
+            case "linearMultiply":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_mult.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
+                if ((String)params[1]=="" || (String)params[0]=="") {
+                    return null;
+                }
+                double m = Double.parseDouble((String) params[0]);
+                double b = Double.parseDouble((String) params[0]);
+                return new LinearMultiplyAnalyzer(inputFiles, outputFiles, m,b);
+
             case "average":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_avg.csv";
@@ -101,6 +127,7 @@ public abstract class Analyzer {
                 range[0] = Integer.parseInt((String) params[0]);
                 range[1] = Integer.parseInt((String) params[1]);
                 return new AverageAnalyzer(inputFiles, outputFiles, range);
+
             default:
                 return null;
         }
