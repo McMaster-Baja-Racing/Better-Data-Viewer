@@ -195,7 +195,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
     console.log(seriesInfo)
   }
-  var analNames = ["Linear Interpolate","Accel Curve", "Rolling Average", "RDP Compression","sGolay"];
+  var analNames = ["Linear Interpolate","Accel Curve", "Rolling Average", "RDP Compression","sGolay","average"];
   // Handles the selection of the analysis
   const getAnalysis = () => {
     var selectedAnals = [];
@@ -210,13 +210,21 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const getAnalyzerOptions = () => {
     var window = document.getElementById("rollavg").value;
     var epsilon = document.getElementById("epl").value;
+
+    var lower = document.getElementById("avg1").value;
+    var upper = document.getElementById("avg2").value;
+
     if (document.getElementById("Rolling Average").checked) {
       console.log(window)
       return  window;
     }else if (document.getElementById("RDP Compression").checked) {
       console.log(epsilon)
       return epsilon;
-    }else{
+    } else if (document.getElementById("average").checked) {
+      console.log(lower, upper)
+      return [lower, upper];
+    }
+    else{
       return null;
     }
   }
@@ -300,6 +308,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       <input type="text" id="rollavg" name="rollavg" ></input> 
       <label htmlFor="epl">Eplison Value:</label>
       <input type="text" id="epl" name="epl" ></input>
+      <label htmlFor="avg1">Lower Bound:</label>
+      <input type="text" id="avg1" name="avg1" ></input>
+      <label htmlFor="avg2">Upper Bound:</label>
+      <input type="text" id="avg2" name="avg2" ></input>
       </div>
       <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage2}>Back</button>
