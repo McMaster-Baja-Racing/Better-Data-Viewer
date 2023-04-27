@@ -92,7 +92,6 @@ const Chart = ({ fileInformation }) => {
                     files.push(fileInformation.files[i].columns[j].filename);
                 }
             }
-            console.log("yo"+fileInformation.files[i].analyze.analyzerValues)
             if (fileInformation.files[i].analyze.analyzerValues == null) {
                 getFile(files, [], [fileInformation.files[i].analyze.analysis],["false"], fileInformation.files[i].columns)
             } else {

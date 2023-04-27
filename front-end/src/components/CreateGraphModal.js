@@ -192,7 +192,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }
 
   var analyzers = [{name:"Linear Interpolate",code: "linearInterpolate",parameters: []},
-  {name: "Accel Curve",code: "accelCurve",parameters: []}, {name: "Rolling Average",code: "rollAvg",parameters: ["Window Size"]},
+  {name: "Accel Curve",code: "accelCurve",parameters: []}, {name: "Rolling Average",code: "rollAvg",parameters: ["WindowSize"]},
    {name: "RDP Compression",code: "RDPCompression",parameters: ["Epsilon"]},{name: "sGolay",code: "sGolay",parameters: ["Window Size", "Polynomial Order"]},
    {name: "Split",code: "split",parameters: ["Start","End"]},{name: "Linear Multiply",code: "linearMultiply",parameters: ["Multiplier", "Offset"]}];
   // Handles the selection of the analysis
@@ -210,20 +210,28 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }
 
   const getAnalyzerOptions = () => {
-    for (let i = 0; i < analyzers.length; i++) {
-      const analyzer = analyzers[i];
-      if (document.getElementById(analyzer.name).checked) {
-        const parameters = [];
-        for (let j = 0; j < analyzer.parameters.length; j++) {
-          const parameterName = analyzer.parameters[j];
-          const parameterValue = document.getElementById(analyzer.code + "_"+parameterName).value;
-          parameters.push(parameterValue === "" ? null : parameterValue);
-        }
-        return parameters.length > 0 ? parameters : null;
+    const inputElements = [
+      { id: 'Rolling Average', params: ['WindowSize'] },
+      { id: 'RDP Compression', params: ['Epsilon'] },
+      { id: 'Split', params: ['Start', 'End'] },
+      { id: 'sGolay', params: ['Window Size', 'Polynomial Order'] },
+      { id: 'Linear Multiply', params: ['Multiplier', 'Offset'] },
+    ];
+  
+    for (const inputElement of inputElements) {
+      if (document.getElementById(inputElement.id).checked) {
+        const params = inputElement.params.map(paramId => {
+          console.log(paramId)
+          const value = document.getElementById(paramId).value;
+          return value === '' ? null : value;
+        });
+        console.log(params);
+        return params.length === 1 ? params[0] : params;
       }
     }
+  
     return null;
-  }
+  };
 
   const pageOne = () => (
     <div className="colFlexBox">
@@ -294,23 +302,18 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
               <div key={analyzer.name}>
                 <div className="rowFlexBox">
                   <input type="radio" id={analyzer.name} name="analyzerChoice" value="true"></input>
-                  <label htmlFor={analyzer.name}><div className="boldText">{analyzer.name}</div></label>
+                  <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
                   <details>
                     <summary></summary>
                     <div className="scrollColFlexBox">
                       <div className="rowFlexBox">
-                        {analyzer.parameters.map((parameter) => {
-                          return (
-                            <div key={parameter}>
-                              <label htmlFor={parameter}>{parameter}</label>
-                              <input type="number" id={analyzer.code+"_"+parameter} className={parameter}></input>
-                            </div>
-                          )
-                        })}
-                        </div>
+                        <label htmlFor="param1">{analyzer.parameters[0]}</label>
+                        <input type="number" id={analyzer.parameters[0]} className="param1" style={{display : (analyzer.parameters.length>=1)? "block" : "none" }} ></input>
+                        <label htmlFor="param2">{analyzer.parameters[1]}</label>
+                        <input type="number" id={analyzer.parameters[1]} className="param2" style={{display : (analyzer.parameters.length>=2)? "block" : "none" }}></input>
+                      </div>
                     </div>
                   </details>
-                  
                 </div>
               </div>
             )
