@@ -183,7 +183,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     seriesInfo.push({
       "columns": selectColumns,
       "analyze": {
-        "analysis": analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
+        "analysis": getAnalysis(),//analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
         "analyzerValues": getAnalyzerOptions()
       }
       
@@ -199,7 +199,14 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
   // Handles the selection of the analysis
 
- 
+  const getAnalysis = () => {
+    for (const inputElement of analyzers) {
+      if (document.getElementById(inputElement.name).checked) {
+        return inputElement.code;
+      }
+    }
+    return null;
+  };
   //the output of the above statement is the key of the first element in the object
 
   const getAnalyzerOptions = () => {
