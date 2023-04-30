@@ -3,6 +3,8 @@ import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
 import { useState, useEffect } from 'react';
 import { useRef } from 'react';
+import FileStorage from './FileStorage';
+
 export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   // Handles how many axes are selected
   const [dimensions, setDimensions] = useState(2);
@@ -249,7 +251,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const pageTwo = () => (
     
     <div className="colFlexBox"> 
-      <h3>Choose Files</h3>
+      {/* <h3>Choose Files</h3>
       <div className="scrollColFlexBox">
       {files.map((file) => {
         return (
@@ -259,7 +261,8 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           </div>
         )
       })}
-      </div>
+      </div> */}
+      <FileStorage />
       <div className="buttonFlexBox">
         <button className="submitbutton" onClick={showPage1}>Back</button>
         <button className="submitbutton" onClick={() => { 
