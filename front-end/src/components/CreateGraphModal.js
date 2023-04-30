@@ -76,30 +76,14 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       })
   }
   // Handles the display of the pages, TODO: Consolidate into one function and a parameter
-  const showPage1 = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "block";
-    y.style.display = "none";
-    z.style.display = "none";
-  }
-  const showPage2 = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "none";
-    y.style.display = "block";
-    z.style.display = "none";
-  }
-  const showPage3 = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "none";
-    y.style.display = "none";
-    z.style.display = "block";
-  }
+  const showPage = (showId, hideIds) => {
+    const showElem = document.getElementById(showId);
+    showElem.style.display = "block";
+    hideIds.forEach((id) => {
+      const hideElem = document.getElementById(id);
+      hideElem.style.display = "none";
+    });
+  };
 
   // Method for checking which files are selected
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -249,7 +233,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         </select>
       </div>
       <div className="pushRightFlexBox">
-      <button className="submitbutton" onClick={() => { listFiles(); showPage2(); } }>Next</button>
+      <button className="submitbutton" onClick={() => { listFiles(); showPage("two", ["one", "three"]); } }>Next</button>
       </div>
     </div>
   )
@@ -268,7 +252,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       })}
       </div>
       <div className="buttonFlexBox">
-        <button className="submitbutton" onClick={showPage1}>Back</button>
+        <button className="submitbutton" onClick={()=> {showPage("one", ["two", "three"])}}>Back</button>
         <button className="submitbutton" onClick={() => { 
           getSelectedFiles(); 
           if(document.getElementById("graphTypeSelect").value === "XYColour") {
@@ -276,7 +260,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           } else {
             setDimensions(2)
           }
-           showPage3(); }} >Next</button>
+          showPage("three", ["one", "two"]);  }} >Next</button>
       </div>
       </div>
     
@@ -316,7 +300,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           )}
       </div>
       <div className="buttonFlexBox">
-        <button className="submitbutton" onClick={showPage2}>Back</button>
+        <button className="submitbutton" onClick={()=> {showPage("two", ["one", "three"])}}>Back</button>
         <button className="submitbutton" onClick={()=> {handleSubmit();}}>Submit</button>
       </div>
     </div>
