@@ -43,7 +43,7 @@ const CustomFileRenderer = (props) => {
 
     return (
         // ${isSelected ? 'selected' : ''}
-        <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile}>
+        <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile} >
             <td className="name" style={{ paddingLeft: depthPadding }}>{file.name}</td>
             <td className="size">{file.size / (1024 * 1024) + " MB"}</td>
             <td className="modified">{file.modified ? file.modified : "-"}</td>
@@ -73,15 +73,16 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
     //const [selectedFiles, setSelectedFiles] = useState([]);
 
     return (
-        <div>
-            <h1>File Storage</h1>
-            <div className="file-browser">
+        <div >
+            
+            <div className="file-browser" style={{overflowY:"scroll", height: "450px"}}>
                 <h3>Choose Files</h3>
                 <FileBrowser
                     files={files}
                     icons={Icons.FontAwesome(4)}
                     fileRendererProps={{ selectedFiles, setSelectedFiles }}
                     fileRenderer={CustomFileRenderer}
+                    
                 />
             </div>
         </div>
