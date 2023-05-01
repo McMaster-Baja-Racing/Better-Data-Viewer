@@ -7,9 +7,9 @@
     font-weight: 200;
 }
 
-.selected {
+.file.selected {
     background-color: rgba(0, 123, 255, 0.25);
-  }
+}
 
 a {
     color: #425363;
