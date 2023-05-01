@@ -6,8 +6,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useState } from 'react'
 
-
-
 const CustomFileRenderer = (props) => {
     const { selectedFiles, setSelectedFiles, browserProps } = props;
 
@@ -54,7 +52,7 @@ const CustomFileRenderer = (props) => {
     );
 };
  
-const FileStorage = () => {
+const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
 
     const [browseFiles, setBrowseFiles] = useState([
         {
@@ -72,7 +70,7 @@ const FileStorage = () => {
         }
     ])
 
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    //const [selectedFiles, setSelectedFiles] = useState([]);
 
     return (
         <div>
@@ -80,7 +78,7 @@ const FileStorage = () => {
             <div className="file-browser">
                 <h3>Choose Files</h3>
                 <FileBrowser
-                    files={browseFiles}
+                    files={files}
                     icons={Icons.FontAwesome(4)}
                     fileRendererProps={{ selectedFiles, setSelectedFiles }}
                     fileRenderer={CustomFileRenderer}
