@@ -71,6 +71,16 @@
     flex: 1;
     background-color: #f1f1f1;
   }
+  .itallicscrollColFlexBox{
+    display: block;
+    font-weight: itallic;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    overflow:auto;
+    flex: 1;
+    background-color: #f1f1f1;
+  }
 
   .colFlexBox{
     display: flex;
@@ -137,6 +147,9 @@
     font-weight: bold;
     margin : 0.5em;
   }
+  .tempsoln{
+    font-weight: bold;
+  }
   
   .btn {
     height : 2em;
@@ -160,6 +173,24 @@
   text-align: left;
   outline: none;
   font-size: 15px;
+}
+
+
+
+details {
+  display: block;
+}
+
+details > summary {
+  list-style: none;
+  display: inline-block;
+}
+
+summary::after {
+  content: ' +';
+}
+details[open] summary:after {
+  content: " -";
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */

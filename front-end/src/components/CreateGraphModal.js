@@ -276,29 +276,34 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         </div>
         <h3>Select Analyzers</h3>
         <div className="scrollColFlexBox">
-        {Object.values(analyzers).map((analyzer) => {
-            return (
-              <div key={analyzer.name}>
+  {Object.values(analyzers).map((analyzer) => {
+    return (
+      <div key={analyzer.name}>
+        <div className="rowFlexBox">
+          <input type="radio" id={analyzer.name} name="analyzerChoice" value="true"></input>
+          {analyzer.parameters.length > 0 ? (
+            <details>
+              <summary><strong>{analyzer.name}</strong></summary>
+              <div className="scrollColFlexBox">
                 <div className="rowFlexBox">
-                  <input type="radio" id={analyzer.name} name="analyzerChoice" value="true"></input>
-                  <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
-                  <details>
-                    <summary></summary>
-                    <div className="scrollColFlexBox">
-                      <div className="rowFlexBox">
-                        <label htmlFor="param1">{analyzer.parameters[0]}</label>
-                        <input type="number" id={analyzer.parameters[0]} className="param1" style={{display : (analyzer.parameters.length>=1)? "block" : "none" }} ></input>
-                        <label htmlFor="param2">{analyzer.parameters[1]}</label>
-                        <input type="number" id={analyzer.parameters[1]} className="param2" style={{display : (analyzer.parameters.length>=2)? "block" : "none" }}></input>
-                      </div>
-                    </div>
-                  </details>
+                  <label htmlFor="param1" style={{ marginRight: "5px" }}>{analyzer.parameters[0]}</label>
+                  <input type="number" id={analyzer.parameters[0]} className="param1" style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }}></input>
+                </div>
+                <div className="rowFlexBox">
+                  <label htmlFor="param2" style={{ marginRight: "5px" }}>{analyzer.parameters[1]}</label>
+                  <input type="number" id={analyzer.parameters[1]} className="param2" style={{ display: (analyzer.parameters.length >= 2) ? "block" : "none" }}></input>
                 </div>
               </div>
-            )
-          }
+            </details>
+          ) : (
+            <label><strong>{analyzer.name}</strong></label>
           )}
+        </div>
+        <br></br>
       </div>
+    )
+  })}
+</div>
       <div className="buttonFlexBox">
         <button className="submitbutton" onClick={()=> {showPage("two", ["one", "three"])}}>Back</button>
         <button className="submitbutton" onClick={()=> {handleSubmit();}}>Submit</button>
