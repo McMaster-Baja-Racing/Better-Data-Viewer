@@ -76,3 +76,8 @@ div.footer {
     color: #fff;
 }
 
+.rendered-react-keyed-file-browser .rendered-file-browser .files {
+    max-height: 300px;
+    overflow-y: auto;
+    display: block;
+}

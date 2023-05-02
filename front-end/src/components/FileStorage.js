@@ -75,7 +75,7 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
     return (
         <div >
             
-            <div className="file-browser" style={{overflowY:"scroll", height: "450px"}}>
+            <div className="file-browser">
                 <h3>Choose Files</h3>
                 <FileBrowser
                     files={files}
