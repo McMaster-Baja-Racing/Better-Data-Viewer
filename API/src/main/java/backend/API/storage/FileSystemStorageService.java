@@ -5,6 +5,10 @@
 // The service provides methods to store, load, and delete files, as well as to read the headers of a file. 
 // Exceptions are thrown in the case of errors, such as IOException or StorageException, specified in the StorageException class.
 
+// TODO: First, folders working. Upload does not need folders, but when a bin file is given, 
+// it should automatically be stored in a folder with the same name as the bin file.
+// Then, using metadata to store information on file size, headers, etc.
+
 package backend.API.storage;
 
 import java.io.IOException;
