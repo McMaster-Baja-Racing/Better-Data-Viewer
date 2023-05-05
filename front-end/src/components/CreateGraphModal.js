@@ -173,7 +173,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const addSeries = () => {
 
     var selectColumns = [];
-    for (let i = 0; i < dimensions; i++) {
+    for (let i = 0; i < dimensions; i++) {  
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
 
@@ -189,7 +189,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   }
 
 
-  const analyzers = [{ name: "Linear Interpolate", code: "linearInterpolate", parameters: [] },
+  const analyzers = [{ name: "None", code: null, parameters: [], checked: true }, { name: "Linear Interpolate", code: "linearInterpolate", parameters: [] },
   { name: "Accel Curve", code: "accelCurve", parameters: [] }, { name: "Rolling Average", code: "rollAvg", parameters: ["WindowSize"] },
   { name: "RDP Compression", code: "RDPCompression", parameters: ["Epsilon"] }, { name: "sGolay", code: "sGolay", parameters: ["Window Size", "Polynomial Order"] },
   { name: "Split", code: "split", parameters: ["Start", "End"] }, { name: "Linear Multiply", code: "linearMultiply", parameters: ["Multiplier", "Offset"] }];
@@ -278,19 +278,21 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           return (
             <div key={analyzer.name}>
               <div className="rowFlexBox">
-                <input type="radio" id={analyzer.name} name="analyzerChoice" value="true"></input>
+                <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" checked={analyzer.checked}></input>
                 <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
-                <details>
-                  <summary></summary>
-                  <div className="scrollColFlexBox">
-                    <div className="rowFlexBox">
-                      <label htmlFor="param1">{analyzer.parameters[0]}</label>
-                      <input type="number" id={analyzer.parameters[0]} className="param1" style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }} ></input>
-                      <label htmlFor="param2">{analyzer.parameters[1]}</label>
-                      <input type="number" id={analyzer.parameters[1]} className="param2" style={{ display: (analyzer.parameters.length >= 2) ? "block" : "none" }}></input>
+                {analyzer.parameters.length <= 0 ? null :
+                  <details>
+                    <summary></summary>
+                    <div className="scrollColFlexBox">
+                      <div className="rowFlexBox">
+                        <label htmlFor="param1">{analyzer.parameters[0]}</label>
+                        <input type="number" id={analyzer.parameters[0]} className="param1" style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }} ></input>
+                        <label htmlFor="param2">{analyzer.parameters[1]}</label>
+                        <input type="number" id={analyzer.parameters[1]} className="param2" style={{ display: (analyzer.parameters.length >= 2) ? "block" : "none" }}></input>
+                      </div>
                     </div>
-                  </div>
-                </details>
+                  </details>
+                }
               </div>
             </div>
           )

@@ -82,17 +82,20 @@ const Chart = ({ fileInformation }) => {
         setLoading(true);
         setParsedData([]);
 
+        
+        
         // Now complete a request for each series
         for (var i = 0; i < fileInformation.files.length; i++) {
             var files = [];
-
+            console.log("ANALYSIS: " + JSON.stringify(fileInformation.files[i]));
             for (var j = 0; j < fileInformation.files[i].columns.length; j++) {
                 // Create a list of all files in order (formatting for backend)
                 if (!files.includes(fileInformation.files[i].columns[j].filename)) {
                     files.push(fileInformation.files[i].columns[j].filename);
                 }
             }
-            if (fileInformation.files[i].analyze.analyzerValues == null) {
+            
+            if (fileInformation.files[i].analyze.analyzerValues == null || fileInformation.files[i].analyze.analysis == null) {
                 getFile(files, [], [fileInformation.files[i].analyze.analysis],["false"], fileInformation.files[i].columns)
             } else {
                 getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.analyzerValues], ["false"], fileInformation.files[i].columns)
