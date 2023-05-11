@@ -6,9 +6,13 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useState } from 'react'
 
+
+// Here is a custom file renderer to be used in place of the default react-keyed-file-browser file renderer.
+// This was done to give the "checked" property to the file element, which is used to allow the selection of multiple files at once.
 const CustomFileRenderer = (props) => {
     const { selectedFiles, setSelectedFiles, browserProps } = props;
 
+    // Get all information from props about the file
     const file = {
         key: props.fileKey,
         name: props.name,
@@ -18,7 +22,7 @@ const CustomFileRenderer = (props) => {
         depth: props.depth,
     };
 
-    //console.log(props)
+    // Either add or remove the file from the selectedFiles array
     const handleSelectFile = (e) => {
         console.log(file)
         const fileIndex = selectedFiles.findIndex((selectedFile) => selectedFile.key === file.key);
@@ -34,15 +38,18 @@ const CustomFileRenderer = (props) => {
         }
     };
 
+    // Check if the file is in the selectedFiles array
     const isSelected = selectedFiles.some((selectedFile) => selectedFile.key === file.key);
 
+    // Default padding values
     const paddingLeft = 16; // This is the base padding value in pixels.
     const depthPadding = paddingLeft * file.depth + 12;
 
+    // Idk what this is for but it might be important?
     const { connectDragSource, connectDropTarget } = browserProps;
 
     return (
-        // ${isSelected ? 'selected' : ''}
+        // Add in table row and then table data for each file, default styling will space it properly
         <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile} >
             <td className="name" style={{ paddingLeft: depthPadding }}>{file.name}</td>
             <td className="size">{file.size / (1024 * 1024) + " MB"}</td>
@@ -54,24 +61,7 @@ const CustomFileRenderer = (props) => {
  
 const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
 
-    const [browseFiles, setBrowseFiles] = useState([
-        {
-            key: 'cat.png',
-            size: 1.5 * 1024 * 1024,
-        },
-        {
-            key: 'dog.png',
-            size: 2 * 1024 * 1024,
-        },
-        {
-            key: 'animal/elephant.png',
-            size: 3 * 1024 * 1024,
-
-        }
-    ])
-
-    //const [selectedFiles, setSelectedFiles] = useState([]);
-
+    // Here is the implementation of the file browser with props passed in
     return (
         <div >
             

@@ -57,10 +57,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const [files, setFiles] = useState([])
   const listFiles = () => {
     //If live data is checked, only show the default live data files
-    if (document.getElementById("liveDataCheckbox").checked) {
-      setFiles(["F_GPS_SPEED.csv", "F_RPM_PRIM.csv", "F_RPM_SEC.csv", "F_THROTTLE.csv", "F_VEHICLE_SPEED.csv"]);
-      return;
-    }
+    // if (document.getElementById("liveDataCheckbox").checked) {
+    //   setFiles(["F_GPS_SPEED.csv", "F_RPM_PRIM.csv", "F_RPM_SEC.csv", "F_THROTTLE.csv", "F_VEHICLE_SPEED.csv"]);
+    //   return;
+    // }
 
     // TODO: This should be updated to also return the size of the file
     // Also, it should be of format files = [{key: "F_GPS_SPEED.csv", size: 1234}, {key: "F_RPM_PRIM.csv", size: 1234}]
