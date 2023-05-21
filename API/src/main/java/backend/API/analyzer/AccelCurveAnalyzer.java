@@ -29,18 +29,26 @@ public class AccelCurveAnalyzer extends Analyzer {
     public void analyze() {
         System.out.println("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
         // Roll average first
-        System.out.println("Rolling Average");
+        System.out.println("sGolay Averaging...");
 
-        RollingAvgAnalyzer rollingAvg1 = new RollingAvgAnalyzer(Arrays.copyOfRange(inputFiles, 0, 1), Arrays.copyOfRange(outputFiles, 0, 1), 30);
-        rollingAvg1.analyze();
-        RollingAvgAnalyzer rollingAvg2 = new RollingAvgAnalyzer(Arrays.copyOfRange(inputFiles, 1, 2), Arrays.copyOfRange(outputFiles, 1, 2), 30);
-        rollingAvg2.analyze();
+        SGolayFilter s = new SGolayFilter(Arrays.copyOfRange(inputFiles, 0, 1), Arrays.copyOfRange(outputFiles, 0, 1), 300, 3);
+        s.analyze();
+        SGolayFilter s2 = new SGolayFilter(Arrays.copyOfRange(inputFiles, 1, 2), Arrays.copyOfRange(outputFiles, 1, 2), 300, 3);
+        s2.analyze();
+
+        // RollingAvgAnalyzer rollingAvg1 = new RollingAvgAnalyzer(Arrays.copyOfRange(inputFiles, 0, 1), Arrays.copyOfRange(outputFiles, 0, 1), 30);
+        // rollingAvg1.analyze();
+        // RollingAvgAnalyzer rollingAvg2 = new RollingAvgAnalyzer(Arrays.copyOfRange(inputFiles, 1, 2), Arrays.copyOfRange(outputFiles, 1, 2), 30);
+        // rollingAvg2.analyze();
 
         // Then interpolate
-        System.out.println("Interpolating");
+        System.out.println("Interpolating...");
 
-        LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
-        linearInt.analyze();
+        LinearInterpolaterAnalyzer linearInterpolate = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
+        linearInterpolate.analyze();
+
+        // LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
+        // linearInt.analyze();
 
         // Here is all the analyzing done for combining the files, the rest concerns
         // finding individual runs
@@ -233,15 +241,26 @@ public class AccelCurveAnalyzer extends Analyzer {
     // my mother is a fish
 
     static public void main(String[] args) {
+        //This will test the accelCurve analyzer
+
+        //Read in the data
         Date start = new Date();
 
         String[] files = new String[2];
-        files[0] = "./data/F_RPM_PRIM.csv";
-        files[1] = "./data/F_GPS_SPEED.csv";
-        //DataAnalyzer d = new AccelCurveAnalyzer(files);
+        files[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/data/live_F_RPM_PRIM.csv";
+        files[1] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/data/live_F_RPM_SEC.csv";
 
-        //String dataPoints = d.analyze();
-        //System.out.println(dataPoints);
+        String[] output = new String[3];
+        output[0] = "prim_roll.csv";
+        output[1] = "sec_roll.csv";
+        output[2] = "accelCurve.csv";
+    
+        //run the accelCurve analyzer
+        AccelCurveAnalyzer accelCurve = new AccelCurveAnalyzer(files, output);
+        accelCurve.analyze();
+
+        System.out.println("Done");
+
 
         Date end = new Date();
         System.out.println("Time: " + (end.getTime() - start.getTime()) + "ms");
