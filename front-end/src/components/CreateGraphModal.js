@@ -263,7 +263,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
           return (
             <div key={analyzer.name}>
               <div className="rowFlexBox">
-                <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" checked={analyzer.checked}></input>
+                <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
                 <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
                 {analyzer.parameters.length <= 0 ? null :
                   <details>
