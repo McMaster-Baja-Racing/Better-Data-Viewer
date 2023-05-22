@@ -11,11 +11,12 @@ import { useState } from 'react'
 // This was done to give the "checked" property to the file element, which is used to allow the selection of multiple files at once.
 const CustomFileRenderer = (props) => {
     const { selectedFiles, setSelectedFiles, browserProps } = props;
+    console.log(props)
 
     // Get all information from props about the file
     const file = {
         key: props.fileKey,
-        name: props.name,
+        name: props.name.split('.')[0],
         size: props.size,
         modified: props.modified,
         extension: props.name.split('.').pop(),
