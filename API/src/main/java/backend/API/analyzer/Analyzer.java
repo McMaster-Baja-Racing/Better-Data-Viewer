@@ -48,6 +48,7 @@ public abstract class Analyzer {
         switch (type) {
             case "accelCurve":
                 if (outputFiles.length == 10) {
+                    // Concept here is when no output files are provided to format automatically, the last one is always used as the final output
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_roll.csv";
                     outputFiles[1] = inputFiles[1].substring(0, inputFiles[1].length() - 4) + "_roll.csv";
                     outputFiles[2] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4) + ".csv";

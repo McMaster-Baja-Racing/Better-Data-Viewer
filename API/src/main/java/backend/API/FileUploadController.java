@@ -1,12 +1,17 @@
 package backend.API;
 
 /*
- * "In a production scenario, you more likely would store the files in a temporary location, 
- * a database, or perhaps a NoSQL store (such as Mongo’s GridFS). It is best to NOT load up 
- * the file system of your application with content."
- * 
- * This is probably worth considering...   buuuutttt...  I'm not going to do that.    :D
- */
+ * This is the main controller for the entire backend. It handles all of the requests that come in from the front end
+ * and then sends the appropriate response back. This is the only class that the front end should be interacting with.
+ * There are quite a few moving parts, but each request should have
+ * 		1. A unique mapping to the URL that the request is coming in on. This may include a variale such as {filename}
+ * 		2. A method signature that includes the appropriate parameters (important ones are return type and input variables) for the request.
+ * 			- The return type should generally be a ResponseEntity, which may contain any object that can be converted to JSON
+ * 			- The input variables may be Path variables (such as ex/{filename}), Request Parameters (such as ?filename=), or Request Body (such as the file itself)
+ * 		3. A method body that handles the request and returns the appropriate response.
+ * 			- This may include calling other methods, but it should be self contained.
+ * That's all I got for explanation, the internet and specifically the spring boot guides through their website daeldung.com are your friend.
+*/
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -81,6 +86,7 @@ public class FileUploadController {
 	}
 
 	//This is the method that returns information about all the files, to be used by fetch
+	// It returns an object of type fileList from the model folder
 	@GetMapping("/files")
 	@ResponseBody
 	public ResponseEntity<fileList> listUploadedFiles() throws IOException{
