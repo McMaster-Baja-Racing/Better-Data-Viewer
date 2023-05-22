@@ -62,30 +62,15 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     //   return;
     // }
 
-    // TODO: This should be updated to also return the size of the file
-    // Also, it should be of format files = [{key: "F_GPS_SPEED.csv", size: 1234}, {key: "F_RPM_PRIM.csv", size: 1234}]
+    // Should be of format [{key: "F_GPS_SPEED.csv", size: 1234, headers: ["header1", "header2", "header3"]}, ...]
     fetch(`http://${window.location.hostname}:8080/files`)
-      .then(response => {
-        console.log(response)
-        // the data is in csv format, print it out
-        response.text().then(text => {
-          //Catch empty response
-          if (text === "") {
-            setFiles([])
-            return;
-          }
-          // TODO:
-          //Split the response into an array
-          var arr = text.split(", ");
-
-          for (let i = 0; i < arr.length; i++) {
-            arr[i] = { key: arr[i], size: 0 };
-          }
-
-          setFiles(arr);
-        });
+      .then(response => response.json())
+      .then(data => {
+        setFiles(data.files);
       })
   }
+
+
   // Handles the display of the pages, TODO: Consolidate into one function and a parameter
   const showPage1 = () => {
     var x = document.getElementById("one");

@@ -111,14 +111,15 @@ public class FileSystemStorageService implements StorageService {
 
 	@Override
 	public String readHeaders(String filename) {
-		String headers = null;
+		// Basically read the first line of the file and return it
 		try {
 			Path file = load(filename);
-			headers = Files.readAllLines(file).get(0);
+			String headers = Files.lines(file).findFirst().get();
+			return headers;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return headers;
 	}
 
 	@Override

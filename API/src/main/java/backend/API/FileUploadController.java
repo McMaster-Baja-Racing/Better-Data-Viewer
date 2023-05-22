@@ -36,6 +36,9 @@ import backend.API.live.Serial;
 
 import backend.API.analyzer.Analyzer;
 
+import backend.API.model.fileInformation;
+import backend.API.model.fileList;
+
 @Controller
 public class FileUploadController {
 
@@ -80,18 +83,27 @@ public class FileUploadController {
 	//This is the method that returns information about all the files, to be used by fetch
 	@GetMapping("/files")
 	@ResponseBody
-	public ResponseEntity<String> listUploadedFiles() throws IOException{
+	public ResponseEntity<fileList> listUploadedFiles() throws IOException{
 
 		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		return ResponseEntity.ok().headers(responseHeaders).body(storageService.loadAll().map(
-				path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-						"serveFile", path.getFileName().toString()).build().toUri().toString().substring(28))
-				.collect(Collectors.toList()).toString().substring(1).replace("]", ""));
-		// I added some trims to remove the exact address of the file from the response, and the brackets
+		fileList files = new fileList();
+
+		// Get name, headers and size of each file
+		storageService.loadAll().forEach(path -> {
+			try {
+				long size = storageService.loadAsResource(path.getFileName().toString()).contentLength();
+				String[] headers = storageService.readHeaders(path.getFileName().toString()).split(",");
+				files.addFile(new fileInformation(path.getFileName().toString(), headers, size));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+
+		return ResponseEntity.ok().headers(responseHeaders).body(files);
 	}
 
 
