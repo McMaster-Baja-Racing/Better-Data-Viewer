@@ -48,11 +48,24 @@ const CustomFileRenderer = (props) => {
     // Idk what this is for but it might be important?
     const { connectDragSource, connectDropTarget } = browserProps;
 
+    // Check if size is in the range of MB or KB and return the appropriate string
+    const formatSize = (size) => {
+        if (size > 1024 * 1024) {
+            return `${Math.round(size / (1024 * 1024 ))} MB`;
+        }
+
+        if (size > 1024) {
+            return `${Math.round(size / 1024)} KB`;
+        }
+
+        return `${size} B`;
+    };
+
     return (
         // Add in table row and then table data for each file, default styling will space it properly
         <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile} >
             <td className="name" style={{ paddingLeft: depthPadding }}>{file.name}</td>
-            <td className="size">{Math.round(100 * file.size / (1024 )) / 100 + " KB"}</td>
+            <td className="size">{formatSize(file.size)}</td>
             <td className="modified">{file.modified ? file.modified : "-"}</td>
         </tr>
         
