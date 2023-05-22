@@ -52,7 +52,7 @@ const CustomFileRenderer = (props) => {
         // Add in table row and then table data for each file, default styling will space it properly
         <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile} >
             <td className="name" style={{ paddingLeft: depthPadding }}>{file.name}</td>
-            <td className="size">{file.size / (1024 * 1024) + " MB"}</td>
+            <td className="size">{Math.round(100 * file.size / (1024 )) / 100 + " KB"}</td>
             <td className="modified">{file.modified ? file.modified : "-"}</td>
         </tr>
         
@@ -60,11 +60,11 @@ const CustomFileRenderer = (props) => {
 };
  
 const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
+    // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
 
     // Here is the implementation of the file browser with props passed in
     return (
         <div >
-            
             <div className="file-browser">
                 <h3>Choose Files</h3>
                 <FileBrowser
@@ -72,7 +72,6 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
                     icons={Icons.FontAwesome(4)}
                     fileRendererProps={{ selectedFiles, setSelectedFiles }}
                     fileRenderer={CustomFileRenderer}
-                    
                 />
             </div>
         </div>

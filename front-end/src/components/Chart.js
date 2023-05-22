@@ -12,7 +12,7 @@ const Chart = ({ fileInformation }) => {
     const [chartOptions, setChartOptions] = useState({
         chart: {
             type: 'line',
-            zoomType: 'x'
+            zoomType: 'xy'
         },
         title: {
             text: 'Template'
