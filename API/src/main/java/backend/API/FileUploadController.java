@@ -101,9 +101,10 @@ public class FileUploadController {
 		// Get name, headers and size of each file
 		storageService.loadAll().forEach(path -> {
 			try {
-				long size = storageService.loadAsResource(path.getFileName().toString()).contentLength();
-				String[] headers = storageService.readHeaders(path.getFileName().toString()).split(",");
-				files.addFile(new fileInformation(path.getFileName().toString(), headers, size));
+				// Get the path and filename of each file and print it
+				long size = storageService.loadAsResource(path.toString()).contentLength();
+				String[] headers = storageService.readHeaders(path.toString()).split(",");
+				files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -252,7 +253,7 @@ public class FileUploadController {
 		String filename = file.getOriginalFilename();
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
-			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", true);
 			storageService.delete(filename);
 		} else {
 			storageService.store(file);
