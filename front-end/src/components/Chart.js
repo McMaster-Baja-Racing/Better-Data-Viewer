@@ -41,9 +41,8 @@ const Chart = ({ fileInformation }) => {
         fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
             method: 'GET'
         }).then(response => {
-            console.log(response)
+            console.log(response);
             response.text().then(text => {
-
                 var headers = text.trim().split("\n")[0].split(",");
                 headers[headers.length-1] = headers[headers.length-1].replace("\r", "")
                 var h = [];

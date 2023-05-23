@@ -1,17 +1,13 @@
 import 'font-awesome/css/font-awesome.min.css';
 import '../styles/fileStorage.css'
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
-import FileBrowser, {Icons} from 'react-keyed-file-browser';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
 import { useState } from 'react'
-
 
 // Here is a custom file renderer to be used in place of the default react-keyed-file-browser file renderer.
 // This was done to give the "checked" property to the file element, which is used to allow the selection of multiple files at once.
 const CustomFileRenderer = (props) => {
-    const { selectedFiles, setSelectedFiles, browserProps } = props;
-    console.log(props)
+    const { files, selectedFiles, setSelectedFiles, browserProps } = props;
 
     // Get all information from props about the file
     const file = {
@@ -25,16 +21,13 @@ const CustomFileRenderer = (props) => {
 
     // Either add or remove the file from the selectedFiles array
     const handleSelectFile = (e) => {
-        console.log(file)
         const fileIndex = selectedFiles.findIndex((selectedFile) => selectedFile.key === file.key);
 
         if (fileIndex === -1) {
-            // Add the file to the selectedFiles array if it's not already there
-            console.log([...selectedFiles, file])
-            setSelectedFiles([...selectedFiles, file]);
+            // Instead of adding file, add the file that corresponds to the key from the files list
+            setSelectedFiles([...selectedFiles, files.find((file) => file.key === props.fileKey)]);
         } else {
             // Remove the file from the selectedFiles array if it's already there
-            console.log(selectedFiles.filter((_, index) => index !== fileIndex))
             setSelectedFiles(selectedFiles.filter((_, index) => index !== fileIndex));
         }
     };
@@ -52,7 +45,7 @@ const CustomFileRenderer = (props) => {
     // Check if size is in the range of MB or KB and return the appropriate string
     const formatSize = (size) => {
         if (size > 1024 * 1024) {
-            return `${Math.round(size / (1024 * 1024 ))} MB`;
+            return `${Math.round(size / (1024 * 1024))} MB`;
         }
 
         if (size > 1024) {
@@ -69,23 +62,45 @@ const CustomFileRenderer = (props) => {
             <td className="size">{formatSize(file.size)}</td>
             <td className="modified">{file.modified ? file.modified : "-"}</td>
         </tr>
-        
+
     );
 };
- 
+
+const CustomFolderRenderer = (props) => {
+    const { isOpen, browserProps } = props;
+    const { connectDragSource, connectDropTarget } = browserProps;
+
+    const handleFolderClick = (e) => {
+        browserProps.toggleFolder(props.fileKey);
+    }
+
+    const paddingLeft = 16; // This is the base padding value in pixels.
+    const depthPadding = paddingLeft * props.depth + 12;
+
+    return (
+        <tr {...connectDragSource} {...connectDropTarget} className={`folder ${isOpen ? 'open' : ''}`} onClick={handleFolderClick}>
+            <td className="name" style={{ paddingLeft: depthPadding }}><i className={`${isOpen ? "fa fa-folder-open-o" : "fa fa-folder-o"}`} aria-hidden="true"/>{props.name}</td>
+            <td className="size">-</td>
+            <td className="modified">-</td>
+        </tr>
+    );
+
+}
+
+
 const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
     // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
-
     // Here is the implementation of the file browser with props passed in
     return (
-        <div >
+        <div>
             <div className="file-browser">
                 <h3>Choose Files</h3>
-                <FileBrowser
+                <RawFileBrowser
                     files={files}
                     icons={Icons.FontAwesome(4)}
-                    fileRendererProps={{ selectedFiles, setSelectedFiles }}
+                    fileRendererProps={{ files, selectedFiles, setSelectedFiles }}
                     fileRenderer={CustomFileRenderer}
+                    folderRenderer={CustomFolderRenderer}
                 />
             </div>
         </div>
