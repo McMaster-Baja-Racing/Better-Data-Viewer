@@ -2,17 +2,12 @@ import 'font-awesome/css/font-awesome.min.css';
 import '../styles/fileStorage.css'
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
-
 import { useState } from 'react'
-
-
 
 // Here is a custom file renderer to be used in place of the default react-keyed-file-browser file renderer.
 // This was done to give the "checked" property to the file element, which is used to allow the selection of multiple files at once.
 const CustomFileRenderer = (props) => {
-    const { selectedFiles, setSelectedFiles, browserProps } = props;
-
-    console.log(props)
+    const { files, selectedFiles, setSelectedFiles, browserProps } = props;
 
     // Get all information from props about the file
     const file = {
@@ -26,16 +21,13 @@ const CustomFileRenderer = (props) => {
 
     // Either add or remove the file from the selectedFiles array
     const handleSelectFile = (e) => {
-        console.log(file)
         const fileIndex = selectedFiles.findIndex((selectedFile) => selectedFile.key === file.key);
 
         if (fileIndex === -1) {
-            // Add the file to the selectedFiles array if it's not already there
-            console.log([...selectedFiles, file])
-            setSelectedFiles([...selectedFiles, file]);
+            // Instead of adding file, add the file that corresponds to the key from the files list
+            setSelectedFiles([...selectedFiles, files.find((file) => file.key === props.fileKey)]);
         } else {
             // Remove the file from the selectedFiles array if it's already there
-            console.log(selectedFiles.filter((_, index) => index !== fileIndex))
             setSelectedFiles(selectedFiles.filter((_, index) => index !== fileIndex));
         }
     };
@@ -62,8 +54,6 @@ const CustomFileRenderer = (props) => {
 
         return `${size} B`;
     };
-
-
 
     return (
         // Add in table row and then table data for each file, default styling will space it properly
@@ -108,7 +98,7 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
                 <RawFileBrowser
                     files={files}
                     icons={Icons.FontAwesome(4)}
-                    fileRendererProps={{ selectedFiles, setSelectedFiles }}
+                    fileRendererProps={{ files, selectedFiles, setSelectedFiles }}
                     fileRenderer={CustomFileRenderer}
                     folderRenderer={CustomFolderRenderer}
                 />

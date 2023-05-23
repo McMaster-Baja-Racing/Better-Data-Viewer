@@ -66,6 +66,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     fetch(`http://${window.location.hostname}:8080/files`)
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         setFiles(data.files);
       })
   }
@@ -115,41 +116,15 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const getHeaders = async (files) => {
     var col = [];
 
-    //format the files, currently passed in as an array of objects, needs to be an array of the key
-    var formattedFiles = [];
     files.forEach(file => {
-      formattedFiles.push(file.key);
+      file.fileHeaders.forEach(header => {
+        col.push({
+          "header": header,
+          "filename": file.key
+        })
+      })
     })
 
-    console.log(formattedFiles)
-
-    //wrap logic in promise
-    await new Promise((resolve, reject) => {
-      //catch errors
-      var c = 0;
-      for (const file of formattedFiles) {
-        fetch(`http://${window.location.hostname}:8080/files/${file}/info`)
-          .then(response => {
-            // the data is in csv format, print it out
-            response.text().then(text => {
-              //append it to columns
-              for (var i = 0; i < text.split(",").length; i++) {
-                col.push({
-                  "header": text.split(",")[i],
-                  "filename": file
-                });
-              }
-              //logic for the promise, increment each time a thread finishes
-              c++;
-              if (c === selectedFiles.length) {
-                resolve();
-              }
-            });
-          }).catch(e => {
-            alert(e)
-          })
-      }
-    })
     setColumns(col);
   }
 
@@ -236,7 +211,10 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
         <button className="submitbutton" onClick={() => {
           // OnClick, it should get the selected files from the file storage component
           //getSelectedFiles();
+          console.log("selected files")
+          console.log(selectedFiles)
           getHeaders(selectedFiles)
+          // Instead of this function, go through 
           if (document.getElementById("graphTypeSelect").value === "XYColour") {
             setDimensions(3)
           } else {

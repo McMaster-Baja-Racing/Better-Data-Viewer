@@ -177,8 +177,8 @@ public class FileUploadController {
 			//storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
 			outputFiles[outputFiles.length - 1] = "./upload-dir/" + inputFiles[0];
 		}
-		// Then return the final file
-		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1].split("/")[2]);
+		// Then return the final file, removing the prefix for upload dir
+		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
 
 		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();
