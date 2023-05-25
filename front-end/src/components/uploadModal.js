@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
 export const UploadModal = ({ setShowUploadModal }) => {
-  
+
   const [dragActive, setDragActive] = React.useState(false);
   const [loading, setLoading] = useState(false);
   // handle drag events
@@ -20,15 +20,13 @@ export const UploadModal = ({ setShowUploadModal }) => {
     }
   };
   const [fileLists,setfileLists] = useState([]);
+
   // triggers when file is dropped
   const handleDrop = function (e) {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    for (let i = 0; i < e.dataTransfer.files.length; i++) {
-      fileLists.push(e.dataTransfer.files[i])
-    }
-    setfileLists(fileLists)
+    setfileLists([...e.dataTransfer.files, ...fileLists])
   };
 
   const modalRef = useRef();
@@ -78,21 +76,33 @@ export const UploadModal = ({ setShowUploadModal }) => {
 
     //setShowUploadModal(false); Dont need to do this neccesarily
   };
+
+
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="centerFlexBox">
           <h1>Upload Files</h1>
           <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} />
+            <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
+              
+              setfileLists([...e.target.files, ...fileLists])
+            }}/>
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : ""}>
               <div>
-                <p>Drag and drop your file here or click to browse your files</p>
+                {fileLists.length == 0 ? <p>Drag and drop your file here or click to browse your files</p> : fileLists.map((file, index) => {
+                  return (
+                  <div>
+                    <button type="button" onClick={() => {
+                      setfileLists(fileLists.filter((f) => f.name !== file.name))
+                    }}>X</button>
+                    {file.name}
+                  </div>)
+                })}
               </div>
             </label>
             {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
-            <button onClick={(() => {
-            console.log("babeyy")
+            <button type="button" onClick={(() => {
             fetch(`http://${window.location.hostname}:8080/deleteAll`).then((res) => {
               alert(res)
             }).catch((err) => {
