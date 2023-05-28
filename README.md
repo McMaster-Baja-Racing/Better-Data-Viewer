@@ -25,6 +25,14 @@ Setup complete!
 - Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
   Optionally, run `Set-ExecutionPolicy unrestricted` in an administrator terminal to set it permanently
 
+
+## Rust Library Build/Setup (Only necessary if making library changes)
+- first have rustup installed https://www.rust-lang.org/tools/install
+- complete setup and use the stable branch of rust
+- in the binary-to-csv-lib folder, run `cargo build --release`
+- once that is complete, copy the resulting dll file(windows) that is now in the `target/release/` folder
+- paste this folder in the `Better-Data-Viewer\API\src\main\java\backend\API\binary_csv\` Folder
+
 ## TODO
 
 ### Front End
