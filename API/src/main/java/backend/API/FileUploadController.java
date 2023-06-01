@@ -111,23 +111,7 @@ public class FileUploadController {
 		});
 
 		return ResponseEntity.ok().headers(responseHeaders).body(files);
-	}
-
-
-	@GetMapping("/deleteAllFiles")
-	@ResponseBody
-	public ResponseEntity<String> deleteAllFiles() {
-
-		storageService.deleteAll();
-
-		//Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-		return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
-
-	}
+	} 
 
 	//This method returns information about a specific file, given the filename.
 	//It should return the first row of the file (the header row) + [datetime, and the number of rows eventually]
@@ -216,6 +200,7 @@ public class FileUploadController {
 	@ResponseBody
 	public ResponseEntity<String> deleteAll() {
 		storageService.deleteAll();
+		storageService.init();
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		//Set these headers so that you can access from LocalHost
