@@ -10,9 +10,9 @@ JDK
 ### To setup:
 
 1. Clone repository.
-2. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command `npm i`
+2. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command `npm i --force`
 3. Inside a terminal, navigate to the folder Better-Data-Viewer\API, then run the command `./mvnw spring-boot:run`
-4. Make a copy of start.ps1.example and set `JAVA_HOME` environment variable to the JDK path.
+4. Inside start.ps1. add your JDK path to the list of `javaHomeLocations`.
 Setup complete!
 
 ### To run:
