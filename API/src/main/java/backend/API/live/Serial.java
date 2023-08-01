@@ -27,6 +27,9 @@ public class Serial {
                     setPort = true;
                     break;
                 }
+            } 
+            if (!setPort) {
+                setPort = true;
             }
         }
 
