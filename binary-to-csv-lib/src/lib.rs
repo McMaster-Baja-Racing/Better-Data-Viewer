@@ -225,7 +225,7 @@ pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(env: JNIEn
         let timestamp: u32 = x[0] >> 6;
         let datatype: u8  = (x[0]&0x3F) as u8;
 
-        if datatype > 41 {
+        if datatype >= 41 {
             println!("Invalid datatype: {}", datatype);
             return None;
         }
