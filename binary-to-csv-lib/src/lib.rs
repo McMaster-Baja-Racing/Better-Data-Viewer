@@ -1,14 +1,14 @@
-use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use jni::sys::jboolean;
+use jni::JNIEnv;
 
-use num_enum::{TryFromPrimitive, IntoPrimitive};
+use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{Write, BufWriter};
-use std::fmt;
 use std::convert::TryFrom;
+use std::fmt;
+use std::fs::File;
+use std::io::{BufWriter, Write};
 use std::time::Instant;
 
 //create an enum  for each data string
@@ -122,7 +122,7 @@ enum Data {
     IntData(u32),
 }
 
-impl <'a>std::ops::BitAnd<u32> for &'a Data {
+impl<'a> std::ops::BitAnd<u32> for &'a Data {
     type Output = Option<u32>;
     fn bitand(self, rhs: u32) -> Self::Output {
         match self {
@@ -138,7 +138,7 @@ impl std::fmt::Display for Data {
         match self {
             Data::FloatData(a) => write!(f, "{}", a),
             Data::IntData(a) => write!(f, "{}", a),
-        }     
+        }
     }
 }
 
@@ -153,9 +153,7 @@ struct Packet {
 #[allow(non_snake_case)]
 pub extern "system" fn read_data(path: &std::path::Path) -> Vec<u8> {
     match std::fs::read(path) {
-        Ok(bytes) => { 
-            bytes
-        }
+        Ok(bytes) => bytes,
         Err(e) => {
             if e.kind() == std::io::ErrorKind::NotFound {
                 eprintln!("The data file was not found");
@@ -166,42 +164,52 @@ pub extern "system" fn read_data(path: &std::path::Path) -> Vec<u8> {
 }
 
 #[no_mangle]
-pub extern "system" fn convert_to_32bit (v: &Vec<u8>) -> Vec<u32> {
+pub extern "system" fn convert_to_32bit(v: &Vec<u8>) -> Vec<u32> {
     let mut i = 0;
-    let mut vec: Vec<u32> = Vec::with_capacity(v.len()/4);
+    let mut vec: Vec<u32> = Vec::with_capacity(v.len() / 4);
     while i < v.len() {
-        vec.push(u32::from_le_bytes([v[i], v[i+1], v[i+2], v[i+3]]));
-        i+=4;
+        vec.push(u32::from_le_bytes([v[i], v[i + 1], v[i + 2], v[i + 3]]));
+        i += 4;
     }
     vec
 }
 
 #[no_mangle]
-pub extern "system" fn get_writer (datatype: &DataType, destination: &str, path: &str, folder: bool) -> std::io::BufWriter<std::fs::File> {
+pub extern "system" fn get_writer(
+    datatype: &DataType,
+    destination: &str,
+    path: &str,
+    folder: bool,
+) -> std::io::BufWriter<std::fs::File> {
     let path = if folder {
         path.to_owned()
-
     } else {
         destination.to_owned() + "/" + path + ".csv"
     };
 
     let path = if folder {
-        
-        path + "/" + datatype.into() + ".csv"    
+        path + "/" + datatype.into() + ".csv"
     } else {
         path + datatype.into() + ".csv"
     };
-    let file = File::create(path).expect("There was an error creating the file.\nMake sure existing files do not exist.");
+    let file = File::create(path)
+        .expect("There was an error creating the file.\nMake sure existing files do not exist.");
     let mut writer = BufWriter::new(file);
     match datatype {
         DataType::INT_GPS_SECONDMINUTEHOUR => {
-            writer.write_all("Timestamp (ms), Seconds, Minutes, Hours\n".as_bytes()).unwrap();
-        },
+            writer
+                .write_all("Timestamp (ms), Seconds, Minutes, Hours\n".as_bytes())
+                .unwrap();
+        }
         DataType::INT_GPS_DAYMONTHYEAR => {
-            writer.write_all("Timestamp (ms), Day, Month, Year\n".as_bytes()).unwrap();
-        },
+            writer
+                .write_all("Timestamp (ms), Day, Month, Year\n".as_bytes())
+                .unwrap();
+        }
         _ => {
-            writer.write_all(format!("Timestamp (ms), {}\n", datatype).as_bytes()).unwrap();
+            writer
+                .write_all(format!("Timestamp (ms), {}\n", datatype).as_bytes())
+                .unwrap();
         }
     }
     writer
@@ -209,12 +217,24 @@ pub extern "system" fn get_writer (datatype: &DataType, destination: &str, path:
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(env: JNIEnv, _class: JClass, file_name: JString, destination: JString, folder: jboolean) {
+pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(
+    env: JNIEnv,
+    _class: JClass,
+    file_name: JString,
+    destination: JString,
+    folder: jboolean,
+) {
     let now = Instant::now();
 
-    let file_name: String = env.get_string(file_name).expect("Java string broken").into();
-    let destination: String = env.get_string(destination).expect("Java string broken").into();
-    
+    let file_name: String = env
+        .get_string(file_name)
+        .expect("Java string broken")
+        .into();
+    let destination: String = env
+        .get_string(destination)
+        .expect("Java string broken")
+        .into();
+
     let folder = !matches!(folder, 0);
 
     let file = std::path::Path::new(&file_name);
@@ -223,75 +243,113 @@ pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(env: JNIEn
     //filter_map
     let parse = |x: &[u32]| {
         let timestamp: u32 = x[0] >> 6;
-        let datatype: u8  = (x[0]&0x3F) as u8;
+        let datatype: u8 = (x[0] & 0x3F) as u8;
 
         if datatype >= 41 {
             println!("Invalid datatype: {}", datatype);
             return None;
         }
         let datatype: DataType = TryFrom::try_from(datatype).unwrap();
-        
+
         let data = match datatype {
-            DataType::INT_GPS_LAT | DataType::INT_GPS_LON => {
-                None
-            },
-            DataType::F_GPS_LATITUDE => {
-                Some(Data::FloatData(f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor()))
-            },
-            DataType::F_GPS_LONGITUDE => {
-                Some(Data::FloatData(-1.0 * (f32::from_bits(x[1]) % 100.0)/60.0 + (f32::from_bits(x[1]) / 100.0).floor()))
-            }
-            DataType::INT_GPS_TIME | DataType::INT_GPS_DAYMONTHYEAR | DataType::INT_GPS_SECONDMINUTEHOUR | DataType::INT_PRIM_TEMP | DataType::INT_STRAIN3 | DataType::INT_STRAIN4 | DataType::INT_STRAIN5 | DataType::INT_STRAIN6 | DataType::INT_BATT_PERC => {
-                Some(Data::IntData(x[1]))
-            },
-            DataType::INT_STRAIN1 => {
-                Some(Data::FloatData(4078.4*(f32::from_bits(x[1]) /1024.0)*3.3-7009.2))
-            },
-            DataType::INT_STRAIN2 => {
-                Some(Data::FloatData(5288.0*(f32::from_bits(x[1]) /1024.0)*3.3-5000.0))
-            }
+            DataType::INT_GPS_LAT | DataType::INT_GPS_LON => None,
+            DataType::F_GPS_LATITUDE => Some(Data::FloatData(
+                f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor(),
+            )),
+            DataType::F_GPS_LONGITUDE => Some(Data::FloatData(
+                -1.0 * (f32::from_bits(x[1]) % 100.0) / 60.0
+                    + (f32::from_bits(x[1]) / 100.0).floor(),
+            )),
+            DataType::INT_GPS_TIME
+            | DataType::INT_GPS_DAYMONTHYEAR
+            | DataType::INT_GPS_SECONDMINUTEHOUR
+            | DataType::INT_PRIM_TEMP
+            | DataType::INT_STRAIN3
+            | DataType::INT_STRAIN4
+            | DataType::INT_STRAIN5
+            | DataType::INT_STRAIN6
+            | DataType::INT_BATT_PERC => Some(Data::IntData(x[1])),
+            DataType::INT_STRAIN1 => Some(Data::FloatData(
+                4078.4 * (f32::from_bits(x[1]) / 1024.0) * 3.3 - 7009.2,
+            )),
+            DataType::INT_STRAIN2 => Some(Data::FloatData(
+                5288.0 * (f32::from_bits(x[1]) / 1024.0) * 3.3 - 5000.0,
+            )),
             DataType::F_RPM_PRIM | DataType::F_RPM_SEC => {
                 let raw = f32::from_bits(x[1]);
                 (raw < 5000.0).then_some(Data::FloatData(raw))
-            },
+            }
             _ => {
                 let raw = f32::from_bits(x[1]);
                 Some(Data::FloatData(raw))
-            },
+            }
         };
-        
+
         data.map(|data| Packet {
-                timestamp,
-                datatype,
-                data
-            })
+            timestamp,
+            datatype,
+            data,
+        })
     };
     let parsed_packets = packets.chunks(2).filter_map(parse);
-    let mut utilised_types: HashMap<DataType, BufWriter<std::fs::File>> = HashMap::with_capacity(DATA_TYPE_LEN);
+    let mut utilised_types: HashMap<DataType, BufWriter<std::fs::File>> =
+        HashMap::with_capacity(DATA_TYPE_LEN);
     let extension_index = file_name.find('.').unwrap();
     let path_no_extension = &file_name[0..extension_index];
     if folder {
-        std::fs::create_dir(path_no_extension).unwrap();
+        match std::fs::create_dir(path_no_extension) {
+            Ok(_) => println!("Created folder: {}", path_no_extension),
+            Err(e) => {
+                if e.kind() == std::io::ErrorKind::AlreadyExists {
+                    println!(
+                        "Folder already exists: {}\nAttempting to delete and reparse",
+                        path_no_extension
+                    );
+                    std::fs::remove_dir_all(path_no_extension).unwrap();
+                    std::fs::create_dir(path_no_extension).unwrap();
+                } else {
+                    panic!("{}", e);
+                }
+            }
+        }
     }
 
     for packet in parsed_packets {
-        utilised_types
-            .entry(packet.datatype)
-            .or_insert_with(|| get_writer(&packet.datatype, &destination, path_no_extension, folder));
+        utilised_types.entry(packet.datatype).or_insert_with(|| {
+            get_writer(&packet.datatype, &destination, path_no_extension, folder)
+        });
 
         match packet.datatype {
             DataType::F_GPS_LATITUDE | DataType::F_GPS_LONGITUDE => {
-                utilised_types.get_mut(&packet.datatype).unwrap().write_all(format!("{},{:.7}\n", packet.timestamp, packet.data).as_bytes()).unwrap();
+                utilised_types
+                    .get_mut(&packet.datatype)
+                    .unwrap()
+                    .write_all(format!("{},{:.7}\n", packet.timestamp, packet.data).as_bytes())
+                    .unwrap();
             }
 
-            DataType::INT_GPS_DAYMONTHYEAR |  DataType::INT_GPS_SECONDMINUTEHOUR => {
-                utilised_types.get_mut(&packet.datatype).unwrap().write_all(format!("{},{},{},{}\n", packet.timestamp, 
-                (&packet.data & (0b11111111<<16)).unwrap(), 
-                (&packet.data & (0b11111111<<8)).unwrap(), 
-                (&packet.data & (0b11111111)).unwrap()).as_bytes()).unwrap();
+            DataType::INT_GPS_DAYMONTHYEAR | DataType::INT_GPS_SECONDMINUTEHOUR => {
+                utilised_types
+                    .get_mut(&packet.datatype)
+                    .unwrap()
+                    .write_all(
+                        format!(
+                            "{},{},{},{}\n",
+                            packet.timestamp,
+                            (&packet.data & (0b11111111 << 16)).unwrap(),
+                            (&packet.data & (0b11111111 << 8)).unwrap(),
+                            (&packet.data & (0b11111111)).unwrap()
+                        )
+                        .as_bytes(),
+                    )
+                    .unwrap();
             }
             _ => {
-                utilised_types.get_mut(&packet.datatype).unwrap().write_all(format!("{},{:.2}\n", packet.timestamp, packet.data).as_bytes()).unwrap();
+                utilised_types
+                    .get_mut(&packet.datatype)
+                    .unwrap()
+                    .write_all(format!("{},{:.2}\n", packet.timestamp, packet.data).as_bytes())
+                    .unwrap();
             }
         };
     }
