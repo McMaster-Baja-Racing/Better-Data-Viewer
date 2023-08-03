@@ -112,7 +112,7 @@ public class BullshitAnalyzer extends Analyzer {
     public static void main(String[] args) {
         // Test the factory method
         System.out.println("Hello");
-        String[] inputFiles = {"C:/Users/Ariel/OneDrive/Documents/GitHub/Better-Data-Viewer/data/test.csv"};
+        String[] inputFiles = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/test.csv"};
         String[] outputFiles = {"output.csv"};
         // now make a bullshit analyzer without createAnalyzer
         BullshitAnalyzer bs = new BullshitAnalyzer(inputFiles, outputFiles, 10);

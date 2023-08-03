@@ -17,7 +17,7 @@ Setup complete!
 
 ### To run:
 
-1. Ensure your Java Development Kit directory is added into the list `javaHomeLocations`
+1. Ensure your Java Development Kit directory is added into the list `javaHomeLocations` in the `start.ps1` file
 2. Run the command `./start.ps1`, and leave all terminals open.
 3. Go to `localhost:3000` to begin.
 

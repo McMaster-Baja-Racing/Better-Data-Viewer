@@ -2,8 +2,6 @@ package backend.API.analyzer;
 
 import java.io.IOException;
 
-import backend.API.storage.StorageProperties;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;

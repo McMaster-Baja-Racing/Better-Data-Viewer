@@ -216,6 +216,9 @@ public class FileUploadController {
 			RedirectAttributes redirectAttributes) {
 
 		String filename = file.getOriginalFilename();
+		if (filename == null) {
+			throw new IllegalArgumentException("No file selected");
+		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
 			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
@@ -236,6 +239,9 @@ public class FileUploadController {
 
 		//Check type of file, either CSV or bin
 		String filename = file.getOriginalFilename();
+		if (filename == null) {
+			throw new IllegalArgumentException("No file selected");
+		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
 			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", true);
