@@ -35,6 +35,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       return( <GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }
   }
+
   //render the modal JSX in the portal div.
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal} >
