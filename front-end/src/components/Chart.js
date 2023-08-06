@@ -7,7 +7,7 @@ import Boost from 'highcharts/modules/boost';
 
 Boost(Highcharts);
 
-const Chart = ({ fileInformation }) => {
+const Chart = ({ chartInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
@@ -78,9 +78,10 @@ const Chart = ({ fileInformation }) => {
     }
 
     useEffect(() => {
+        console.log(chartInformation)
         
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
-        if (fileInformation.files.length === 0) {
+        if (chartInformation.files.length === 0) {
             return;
         }
 
@@ -91,30 +92,30 @@ const Chart = ({ fileInformation }) => {
         
         
         // Now complete a request for each series
-        for (var i = 0; i < fileInformation.files.length; i++) {
+        for (var i = 0; i < chartInformation.files.length; i++) {
             var files = [];
-            console.log("ANALYSIS: " + JSON.stringify(fileInformation.files[i]));
-            for (var j = 0; j < fileInformation.files[i].columns.length; j++) {
+            console.log("ANALYSIS: " + JSON.stringify(chartInformation.files[i]));
+            for (var j = 0; j < chartInformation.files[i].columns.length; j++) {
                 // Create a list of all files in order (formatting for backend)
-                if (!files.includes(fileInformation.files[i].columns[j].filename)) {
-                    files.push(fileInformation.files[i].columns[j].filename);
+                if (!files.includes(chartInformation.files[i].columns[j].filename)) {
+                    files.push(chartInformation.files[i].columns[j].filename);
                 }
             }
             
-            if (fileInformation.files[i].analyze.analyzerValues == null || fileInformation.files[i].analyze.analysis == null) {
-                getFile(files, [], [fileInformation.files[i].analyze.analysis],["false"], fileInformation.files[i].columns)
+            if (chartInformation.files[i].analyze.analyzerValues == null || chartInformation.files[i].analyze.analysis == null) {
+                getFile(files, [], [chartInformation.files[i].analyze.analysis],["false"], chartInformation.files[i].columns)
             } else {
-                getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.analyzerValues], ["false"], fileInformation.files[i].columns)
+                getFile(files, [], [chartInformation.files[i].analyze.analysis,chartInformation.files[i].analyze.analyzerValues], ["false"], chartInformation.files[i].columns)
             }
         }
 
         // Set files to be all filenames in fileInformation, without duplicates
 
-    }, [fileInformation]);
+    }, [chartInformation]);
 
     useEffect(() => {
         // Once necessary data is fetched, format it for the chart
-        if (fileInformation.files.length === 0) {
+        if (chartInformation.files.length === 0) {
             return;
         }
 
@@ -138,24 +139,24 @@ const Chart = ({ fileInformation }) => {
                     return series;
                 })(),
                 title: {
-                    text: fileInformation.files[0].columns[1].header + " vs " + fileInformation.files[0].columns[0].header
+                    text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
                 },
 
                 chart: {
-                    type: fileInformation.type,
+                    type: chartInformation.type,
                     zoomType: 'x'
                 },
 
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-                        type: fileInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
-                        text: fileInformation.files[0].columns[0].header
+                        type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+                        text: chartInformation.files[0].columns[0].header
                     }
                 },
                 yAxis: {
                     title: {
-                        text: fileInformation.files[0].columns[1].header
+                        text: chartInformation.files[0].columns[1].header
                     }
                 },
                 legend: {
@@ -216,8 +217,8 @@ const Chart = ({ fileInformation }) => {
     useEffect(() => {
         let intervalId;
         //for loop to loop through file information array to check if live is true
-        for (var i =0; i<fileInformation.length; i++) {
-            if (fileInformation[i].live){
+        for (var i =0; i<chartInformation.length; i++) {
+            if (chartInformation[i].live){
                 intervalId = setInterval(() => {
                             fetchData();
                         }, 250);

@@ -7,7 +7,7 @@ import FileStorage from './FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 
-export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
+export const CreateGraphModal = ({ setShowModal, setChartInformation }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -16,6 +16,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const [displayPage, setDisplayPage] = useState(1);
   const [graphType, setGraphType] = useState("");
   const [liveCheck, setLiveCheck] = useState(false);
+  //const [seriesInfo, setSeriesInfo] = useState([]);
 
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -23,6 +24,15 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       setShowModal(false);
     }
   };
+
+  //Stuff for handling final submit
+  const handleSubmit = (seriesInfo) => {
+    setChartInformation({
+      "files": seriesInfo,
+      "live": liveCheck,
+      "type": graphType
+    })
+  }
   
 
   const updatePage = (pageVar) => {
@@ -30,7 +40,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     if (displayPage === 2) {
       return (<FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setDimensions={setDimensions} setColumns={setColumns} setDisplayPage={setDisplayPage}/>)
     } else if (displayPage === 3) {
-        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} fileTransfer={fileTransfer} setShowModal={setShowModal} graphType={graphType} liveCheck={liveCheck}/>)
+        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit}/>)
     } else{
       return( <GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }

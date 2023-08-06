@@ -1,6 +1,6 @@
 import '../styles/modalStyles.css';
 
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer, setShowModal, graphType, liveCheck }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
     const columnGenerator = (n) => {
         let arr = [];
@@ -63,25 +63,6 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer,
         console.log(seriesInfo)
     }
 
-    const handleSubmit = (e) => {
-        addSeries();
-        //Check if they are empty
-        if (document.getElementsByClassName(0)[0].value === "") {
-            alert("Please select a column for the x-axis.");
-            return;
-        }
-        var selectColumns = [];
-        for (let i = 0; i < dimensions; i++) {
-            selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
-        }
-        fileTransfer({
-            "files": seriesInfo,
-            "live": liveCheck,
-            "type": graphType
-        })
-        setShowModal(false);
-    }
-
     return (
         <div className="colFlexBox">
             <h3>Select Axis</h3>
@@ -125,7 +106,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer,
             </div>
             <div className="buttonFlexBox">
                 <button className="submitbutton" onClick={() => {setDisplayPage(2)}}>Back</button>
-                <button className="submitbutton" onClick={() => { handleSubmit(); }}>Submit</button>
+                <button className="submitbutton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
             </div>
         </div>
     )
