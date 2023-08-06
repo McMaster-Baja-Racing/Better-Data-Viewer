@@ -1,30 +1,22 @@
 //CreateGraphModal.js
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { useRef } from 'react';
 import FileStorage from './FileStorage';
+import GraphSettings from './GraphSettings';
+import AnalyzersAndSeries from './AnalyzersAndSeries';
 
-export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
-  // Handles how many axes are selected
+export const CreateGraphModal = ({ setShowModal, setChartInformation }) => {
+
   const [dimensions, setDimensions] = useState(2);
-
-
-  // Generates the columns for the dropdowns
-  const columnGenerator = (n) => {
-    let arr = [];
-    for (let i = 0; i < n; i++) {
-      arr.push(
-        <div > <div className="boldText">{i === 0 ? "X-Axis" : "Y-Axis"} </div>
-          <select className={i} key={i}>
-            {columns.map(column => (
-              <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
-            ))}
-          </select>
-        </div>);
-    }
-    return arr;
-  }
+  const [columns, setColumns] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [files, setFiles] = useState([])
+  const [displayPage, setDisplayPage] = useState(1);
+  const [graphType, setGraphType] = useState("");
+  const [liveCheck, setLiveCheck] = useState(false);
+  //const [seriesInfo, setSeriesInfo] = useState([]);
 
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -33,261 +25,32 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     }
   };
 
-  // Handles the submit button and passes the selected data to the parent component
-  const handleSubmit = (e) => {
-    addSeries();
-    //Check if they are empty
-    if (document.getElementsByClassName(0)[0].value === "") {
-      alert("Please select a column for the x-axis.");
-      return;
-    }
-    var selectColumns = [];
-    for (let i = 0; i < dimensions; i++) {
-      selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
-    }
-    fileTransfer({
+  //Stuff for handling final submit
+  const handleSubmit = (seriesInfo) => {
+    setChartInformation({
       "files": seriesInfo,
-      "live": document.getElementById("liveDataCheckbox").checked,
-      "type": document.getElementById("graphTypeSelect").value
+      "live": liveCheck,
+      "type": graphType
     })
-    setShowModal(false);
   }
+  
 
-  // Handles fetching all files from the server
-  const [files, setFiles] = useState([])
-  const listFiles = () => {
-    //If live data is checked, only show the default live data files
-    // if (document.getElementById("liveDataCheckbox").checked) {
-    //   setFiles(["F_GPS_SPEED.csv", "F_RPM_PRIM.csv", "F_RPM_SEC.csv", "F_THROTTLE.csv", "F_VEHICLE_SPEED.csv"]);
-    //   return;
-    // }
-
-    // Should be of format [{key: "F_GPS_SPEED.csv", size: 1234, headers: ["header1", "header2", "header3"]}, ...]
-    fetch(`http://${window.location.hostname}:8080/files`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        setFiles(data.files);
-      })
-  }
-
-
-  // Handles the display of the pages, TODO: Consolidate into one function and a parameter
-  const showPage1 = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "block";
-    y.style.display = "none";
-    z.style.display = "none";
-  }
-  const showPage2 = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "none";
-    y.style.display = "block";
-    z.style.display = "none";
-  }
-  const showPage3 = () => {
-    var x = document.getElementById("one");
-    var y = document.getElementById("two");
-    var z = document.getElementById("three");
-    x.style.display = "none";
-    y.style.display = "none";
-    z.style.display = "block";
-  }
-
-  // Method for checking which files are selected
-  const [selectedFiles, setSelectedFiles] = useState([]);
-
-  // Handles fetching of headers based on selected files, once the files are selected
-
-  // TODO:: This should be changed
-
-  // Logic should be as follows: FileStorage has all the files. Upon clicking the submit button, these files are collected
-  // And then this component should fetch the headers for each file. Then, the user can select which headers they want to use.
-
-  // Alternatively we can provide insight into the files in file storage, and then the user can select which files they want to use
-  // Then all this information is passed to the parent without any fetching neccesary
-  const [columns, setColumns] = useState([]);
-
-  // This method will return headers when supplied with a list of files. Added support for folders is neccesary
-  const getHeaders = async (files) => {
-    var col = [];
-
-    files.forEach(file => {
-      file.fileHeaders.forEach(header => {
-        col.push({
-          "header": header,
-          "filename": file.key
-        })
-      })
-    })
-
-    setColumns(col);
-  }
-
-  var seriesInfo = []
-
-  const addSeries = () => {
-
-    var selectColumns = [];
-    for (let i = 0; i < dimensions; i++) {
-      selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
+  const updatePage = (pageVar) => {
+    
+    if (displayPage === 2) {
+      return (<FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setDimensions={setDimensions} setColumns={setColumns} setDisplayPage={setDisplayPage}/>)
+    } else if (displayPage === 3) {
+        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit}/>)
+    } else{
+      return( <GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }
-
-    seriesInfo.push({
-      "columns": selectColumns,
-      "analyze": {
-        "analysis": analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
-        "analyzerValues": getAnalyzerOptions()
-      }
-
-    })
-    console.log(seriesInfo)
   }
-
-
-  const analyzers = [
-    { name: "None", code: null, parameters: [], checked: true },
-    { name: "Linear Interpolate", code: "linearInterpolate", parameters: [] },
-    { name: "Accel Curve", code: "accelCurve", parameters: [] },
-    { name: "Rolling Average", code: "rollAvg", parameters: [{ name: "WindowSize", default: "100" }] },
-    { name: "RDP Compression", code: "RDPCompression", parameters: [{ name: "Epsilon", default: "0.1" }] },
-    { name: "sGolay", code: "sGolay", parameters: [{ name: "Window Size", default: "100" }, { name: "Polynomial Order", default: "3" }] },
-    { name: "Split", code: "split", parameters: [{ name: "Start", default: "0" }, { name: "End", default: null }] },
-    { name: "Linear Multiply", code: "linearMultiply", parameters: [{ name: "Multiplier", default: "1" }, { name: "Offset", default: "0" }] }
-  ];
-
-  // Handles the selection of the analysis
-
-
-  //the output of the above statement is the key of the first element in the object
-
-  const getAnalyzerOptions = () => {
-
-    for (const inputElement of analyzers) {
-      if (document.getElementById(inputElement.name).checked) {
-        const params = inputElement.parameters.map(param => {
-          //console.log(paramId)
-          const value = document.getElementById(param.name).value;
-          return value === '' ? null : value;
-        });
-        //console.log(params);
-        return params;
-      }
-
-    }
-
-    return null;
-  };
-
-  const pageOne = () => (
-    <div className="colFlexBox">
-      <h1>Graph Options</h1><br></br>
-      <div className="rowFlexBox">
-        <h3>Live Data</h3><br></br>
-        <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
-      </div>
-
-      <label htmlFor="port">Port</label>
-      <input type="text" id="port" name="port"></input>
-      <label htmlFor="baud">Baud</label>
-      <input type="text" id="baud" name="baud"></input>
-
-      <h3>Graph Types</h3><div className="pushLeftFlexBox">
-        <select id="graphTypeSelect" className="graphTypeSelect">
-          <option value="line">line</option>
-          <option value="spline">spline</option>
-          <option value="scatter"> scatter</option>
-        </select>
-      </div>
-      <div className="pushRightFlexBox">
-        <button className="submitbutton" onClick={() => { listFiles(); showPage2(); }}>Next</button>
-      </div>
-    </div>
-  )
-  const pageTwo = () => (
-
-    <div className="colFlexBox">
-      <FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
-      <div className="buttonFlexBox">
-        <button className="submitbutton" onClick={showPage1}>Back</button>
-        <button className="submitbutton" onClick={() => {
-          // OnClick, it should get the selected files from the file storage component
-          //getSelectedFiles();
-          console.log("selected files")
-          console.log(selectedFiles)
-          getHeaders(selectedFiles)
-          // Instead of this function, go through 
-          if (document.getElementById("graphTypeSelect").value === "XYColour") {
-            setDimensions(3)
-          } else {
-            setDimensions(2)
-          }
-          showPage3();
-        }} >Next</button>
-      </div>
-    </div>
-
-  )
-  const pageThree = () => (
-    <div className="colFlexBox">
-      <h3>Select Axis</h3>
-      <div className="rowFlexBox">
-        {columnGenerator(dimensions)}
-      </div>
-      <div className="pushLeftFlexBox">
-        <button onClick={addSeries}>Add Series</button>
-      </div>
-      <h3>Select Analyzers</h3>
-      <div className="scrollColFlexBox">
-        {Object.values(analyzers).map((analyzer) => {
-          return (
-
-            <div key={analyzer.name}>
-              <div className="rowFlexBox">
-                <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
-                <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
-                {analyzer.parameters.length <= 0 ? null :
-                  <details>
-                    <summary></summary>
-                    <div className="scrollColFlexBox">
-                      <div className="rowFlexBox">
-                        {analyzer.parameters.map((param, index) => {
-                          return (
-                            <>
-                              <label htmlFor={`param${index}`}>{`${param.name} ->`}</label>
-                              <input type="number" id={param.name} className={`param${index}`} style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }} defaultValue={param.default} />
-                            </>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  </details>
-                }
-              </div>
-            </div>
-          )
-        }
-        )}
-      </div>
-      <div className="buttonFlexBox">
-        <button className="submitbutton" onClick={showPage2}>Back</button>
-        <button className="submitbutton" onClick={() => { handleSubmit(); }}>Submit</button>
-      </div>
-    </div>
-  )
 
   //render the modal JSX in the portal div.
-
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal} >
       <div className="modal">
-        <div id="one" >{pageOne()} </div>
-        <div id="two" hidden >{pageTwo()}</div>
-        <div id="three" hidden> {pageThree()}</div>
+        {updatePage(displayPage)}
         <button className="closeButton" onClick={() => setShowModal(false)}>X</button>
       </div>
     </div>,
