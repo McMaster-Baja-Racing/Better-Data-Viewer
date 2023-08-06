@@ -2,7 +2,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import '../styles/fileStorage.css'
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
-import { useState } from 'react'
 
 // Here is a custom file renderer to be used in place of the default react-keyed-file-browser file renderer.
 // This was done to give the "checked" property to the file element, which is used to allow the selection of multiple files at once.
@@ -88,9 +87,26 @@ const CustomFolderRenderer = (props) => {
 }
 
 
-const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
+const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, setColumns, setDisplayPage }) => {
     // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
     // Here is the implementation of the file browser with props passed in
+
+    // This method will return headers when supplied with a list of files. Added support for folders is neccesary
+    const getHeaders = async (files) => {
+      var col = [];
+  
+      files.forEach(file => {
+        file.fileHeaders.forEach(header => {
+          col.push({
+            "header": header,
+            "filename": file.key
+          })
+        })
+      })
+  
+      setColumns(col);
+    }
+
     return (
         <div>
             <div className="file-browser">
@@ -103,6 +119,23 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
                     folderRenderer={CustomFolderRenderer}
                 />
             </div>
+            <div className="buttonFlexBox">
+        <button className="submitbutton" onClick={() => {setDisplayPage(1)}}>Back</button>
+        <button className="submitbutton" onClick={() => {
+          // OnClick, it should get the selected files from the file storage component
+          //getSelectedFiles();
+          console.log("selected files")
+          console.log(selectedFiles)
+          getHeaders(selectedFiles)
+          // Instead of this function, go through 
+          if (document.getElementById("graphTypeSelect").value === "XYColour") {
+            setDimensions(3)
+          } else {
+            setDimensions(2)
+          }
+          setDisplayPage(3);
+        }} >Next</button>
+      </div>
         </div>
     )
 }
