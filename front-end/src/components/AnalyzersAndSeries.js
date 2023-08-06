@@ -1,6 +1,6 @@
 import '../styles/modalStyles.css';
 
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer, setShowModal }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer, setShowModal, graphType, liveCheck }) => {
 
     const columnGenerator = (n) => {
         let arr = [];
@@ -76,12 +76,11 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer,
         }
         fileTransfer({
             "files": seriesInfo,
-            "live": document.getElementById("liveDataCheckbox").checked,
-            "type": document.getElementById("graphTypeSelect").value
+            "live": liveCheck,
+            "type": graphType
         })
         setShowModal(false);
     }
-
 
     return (
         <div className="colFlexBox">

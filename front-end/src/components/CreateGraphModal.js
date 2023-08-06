@@ -14,6 +14,8 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [files, setFiles] = useState([])
   const [displayPage, setDisplayPage] = useState(1);
+  const [graphType, setGraphType] = useState("");
+  const [liveCheck, setLiveCheck] = useState(false);
 
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -28,16 +30,15 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     if (displayPage === 2) {
       return (<FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setDimensions={setDimensions} setColumns={setColumns} setDisplayPage={setDisplayPage}/>)
     } else if (displayPage === 3) {
-        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} fileTransfer={fileTransfer} setShowModal={setShowModal}/>)
+        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} fileTransfer={fileTransfer} setShowModal={setShowModal} graphType={graphType} liveCheck={liveCheck}/>)
     } else{
-      return( <GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles}/>);
+      return( <GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }
   }
   //render the modal JSX in the portal div.
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal} >
       <div className="modal">
-        
         {updatePage(displayPage)}
         <button className="closeButton" onClick={() => setShowModal(false)}>X</button>
       </div>

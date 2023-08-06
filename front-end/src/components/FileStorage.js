@@ -87,7 +87,7 @@ const CustomFolderRenderer = (props) => {
 }
 
 
-const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, setColumns, setDisplayPage }) => {
+const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, setColumns, setDisplayPage,graphType }) => {
     // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
     // Here is the implementation of the file browser with props passed in
 
@@ -128,7 +128,7 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, se
           console.log(selectedFiles)
           getHeaders(selectedFiles)
           // Instead of this function, go through 
-          if (document.getElementById("graphTypeSelect").value === "XYColour") {
+          if (graphType === "XYColour") {
             setDimensions(3)
           } else {
             setDimensions(2)

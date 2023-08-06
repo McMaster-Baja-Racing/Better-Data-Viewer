@@ -1,7 +1,7 @@
 import '../styles/modalStyles.css';
 
 
-const GraphSettings = ({setDisplayPage,setFiles}) => {
+const GraphSettings = ({setDisplayPage,setFiles,setGraphType, setLiveCheck}) => {
     
     const listFiles = () => {
       //If live data is checked, only show the default live data files
@@ -17,6 +17,16 @@ const GraphSettings = ({setDisplayPage,setFiles}) => {
           console.log(data)
           setFiles(data.files);
         })
+    }
+
+    const graphType = () => {
+      setGraphType (document.getElementById("graphTypeSelect").value);
+      console.log(setGraphType)
+      
+    }
+
+    const liveData = () => {
+      setLiveCheck (document.getElementById("liveDataCheckbox").checked);
     }
 
     return (
@@ -40,7 +50,7 @@ const GraphSettings = ({setDisplayPage,setFiles}) => {
             </select>
           </div>
           <div className="pushRightFlexBox">
-            <button className="submitbutton" onClick={() => { listFiles(); setDisplayPage(2); }}>Next</button>
+            <button className="submitbutton" onClick={() => {liveData(); graphType(); listFiles(); setDisplayPage(2);  }}>Next</button>
           </div>
         </div>
       )
