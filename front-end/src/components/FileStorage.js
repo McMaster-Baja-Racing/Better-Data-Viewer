@@ -87,7 +87,7 @@ const CustomFolderRenderer = (props) => {
 }
 
 
-const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, setColumns, setDisplayPage,graphType }) => {
+const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, setColumns, setDisplayPage}) => {
     // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
     // Here is the implementation of the file browser with props passed in
 
@@ -123,16 +123,10 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, se
         <button className="submitbutton" onClick={() => {setDisplayPage(1)}}>Back</button>
         <button className="submitbutton" onClick={() => {
           // OnClick, it should get the selected files from the file storage component
-          //getSelectedFiles();
           console.log("selected files")
           console.log(selectedFiles)
           getHeaders(selectedFiles)
-          // Instead of this function, go through 
-          if (graphType === "XYColour") {
-            setDimensions(3)
-          } else {
-            setDimensions(2)
-          }
+          setDimensions(2)
           setDisplayPage(3);
         }} >Next</button>
       </div>
