@@ -133,7 +133,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
   const addSeries = () => {
 
     var selectColumns = [];
-    for (let i = 0; i < dimensions; i++) {  
+    for (let i = 0; i < dimensions; i++) {
       selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
     }
 
@@ -150,14 +150,14 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
 
 
   const analyzers = [
-    { name: "None", code: null, parameters: [], checked: true }, 
+    { name: "None", code: null, parameters: [], checked: true },
     { name: "Linear Interpolate", code: "linearInterpolate", parameters: [] },
-    { name: "Accel Curve", code: "accelCurve", parameters: [] }, 
-    { name: "Rolling Average", code: "rollAvg", parameters: [ {name: "WindowSize", default: "100"} ] },
-    { name: "RDP Compression", code: "RDPCompression", parameters: [ {name: "Epsilon", default: "0.1"}] }, 
-    { name: "sGolay", code: "sGolay", parameters: [ {name: "Window Size", default: "100"}, {name: "Polynomial Order", default: "3"} ] },
-    { name: "Split", code: "split", parameters: [{ name: "Start", default: "0"}, {name: "End", default: null} ] }, 
-    { name: "Linear Multiply", code: "linearMultiply", parameters: [{ name: "Multiplier", default: "1"} , {name: "Offset", default : "0"}]}
+    { name: "Accel Curve", code: "accelCurve", parameters: [] },
+    { name: "Rolling Average", code: "rollAvg", parameters: [{ name: "WindowSize", default: "100" }] },
+    { name: "RDP Compression", code: "RDPCompression", parameters: [{ name: "Epsilon", default: "0.1" }] },
+    { name: "sGolay", code: "sGolay", parameters: [{ name: "Window Size", default: "100" }, { name: "Polynomial Order", default: "3" }] },
+    { name: "Split", code: "split", parameters: [{ name: "Start", default: "0" }, { name: "End", default: null }] },
+    { name: "Linear Multiply", code: "linearMultiply", parameters: [{ name: "Multiplier", default: "1" }, { name: "Offset", default: "0" }] }
   ];
 
   // Handles the selection of the analysis
@@ -245,7 +245,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
       <div className="scrollColFlexBox">
         {Object.values(analyzers).map((analyzer) => {
           return (
-            
+
             <div key={analyzer.name}>
               <div className="rowFlexBox">
                 <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
@@ -259,7 +259,7 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
                           return (
                             <>
                               <label htmlFor={`param${index}`}>{`${param.name} ->`}</label>
-                              <input type="number" id={param.name} className={`param${index}`} style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }} defaultValue={param.default}/>
+                              <input type="number" id={param.name} className={`param${index}`} style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }} defaultValue={param.default} />
                             </>
                           )
                         })}
