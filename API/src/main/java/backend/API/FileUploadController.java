@@ -14,6 +14,8 @@ package backend.API;
 */
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -166,10 +168,13 @@ public class FileUploadController {
 
 		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();
+		Path absoluteFilePath = storageService.load(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
+		String relativePath = Paths.get("upload-dir").relativize(absoluteFilePath).toString();
 		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
+		"attachment; filename=\"" + relativePath + "\"");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
 
 		return ResponseEntity.ok().headers(responseHeaders).body(file);
 	}

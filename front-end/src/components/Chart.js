@@ -34,6 +34,7 @@ const Chart = ({ fileInformation }) => {
 
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
+    const [fileNames, setFileNames] = useState([]);
 
     const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions, columnInfo) => {
         console.log(inputFiles, outputFiles, analyzerOptions, liveOptions)
@@ -41,6 +42,11 @@ const Chart = ({ fileInformation }) => {
         fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
             method: 'GET'
         }).then(response => {
+            const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
+            setFileNames (prevState => {
+                return [...prevState, filename]
+            })
+            console.log(filename)
             console.log(response);
             response.text().then(text => {
                 var headers = text.trim().split("\n")[0].split(",");
@@ -56,7 +62,7 @@ const Chart = ({ fileInformation }) => {
                     }
                 }
 
-                // Only works for 2 headers atm
+                // Should work for > 2 headers
                 const data = text
                     .trim()
                     .split("\n")
@@ -80,6 +86,7 @@ const Chart = ({ fileInformation }) => {
 
         setLoading(true);
         setParsedData([]);
+        setFileNames([]);
 
         
         
@@ -113,16 +120,16 @@ const Chart = ({ fileInformation }) => {
 
         // Update the chart options with the new data
         setChartOptions((prevState) => {
-            console.log(parsedData)
+            //console.log(parsedData)
             return {
                 ...prevState,
                 series: ( () => {
                     var series = [];
                     var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
                     for (var i = 0; i < parsedData.length; i++) {
-                        console.log(fileInformation)
+                        //console.log(fileInformation)
                         series.push({
-                            name: fileInformation.files[i].columns[0].filename,
+                            name: fileNames[i],
                             data: parsedData[i],
                             colour: colours[i],
                             opacity: 1
