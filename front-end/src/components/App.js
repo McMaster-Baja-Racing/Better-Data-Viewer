@@ -43,11 +43,12 @@ const App = () => {
   //   live: false,
   //   type: "line"
   // }
-  const [fileInformation, setFileInformation] = useState({files: [], live: false});
-  const handleFileTransfer = (e) => {
-    console.log(e)
-    setFileInformation(e);
-  }
+
+  const [chartInformation, setChartInformation] = useState({
+    files: [],
+    live: false,
+    type: "line"
+  });
 
   return (
     <div className="App">
@@ -57,7 +58,7 @@ const App = () => {
         {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} fileTransfer={handleFileTransfer} /> : null}
         {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} fileTransfer={handleFileTransfer} /> : null}
 
-        <Chart fileInformation={fileInformation} />
+        <Chart chartInformation={chartInformation} />
 
       </header>
 

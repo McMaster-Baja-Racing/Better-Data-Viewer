@@ -1,7 +1,6 @@
 //Written by Gavin, history of pain on this one
 package backend.API.live;
 import java.io.FileWriter;
-import java.nio.charset.StandardCharsets;
 import com.fazecast.jSerialComm.*;
 import backend.API.binary_csv.Packet;
 
@@ -27,6 +26,9 @@ public class Serial {
                     setPort = true;
                     break;
                 }
+            } 
+            if (!setPort) {
+                setPort = true;
             }
         }
 

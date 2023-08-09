@@ -3,16 +3,16 @@ import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
-import Papa from "papaparse";
+//import Papa from "papaparse";
 
 Boost(Highcharts);
 
-const Chart = ({ fileInformation }) => {
+const Chart = ({ chartInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
             type: 'line',
-            zoomType: 'x'
+            zoomType: 'xy'
         },
         title: {
             text: 'Template'
@@ -34,6 +34,7 @@ const Chart = ({ fileInformation }) => {
 
     //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
+    const [fileNames, setFileNames] = useState([]);
 
     const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions, columnInfo) => {
         console.log(inputFiles, outputFiles, analyzerOptions, liveOptions)
@@ -41,9 +42,13 @@ const Chart = ({ fileInformation }) => {
         fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
             method: 'GET'
         }).then(response => {
-            console.log(response)
+            const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
+            setFileNames (prevState => {
+                return [...prevState, filename]
+            })
+            console.log(filename)
+            console.log(response);
             response.text().then(text => {
-
                 var headers = text.trim().split("\n")[0].split(",");
                 headers[headers.length-1] = headers[headers.length-1].replace("\r", "")
                 var h = [];
@@ -51,13 +56,13 @@ const Chart = ({ fileInformation }) => {
                 // This will find the index of the headers in the file (works for any number of headers)
                 for (var i = 0; i < headers.length; i++) {
                     for (var j = 0; j < columnInfo.length; j++) {
-                        if (headers[i] == columnInfo[j].header) {
+                        if (headers[i] === columnInfo[j].header) {
                             h.push(i);
                         }
                     }
                 }
 
-                // Only works for 2 headers atm
+                // Should work for > 2 headers
                 const data = text
                     .trim()
                     .split("\n")
@@ -73,54 +78,59 @@ const Chart = ({ fileInformation }) => {
     }
 
     useEffect(() => {
+        console.log(chartInformation)
         
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
-        if (fileInformation.files.length === 0) {
+        if (chartInformation.files.length === 0) {
             return;
         }
 
         setLoading(true);
         setParsedData([]);
+        setFileNames([]);
 
+        
+        
         // Now complete a request for each series
-        for (var i = 0; i < fileInformation.files.length; i++) {
+        for (var i = 0; i < chartInformation.files.length; i++) {
             var files = [];
-
-            for (var j = 0; j < fileInformation.files[i].columns.length; j++) {
+            console.log("ANALYSIS: " + JSON.stringify(chartInformation.files[i]));
+            for (var j = 0; j < chartInformation.files[i].columns.length; j++) {
                 // Create a list of all files in order (formatting for backend)
-                if (!files.includes(fileInformation.files[i].columns[j].filename)) {
-                    files.push(fileInformation.files[i].columns[j].filename);
+                if (!files.includes(chartInformation.files[i].columns[j].filename)) {
+                    files.push(chartInformation.files[i].columns[j].filename);
                 }
             }
-            if (fileInformation.files[i].analyze.variable == null) {
-                getFile(files, [], [fileInformation.files[i].analyze.analysis], ["false"], fileInformation.files[i].columns)
+            
+            if (chartInformation.files[i].analyze.analyzerValues == null || chartInformation.files[i].analyze.analysis == null) {
+                getFile(files, [], [chartInformation.files[i].analyze.analysis],["false"], chartInformation.files[i].columns)
             } else {
-                getFile(files, [], [fileInformation.files[i].analyze.analysis,fileInformation.files[i].analyze.analyzerValues], ["false"], fileInformation.files[i].columns)
+                getFile(files, [], [chartInformation.files[i].analyze.analysis,chartInformation.files[i].analyze.analyzerValues], ["false"], chartInformation.files[i].columns)
             }
         }
 
         // Set files to be all filenames in fileInformation, without duplicates
 
-    }, [fileInformation]);
+    }, [chartInformation]);
 
     useEffect(() => {
         // Once necessary data is fetched, format it for the chart
-        if (fileInformation.files.length === 0) {
+        if (chartInformation.files.length === 0) {
             return;
         }
 
         // Update the chart options with the new data
         setChartOptions((prevState) => {
-            console.log(parsedData)
+            //console.log(parsedData)
             return {
                 ...prevState,
                 series: ( () => {
                     var series = [];
                     var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
                     for (var i = 0; i < parsedData.length; i++) {
-                        console.log(fileInformation)
+                        //console.log(fileInformation)
                         series.push({
-                            name: fileInformation.files[i].columns[0].filename,
+                            name: fileNames[i],
                             data: parsedData[i],
                             colour: colours[i],
                             opacity: 1
@@ -129,24 +139,24 @@ const Chart = ({ fileInformation }) => {
                     return series;
                 })(),
                 title: {
-                    text: fileInformation.files[0].columns[1].header + " vs " + fileInformation.files[0].columns[0].header
+                    text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
                 },
 
                 chart: {
-                    type: fileInformation.type,
+                    type: chartInformation.type,
                     zoomType: 'x'
                 },
 
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-                        type: fileInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
-                        text: fileInformation.files[0].columns[0].header
+                        type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+                        text: chartInformation.files[0].columns[0].header
                     }
                 },
                 yAxis: {
                     title: {
-                        text: fileInformation.files[0].columns[1].header
+                        text: chartInformation.files[0].columns[1].header
                     }
                 },
                 legend: {
@@ -207,8 +217,8 @@ const Chart = ({ fileInformation }) => {
     useEffect(() => {
         let intervalId;
         //for loop to loop through file information array to check if live is true
-        for (var i =0; i<fileInformation.length; i++) {
-            if (fileInformation[i].live){
+        for (var i =0; i<chartInformation.length; i++) {
+            if (chartInformation[i].live){
                 intervalId = setInterval(() => {
                             fetchData();
                         }, 250);

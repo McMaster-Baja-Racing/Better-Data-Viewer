@@ -14,14 +14,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.stream.Stream;
+import java.util.stream.Stream; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -60,9 +59,10 @@ public class FileSystemStorageService implements StorageService {
 	@Override
 	public Stream<Path> loadAll() {
 		try {
-			return Files.walk(this.rootLocation, 1)
-					.filter(path -> !path.equals(this.rootLocation))
-					.map(this.rootLocation::relativize);
+			return Files.walk(this.rootLocation, 2) //optional depth parameter
+			.filter(path -> !Files.isDirectory(path))
+			.map(this.rootLocation::relativize);
+
 		} catch (IOException e) {
 			throw new StorageException("Failed to read stored files", e);
 		}
@@ -107,14 +107,15 @@ public class FileSystemStorageService implements StorageService {
 
 	@Override
 	public String readHeaders(String filename) {
-		String headers = null;
+		// Basically read the first line of the file and return it
 		try {
 			Path file = load(filename);
-			headers = Files.readAllLines(file).get(0);
+			String headers = Files.lines(file).findFirst().get();
+			return headers;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return headers;
 	}
 
 	@Override

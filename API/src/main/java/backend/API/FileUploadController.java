@@ -1,14 +1,21 @@
 package backend.API;
 
 /*
- * "In a production scenario, you more likely would store the files in a temporary location, 
- * a database, or perhaps a NoSQL store (such as Mongo’s GridFS). It is best to NOT load up 
- * the file system of your application with content."
- * 
- * This is probably worth considering...   buuuutttt...  I'm not going to do that.    :D
- */
+ * This is the main controller for the entire backend. It handles all of the requests that come in from the front end
+ * and then sends the appropriate response back. This is the only class that the front end should be interacting with.
+ * There are quite a few moving parts, but each request should have
+ * 		1. A unique mapping to the URL that the request is coming in on. This may include a variale such as {filename}
+ * 		2. A method signature that includes the appropriate parameters (important ones are return type and input variables) for the request.
+ * 			- The return type should generally be a ResponseEntity, which may contain any object that can be converted to JSON
+ * 			- The input variables may be Path variables (such as ex/{filename}), Request Parameters (such as ?filename=), or Request Body (such as the file itself)
+ * 		3. A method body that handles the request and returns the appropriate response.
+ * 			- This may include calling other methods, but it should be self contained.
+ * That's all I got for explanation, the internet and specifically the spring boot guides through their website daeldung.com are your friend.
+*/
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -35,6 +42,9 @@ import backend.API.binary_csv.BinaryTOCSV;
 import backend.API.live.Serial;
 
 import backend.API.analyzer.Analyzer;
+
+import backend.API.model.fileInformation;
+import backend.API.model.fileList;
 
 @Controller
 public class FileUploadController {
@@ -78,37 +88,32 @@ public class FileUploadController {
 	}
 
 	//This is the method that returns information about all the files, to be used by fetch
+	// It returns an object of type fileList from the model folder
 	@GetMapping("/files")
 	@ResponseBody
-	public ResponseEntity<String> listUploadedFiles() throws IOException{
+	public ResponseEntity<fileList> listUploadedFiles() throws IOException{
 
 		//Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		return ResponseEntity.ok().headers(responseHeaders).body(storageService.loadAll().map(
-				path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-						"serveFile", path.getFileName().toString()).build().toUri().toString().substring(28))
-				.collect(Collectors.toList()).toString().substring(1).replace("]", ""));
-		// I added some trims to remove the exact address of the file from the response, and the brackets
-	}
+		fileList files = new fileList();
 
+		// Get name, headers and size of each file
+		storageService.loadAll().forEach(path -> {
+			try {
+				// Get the path and filename of each file and print it
+				long size = storageService.loadAsResource(path.toString()).contentLength();
+				String[] headers = storageService.readHeaders(path.toString()).split(",");
+				files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 
-	@GetMapping("/deleteAllFiles")
-	@ResponseBody
-	public ResponseEntity<String> deleteAllFiles() {
-
-		storageService.deleteAll();
-
-		//Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-		return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
-
-	}
+		return ResponseEntity.ok().headers(responseHeaders).body(files);
+	} 
 
 	//This method returns information about a specific file, given the filename.
 	//It should return the first row of the file (the header row) + [datetime, and the number of rows eventually]
@@ -149,7 +154,7 @@ public class FileUploadController {
 		if (liveOptions[0].equals("true")) {
 			// Maybe do the serial stuff here, but definitely look in live folder for data
 		}
-		System.out.println("hello");
+
 		// Then run the selected analyzer
 		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
 			Analyzer.createAnalyzer(analyzer[0], inputFiles, outputFiles, Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
@@ -158,15 +163,18 @@ public class FileUploadController {
 			//storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
 			outputFiles[outputFiles.length - 1] = "./upload-dir/" + inputFiles[0];
 		}
-		// Then return the final file
-		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1].split("/")[2]);
+		// Then return the final file, removing the prefix for upload dir
+		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
 
 		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();
+		Path absoluteFilePath = storageService.load(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
+		String relativePath = Paths.get("upload-dir").relativize(absoluteFilePath).toString();
 		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
+		"attachment; filename=\"" + relativePath + "\"");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
 
 		return ResponseEntity.ok().headers(responseHeaders).body(file);
 	}
@@ -197,6 +205,7 @@ public class FileUploadController {
 	@ResponseBody
 	public ResponseEntity<String> deleteAll() {
 		storageService.deleteAll();
+		storageService.init();
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		//Set these headers so that you can access from LocalHost
@@ -212,6 +221,9 @@ public class FileUploadController {
 			RedirectAttributes redirectAttributes) {
 
 		String filename = file.getOriginalFilename();
+		if (filename == null) {
+			throw new IllegalArgumentException("No file selected");
+		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
 			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
@@ -232,9 +244,12 @@ public class FileUploadController {
 
 		//Check type of file, either CSV or bin
 		String filename = file.getOriginalFilename();
+		if (filename == null) {
+			throw new IllegalArgumentException("No file selected");
+		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
-			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", true);
 			storageService.delete(filename);
 		} else {
 			storageService.store(file);
