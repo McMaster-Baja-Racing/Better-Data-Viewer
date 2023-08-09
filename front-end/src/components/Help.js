@@ -8,6 +8,9 @@ const Help = () => {
         popup.classList.toggle("show");
     }
 
+    // HI
+    
+
 
     return (
         <div class="popup" onclick="myFunction()">Click me!
