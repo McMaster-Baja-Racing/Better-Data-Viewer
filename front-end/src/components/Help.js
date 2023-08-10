@@ -4,18 +4,20 @@ const Help = () => {
 
 
     function myFunction() {
+        console.log("Hi")
         var popup = document.getElementById("myPopup");
         popup.classList.toggle("show");
     }
 
-    // HI
+    const func = (variable) => {
+        console.log("Hi")
+        var popup = document.getElementById("myPopup");
+        popup.classList.toggle("show");
+    }
 
-
-    // Go way
-
-
+    // JSX not HTML
     return (
-        <div class="popup" onclick="myFunction()">Click me!
+        <div class="popup" onClick={() => {myFunction()}}>Click me!
             <span class="popuptext" id="myPopup">Popup text...</span>
         </div>
     );

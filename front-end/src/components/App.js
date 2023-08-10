@@ -55,8 +55,8 @@ const App = () => {
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} />
       <header className="App-header">
         <Help />
-        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} fileTransfer={handleFileTransfer} /> : null}
-        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} fileTransfer={handleFileTransfer} /> : null}
+        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} /> : null}
+        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} /> : null}
 
         <Chart chartInformation={chartInformation} />
 

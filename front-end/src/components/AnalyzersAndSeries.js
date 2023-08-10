@@ -18,7 +18,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
     }
 
     const analyzers = [
-        { name: "None", code: null, parameters: [], checked: true },
+        { name: "None", code: null, parameters: [], checked: true, info: {title: "Bitch", paragraph1 : "bitch bitch bitch", link: "bitch.org"} },
         { name: "Linear Interpolate", code: "linearInterpolate", parameters: [] },
         { name: "Accel Curve", code: "accelCurve", parameters: [] },
         { name: "Rolling Average", code: "rollAvg", parameters: [{ name: "WindowSize", default: "100" }] },
@@ -81,6 +81,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                             <div className="rowFlexBox">
                                 <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
                                 <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
+                                
                                 {analyzer.parameters.length <= 0 ? null :
                                     <details>
                                         <summary></summary>
@@ -98,6 +99,11 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                         </div>
                                     </details>
                                 }
+                                {analyzer.name == "None" ? <div className="infoSection">
+                                    <h1>{analyzer.info.title}</h1>
+                                    <p>{analyzer.info.paragraph1}</p>
+                                    <a href={analyzer.info.link}>Learn More</a>
+                                </div> : null}
                             </div>
                         </div>
                     )
