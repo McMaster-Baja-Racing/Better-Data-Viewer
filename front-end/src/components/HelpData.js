@@ -3,35 +3,35 @@
 const helpData = {
     none: {
       title: "No Analyzer.",
-      description: "None info...",
+      description: "Probably self-explanatory",
     },
     linearInterpolate: {
       title: "Linear Interpolate.",
-      description: "Linear interpolate info...",
+      description: "Interpolates linearly",
     },
     accelCurve: {
       title: "Accel Curve.",
-      description: "Accel curve info...",
+      description: "Acceleration curve",
     },
     rollAvg: {
         title: "Rolling Average.",
-        description: "Rolling average info...",
+        description: "Rolling average",
       },
       RDPCompression: {
         title: "RDP Compression.",
-        description: "RDP compression info...",
+        description: "Squish squish --> better",
       },
       sGolay: {
         title: "sGolay.",
-        description: "sGolay info...",
+        description: "Savitzky–Golay --> smooth",
       },
       split: {
         title: "Split.",
-        description: "Split info...",
+        description: "Splits..?",
       },
       linearMultiply: {
         title: "Linear Multiply.",
-        description: "Linear multiply info...",
+        description: "Multiplies linearly",
       },
   };
   
