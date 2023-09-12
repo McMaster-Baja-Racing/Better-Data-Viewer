@@ -1,5 +1,4 @@
 // probably too verbose to put in the actual code
-
 const helpData = {
     none: {
       title: "No Analyzer.",

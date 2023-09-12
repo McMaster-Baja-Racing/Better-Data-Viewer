@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import "../styles/help.css";
 
-const Help = ({ popupText }) => {
+const Help = ({ popupText, popupImg }) => {
   const [showPopup, setShowPopup] = useState(false);
 
   const togglePopup = () => {
@@ -13,8 +13,9 @@ const Help = ({ popupText }) => {
       <span className="popup-button" onClick={togglePopup}>Help..?</span>
       {showPopup && (
         <div className="popuptext">
-          {popupText}
-        </div>
+        {popupText}
+        {popupImg && <div className="popupimg">{popupImg}</div>}
+      </div>
       )}
     </div>
   );

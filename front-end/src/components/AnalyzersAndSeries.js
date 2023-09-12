@@ -116,6 +116,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                             helpData.linearInterpolate.title + '\n' + 
                                             helpData.linearInterpolate.description
                                         }
+                                        popupImg = {<img src="/linint_95x74.png" alt="Linear Interpolate Image"></img>} 
                                     />
                                 </div> : null}
 
