@@ -1,26 +1,23 @@
-import "../styles/help.css"
+import React, { useState } from 'react';
+import "../styles/help.css";
 
-const Help = () => {
+const Help = ({ popupText }) => {
+  const [showPopup, setShowPopup] = useState(false);
 
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
 
-    function myFunction() {
-        console.log("Hi")
-        var popup = document.getElementById("myPopup");
-        popup.classList.toggle("show");
-    }
-
-    const func = (variable) => {
-        console.log("Hi")
-        var popup = document.getElementById("myPopup");
-        popup.classList.toggle("show");
-    }
-
-    // JSX not HTML
-    return (
-        <div class="popup" onClick={() => {myFunction()}}>Click me!
-            <span class="popuptext" id="myPopup">Popup text...</span>
+  return (
+    <div className="popup-container">
+      <span className="popup-button" onClick={togglePopup}>Help..?</span>
+      {showPopup && (
+        <div className="popuptext">
+          {popupText}
         </div>
-    );
+      )}
+    </div>
+  );
 }
 
 export default Help;

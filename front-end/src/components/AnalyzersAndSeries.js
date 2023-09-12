@@ -1,4 +1,6 @@
 import '../styles/modalStyles.css';
+import Help from './Help';
+import helpData from './HelpData';
 
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
@@ -18,7 +20,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
     }
 
     const analyzers = [
-        { name: "None", code: null, parameters: [], checked: true, info: {title: "Bitch", paragraph1 : "bitch bitch bitch", link: "bitch.org"} },
+        { name: "None", code: null, parameters: [], checked: true },
         { name: "Linear Interpolate", code: "linearInterpolate", parameters: [] },
         { name: "Accel Curve", code: "accelCurve", parameters: [] },
         { name: "Rolling Average", code: "rollAvg", parameters: [{ name: "WindowSize", default: "100" }] },
@@ -99,10 +101,76 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                         </div>
                                     </details>
                                 }
-                                {analyzer.name == "None" ? <div className="infoSection">
-                                    <h1>{analyzer.info.title}</h1>
-                                    <p>{analyzer.info.paragraph1}</p>
-                                    <a href={analyzer.info.link}>Learn More</a>
+                                {analyzer.name === "None" ? <div className="info">
+                                    <Help 
+                                        popupText={
+                                            helpData.none.title + '\n' + 
+                                            helpData.none.description
+                                        }
+                                    />
+                                </div> : null}
+
+                                {analyzer.name === "Linear Interpolate" ? <div className="info">
+                                    <Help 
+                                        popupText={
+                                            helpData.linearInterpolate.title + '\n' + 
+                                            helpData.linearInterpolate.description
+                                        }
+                                    />
+                                </div> : null}
+
+                                {analyzer.name === "Accel Curve" ? <div className="info">
+                                    <Help 
+                                        popupText={
+                                            helpData.accelCurve.title + '\n' + 
+                                            helpData.accelCurve.description
+                                        }
+                                    />
+                                </div> : null}
+
+                                {analyzer.name === "Rolling Average" ? <div className="info">
+                                    <Help 
+                                        popupText={
+                                            helpData.rollAvg.title + '\n' + 
+                                            helpData.rollAvg.description
+                                        }
+                                    />
+                                </div> : null}
+
+                                {analyzer.name === "RDP Compression" ? <div className="info">
+                                    <Help 
+                                        popupText={
+                                            helpData.RDPCompression.title + '\n' + 
+                                            helpData.RDPCompression.description
+                                        }
+                                    />
+                                </div> : null}
+
+                                {analyzer.name === "sGolay" ? <div className="info">
+                                    <Help 
+                                        popupText={
+                                            helpData.sGolay.title + '\n' + 
+                                            helpData.sGolay.description
+                                        }
+                                    />
+                                </div> : null}
+
+                                {analyzer.name === "Split" ? <div className="info">
+                                    <Help 
+                                        popupText={
+                                            helpData.split.title + '\n' + 
+                                            helpData.split.description
+                                        }
+                                    />
+                                </div> : null}
+
+                                {analyzer.name === "Linear Multiply" ? <div className="info">
+                                    <Help 
+                                        popupText={
+                                            helpData.linearMultiply.title + '\n' + 
+                                            helpData.linearMultiply.description
+                                        }
+                                    />
                                 </div> : null}
                             </div>
                         </div>

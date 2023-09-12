@@ -5,7 +5,6 @@ import { UploadModal } from "./uploadModal";
 import React, { useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
-import Help from './Help';
 
 const App = () => {
 
@@ -54,7 +53,7 @@ const App = () => {
     <div className="App">
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} />
       <header className="App-header">
-        <Help />
+
         {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} /> : null}
         {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} /> : null}
 

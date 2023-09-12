@@ -1,52 +1,50 @@
 /* Popup container */
-.popup {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-  }
-  
-  /* The actual popup (appears on top) */
-  .popup .popuptext {
-    visibility: hidden;
-    width: 160px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 8px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -80px;
-  }
-  
-  /* Popup arrow */
-  .popup .popuptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-  }
-  
-  /* Toggle this class when clicking on the popup container (hide and show the popup) */
-  .popup .show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s
-  }
-  
-  /* Add animation (fade in the popup) */
-  @-webkit-keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
-  }
-  
-  @keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity:1 ;}
-  }
+.popup-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Popup button */
+.popup-button {
+  cursor: pointer;
+  padding: 10px 10px;
+  background-color: transparent;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* The actual popup */
+.popuptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 10px;
+  position: absolute;
+  z-index: 999;
+  top: 50%;
+  left: 200%;
+  transform: translateY(-50%);
+}
+
+/* Popup arrow */
+.popuptext::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -4px; 
+  margin-top: -5px; 
+  border-width: 5px 5px 5px 0; 
+  border-style: solid;
+  border-color: transparent #555 transparent transparent; 
+}
+
+/* Show the popup when the button is hovered */
+.popup-container:hover .popuptext {
+  visibility: visible;
+}
