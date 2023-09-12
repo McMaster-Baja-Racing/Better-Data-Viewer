@@ -49,16 +49,21 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer,
 
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
-            selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
+           
+            if (document.getElementsByClassName(i)[0].value === "") {
+                alert("Please select a column for the x-axis.");
+                return;
+            } else{
+                selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
+            }
         }
-
+    
         seriesInfo.push({
             "columns": selectColumns,
             "analyze": {
                 "analysis": analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
                 "analyzerValues": getAnalyzerOptions()
             }
-
         })
         console.log(seriesInfo)
     }
@@ -70,10 +75,12 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer,
             alert("Please select a column for the x-axis.");
             return;
         }
+        
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
             selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
         }
+
         fileTransfer({
             "files": seriesInfo,
             "live": liveCheck,

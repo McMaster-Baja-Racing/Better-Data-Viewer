@@ -15,13 +15,11 @@ const GraphSettings = ({setDisplayPage,setFiles,setGraphType, setLiveCheck}) => 
         .then(response => response.json())
         .then(data => {
           console.log(data)
-          setFiles(data.files);
-        })
+          setFiles(data.files);})
     }
 
     const graphType = () => {
       setGraphType (document.getElementById("graphTypeSelect").value);
-      console.log(setGraphType)
       
     }
 

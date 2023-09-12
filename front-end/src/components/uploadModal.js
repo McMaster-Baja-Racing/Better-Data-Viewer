@@ -77,6 +77,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
     //setShowUploadModal(false); Dont need to do this neccesarily
   };
 
+ 
 
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
