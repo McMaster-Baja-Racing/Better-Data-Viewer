@@ -2,6 +2,7 @@ import '../styles/App.css';
 import '../styles/modalStyles.css';
 import { CreateGraphModal } from "./CreateGraphModal";
 import { UploadModal } from "./uploadModal";
+import { HelpModal } from "./helpModal";
 import React, { useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
@@ -17,6 +18,12 @@ const App = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const openUploadModal = () => {
     setShowUploadModal(true);
+  }
+
+  // All for help popup
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const openHelpModal = () => {
+    setShowHelpModal(true);
   }
 
   // All for information transfer between children and parent
@@ -51,11 +58,12 @@ const App = () => {
 
   return (
     <div className="App">
-      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} />
+      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
 
         {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} /> : null}
         {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} /> : null}
+        {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
 
         <Chart chartInformation={chartInformation} />
 
