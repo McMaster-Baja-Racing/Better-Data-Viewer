@@ -1,6 +1,6 @@
 import '../styles/modalStyles.css';
 
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer, setShowModal, graphType, liveCheck }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
     const columnGenerator = (n) => {
         let arr = [];
@@ -89,6 +89,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer,
         setShowModal(false);
     }
 
+
     return (
         <div className="colFlexBox">
             <h3>Select Axis</h3>
@@ -132,7 +133,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, fileTransfer,
             </div>
             <div className="buttonFlexBox">
                 <button className="submitbutton" onClick={() => {setDisplayPage(2)}}>Back</button>
-                <button className="submitbutton" onClick={() => { handleSubmit(); }}>Submit</button>
+                <button className="submitbutton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
             </div>
         </div>
     )

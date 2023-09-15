@@ -42,21 +42,22 @@ const App = () => {
   //   live: false,
   //   type: "line"
   // }
-  const [fileInformation, setFileInformation] = useState({files: [], live: false});
-  const handleFileTransfer = (e) => {
-    console.log(e)
-    setFileInformation(e);
-  }
+
+  const [chartInformation, setChartInformation] = useState({
+    files: [],
+    live: false,
+    type: "line"
+  });
 
   return (
     <div className="App">
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} />
       <header className="App-header">
 
-        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} fileTransfer={handleFileTransfer} /> : null}
-        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} fileTransfer={handleFileTransfer} /> : null}
+        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} /> : null}
+        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} /> : null}
 
-        <Chart fileInformation={fileInformation} />
+        <Chart chartInformation={chartInformation} />
 
       </header>
 
