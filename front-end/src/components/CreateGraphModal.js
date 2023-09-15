@@ -280,11 +280,13 @@ export const CreateGraphModal = ({ setShowModal, fileTransfer }) => {
     return (
       <div key={analyzer.name}>
         <div className="rowFlexBox">
+          <div className="scrollcolFlexBox">
           <input type="radio" id={analyzer.name} name="analyzerChoice" value="true"></input>
+          </div>
           {analyzer.parameters.length > 0 ? (
             <details>
               <summary><strong>{analyzer.name}</strong></summary>
-              <div className="scrollColFlexBox">
+              <div style={{flex: "column"}}>
                 <div className="rowFlexBox">
                   <label htmlFor="param1" style={{ marginRight: "5px" }}>{analyzer.parameters[0]}</label>
                   <input type="number" id={analyzer.parameters[0]} className="param1" style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }}></input>
