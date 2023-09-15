@@ -49,13 +49,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
 
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
-           
-            if (document.getElementsByClassName(i)[0].value === "") {
-                alert("Please select a column for the x-axis.");
-                return;
-            } else{
-                selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
-            }
+            selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
         }
     
         seriesInfo.push({
@@ -67,20 +61,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         })
         console.log(seriesInfo)
     }
-
-    const onSubmit = (e) => {
-        //Check if they are empty
-        if (document.getElementsByClassName(0)[0].value === "") {
-            alert("Please select a column for the x-axis.");
-            return;
-        }
     
-        addSeries(); 
-        handleSubmit(seriesInfo); 
-        setShowModal(false);
-    }
-
-
     return (
         <div className="colFlexBox">
             <h3>Select Axis</h3>
@@ -124,7 +105,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
             </div>
             <div className="buttonFlexBox">
                 <button className="submitbutton" onClick={() => {setDisplayPage(2)}}>Back</button>
-                <button className="submitbutton" onClick={() => {onSubmit()}}>Submit</button>
+                <button className="submitbutton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false);}}>Submit</button>
             </div>
         </div>
     )
