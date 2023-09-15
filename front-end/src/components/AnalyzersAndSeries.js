@@ -68,24 +68,15 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         console.log(seriesInfo)
     }
 
-    const handleSubmit = (e) => {
-        addSeries();
+    const onSubmit = (e) => {
         //Check if they are empty
         if (document.getElementsByClassName(0)[0].value === "") {
             alert("Please select a column for the x-axis.");
             return;
         }
-        
-        var selectColumns = [];
-        for (let i = 0; i < dimensions; i++) {
-            selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
-        }
-
-        fileTransfer({
-            "files": seriesInfo,
-            "live": liveCheck,
-            "type": graphType
-        })
+    
+        addSeries(); 
+        handleSubmit(seriesInfo); 
         setShowModal(false);
     }
 
@@ -133,7 +124,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
             </div>
             <div className="buttonFlexBox">
                 <button className="submitbutton" onClick={() => {setDisplayPage(2)}}>Back</button>
-                <button className="submitbutton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
+                <button className="submitbutton" onClick={() => {onSubmit()}}>Submit</button>
             </div>
         </div>
     )
