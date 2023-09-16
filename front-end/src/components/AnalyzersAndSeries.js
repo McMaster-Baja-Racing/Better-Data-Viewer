@@ -51,18 +51,17 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         for (let i = 0; i < dimensions; i++) {
             selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
         }
-
+    
         seriesInfo.push({
             "columns": selectColumns,
             "analyze": {
                 "analysis": analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
                 "analyzerValues": getAnalyzerOptions()
             }
-
         })
         console.log(seriesInfo)
     }
-
+    
     return (
         <div className="colFlexBox">
             <h3>Select Axis</h3>
@@ -106,7 +105,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
             </div>
             <div className="buttonFlexBox">
                 <button className="submitbutton" onClick={() => {setDisplayPage(2)}}>Back</button>
-                <button className="submitbutton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
+                <button className="submitbutton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false);}}>Submit</button>
             </div>
         </div>
     )

@@ -123,6 +123,10 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, se
         <button className="submitbutton" onClick={() => {setDisplayPage(1)}}>Back</button>
         <button className="submitbutton" onClick={() => {
           // OnClick, it should get the selected files from the file storage component
+          if (selectedFiles.length === 0) {
+            alert("Please select at least one file.");
+            return;
+          }
           console.log("selected files")
           console.log(selectedFiles)
           getHeaders(selectedFiles)
