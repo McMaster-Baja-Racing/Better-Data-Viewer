@@ -32,7 +32,7 @@ const Topbar = ({ openCreateGraphModal, openUploadModal }) => {
                 <img src={process.env.PUBLIC_URL + 'eeee.gif'} alt="baja_logo"/>
             </div>
             <div className="buttons">
-                <button className="beginLive" onClick={beginLiveData}>{liveStatus}</button>
+                {/* <button className="beginLive" onClick={beginLiveData}>{liveStatus}</button> */}
                 <button className="createGraph" onClick={openCreateGraphModal}>Create Graph</button>
                 <button className="createGraph" onClick={openUploadModal}>Upload Files</button>
             </div>

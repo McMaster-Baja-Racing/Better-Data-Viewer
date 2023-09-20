@@ -1,0 +1,62 @@
+.App {
+    text-align: center;
+}
+    .graph-settings-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    flex: 1;
+    min-height : 30rem;
+    min-width: 35rem;
+    }
+    .NoSpaceBox{
+        margin : 0;
+        padding : 0;
+    } 
+
+    .liveDataBox{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+        margin : 0;
+    }
+
+    .textboxbold{
+        margin : 0;
+        padding : 0;
+        font-size: 20px;
+
+    }
+
+    .header2{
+        margin : 0;
+        padding : 0;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .GraphTypeSelect {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    .GraphSettingsNextButton{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    .pageOneNextButton {
+        margin: 1em;
+        padding: 13px 29px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+        background: crimson;
+        color: white;
+        cursor: pointer;
+    }

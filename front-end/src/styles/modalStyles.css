@@ -105,9 +105,6 @@
     justify-content: flex-start;
   }
 
-  .graphTypeSelect {
-    margin-bottom: 4em;
-  }
 
   .buttonFlexBox{
     display: flex;
