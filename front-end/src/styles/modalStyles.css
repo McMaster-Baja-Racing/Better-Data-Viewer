@@ -11,6 +11,9 @@
     background: crimson;
     color: white;
     cursor: pointer;
+    max-width: 100%; 
+    overflow: hidden; 
+    white-space: nowrap; 
   }
   .App logobutton {
     border: none;
