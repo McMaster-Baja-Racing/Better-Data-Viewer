@@ -81,3 +81,20 @@ div.footer {
     overflow-y: auto;
     display: block;
 }
+
+
+.file-Storage-Container {
+display: flex;
+flex-direction: column;
+justify-content: left;
+align-items: left;
+flex: 1;
+min-height : 30rem;
+min-width: 35rem;
+}
+
+.buttonFlexBox{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }

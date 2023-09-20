@@ -108,7 +108,7 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, se
     }
 
     return (
-        <div>
+        <div className='file-Storage-Container'>
             <div className="file-browser">
                 <h3>Choose Files</h3>
                 <RawFileBrowser

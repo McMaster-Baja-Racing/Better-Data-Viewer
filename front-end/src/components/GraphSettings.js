@@ -40,7 +40,7 @@ const GraphSettings = ({setDisplayPage,setFiles,setGraphType, setLiveCheck}) => 
 
     <div className='header2'>Graph Options</div>
     <br></br>
-        
+        <div className='graphOptionsCol1'>
           <div className='liveDataBox'>
             <div classname ="textboxbold">Live Data</div><br></br>
             <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
@@ -53,6 +53,7 @@ const GraphSettings = ({setDisplayPage,setFiles,setGraphType, setLiveCheck}) => 
               <option value="spline">spline</option>
               <option value="scatter"> scatter</option>
             </select>
+            </div>
           </div>
           <div className="GraphSettingsNextButton">
             <button className="pageOneNextButton" onClick={() => {liveData(); graphType(); listFiles(); setDisplayPage(2);  }}>Next</button>

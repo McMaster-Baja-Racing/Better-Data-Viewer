@@ -1,4 +1,5 @@
 import '../styles/modalStyles.css';
+import '../styles/analyzersAndSeriesStyles.css';
 
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
@@ -65,13 +66,13 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
     return (
         <div className="colFlexBox">
             <h3>Select Axis</h3>
-            <div className="rowFlexBox">
+            <div className="columnHeaders">
                 {columnGenerator(dimensions)}
             </div>
             <div className="pushLeftFlexBox">
                 <button onClick={addSeries}>Add Series</button>
             </div>
-            <h3>Select Analyzers</h3>
+            <h3>Select Analyzer</h3>
             <div className="scrollColFlexBox">
                 {Object.values(analyzers).map((analyzer) => {
                     return (
