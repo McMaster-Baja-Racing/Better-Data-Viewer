@@ -17,7 +17,7 @@
 
 /* The actual popup */
 .popuptext {
-  visibility: hidden;
+  /* visibility: visible; */
   width: 200px;
   background-color: #555;
   color: #fff;
@@ -42,9 +42,4 @@
   border-width: 5px 5px 5px 0; 
   border-style: solid;
   border-color: transparent #555 transparent transparent; 
-}
-
-/* Show the popup when the button is hovered */
-.popup-container:hover .popuptext {
-  visibility: visible;
 }

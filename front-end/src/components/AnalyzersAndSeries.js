@@ -101,78 +101,9 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                         </div>
                                     </details>
                                 }
-                                {analyzer.name === "None" ? <div className="info">
-                                    <Help 
-                                        popupText={
-                                            helpData.none.title + '\n' + 
-                                            helpData.none.description
-                                        }
-                                    />
-                                </div> : null}
-
-                                {analyzer.name === "Linear Interpolate" ? <div className="info">
-                                    <Help 
-                                        popupText={
-                                            helpData.linearInterpolate.title + '\n' + 
-                                            helpData.linearInterpolate.description
-                                        }
-                                        popupImg = {<img src="/linint_95x74.png" alt="Linear Interpolate Image"></img>} 
-                                    />
-                                </div> : null}
-
-                                {analyzer.name === "Accel Curve" ? <div className="info">
-                                    <Help 
-                                        popupText={
-                                            helpData.accelCurve.title + '\n' + 
-                                            helpData.accelCurve.description
-                                        }
-                                    />
-                                </div> : null}
-
-                                {analyzer.name === "Rolling Average" ? <div className="info">
-                                    <Help 
-                                        popupText={
-                                            helpData.rollAvg.title + '\n' + 
-                                            helpData.rollAvg.description
-                                        }
-                                    />
-                                </div> : null}
-
-                                {analyzer.name === "RDP Compression" ? <div className="info">
-                                    <Help 
-                                        popupText={
-                                            helpData.RDPCompression.title + '\n' + 
-                                            helpData.RDPCompression.description
-                                        }
-                                    />
-                                </div> : null}
-
-                                {analyzer.name === "sGolay" ? <div className="info">
-                                    <Help 
-                                        popupText={
-                                            helpData.sGolay.title + '\n' + 
-                                            helpData.sGolay.description
-                                        }
-                                    />
-                                </div> : null}
-
-                                {analyzer.name === "Split" ? <div className="info">
-                                    <Help 
-                                        popupText={
-                                            helpData.split.title + '\n' + 
-                                            helpData.split.description
-                                        }
-                                    />
-                                </div> : null}
-
-                                {analyzer.name === "Linear Multiply" ? <div className="info">
-                                    <Help 
-                                        popupText={
-                                            helpData.linearMultiply.title + '\n' + 
-                                            helpData.linearMultiply.description
-                                        }
-                                    />
-                                </div> : null}
+                                <div className="info">
+                                    <Help data={helpData[analyzer.code]}/>
+                                </div>
                             </div>
                         </div>
                     )
