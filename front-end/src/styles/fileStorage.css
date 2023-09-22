@@ -93,8 +93,34 @@ min-height : 30rem;
 min-width: 35rem;
 }
 
-.buttonFlexBox{
+.fileButtons{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-top: auto;
   }
+
+  .pageTwoNextButton {
+    margin: 1em;
+    padding: 13px 29px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background: crimson;
+    color: white;
+    cursor: pointer;
+}
+.pageTwoBackButton {
+    margin: 1em;
+    padding: 13px 29px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background: crimson;
+    color: white;
+    cursor: pointer;
+}

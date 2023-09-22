@@ -106,12 +106,7 @@
   }
 
 
-  .buttonFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
+ 
   .pushRightFlexBox{
     display: flex;
     flex-direction: row;
@@ -130,10 +125,7 @@
     justify-content: space-between;
   }
 
-  .boldText{
-    font-weight: bold;
-    margin : 0.5em;
-  }
+
   
   .btn {
     height : 2em;

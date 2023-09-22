@@ -1,4 +1,3 @@
-import '../styles/modalStyles.css';
 import '../styles/analyzersAndSeriesStyles.css';
 
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
@@ -64,28 +63,28 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
     }
     
     return (
-        <div className="colFlexBox">
+        <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
             <div className="columnHeaders">
                 {columnGenerator(dimensions)}
             </div>
-            <div className="pushLeftFlexBox">
+            <div className="addSeries">
                 <button onClick={addSeries}>Add Series</button>
             </div>
             <h3>Select Analyzer</h3>
-            <div className="scrollColFlexBox">
+            <div className="analyzerContainer">
                 {Object.values(analyzers).map((analyzer) => {
                     return (
 
                         <div key={analyzer.name}>
-                            <div className="rowFlexBox">
+                            <div className="analyzerBox">
                                 <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
                                 <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
                                 {analyzer.parameters.length <= 0 ? null :
                                     <details>
                                         <summary></summary>
-                                        <div className="scrollColFlexBox">
-                                            <div className="rowFlexBox">
+                                        <div style={{flex: "column"}}>
+                                            <div className="expandBox">
                                                 {analyzer.parameters.map((param, index) => {
                                                     return (
                                                         <>
@@ -105,8 +104,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                 )}
             </div>
             <div className="buttonFlexBox">
-                <button className="submitbutton" onClick={() => {setDisplayPage(2)}}>Back</button>
-                <button className="submitbutton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false);}}>Submit</button>
+                <button className="pageThreeBackButton" onClick={() => {setDisplayPage(2)}}>Back</button>
+                <button className="pageThreeNextButton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false);}}>Submit</button>
             </div>
         </div>
     )

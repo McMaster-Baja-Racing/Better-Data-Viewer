@@ -119,9 +119,9 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, se
                     folderRenderer={CustomFolderRenderer}
                 />
             </div>
-            <div className="buttonFlexBox">
-        <button className="submitbutton" onClick={() => {setDisplayPage(1)}}>Back</button>
-        <button className="submitbutton" onClick={() => {
+            <div className="fileButtons">
+        <button className="pageTwoBackButton" onClick={() => {setDisplayPage(1)}}>Back</button>
+        <button className="pageTwoNextButton" onClick={() => {
           // OnClick, it should get the selected files from the file storage component
           if (selectedFiles.length === 0) {
             alert("Please select at least one file.");

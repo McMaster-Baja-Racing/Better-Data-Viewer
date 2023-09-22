@@ -1,4 +1,3 @@
-import '../styles/modalStyles.css';
 import '../styles/GraphSettingsStyles.css';
 
 const GraphSettings = ({setDisplayPage,setFiles,setGraphType, setLiveCheck}) => {
@@ -36,17 +35,16 @@ const GraphSettings = ({setDisplayPage,setFiles,setGraphType, setLiveCheck}) => 
     <p>2. Select the files you want to graph</p>
     <p>3. Select the column headers you want on your graph</p>
     <p>4. Select the analyzer you want to use on your data</p>
-    <p>5. Click "Submit"</p>
 
     <div className='header2'>Graph Options</div>
     <br></br>
         <div className='graphOptionsCol1'>
           <div className='liveDataBox'>
-            <div classname ="textboxbold">Live Data</div><br></br>
+            <div className ="textboxbold">Live Data</div><br></br>
             <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
           </div> 
           <br></br>
-          <div classname ="textboxbold">Graph Types</div>
+          <div className ="textboxbold">Graph Types</div>
           <div className="GraphTypeSelect">
             <select id="graphTypeSelect" >
               <option value="line">line</option>
