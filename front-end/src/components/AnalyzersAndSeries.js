@@ -101,9 +101,11 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                         </div>
                                     </details>
                                 }
+
                                 <div className="info">
                                     <Help data={helpData[analyzer.code]}/>
                                 </div>
+
                             </div>
                         </div>
                     )

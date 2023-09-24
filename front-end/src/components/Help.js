@@ -1,38 +1,39 @@
 import React, { useState } from 'react';
 import "../styles/help.css";
 
-const Help = ({ data, popupText, popupImg, popupLinks }) => {
-  const [showPopup, setShowPopup] = useState(false);
+const HelpButton = ({ onClick }) => {
+  return (
+    <span className="popup-button" onClick={onClick}>Help..?</span>
+  );
+}
 
-  const {title, description, image, links} = data;
+const HelpPopup = ({ data }) => {
+  const { title, description, image, links } = data;
+
+  return (
+    <div className="popuptext">
+      <h1>{title}</h1>
+      <p>{description}</p>
+      {image && <img src={image.link} alt={image.alt} style={{ width: 200, height: 200 }} />}
+      <div></div>
+      {links && links.map((link) => (
+        <a href={link.link} target="_blank" rel="noreferrer">{link.title}</a>
+      ))}
+    </div>
+  );
+}
+
+const Help = ({ data }) => {
+  const [showPopup, setShowPopup] = useState(false);
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
   };
 
   return (
-    <div className="popup-container">
-      <span className="popup-button" onClick={togglePopup}>Help..?</span>
-      {showPopup && (
-        <div className="popuptext">
-          <h1>
-            {title}
-          </h1>
-          <p>
-            {description}
-          </p>
-        {image && <img src={image.link} alt={image.alt}/>}
-        {popupLinks}
-
-        {links && links.map((link) => {
-          console.log(link)
-          return (
-              <a href={link.link} target="_blank" rel="noreferrer">{link.title}</a>
-          )})}
-      </div>
-      
-
-      )}
+    <div>
+      <HelpButton onClick={togglePopup} /> {}
+      {showPopup && <HelpPopup data={data} />} {}
     </div>
   );
 }
