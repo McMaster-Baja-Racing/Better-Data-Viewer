@@ -62,3 +62,9 @@ p{
 h1{
   font-size:2rem;
 }
+
+.comma {
+  color: crimson; 
+  font-weight: bold; 
+  font-size: medium;
+}

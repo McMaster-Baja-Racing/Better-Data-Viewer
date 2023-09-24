@@ -16,9 +16,16 @@ const HelpPopup = ({ data }) => {
       <p>{description}</p>
       {image && <img src={image.link} alt={image.alt} style={{ width: 200, height: 200 }} />}
       <div></div>
-      {links && links.map((link) => (
-        <a href={link.link} target="_blank" rel="noreferrer">{link.title}</a>
-      ))}
+      {links && (
+        <div>
+          {links.map((link, index) => (
+            <React.Fragment key={link.link}>
+              <a href={link.link} target="_blank" rel="noreferrer">{link.title}</a>
+              {index < links.length - 1 && <span className="comma">, </span>}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
