@@ -83,3 +83,6 @@
   color: white;
   cursor: pointer;
 }
+.flexcol{
+  flex-direction: column;
+}
