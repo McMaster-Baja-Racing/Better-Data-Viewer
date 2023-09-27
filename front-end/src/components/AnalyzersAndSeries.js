@@ -91,18 +91,19 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                                         <>
                                                             <label htmlFor={`param${index}`}>{`${param.name} ->`}</label>
                                                             <input type="number" id={param.name} className={`param${index}`} style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }} defaultValue={param.default} />
-                                                        </></div>
+                                                        </>
+                                                        </div>
                                                     )
                                                 })}
-                                            </div>
+                                           </div>
                                         
                                     </details>
                                     ) : (
                                         <label><strong>{analyzer.name}</strong></label>
-                                      )}
+                                      )} 
                                 
                             </div>
-                        </div>
+                       <br></br> </div>
                     )
                 }
                 )}
