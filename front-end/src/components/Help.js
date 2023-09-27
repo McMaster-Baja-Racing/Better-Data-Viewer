@@ -14,14 +14,14 @@ const HelpPopup = ({ data }) => {
     <div className="popuptext">
       <h1>{title}</h1>
       <p>{description}</p>
-      {image && <img src={image.link} alt={image.alt} style={{ width: 200, height: 200 }} />}
+      {image && <img src={image.link} alt={image.alt} style={{ width: 250, height: 200 }} />}
       <div></div>
       {links && (
         <div>
           {links.map((link, index) => (
             <React.Fragment key={link.link}>
               <a href={link.link} target="_blank" rel="noreferrer">{link.title}</a>
-              {index < links.length - 1 && <span className="comma">, </span>}
+              {index < links.length - 1 && ', '}
             </React.Fragment>
           ))}
         </div>

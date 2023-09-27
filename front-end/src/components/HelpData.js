@@ -18,7 +18,7 @@ const helpData = {
       title: "Interpolation",
       description: "Interpolation is the act of adding new data points between existing data points. This is useful for making data more readable, or for making it easier to compare data sets. This is implemented linearly.",
       image: {
-        link: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/LinearInterpolation.svg/450px-LinearInterpolation.svg.png",
+        link: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/LinearInterpolation.svg/450px-LinearInter  polation.svg.png",
         alt: "Linear Interpolate Image"
       },
       links: [
@@ -30,15 +30,15 @@ const helpData = {
     },
     accelCurve: {
       title: "Acceleration Curve Tool",
-      description: "Given both primary and secondary rpm values, this tool will first apply a noise reduction algorithm, and then interpolate between them to achieve a graph that displays the shift curve. ",
+      description: "Given both primary and secondary RPM values, this tool will first apply a noise reduction algorithm, and then interpolate between them to achieve a graph that displays the shift curve. ",
       image: {
-        link: "GET ANB IMAGE FROM DRIVETRAIN",
+        link: "./accel.png",
         alt: "fuck u"
       },
       links: [
         {
-          title: "GET THE HANDY DANDY BOOLKET FROM DRIVETRAIN",
-          link: "virus.com",
+          title: "CVT Shifting Stages",
+          link: "CVT_Tutorial-part-2.pdf",
         },
       ]
     },
@@ -46,13 +46,13 @@ const helpData = {
         title: "Moving Average",
         description: "Given noisy data, this will take the average over a window of points. This should help reduce noise, but can add other imperfections.",
         image: {
-          link: "/linint_95x74.png",
-          alt: "Linear Interpolate Image"
+          link: "./rollAvg.png",
+          alt: "rollAvg Image"
         },
         links: [
           {
-            title: "Y = mx + b",
-            link: "https://byjus.com/maths/y-mx-b/#:~:text=y%20%3D%20mx%20%2B%20b%20is%20the,how%20steep%20the%20line%20is.",
+            title: "Moving Average",
+            link: "https://en.wikipedia.org/wiki/Moving_average",
           },
         ]
       },
@@ -60,13 +60,13 @@ const helpData = {
       title: "Compression",
       description: "Implements the Ramer-Douglas-Peucker algorithm in order to reduce the number of points in a curve while preserving its shape.",
       image: {
-        link: "/linint_95x74.png",
-        alt: "Linear Interpolate Image"
+        link: "rdp.gif",
+        alt: "RDP Image"
       },
       links: [
         {
-          title: "Y = mx + b",
-          link: "https://byjus.com/maths/y-mx-b/#:~:text=y%20%3D%20mx%20%2B%20b%20is%20the,how%20steep%20the%20line%20is.",
+          title: "Ramer–Douglas–Peucker algorithm",
+          link: "https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm",
         },
       ]
     },
@@ -74,13 +74,13 @@ const helpData = {
       title: "Ultimate Smoothener",
       description: "Implements the Savitzky-Golay algorithm in order to smooth out a curve. This is a very powerful tool that can help capture many trends not visible. Input variables are the window and polynomial order.",
       image: {
-        link: "/linint_95x74.png",
-        alt: "Linear Interpolate Image"
+        link: "sgolay.gif",
+        alt: "sGolay Image"
       },
       links: [
         {
-          title: "Y = mx + b",
-          link: "https://byjus.com/maths/y-mx-b/#:~:text=y%20%3D%20mx%20%2B%20b%20is%20the,how%20steep%20the%20line%20is.",
+          title: "Savitzky–Golay filter",
+          link: "https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter",
         },
       ]
     },
@@ -88,8 +88,8 @@ const helpData = {
       title: "Split",
       description: "Splits the data into two parts, given a start and end point (timestamp)",
       image: {
-        link: "/linint_95x74.png",
-        alt: "Linear Interpolate Image"
+        link: "split.png",
+        alt: "Split Image"
       },
       links: [
         {
@@ -102,8 +102,8 @@ const helpData = {
       title: "Linear Multiply.",
       description: "Given a multiplier and offset, this will multiply the data by the multiplier and add the offset.",
       image: {
-        link: "/linint_95x74.png",
-        alt: "Linear Interpolate Image"
+        link: "linmult.png",
+        alt: "Multiply Image"
       },
       links: [
         {
