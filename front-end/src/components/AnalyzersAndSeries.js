@@ -85,17 +85,17 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                     <details>
                                         <summary><strong>{analyzer.name}</strong></summary>
                                         <div style={{flex: "column"}}>
-                                            <div className="expandBox">
+                                            
                                                 {analyzer.parameters.map((param, index) => {
-                                                    return (
+                                                    return (<div className="expandBox">
                                                         <>
                                                             <label htmlFor={`param${index}`}>{`${param.name} ->`}</label>
                                                             <input type="number" id={param.name} className={`param${index}`} style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }} defaultValue={param.default} />
-                                                        </>
+                                                        </></div>
                                                     )
                                                 })}
                                             </div>
-                                        </div>
+                                        
                                     </details>
                                     ) : (
                                         <label><strong>{analyzer.name}</strong></label>
