@@ -41,10 +41,10 @@ pub enum DataType {
     INT_GPS_SECONDMINUTEHOUR,
     INT_PRIM_TEMP,
     F_SEC_TEMP,
-    F_SUS_TRAV_FR,
-    F_SUS_TRAV_FL,
-    F_SUS_TRAV_RR,
-    F_SUS_TRAV_RL,
+    INT_SUS_TRAV_FR,
+    INT_SUS_TRAV_FL,
+    INT_SUS_TRAV_RR,
+    INT_SUS_TRAV_RL,
     INT_STRAIN1,
     INT_STRAIN2,
     INT_STRAIN3,
@@ -89,10 +89,12 @@ impl<'a> From<&DataType> for &'a str {
             DataType::INT_GPS_SECONDMINUTEHOUR => "GPS SECOND MINUTE HOUR",
             DataType::INT_PRIM_TEMP => "PRIM TEMP",
             DataType::F_SEC_TEMP => "SEC TEMP",
-            DataType::F_SUS_TRAV_FR => "SUS TRAV FR",
-            DataType::F_SUS_TRAV_FL => "SUS TRAV FL",
-            DataType::F_SUS_TRAV_RR => "SUS TRAV RR",
-            DataType::F_SUS_TRAV_RL => "SUS TRAV RL",
+            //suspension data types are currently integers.
+            DataType::INT_SUS_TRAV_FR => "SUS TRAV FR",
+            DataType::INT_SUS_TRAV_FL => "SUS TRAV FL",
+            DataType::INT_SUS_TRAV_RR => "SUS TRAV RR",
+            DataType::INT_SUS_TRAV_RL => "SUS TRAV RL",
+
             DataType::INT_STRAIN1 => "STRAIN1",
             DataType::INT_STRAIN2 => "STRAIN2",
             DataType::INT_STRAIN3 => "STRAIN3",
@@ -268,7 +270,12 @@ pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(
             | DataType::INT_STRAIN4
             | DataType::INT_STRAIN5
             | DataType::INT_STRAIN6
-            | DataType::INT_BATT_PERC => Some(Data::IntData(x[1])),
+            | DataType::INT_BATT_PERC
+            | DataType::INT_SUS_TRAV_FL
+            | DataType::INT_SUS_TRAV_FR
+            | DataType::INT_SUS_TRAV_RL
+            | DataType::INT_SUS_TRAV_RR => Some(Data::IntData(x[1])),
+
             DataType::INT_STRAIN1 => Some(Data::FloatData(
                 4078.4 * (f32::from_bits(x[1]) / 1024.0) * 3.3 - 7009.2,
             )),
