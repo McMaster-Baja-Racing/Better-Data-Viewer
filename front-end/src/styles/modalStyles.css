@@ -62,71 +62,7 @@
     border-radius: 2px;
     cursor: pointer;
   }
-  .scrollColFlexBox{
-    display: block;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    overflow:auto;
-    flex: 1;
-    background-color: #f1f1f1;
-  }
 
-  .colFlexBox{
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    flex: 1;
-    height : 100%;
-    min-width: 35rem;
-    min-height: 30rem;
-  }
-
-  .rowFlexBox{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: left;
-  }
-  .spaceRowFlexBox{
-    display: flex;
-    flex-direction: row;
-    align-items: left;
-    justify-content: space-between;
-  }
-
-  .smallColFlexBox{
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    flex: 1;
-    justify-content: flex-start;
-  }
-
-
- 
-  .pushRightFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
-  .pushLeftFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-  }
-
-  .spaceRowFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-
-  
   .btn {
     height : 2em;
     width : 2em;
