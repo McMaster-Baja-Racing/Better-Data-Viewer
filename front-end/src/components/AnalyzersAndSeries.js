@@ -80,11 +80,11 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                             <div className="analyzerBox">
                                 <div className="flexcol">
                                 <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
-                                </div>
+                                </div >
                                 {analyzer.parameters.length > 0 ? (
                                     <details>
                                         <summary><strong>{analyzer.name}</strong></summary>
-                                        <div style={{flex: "column"}}>
+                                        <div className="parambox">
                                             
                                                 {analyzer.parameters.map((param, index) => {
                                                     return (<div className="expandBox">

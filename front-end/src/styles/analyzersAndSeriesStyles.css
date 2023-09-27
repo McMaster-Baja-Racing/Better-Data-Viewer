@@ -84,7 +84,11 @@
   cursor: pointer;
 }
 .flexcol{
-  flex-direction: column;
+  display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    
 }
 
 details {
@@ -114,4 +118,7 @@ details[open] summary:after {
   display: none;
   overflow: hidden;
   background-color: #f1f1f1;
+}
+.parambox{
+  flex-direction: column;
 }
