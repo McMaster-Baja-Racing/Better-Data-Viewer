@@ -33,6 +33,7 @@ ol {
 .graphTypesBox {
     display: flex;
     margin: 0;
+    align-items: center;
 }
 
 .GraphSettingsNextButton {
@@ -42,8 +43,12 @@ ol {
     margin-top: auto;
 }
 
-.graphOptionsCol1 {
+.graphOptions {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+}
+
+.graphOptionsText {
+    margin: 0 0.5em;
 }

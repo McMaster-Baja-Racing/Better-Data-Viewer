@@ -50,6 +50,21 @@ button {
   cursor: pointer;
 }
 
+select {
+  padding: 0.5em;
+  border-radius: 3px;
+  border: 1px solid black;
+  outline: none;
+  background: #f1f1f1;
+  color: black;
+  
+}
+
+/* now style the select items (options) */
+/* select option {
+  font-weight: bold;
+} */
+
 @keyframes animate {
   from {
     transform: scale(0.5);
