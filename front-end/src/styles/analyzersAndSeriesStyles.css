@@ -1,113 +1,69 @@
-.columnHeaders{
-    display: block;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    flex: 1;
-  }
-
-  .analyzersAndSeriesContainer{
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    flex: 1;
-    height : 100%;
-    min-width: 35rem;
-    min-height: 30rem;
-  }
-
-  .addSeries{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-  }
-
-  .analyzerContainer{
-    display: block;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    overflow:auto;
-    flex: 1;
-    background-color: #f1f1f1;
-  }
-
-  .analyzerBox{
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .boldText{
-    font-weight: bold;
-    margin : 0.5em;
-  }
-
-  .expandBox{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: left;
-  }
-
-  .buttonFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: auto;
-
-  }
-  .pageThreeBackButton {
-    margin: 1em;
-    padding: 13px 29px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    background: crimson;
-    color: white;
-    cursor: pointer;
-}
-.pageThreeNextButton {
-  margin: 1em;
-  padding: 13px 29px;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-  background: crimson;
-  color: white;
-  cursor: pointer;
-}
-.flexcol{
+.columnHeaders {
   display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    
+  flex-direction: row;
+  justify-content: space-around;
 }
+
+.analyzersAndSeriesContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  flex: 1;
+}
+
+
+
+.analyzerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  overflow: auto;
+  background-color: #f1f1f1;
+  margin-bottom: 2em;
+}
+
+.analyzerBox {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin: 0.5em 0;
+}
+
+.boldText {
+  font-weight: bold;
+  margin: 0 0 0.25em 0.5em;
+}
+
+.buttonFlexBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+
 
 details {
   display: block;
 }
 
-details > summary {
+details>summary {
   list-style: none;
   display: inline-block;
 }
 
 summary::after {
-  content: ' +';
+  content: ' ▶';
 }
+
 details[open] summary:after {
-  content: " -";
+  content: " ▼";
 }
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .collapsible:hover {
+.active,
+.collapsible:hover {
   background-color: #ccc;
 }
 
@@ -118,6 +74,4 @@ details[open] summary:after {
   overflow: hidden;
   background-color: #f1f1f1;
 }
-.parambox{
-  flex-direction: column;
-}
+
