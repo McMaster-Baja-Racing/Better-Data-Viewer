@@ -3,6 +3,7 @@
 .popup-container {
   position: absolute;
   display: inline-block;
+  z-index: 999;
 }
 
 /* Popup button */
