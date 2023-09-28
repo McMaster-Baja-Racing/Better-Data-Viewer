@@ -284,7 +284,7 @@ pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(
             )),
             DataType::F_RPM_PRIM | DataType::F_RPM_SEC => {
                 let raw = f32::from_bits(x[1]);
-                (raw < 5000.0).then_some(Data::FloatData(raw))
+                (raw < 15000.0).then_some(Data::FloatData(raw))
             }
             _ => {
                 let raw = f32::from_bits(x[1]);
