@@ -1,0 +1,54 @@
+.graph-settings-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.liveDataBox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    margin: 0;
+}
+
+.PageButton {
+    margin: auto 0 0 auto;
+    padding: 13px 29px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background: crimson;
+    color: white;
+    cursor: pointer;
+}
+
+ol {
+    margin: 0;
+}
+
+.graphTypesBox {
+    display: flex;
+    margin: 0;
+    align-items: center;
+}
+
+.GraphSettingsNextButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: auto;
+}
+
+.graphOptions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.graphOptionsText {
+    margin: 0 0.5em;
+}

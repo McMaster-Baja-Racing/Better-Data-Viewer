@@ -1,0 +1,77 @@
+.columnHeaders {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.analyzersAndSeriesContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  flex: 1;
+}
+
+
+
+.analyzerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  overflow: auto;
+  background-color: #f1f1f1;
+  margin-bottom: 2em;
+}
+
+.analyzerBox {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin: 0.5em 0;
+}
+
+.boldText {
+  font-weight: bold;
+  margin: 0 0 0.25em 0.5em;
+}
+
+.buttonFlexBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+
+
+details {
+  display: block;
+}
+
+details>summary {
+  list-style: none;
+  display: inline-block;
+}
+
+summary::after {
+  content: ' ▶';
+}
+
+details[open] summary:after {
+  content: " ▼";
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
