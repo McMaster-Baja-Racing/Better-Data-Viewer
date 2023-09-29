@@ -1,6 +1,7 @@
 import '../styles/modalStyles.css';
 import Help from './Help';
 import helpData from './HelpData';
+import '../styles/analyzersAndSeriesStyles.css';
 
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
@@ -8,7 +9,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         let arr = [];
         for (let i = 0; i < n; i++) {
             arr.push(
-                <div > <div className="boldText">{i === 0 ? "X-Axis" : "Y-Axis"} </div>
+                <div >
+                    <div className="boldText">{i === 0 ? "X-Axis" : "Y-Axis"} </div>
                     <select className={i} key={i}>
                         {columns.map(column => (
                             <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
@@ -60,59 +62,54 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                 "analysis": analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
                 "analyzerValues": getAnalyzerOptions()
             }
-
         })
         console.log(seriesInfo)
     }
 
     return (
-        <div className="colFlexBox">
+        <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
-            <div className="rowFlexBox">
+            <div className="columnHeaders">
                 {columnGenerator(dimensions)}
             </div>
-            <div className="pushLeftFlexBox">
-                <button onClick={addSeries}>Add Series</button>
-            </div>
-            <h3>Select Analyzers</h3>
-            <div className="scrollColFlexBox">
+
+            <h3>Select Analyzer</h3>
+            <div className="analyzerContainer">
                 {Object.values(analyzers).map((analyzer) => {
                     return (
 
-                        <div key={analyzer.name}>
-                            <div className="rowFlexBox">
-                                <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
-                                <label htmlFor={analyzer.code}><div className="boldText">{analyzer.name}</div></label>
-                                
-                                {analyzer.parameters.length <= 0 ? null :
-                                    <details>
-                                        <summary></summary>
-                                        <div className="scrollColFlexBox">
-                                            <div className="rowFlexBox">
-                                                {analyzer.parameters.map((param, index) => {
-                                                    return (
-                                                        <>
-                                                            <label htmlFor={`param${index}`}>{`${param.name} ->`}</label>
-                                                            <input type="number" id={param.name} className={`param${index}`} style={{ display: (analyzer.parameters.length >= 1) ? "block" : "none" }} defaultValue={param.default} />
-                                                        </>
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
-                                    </details>
-                                }
-                                <div className="info">
+                        <div className="analyzerBox" key={analyzer.name}>
+                            <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
+                            
+                            {analyzer.parameters.length > 0 ? (
+                                <details>
+                                    <summary><strong>{analyzer.name}</strong></summary>
+                                        {analyzer.parameters.map((param, index) => {
+                                            return (
+                                                <div className="parambox">
+                                                    <label htmlFor={`param${index}`}>{`${param.name} ->`}</label>
+                                                    <input type="number" id={param.name} className={`param${index}`} defaultValue={param.default} />
+                                                </div>
+                                            
+                                            )
+                                        })}
+                                </details>
+                            ) : (
+                                <label><strong>{analyzer.name}</strong></label>
+                            )}
+                            <div className="info">
                                     <Help data={helpData[analyzer.code]}/>
                                 </div>
-                            </div>
+                            <br></br>
                         </div>
                     )
                 }
                 )}
             </div>
             <div className="buttonFlexBox">
-                <button className="submitbutton" onClick={() => {setDisplayPage(2)}}>Back</button>
-                <button className="submitbutton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
+                <button className="pageThreeBackButton" onClick={() => { setDisplayPage(2) }}>Back</button>
+                <button className="addSeries" onClick={addSeries}>Add Series</button>
+                <button className="pageThreeNextButton" onClick={() => { addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
             </div>
         </div>
     )

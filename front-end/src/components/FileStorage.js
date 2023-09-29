@@ -108,7 +108,7 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, se
     }
 
     return (
-        <div>
+        <div className='file-Storage-Container'>
             <div className="file-browser">
                 <h3>Choose Files</h3>
                 <RawFileBrowser
@@ -119,17 +119,19 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, se
                     folderRenderer={CustomFolderRenderer}
                 />
             </div>
-            <div className="buttonFlexBox">
-        <button className="submitbutton" onClick={() => {setDisplayPage(1)}}>Back</button>
-        <button className="submitbutton" onClick={() => {
-          // OnClick, it should get the selected files from the file storage component
-          console.log("selected files")
-          console.log(selectedFiles)
-          getHeaders(selectedFiles)
-          setDimensions(2)
-          setDisplayPage(3);
-        }} >Next</button>
-      </div>
+            <div className="fileButtons">
+                <button className="pageTwoBackButton" onClick={() => {setDisplayPage(1)}}>Back</button>
+                <button className="pageTwoNextButton" onClick={() => {
+                // OnClick, it should get the selected files from the file storage component
+                if (selectedFiles.length === 0) {
+                    alert("Please select at least one file.");
+                    return;
+                }
+                getHeaders(selectedFiles)
+                setDimensions(2)
+                setDisplayPage(3);
+                }} >Next</button>
+            </div>
         </div>
     )
 }
