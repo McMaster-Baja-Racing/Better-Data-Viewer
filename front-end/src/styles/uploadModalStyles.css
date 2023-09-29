@@ -51,18 +51,6 @@
   left: 0px;
 }
 
-.submitbutton {
-  margin: 1em;
-  padding: 13px 29px;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-  background: crimson;
-  color: white;
-  cursor: pointer;
-}
 
 .submitbutton:active {
   outline: none;
