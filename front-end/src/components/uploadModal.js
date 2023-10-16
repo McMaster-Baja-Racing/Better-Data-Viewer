@@ -74,7 +74,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
     //console.log(loading);
     setLoading(false);
 
-    //setShowUploadModal(false); Dont need to do this neccesarily
+    setShowUploadModal(false); //Dont need to do this neccesarily
   };
 
  
