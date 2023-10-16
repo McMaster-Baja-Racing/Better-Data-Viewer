@@ -1,186 +1,77 @@
-.App {
-    text-align: center;
-  }
-  .App button {
-    padding: 13px 29px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    background: crimson;
-    color: white;
-    cursor: pointer;
-  }
-  .App logobutton {
-    border: none;
-    outline: none;
-  }
-  #portal .container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: 100vh;
-    width:100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.6);
-  }
-  .container .modal {
-    padding: 3rem;
-    z-index: 1;
-    height: 26rem;
-    background: white;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    border-radius: 5px;
-    position: relative;
-    animation: animate 0.3s;
-    min-width: 35rem;
-    min-height: 30rem;
-  }
-  .centerFlexBox{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .closeButton {
-    position: absolute;
-    top: 0.5em;
-    right: 0.5em;
-    padding: 8px 11px;
-    background: crimson;
-    color: white;
-    font-weight: bold;
-    border: none;
-    outline: none;
-    border-radius: 2px;
-    cursor: pointer;
-  }
-  .scrollColFlexBox{
-    display: block;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    overflow:auto;
-    flex: 1;
-    background-color: #f1f1f1;
-  }
-
-  .colFlexBox{
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    flex: 1;
-    height : 100%;
-    min-width: 35rem;
-    min-height: 30rem;
-  }
-
-  .rowFlexBox{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: left;
-  }
-  .spaceRowFlexBox{
-    display: flex;
-    flex-direction: row;
-    align-items: left;
-    justify-content: space-between;
-  }
-
-  .smallColFlexBox{
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    align-items: left;
-    flex: 1;
-    justify-content: flex-start;
-  }
-
-  .graphTypeSelect {
-    margin-bottom: 4em;
-  }
-
-  .buttonFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
-  .pushRightFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
-  .pushLeftFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-  }
-
-  .spaceRowFlexBox{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .boldText{
-    font-weight: bold;
-    margin : 0.5em;
-  }
-  
-  .btn {
-    height : 2em;
-    width : 2em;
-    font-weight: bold;
-    border-radius: 50%;
-    background-color: #9a9aa3;
-    color: white;
-    text-align: center;
-    cursor: pointer;
-  }
-
-  /* Style the button that is used to open and close the collapsible content */
-.collapsible {
-  background-color: #eee;
-  color: #444;
-  cursor: pointer;
-  padding: 18px;
+#portal .container {
+  font-family: 'Lato', sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 100vh;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.container .modal {
+  padding: 3rem;
+  z-index: 1;
+  background: white;
+  border-radius: 5px;
+  position: relative;
+  animation: animate 0.3s;
+  width: 35rem;
+  height: 30rem;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  padding: 8px 11px;
+  background: crimson;
+  color: white;
+  font-weight: bold;
   border: none;
-  text-align: left;
   outline: none;
-  font-size: 15px;
+  border-radius: 2px;
+  cursor: pointer;
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .collapsible:hover {
-  background-color: #ccc;
+button {
+  padding: 13px 29px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  background: crimson;
+  color: white;
+  cursor: pointer;
 }
 
-/* Style the collapsible content. Note: hidden by default */
-.content {
-  padding: 0 18px;
-  display: none;
-  overflow: hidden;
-  background-color: #f1f1f1;
-}
-
-  @keyframes animate {
-    from {
-      transform: scale(0.5);
-    }
-    to {
-      transform: scale(1);
-    }
-  }
+select {
+  padding: 0.5em;
+  border-radius: 3px;
+  border: 1px solid black;
+  outline: none;
+  background: #f1f1f1;
+  color: black;
   
+}
+
+/* now style the select items (options) */
+/* select option {
+  font-weight: bold;
+} */
+
+@keyframes animate {
+  from {
+    transform: scale(0.5);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+

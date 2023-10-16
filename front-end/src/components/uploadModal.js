@@ -1,7 +1,7 @@
 //UploadModal.js
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
-import '../styles/dragNdrop.css';
+import '../styles/uploadModalStyles.css';
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
@@ -82,7 +82,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
-        <div className="centerFlexBox">
+        <div className="uploadContainer">
           <h1>Upload Files</h1>
           <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
             <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
@@ -111,7 +111,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
             })
           })}>Delete All</button>
           {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..."/>}
-          <input className="submitbutton" type="submit" />
+          <input className="uploadSubmit" type="submit" />
           </form>
         </div>
         <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
