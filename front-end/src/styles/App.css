@@ -51,14 +51,11 @@ input[type="checkbox"]:focus::before {
 }
 
 select {
-  appearance: none; 
   padding: 3px;
   border: 1px solid #555;
   border-radius: 4px;
-  background-color: white;
   width: 200px; 
 }
-
 
 button {
   padding: 7px 7px;
@@ -77,10 +74,4 @@ button {
 
 button:hover {
   background-color: rgb(238, 48, 86);
-}
-
-select {
-  width: 200px;
-  padding: 5px;
-  font-size: 12px;
 }
