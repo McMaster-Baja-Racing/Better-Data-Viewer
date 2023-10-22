@@ -259,8 +259,7 @@ pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(
                 f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor(),
             )),
             DataType::F_GPS_LONGITUDE => Some(Data::FloatData(
-                -1.0 * (f32::from_bits(x[1]) % 100.0) / 60.0
-                    + (f32::from_bits(x[1]) / 100.0).floor(),
+                (f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor()) * -1.0,
             )),
             DataType::INT_GPS_TIME
             | DataType::INT_GPS_DAYMONTHYEAR
