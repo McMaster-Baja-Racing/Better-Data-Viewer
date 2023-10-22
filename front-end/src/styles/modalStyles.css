@@ -60,10 +60,10 @@ select {
   
 }
 
-/* now style the select items (options) */
-/* select option {
-  font-weight: bold;
-} */
+select option:checked {
+  background-color: crimson; 
+  color: #fff; 
+}
 
 @keyframes animate {
   from {

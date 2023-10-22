@@ -84,8 +84,3 @@ select {
   padding: 5px;
   font-size: 12px;
 }
-
-select option:checked {
-  background-color: crimson; 
-  color: #fff; 
-}
