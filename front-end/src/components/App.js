@@ -1,5 +1,4 @@
 import '../styles/App.css';
-import '../styles/modalStyles.css';
 import { CreateGraphModal } from "./CreateGraphModal";
 import { UploadModal } from "./uploadModal";
 import React, { useState } from 'react';
