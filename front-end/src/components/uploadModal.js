@@ -38,17 +38,18 @@ export const UploadModal = ({ setShowUploadModal }) => {
 
   const { register, handleSubmit } = useForm();
   //This stuff is for backend API
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     //upload multiple files
     const formData = new FormData();
+    // THIS SHOULD BE A POPUP THAT DECAYS AWAY, NOT AN ALERT
+    if (fileLists.length === 0) { 
+      alert("Please select a file")
+      return
+    }
     //start loading useState
     setLoading(true);
     //console.log(loading);
     await new Promise((resolve, reject) => {
-      console.log(data.file)
-      for (let i = 0; i < data.file.length; i++) {
-        fileLists.push(data.file[i])
-      }
       for (let i = 0; i < fileLists.length; i++) {
         formData.set("file", fileLists[i]);
         fetch(`http://${window.location.hostname}:8080/upload`, {
@@ -74,7 +75,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
     //console.log(loading);
     setLoading(false);
 
-    //setShowUploadModal(false); Dont need to do this neccesarily
+    setShowUploadModal(false); //Dont need to do this neccesarily
   };
 
  
@@ -86,7 +87,6 @@ export const UploadModal = ({ setShowUploadModal }) => {
           <h1>Upload Files</h1>
           <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
             <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
-              
               setfileLists([...e.target.files, ...fileLists])
             }}/>
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : ""}>
