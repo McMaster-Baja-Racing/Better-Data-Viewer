@@ -3,16 +3,19 @@ import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
-//import Papa from "papaparse";
+import HighchartsColorAxis from "highcharts/modules/coloraxis"; 
 
+HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
+
+
 
 const Chart = ({ chartInformation }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
-            type: 'line',
-            zoomType: 'xy'
+            type: 'scatter',
+            zoomType: 'x'
         },
         title: {
             text: 'Template'
@@ -26,6 +29,10 @@ const Chart = ({ chartInformation }) => {
         },
         accessibility: {
             enabled: false
+        },
+        // Leaving this enabled will disable colorAxis, and so should only be enabled when necessary
+        boost: {
+            enabled: false
         }
     });
 
@@ -36,6 +43,7 @@ const Chart = ({ chartInformation }) => {
     const [parsedData, setParsedData] = useState([]);
     const [fileNames, setFileNames] = useState([]);
 
+    // This function handles the fetching of the data from the backend
     const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions, columnInfo) => {
         // Using async / await rather than .then() allows me to return the data from the function easily
         const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
@@ -72,7 +80,10 @@ const Chart = ({ chartInformation }) => {
             .split("\n")
             .slice(1)
             .map((line) => line.split(","))
-            .map((line) => [parseFloat(line[h[0]]), parseFloat(line[h[1]])]);
+            .map((line) => ({x:parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: Math.floor(Math.random() * 30)}));
+            
+
+        console.log(data)
 
         return data;
     }
@@ -98,10 +109,8 @@ const Chart = ({ chartInformation }) => {
         setParsedData(data)
     }
 
-
+    // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
     useEffect(() => {
-        
-        // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
         if (chartInformation.files.length === 0) {
             return;
         }
@@ -117,8 +126,8 @@ const Chart = ({ chartInformation }) => {
 
     }, [chartInformation]);
 
+    // Once necessary data is fetched, format it for the chart
     useEffect(() => {
-        // Once necessary data is fetched, format it for the chart
         if (chartInformation.files.length === 0) {
             return;
         }
@@ -127,7 +136,6 @@ const Chart = ({ chartInformation }) => {
         setChartOptions((prevState) => {
             //console.log(parsedData)
             return {
-                ...prevState,
                 series: ( () => {
                     var series = [];
                     var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
@@ -136,7 +144,8 @@ const Chart = ({ chartInformation }) => {
                         series.push({
                             name: fileNames[i],
                             data: parsedData[i],
-                            colour: colours[i],
+                            colorKey: 'colorValue',
+                            turboThreshold: 0,
                             opacity: 1
                         })
                     }
@@ -145,12 +154,10 @@ const Chart = ({ chartInformation }) => {
                 title: {
                     text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
                 },
-
                 chart: {
                     type: chartInformation.type,
                     zoomType: 'x'
                 },
-
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
@@ -166,11 +173,21 @@ const Chart = ({ chartInformation }) => {
                 legend: {
                     enabled: true
                 },
+                colorAxis: {
+                    min: 0,
+                    max: 35,
+                    minColor: "#FF0000",
+                    maxColor: "#00FF00"
+                },
+                boost: {
+                    //enabled: true
+                }
             }
         })
         setLoading(false);
     }, [parsedData])
 
+    // This function is used to throttle the resize observer
     function throttle(f, delay) {
         let timer = 0;
         return function(...args) {
