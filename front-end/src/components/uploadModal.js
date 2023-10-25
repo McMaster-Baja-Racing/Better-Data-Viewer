@@ -80,17 +80,12 @@ export const UploadModal = ({ setShowUploadModal, success}) => {
     success();
   };
 
-  $( "#form-file-upload" ).click(function() {
-    $( "div.success" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
-  });
-
   return ReactDom.createPortal(
     
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="uploadContainer">
           <h1>Upload Files</h1>
-          <div class="alert-box success">Successful Alert !!!</div>
             <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
             <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
               setfileLists([...e.target.files, ...fileLists])

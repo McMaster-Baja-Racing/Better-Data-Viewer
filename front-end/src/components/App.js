@@ -59,14 +59,15 @@ const App = () => {
   });
 
   const success = () => {
-    $( "div.success" )
+    $( "div.success" ).fadeIn("slow")
+    $( "div.success" ).fadeOut("slow")
   };
   
   return (
     <div className="App">
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
-      <div class="alert-box success">Successful Alert !!!</div>
+      <div class="success">Sucess message for the stupid</div>
         {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} /> : null}
         {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} success={success}/> : null}
         {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
