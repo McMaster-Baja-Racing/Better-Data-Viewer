@@ -5,6 +5,7 @@ import { HelpModal } from "./helpModal";
 import React, { useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
+import $ from 'jquery';
 
 const App = () => {
 
@@ -24,6 +25,8 @@ const App = () => {
   const openHelpModal = () => {
     setShowHelpModal(true);
   }
+
+
 
   // All for information transfer between children and parent
   // sample format for fileInformation: 
@@ -55,13 +58,17 @@ const App = () => {
     type: "line"
   });
 
+  const success = () => {
+    $( "div.success" )
+  };
+  
   return (
     <div className="App">
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
-
+      <div class="alert-box success">Successful Alert !!!</div>
         {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} /> : null}
-        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} /> : null}
+        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} success={success}/> : null}
         {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
 
         <Chart chartInformation={chartInformation} />
