@@ -91,13 +91,20 @@ select option:checked {
 }
 .success {
 	padding: 15px;
-  margin-bottom: 20px;
+  align-self: center;
   border: 1px solid transparent;
   border-radius: 4px;
   position: absolute;  
   z-index: 1;
-  color: #3c763d;
+  color: #161616;
   background-color: #dff0d8;
   border-color: #d6e9c6;
   display: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.success {
+  /* existing properties */
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
