@@ -80,7 +80,7 @@ const Chart = ({ chartInformation }) => {
             .split("\n")
             .slice(1)
             .map((line) => line.split(","))
-            .map((line) => ({x:parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: Math.floor(Math.random() * 30)}));
+            .map((line) => ({x:parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: Math.floor(Math.random() * 35)}));
             
 
         console.log(data)
@@ -138,16 +138,31 @@ const Chart = ({ chartInformation }) => {
             return {
                 series: ( () => {
                     var series = [];
-                    var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
-                    for (var i = 0; i < parsedData.length; i++) {
-                        //console.log(fileInformation)
-                        series.push({
-                            name: fileNames[i],
-                            data: parsedData[i],
-                            colorKey: 'colorValue',
-                            turboThreshold: 0,
-                            opacity: 1
-                        })
+                    if (chartInformation.type !== "colour") {
+                        console.log("Not colour")
+                        // Normal type of graph
+                        var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
+                        for (var i = 0; i < parsedData.length; i++) {
+                            series.push({
+                                name: fileNames[i],
+                                data: parsedData[i],
+                                colour: colours[i],
+                                turboThreshold: 0,
+                                opacity: 1,
+                                colorAxis: false
+                            })
+                        }
+                    } else {
+                        // XYColour graph
+                        for (var i = 0; i < parsedData.length; i++) {
+                            series.push({
+                                name: fileNames[i],
+                                data: parsedData[i],
+                                colorKey: 'colorValue',
+                                turboThreshold: 0,
+                                opacity: 1
+                            })
+                        }
                     }
                     return series;
                 })(),
@@ -155,7 +170,7 @@ const Chart = ({ chartInformation }) => {
                     text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
                 },
                 chart: {
-                    type: chartInformation.type,
+                    type: chartInformation.type === "colour" ? 'scatter' : chartInformation.type,
                     zoomType: 'x'
                 },
                 xAxis: {
@@ -173,15 +188,24 @@ const Chart = ({ chartInformation }) => {
                 legend: {
                     enabled: true
                 },
-                colorAxis: {
-                    min: 0,
-                    max: 35,
-                    minColor: "#FF0000",
-                    maxColor: "#00FF00"
-                },
-                boost: {
-                    //enabled: true
-                }
+                colorAxis: (() => {
+                    if (chartInformation.type === "colour") {
+                        return {
+                            min: 0,
+                            max: 35,
+                            minColor: '#000fb0',
+                            maxColor: '#e3e5ff',
+                            labels: {
+                                format: '{value}%'
+                            },
+                            reversed: true
+                        }
+                    } else {
+                        return {
+                            showInLegend: false
+                        }
+                    }
+                })()
             }
         })
         setLoading(false);

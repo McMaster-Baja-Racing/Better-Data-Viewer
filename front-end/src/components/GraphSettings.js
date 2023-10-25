@@ -47,6 +47,7 @@ const GraphSettings = ({ setDisplayPage, setFiles, setGraphType, setLiveCheck })
               <option value="line">Line</option>
               <option value="spline">Spline</option>
               <option value="scatter">Scatter</option>
+              <option value="colour">XYColour</option>
             </select>
           </div>
         </div>
