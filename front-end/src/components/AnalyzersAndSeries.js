@@ -3,8 +3,10 @@ import Help from './Help';
 import helpData from './HelpData';
 import '../styles/analyzersAndSeriesStyles.css';
 import { useState } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
+const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
+
+    const [isSeries,setIsSeries] = useState(false);
     const columnGenerator = (n) => {
         let arr = [];
         for (let i = 0; i < n; i++) {
@@ -54,6 +56,13 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
             selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
+        }
+        if (isSeries===true){
+            setSuccessMessage(3);
+            success();
+        } else if (isSeries === false) {
+            setSuccessMessage(2);
+            success();
         }
 
         seriesInfo.push({
@@ -123,7 +132,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
             </div>
             <div className="buttonFlexBox">
                 <button className="pageThreeBackButton" onClick={() => { setDisplayPage(2) }}>Back</button>
-                <button className="addSeries" onClick={addSeries}>Add Series</button>
+                <button className="addSeries" onClick={() => {setIsSeries(true); addSeries(); }}>Add Series</button>
                 <button className="pageThreeNextButton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
             </div>
         </div>

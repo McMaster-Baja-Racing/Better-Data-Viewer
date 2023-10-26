@@ -57,8 +57,23 @@ const App = () => {
     live: false,
     type: "line"
   });
+  const changeMessage = (x) => {
+    var message = "";
+    if (x === 1) {
+      message = "Files Uploaded"
+    } else if (x === 2) {
+      message = "Graph Created"
+    } else if (x === 3) {
+      message = "Series Created"
+    } else {
+      message = ""
+    }
+    return message;
+  }
 
+  const [successMessage, setSuccessMessage] = useState(0)
   const success = () => {
+    console.log(successMessage)
     $( "div.success" ).fadeIn(3000)
     $( "div.success" ).fadeOut(3000)
   };
@@ -67,9 +82,9 @@ const App = () => {
     <div className="App">
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
-      <div class="success">Files Uploaded</div>
-        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} /> : null}
-        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} success={success}/> : null}
+        <div className="success">{changeMessage(successMessage)}</div>
+        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} success={success}/> : null}
+        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} setSuccessMessage={setSuccessMessage} success={success}/> : null}
         {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
 
         <Chart chartInformation={chartInformation} />

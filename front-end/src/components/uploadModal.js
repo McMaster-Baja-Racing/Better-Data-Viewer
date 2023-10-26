@@ -5,8 +5,7 @@ import '../styles/uploadModalStyles.css';
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
-import $ from 'jquery';
-export const UploadModal = ({ setShowUploadModal, success}) => {
+export const UploadModal = ({ setShowUploadModal, success, setSuccessMessage}) => {
 
   const [dragActive, setDragActive] = React.useState(false);
   const [loading, setLoading] = useState(false);
@@ -77,6 +76,7 @@ export const UploadModal = ({ setShowUploadModal, success}) => {
     setLoading(false);
 
     setShowUploadModal(false); //Dont need to do this neccesarily
+    setSuccessMessage(1);
     success();
   };
 
