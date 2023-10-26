@@ -2,7 +2,7 @@ import '../styles/modalStyles.css';
 import Help from './Help';
 import helpData from './HelpData';
 import '../styles/analyzersAndSeriesStyles.css';
-
+import { useState } from 'react';
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
     const columnGenerator = (n) => {
@@ -66,6 +66,18 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         console.log(seriesInfo)
     }
 
+    const [openPopup, setOpenPopup] = useState(null);
+
+    const togglePopup = (analyzerName) => {
+      if (openPopup === analyzerName) {
+        // Clicking on the same analyzer, so close it
+        setOpenPopup(null);
+      } else {
+        // Clicking on a different analyzer, open it
+        setOpenPopup(analyzerName);
+      }
+    };
+
     return (
         <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
@@ -98,8 +110,11 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                 <label><strong>{analyzer.name}</strong></label>
                             )}
                             <div className="info">
-                                    <Help data={helpData[analyzer.code]}/>
-                                </div>
+                            <Help
+                  togglePopup={() => togglePopup(analyzer.name)}
+                  isPopupOpen={openPopup === analyzer.name}
+                  data={helpData[analyzer.code]}
+                />                                </div>
                             <br></br>
                         </div>
                     )
@@ -109,7 +124,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
             <div className="buttonFlexBox">
                 <button className="pageThreeBackButton" onClick={() => { setDisplayPage(2) }}>Back</button>
                 <button className="addSeries" onClick={addSeries}>Add Series</button>
-                <button className="pageThreeNextButton" onClick={() => { addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
+                <button className="pageThreeNextButton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
             </div>
         </div>
     )
