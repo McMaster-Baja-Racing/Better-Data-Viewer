@@ -42,6 +42,11 @@ const Chart = ({ chartInformation }) => {
             method: 'GET'
         })
 
+        if (!response.ok) {
+            alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
+            return
+        }
+
         const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
         setFileNames (prevState => {
             // return without duplicates
