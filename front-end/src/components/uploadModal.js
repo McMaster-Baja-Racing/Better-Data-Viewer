@@ -76,7 +76,7 @@ export const UploadModal = ({ setShowUploadModal, success, setSuccessMessage}) =
     setLoading(false);
 
     setShowUploadModal(false); //Dont need to do this neccesarily
-    setSuccessMessage(1);
+    setSuccessMessage("Files Uploaded ");// + fileLists.map((file) => file.name).join(", ")
     success();
   };
 

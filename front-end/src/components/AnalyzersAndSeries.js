@@ -5,8 +5,6 @@ import '../styles/analyzersAndSeriesStyles.css';
 import { useState } from 'react';
 const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
-
-    const [isSeries,setIsSeries] = useState(false);
     const columnGenerator = (n) => {
         let arr = [];
         for (let i = 0; i < n; i++) {
@@ -51,17 +49,18 @@ const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, set
 
     var seriesInfo = []
 
-    const addSeries = () => {
+    const addSeries = (isSeries) => {
+        
 
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
             selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
         }
-        if (isSeries===true){
-            setSuccessMessage(3);
+        if (isSeries) {
+            setSuccessMessage("Series Added");
             success();
-        } else if (isSeries === false) {
-            setSuccessMessage(2);
+        } else {
+            setSuccessMessage("Graph Created");
             success();
         }
 
@@ -132,8 +131,8 @@ const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, set
             </div>
             <div className="buttonFlexBox">
                 <button className="pageThreeBackButton" onClick={() => { setDisplayPage(2) }}>Back</button>
-                <button className="addSeries" onClick={() => {setIsSeries(true); addSeries(); }}>Add Series</button>
-                <button className="pageThreeNextButton" onClick={() => {addSeries(); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
+                <button className="addSeries" onClick={() => {addSeries(true); }}>Add Series</button>
+                <button className="pageThreeNextButton" onClick={() => {addSeries(false); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
             </div>
         </div>
     )

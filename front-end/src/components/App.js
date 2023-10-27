@@ -57,32 +57,18 @@ const App = () => {
     live: false,
     type: "line"
   });
-  const changeMessage = (x) => {
-    var message = "";
-    if (x === 1) {
-      message = "Files Uploaded"
-    } else if (x === 2) {
-      message = "Graph Created"
-    } else if (x === 3) {
-      message = "Series Created"
-    } else {
-      message = ""
-    }
-    return message;
-  }
 
-  const [successMessage, setSuccessMessage] = useState(0)
+  const [successMessage, setSuccessMessage] = useState("")
+
   const success = () => {
-    console.log(successMessage)
-    $( "div.success" ).fadeIn(3000)
-    $( "div.success" ).fadeOut(3000)
+    $( "div.success" ).fadeIn(1000).delay(2000).fadeOut(1000)
   };
   
   return (
     <div className="App">
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
-        <div className="success">{changeMessage(successMessage)}</div>
+        <div className="success">{successMessage}</div>
         {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} success={success}/> : null}
         {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} setSuccessMessage={setSuccessMessage} success={success}/> : null}
         {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
