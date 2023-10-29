@@ -2,6 +2,7 @@ import '../styles/modalStyles.css';
 import Help from './Help';
 import helpData from './HelpData';
 import '../styles/analyzersAndSeriesStyles.css';
+import React, { useState } from 'react';
 
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
@@ -65,7 +66,18 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         })
         console.log(seriesInfo)
     }
+    
+    const [openPopup, setOpenPopup] = useState(null);
 
+    const togglePopup = (analyzerName) => {
+        if (openPopup === analyzerName) {
+          // Clicking on the same analyzer, so close it
+          setOpenPopup(null);
+        } else {
+          // Clicking on a different analyzer, open it
+          setOpenPopup(analyzerName);
+        }
+      };
     return (
         <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
@@ -98,8 +110,11 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                 <label><strong>{analyzer.name}</strong></label>
                             )}
                             <div className="info">
-                                    <Help data={helpData[analyzer.code]}/>
-                                </div>
+                            <Help
+                  togglePopup={() => togglePopup(analyzer.name)}
+                  isPopupOpen={openPopup === analyzer.name}
+                  data={helpData[analyzer.code]}
+                />                                </div>
                             <br></br>
                         </div>
                     )

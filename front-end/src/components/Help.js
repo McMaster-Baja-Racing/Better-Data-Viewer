@@ -30,19 +30,13 @@ const HelpPopup = ({ data }) => {
   );
 }
 
-const Help = ({ data }) => {
-  const [showPopup, setShowPopup] = useState(false);
-
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
-
+const Help = ({ data, isPopupOpen, togglePopup }) => {
   return (
     <div>
       <HelpButton onClick={togglePopup} /> {}
-      {showPopup && <HelpPopup data={data} />} {}
+      {isPopupOpen && <HelpPopup data={data} />} {}
     </div>
   );
-}
+};
 
 export default Help;
