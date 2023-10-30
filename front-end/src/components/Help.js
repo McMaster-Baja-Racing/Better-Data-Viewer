@@ -30,11 +30,21 @@ const HelpPopup = ({ data }) => {
   );
 }
 
-const Help = ({ data, isPopupOpen, togglePopup }) => {
+const Help = ({ data, openPopup, setOpenPopup }) => {
+
+  const togglePopup = () => {
+    if (openPopup === data.title) {
+      setOpenPopup(null);
+    } else {
+      setOpenPopup(data.title);
+    }
+  }
+
+
   return (
     <div>
       <HelpButton onClick={togglePopup} /> {}
-      {isPopupOpen && <HelpPopup data={data} />} {}
+      {openPopup === data.title && <HelpPopup data={data} />} {}
     </div>
   );
 };
