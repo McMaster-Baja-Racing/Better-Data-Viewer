@@ -50,13 +50,6 @@ input[type="checkbox"]:focus::before {
   box-shadow: 0 0 3px #555;
 }
 
-select {
-  padding: 3px;
-  border: 1px solid #555;
-  border-radius: 4px;
-  width: 200px; 
-}
-
 button {
   padding: 7px 7px;
   font-size: 0.8rem;

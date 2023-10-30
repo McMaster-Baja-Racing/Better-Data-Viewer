@@ -69,7 +69,7 @@ const analyzerData = [
     title: "Compression",
     code: "RDPCompression",
     parameters: [{ name: "Epsilon", default: "0.1" }],
-    description: "Implements the Ramer-Douglas-Peucker algorithm in order to reduce the number of points in a curve while preserving its shape.",
+    description: "The Ramer-Douglas-Peucker algorithm helps simplify a curve by removing some of its points while keeping its overall shape intact. It's a handy tool for looking at large files!",
     image: {
       link: "rdp.gif",
       alt: "RDP Image"
