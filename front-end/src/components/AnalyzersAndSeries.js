@@ -1,4 +1,8 @@
+import '../styles/modalStyles.css';
+import Help from './Help';
+import analyzerData from './analyzerData';
 import '../styles/analyzersAndSeriesStyles.css';
+import React, { useState } from 'react';
 
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
 
@@ -18,32 +22,6 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         return arr;
     }
 
-    const analyzers = [
-        { name: "None", code: null, parameters: [], checked: true },
-        { name: "Linear Interpolate", code: "linearInterpolate", parameters: [] },
-        { name: "Accel Curve", code: "accelCurve", parameters: [] },
-        { name: "Rolling Average", code: "rollAvg", parameters: [{ name: "WindowSize", default: "100" }] },
-        { name: "RDP Compression", code: "RDPCompression", parameters: [{ name: "Epsilon", default: "0.1" }] },
-        { name: "sGolay", code: "sGolay", parameters: [{ name: "Window Size", default: "100" }, { name: "Polynomial Order", default: "3" }] },
-        { name: "Split", code: "split", parameters: [{ name: "Start", default: "0" }, { name: "End", default: null }] },
-        { name: "Linear Multiply", code: "linearMultiply", parameters: [{ name: "Multiplier", default: "1" }, { name: "Offset", default: "0" }] }
-    ];
-
-    const getAnalyzerOptions = () => {
-        for (const inputElement of analyzers) {
-            if (document.getElementById(inputElement.name).checked) {
-                const params = inputElement.parameters.map(param => {
-                    //console.log(paramId)
-                    const value = document.getElementById(param.name).value;
-                    return value === '' ? null : value;
-                });
-                //console.log(params);
-                return params;
-            }
-        }
-        return null;
-    };
-
     var seriesInfo = []
 
     const addSeries = () => {
@@ -53,15 +31,22 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
             selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
         }
 
+        var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
+
         seriesInfo.push({
             "columns": selectColumns,
             "analyze": {
-                "analysis": analyzers.filter(analyzer => document.getElementById(analyzer.name).checked)[0].code,
-                "analyzerValues": getAnalyzerOptions()
+                "analysis": checkedAnalyzer.code,
+                "analyzerValues": checkedAnalyzer.parameters.map(param => {
+                    const value = document.getElementById(param.name).value;
+                    return value === '' ? null : value;
+                })
             }
         })
         console.log(seriesInfo)
     }
+
+    const [openPopup, setOpenPopup] = useState(null);
 
     return (
         <div className="analyzersAndSeriesContainer">
@@ -72,15 +57,16 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
 
             <h3>Select Analyzer</h3>
             <div className="analyzerContainer">
-                {Object.values(analyzers).map((analyzer) => {
+                {analyzerData.map((analyzer) => {
+                    //console.log(analyzer)
                     return (
 
-                        <div className="analyzerBox" key={analyzer.name}>
-                            <input type="radio" id={analyzer.name} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}></input>
+                        <div className="analyzerBox" key={analyzer.title}>
+                            <input type="radio" id={analyzer.title} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}/>
                             
                             {analyzer.parameters.length > 0 ? (
                                 <details>
-                                    <summary><strong>{analyzer.name}</strong></summary>
+                                    <summary><strong>{analyzer.title}</strong></summary>
                                         {analyzer.parameters.map((param, index) => {
                                             return (
                                                 <div className="parambox">
@@ -92,8 +78,11 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                         })}
                                 </details>
                             ) : (
-                                <label><strong>{analyzer.name}</strong></label>
+                                <label><strong>{analyzer.title}</strong></label>
                             )}
+                            <div className="info">
+                                <Help data={analyzer} openPopup={openPopup} setOpenPopup={setOpenPopup}/>
+                            </div>
                             <br></br>
                         </div>
                     )
