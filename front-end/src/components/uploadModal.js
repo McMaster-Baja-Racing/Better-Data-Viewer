@@ -95,7 +95,7 @@ export const UploadModal = ({ setShowUploadModal, success, setSuccessMessage}) =
                 {fileLists.length == 0 ? <p>Drag and drop your file here or click to browse your files</p> : fileLists.map((file, index) => {
                   return (
                   <div>
-                    <button type="button" onClick={() => {
+                    <button className="fileButton" type="button" onClick={() => {
                       setfileLists(fileLists.filter((f) => f.name !== file.name))
                     }}>X</button>
                     {file.name}
