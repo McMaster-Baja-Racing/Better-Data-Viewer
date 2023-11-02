@@ -60,9 +60,10 @@ const App = () => {
 
   const [successMessage, setSuccessMessage] = useState({})
 
-  // Catches when success message is updated and displays it
+  // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
     if (successMessage === "" || Object.keys(successMessage).length === 0) return;
+    $( "div.success" ).hide().stop(true, false) // This could use some work to show that they are different messages more clearly
     $( "div.success" ).slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
   
