@@ -58,6 +58,7 @@ const App = () => {
     type: "line"
   });
 
+  // This is an object so that other updates to it will always call the useEffect, even if the message is the same
   const [successMessage, setSuccessMessage] = useState({})
 
   // Catches when success message is updated and displays it after removing old one
