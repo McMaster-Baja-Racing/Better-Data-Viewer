@@ -5,7 +5,7 @@ import '../styles/uploadModalStyles.css';
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
-export const UploadModal = ({ setShowUploadModal, success, setSuccessMessage}) => {
+export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
 
   const [dragActive, setDragActive] = React.useState(false);
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ export const UploadModal = ({ setShowUploadModal, success, setSuccessMessage}) =
       alert("Please select a file")
       return
     }
-    //start loading useState
+    //start loading
     setLoading(true);
     //console.log(loading);
     await new Promise((resolve, reject) => {
@@ -71,13 +71,10 @@ export const UploadModal = ({ setShowUploadModal, success, setSuccessMessage}) =
         
       }
     });
-    //stop loading useState
-    //console.log(loading);
-    setLoading(false);
 
-    setShowUploadModal(false); //Dont need to do this neccesarily
-    setSuccessMessage("Files Uploaded ");// + fileLists.map((file) => file.name).join(", ")
-    success();
+    setLoading(false);
+    setShowUploadModal(false);
+    setSuccessMessage({ message: "Files Uploaded" });// + fileLists.map((file) => file.name).join(", ")
   };
 
   return ReactDom.createPortal(

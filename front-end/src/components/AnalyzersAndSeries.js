@@ -2,8 +2,8 @@ import '../styles/modalStyles.css';
 import Help from './Help';
 import analyzerData from './analyzerData';
 import '../styles/analyzersAndSeriesStyles.css';
-import { useState } from 'react';
-const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
+import { useState, useRef } from 'react';
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage }) => {
 
     const columnGenerator = (n) => {
         let arr = [];
@@ -21,26 +21,25 @@ const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, set
         return arr;
     }
 
-    var seriesInfo = []
+    var seriesInfo = useRef([]);
+    
 
     const addSeries = (isSeries) => {
-        
+
+        if (isSeries) {
+            setSuccessMessage({ message: "Series Added" });
+        } else {
+            setSuccessMessage({ message: "Graph Created" });
+        }
 
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
             selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
         }
-        if (isSeries) {
-            setSuccessMessage("Series Added");
-            success();
-        } else {
-            setSuccessMessage("Graph Created");
-            success();
-        }
 
         var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
 
-        seriesInfo.push({
+        seriesInfo.current.push({
             "columns": selectColumns,
             "analyze": {
                 "analysis": checkedAnalyzer.code,
@@ -54,16 +53,6 @@ const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, set
     }
 
     const [openPopup, setOpenPopup] = useState(null);
-
-    const togglePopup = (analyzerName) => {
-      if (openPopup === analyzerName) {
-        // Clicking on the same analyzer, so close it
-        setOpenPopup(null);
-      } else {
-        // Clicking on a different analyzer, open it
-        setOpenPopup(analyzerName);
-      }
-    };
 
     return (
         <div className="analyzersAndSeriesContainer">
@@ -109,7 +98,7 @@ const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, set
             <div className="buttonFlexBox">
                 <button className="pageThreeBackButton" onClick={() => { setDisplayPage(2) }}>Back</button>
                 <button className="addSeries" onClick={() => {addSeries(true); }}>Add Series</button>
-                <button className="pageThreeNextButton" onClick={() => {addSeries(false); handleSubmit(seriesInfo); setShowModal(false); }}>Submit</button>
+                <button className="pageThreeNextButton" onClick={() => {addSeries(false); handleSubmit(seriesInfo.current); setShowModal(false); }}>Submit</button>
             </div>
         </div>
     )

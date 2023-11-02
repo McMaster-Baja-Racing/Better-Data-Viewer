@@ -2,7 +2,7 @@ import '../styles/App.css';
 import { CreateGraphModal } from "./CreateGraphModal";
 import { UploadModal } from "./uploadModal";
 import { HelpModal } from "./helpModal";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
 import $ from 'jquery';
@@ -58,19 +58,21 @@ const App = () => {
     type: "line"
   });
 
-  const [successMessage, setSuccessMessage] = useState("")
+  const [successMessage, setSuccessMessage] = useState({})
 
-  const success = () => {
+  // Catches when success message is updated and displays it
+  useEffect(() => {
+    if (successMessage === "" || Object.keys(successMessage).length === 0) return;
     $( "div.success" ).fadeIn(1000).delay(2000).fadeOut(1000)
-  };
+  }, [successMessage]);
   
   return (
     <div className="App">
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
-        <div className="success">{successMessage}</div>
-        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} success={success}/> : null}
-        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} setSuccessMessage={setSuccessMessage} success={success}/> : null}
+        <div className="success">{successMessage.message}</div>
+        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} setSuccessMessage={setSuccessMessage}/> : null}
         {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
 
         <Chart chartInformation={chartInformation} />
