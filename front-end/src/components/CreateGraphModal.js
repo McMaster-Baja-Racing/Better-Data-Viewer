@@ -7,7 +7,7 @@ import FileStorage from './FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 
-export const CreateGraphModal = ({ setShowModal, setChartInformation }) => {
+export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccessMessage }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -40,7 +40,7 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation }) => {
     if (displayPage === 2) {
       return (<FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setDimensions={setDimensions} setColumns={setColumns} setDisplayPage={setDisplayPage}/>)
     } else if (displayPage === 3) {
-        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit}/>)
+        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage}/>)
     } else{
       return( <GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }

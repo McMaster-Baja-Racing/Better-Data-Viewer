@@ -5,7 +5,7 @@ import '../styles/uploadModalStyles.css';
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
-export const UploadModal = ({ setShowUploadModal }) => {
+export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
 
   const [dragActive, setDragActive] = React.useState(false);
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
       alert("Please select a file")
       return
     }
-    //start loading useState
+    //start loading
     setLoading(true);
     //console.log(loading);
     await new Promise((resolve, reject) => {
@@ -71,21 +71,19 @@ export const UploadModal = ({ setShowUploadModal }) => {
         
       }
     });
-    //stop loading useState
-    //console.log(loading);
-    setLoading(false);
 
-    setShowUploadModal(false); //Dont need to do this neccesarily
+    setLoading(false);
+    setShowUploadModal(false);
+    setSuccessMessage({ message: "Files Uploaded" });// + fileLists.map((file) => file.name).join(", ")
   };
 
- 
-
   return ReactDom.createPortal(
+    
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         <div className="uploadContainer">
           <h1>Upload Files</h1>
-          <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
+            <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
             <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
               setfileLists([...e.target.files, ...fileLists])
             }}/>
@@ -94,7 +92,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
                 {fileLists.length == 0 ? <p>Drag and drop your file here or click to browse your files</p> : fileLists.map((file, index) => {
                   return (
                   <div>
-                    <button type="button" onClick={() => {
+                    <button className="fileButton" type="button" onClick={() => {
                       setfileLists(fileLists.filter((f) => f.name !== file.name))
                     }}>X</button>
                     {file.name}
@@ -103,7 +101,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
               </div>
             </label>
             {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
-            <button type="button" onClick={(() => {
+            <button id = "delete" type="button" onClick={(() => {
             fetch(`http://${window.location.hostname}:8080/deleteAll`).then((res) => {
               alert(res)
             }).catch((err) => {
@@ -111,7 +109,7 @@ export const UploadModal = ({ setShowUploadModal }) => {
             })
           })}>Delete All</button>
           {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..."/>}
-          <input className="uploadSubmit" type="submit" />
+          <input id = "submitButton" className="uploadSubmit" type="submit" />
           </form>
         </div>
         <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
