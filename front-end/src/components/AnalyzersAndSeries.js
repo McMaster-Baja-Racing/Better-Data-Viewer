@@ -3,7 +3,7 @@ import Help from './Help';
 import analyzerData from './analyzerData';
 import '../styles/analyzersAndSeriesStyles.css';
 import { useState } from 'react';
-const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
+const AnalyzersAndSeries = ({dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage ,success }) => {
 
     const columnGenerator = (n) => {
         let arr = [];
@@ -32,11 +32,9 @@ const AnalyzersAndSeries = ({ setSuccessMessage,success,dimensions, columns, set
         }
         if (isSeries) {
             setSuccessMessage("Series Added");
-            success();
         } else {
             setSuccessMessage("Graph Created");
-            success();
-        }
+        }success();
 
         var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
 
