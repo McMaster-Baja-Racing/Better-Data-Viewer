@@ -69,16 +69,6 @@ button:hover {
   background-color: rgb(238, 48, 86);
 }
 
-select {
-  width: 200px;
-  padding: 5px;
-  font-size: 12px;
-}
-
-select option:checked {
-  background-color: crimson; 
-  color: #fff; 
-}
 .success {
 	padding: 15px;
   align-self: center;
