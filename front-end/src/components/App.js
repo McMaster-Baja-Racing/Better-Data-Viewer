@@ -63,7 +63,7 @@ const App = () => {
   // Catches when success message is updated and displays it
   useEffect(() => {
     if (successMessage === "" || Object.keys(successMessage).length === 0) return;
-    $( "div.success" ).fadeIn(1000).delay(2000).fadeOut(1000)
+    $( "div.success" ).slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
   
   return (

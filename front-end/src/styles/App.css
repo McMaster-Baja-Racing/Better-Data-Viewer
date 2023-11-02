@@ -72,13 +72,12 @@ button:hover {
 .success {
 	padding: 15px;
   align-self: center;
-  border: 1px solid transparent;
+  border: 2px solid #161616;
   border-radius: 4px;
-  position: absolute;  
+  position: absolute;
   z-index: 1;
   color: #161616;
   background-color: #dff0d8;
-  border-color: #d6e9c6;
   display: none;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   top: 20%;
