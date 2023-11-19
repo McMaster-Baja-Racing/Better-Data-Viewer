@@ -145,12 +145,10 @@ const Chart = ({ chartInformation }) => {
                 title: {
                     text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
                 },
-
                 chart: {
                     type: chartInformation.type,
                     zoomType: 'x'
                 },
-
                 xAxis: {
                     title: {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'

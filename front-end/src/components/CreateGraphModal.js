@@ -1,7 +1,7 @@
 //CreateGraphModal.js
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
-import { useState} from 'react';
+import { useState } from 'react';
 import { useRef } from 'react';
 import FileStorage from './FileStorage';
 import GraphSettings from './GraphSettings';
@@ -33,16 +33,16 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
       "type": graphType
     })
   }
-  
 
-  const updatePage = (pageVar) => {
-    
+
+  const updatePage = () => {
+
     if (displayPage === 2) {
-      return (<FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setDimensions={setDimensions} setColumns={setColumns} setDisplayPage={setDisplayPage}/>)
+      return (<FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setDimensions={setDimensions} setColumns={setColumns} setDisplayPage={setDisplayPage} />)
     } else if (displayPage === 3) {
-        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage}/>)
-    } else{
-      return( <GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
+      return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} />)
+    } else {
+      return (<GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles} setGraphType={setGraphType} setLiveCheck={setLiveCheck} />);
     }
   }
 
