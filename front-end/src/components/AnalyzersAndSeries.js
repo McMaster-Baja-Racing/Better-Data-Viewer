@@ -4,18 +4,31 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
 
     const columnGenerator = (n) => {
         let arr = [];
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < 2; i++) {
             arr.push(
-                <div >
-                    <div className="boldText">{i === 0 ? "X-Axis" : (i==1 ? "Y Axis": "Z Axis")} </div>
-                    <select className={i} key={i}>
+                <div>
+                    <div className="boldText">{i === 0 ? "X-Axis" : "Y Axis"} </div>
+                    <select className={i} key={i} defaultValue={JSON.stringify(columns[i])}>
                         {columns.map(column => (
                             <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
                         ))}
                     </select>
                 </div>);
         }
-        return arr;
+        let arr2 = [];
+        if (n === 3) {
+            arr2.push(
+                <br></br>,
+                <div>
+                    <div className="boldText">Z Axis</div>
+                    <select className={2} key={2} defaultValue={JSON.stringify(columns[2])}>
+                        {columns.map(column => (
+                            <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
+                        ))}
+                    </select>
+                </div>);
+        }
+        return <div><div className='columnHeaders'>{arr}</div> <div className='columnHeaders2'>{arr2}</div></div>;
     }
 
     const analyzers = [
@@ -66,10 +79,10 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
     return (
         <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
-            <div className="columnHeaders">
+         
                 {graphType === "colour" ? (setDimensions(3)) : (setDimensions(2))}
                 {columnGenerator(dimensions)}
-            </div>
+         
 
             <h3>Select Analyzer</h3>
             <div className="analyzerContainer">

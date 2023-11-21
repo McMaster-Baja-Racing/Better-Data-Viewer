@@ -13,7 +13,7 @@ const GraphSettings = ({ setDisplayPage, setFiles, setGraphType, setLiveCheck })
     fetch(`http://${window.location.hostname}:8080/files`)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
         setFiles(data.files);
       })
   }
