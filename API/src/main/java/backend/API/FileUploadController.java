@@ -56,7 +56,7 @@ public class FileUploadController {
 		this.storageService = storageService;
 	}
 
-	//This is the method that shows the upload form page, used for debugging
+	// This is the method that shows the upload form page, used for debugging
 	@GetMapping("/")
 	public String listUploadedFiles(Model model) throws IOException {
 
@@ -68,7 +68,7 @@ public class FileUploadController {
 		return "uploadForm";
 	}
 
-	//This is the default method that returns a single file
+	// This is the default method that returns a single file
 	@GetMapping("/files/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
@@ -78,22 +78,23 @@ public class FileUploadController {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 
-    	responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
-		//Set these headers so that you can access from LocalHost
+		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
+				"attachment; filename=\"" + file.getFilename() + "\"");
+		// Set these headers so that you can access from LocalHost
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
 		return ResponseEntity.ok().headers(responseHeaders).body(file);
 	}
 
-	//This is the method that returns information about all the files, to be used by fetch
+	// This is the method that returns information about all the files, to be used
+	// by fetch
 	// It returns an object of type fileList from the model folder
 	@GetMapping("/files")
 	@ResponseBody
-	public ResponseEntity<fileList> listUploadedFiles() throws IOException{
+	public ResponseEntity<fileList> listUploadedFiles() throws IOException {
 
-		//Set these headers so that you can access from LocalHost
+		// Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
@@ -113,15 +114,16 @@ public class FileUploadController {
 		});
 
 		return ResponseEntity.ok().headers(responseHeaders).body(files);
-	} 
+	}
 
-	//This method returns information about a specific file, given the filename.
-	//It should return the first row of the file (the header row) + [datetime, and the number of rows eventually]
+	// This method returns information about a specific file, given the filename.
+	// It should return the first row of the file (the header row) + [datetime, and
+	// the number of rows eventually]
 	@GetMapping("/files/{filename:.+}/info")
 	@ResponseBody
-	public ResponseEntity<String> listFileInformation(@PathVariable String filename) throws IOException{
+	public ResponseEntity<String> listFileInformation(@PathVariable String filename) throws IOException {
 
-		//Set these headers so that you can access from LocalHost
+		// Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
@@ -132,19 +134,22 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(fileinfo);
 	}
 
-	// This is the be all end all method that should take in any number of file names and analyzers, plus live option and return a file
+	// This is the be all end all method that should take in any number of file
+	// names and analyzers, plus live option and return a file
 	@GetMapping("/analyze")
 	@ResponseBody
-	public ResponseEntity<Resource> handleFileRequest(@RequestParam(value = "inputFiles", required = true) String[] inputFiles,
-		@RequestParam(value = "outputFiles", required = false) String[] outputFiles,
-		@RequestParam(value = "analyzer", required = false) String[] analyzer,
-		@RequestParam(value = "liveOptions", required = false) String[] liveOptions) throws InterruptedException {
-		//Catch exceptions first
+	public ResponseEntity<Resource> handleFileRequest(
+			@RequestParam(value = "inputFiles", required = true) String[] inputFiles,
+			@RequestParam(value = "inputColumns", required = true) String[] inputColumns,
+			@RequestParam(value = "outputFiles", required = false) String[] outputFiles,
+			@RequestParam(value = "analyzer", required = false) String[] analyzer,
+			@RequestParam(value = "liveOptions", required = false) String[] liveOptions) throws InterruptedException {
+		// Catch exceptions first
 		if (inputFiles == null || inputFiles.length == 0) {
 			throw new IllegalArgumentException("No input files selected");
 		}
 
-		// If no output files are selected, give it a single 
+		// If no output files are selected, give it a single
 		if (outputFiles == null || outputFiles.length == 0) {
 			// Set output files to empty string
 			outputFiles = new String[10];
@@ -157,21 +162,24 @@ public class FileUploadController {
 
 		// Then run the selected analyzer
 		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
-			Analyzer.createAnalyzer(analyzer[0], inputFiles, outputFiles, Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
+			Analyzer.createAnalyzer(analyzer[0], inputFiles, inputColumns, outputFiles,
+					Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
 		} else {
 			// If no analyzer is selected, only one file is selected, copy it
-			//storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
+			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
 			outputFiles[outputFiles.length - 1] = "./upload-dir/" + inputFiles[0];
 		}
 		// Then return the final file, removing the prefix for upload dir
-		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
+		Resource file = storageService.loadAsResource(
+				outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
 
 		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();
-		Path absoluteFilePath = storageService.load(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
+		Path absoluteFilePath = storageService
+				.load(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
 		String relativePath = Paths.get("upload-dir").relativize(absoluteFilePath).toString();
 		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + relativePath + "\"");
+				"attachment; filename=\"" + relativePath + "\"");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
@@ -179,9 +187,9 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(file);
 	}
 
-
-	//This next method is for live data! Ideally you can feed it any of the basic filenames that the car might output
-	//And this will send the csv right back! Neat, huh?
+	// This next method is for live data! Ideally you can feed it any of the basic
+	// filenames that the car might output
+	// And this will send the csv right back! Neat, huh?
 	@GetMapping("/live/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> serveLiveFile(@PathVariable String filename) {
@@ -193,8 +201,8 @@ public class FileUploadController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 
 		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
-		//Set these headers so that you can access from LocalHost
+				"attachment; filename=\"" + file.getFilename() + "\"");
+		// Set these headers so that you can access from LocalHost
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
@@ -208,14 +216,14 @@ public class FileUploadController {
 		storageService.init();
 
 		HttpHeaders responseHeaders = new HttpHeaders();
-		//Set these headers so that you can access from LocalHost
+		// Set these headers so that you can access from LocalHost
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
 		return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
 	}
 
-	//This is the method that uploads the file
+	// This is the method that uploads the file
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {
@@ -226,7 +234,8 @@ public class FileUploadController {
 		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
-			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", false);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
+					storageService.load("").toAbsolutePath().toString() + "\\", false);
 			storageService.delete(filename);
 		} else {
 			storageService.store(file);
@@ -238,37 +247,39 @@ public class FileUploadController {
 		return "redirect:/";
 	}
 
-	//Upload file without redirect
+	// Upload file without redirect
 	@PostMapping("/upload")
 	public ResponseEntity<String> handleFileUploadAPI(@RequestParam("file") MultipartFile file) {
 
-		//Check type of file, either CSV or bin
+		// Check type of file, either CSV or bin
 		String filename = file.getOriginalFilename();
 		if (filename == null) {
 			throw new IllegalArgumentException("No file selected");
 		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
-			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(), storageService.load("").toAbsolutePath().toString() + "\\", true);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
+					storageService.load("").toAbsolutePath().toString() + "\\", true);
 			storageService.delete(filename);
 		} else {
 			storageService.store(file);
 		}
 
-		//Set these headers so that you can access from LocalHost
+		// Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-		
-		return ResponseEntity.ok().headers(responseHeaders).body(String.format("%s uploaded", file.getOriginalFilename()));
+
+		return ResponseEntity.ok().headers(responseHeaders)
+				.body(String.format("%s uploaded", file.getOriginalFilename()));
 	}
 
-	//This method lets the backend know to collect live data and from which port
+	// This method lets the backend know to collect live data and from which port
 	@PostMapping("/live")
 	public ResponseEntity<String> handleLive(@RequestParam(name = "port", required = false) String port) {
-		//Start the live data collection
+		// Start the live data collection
 
-		//call the readLive function in Serial.java
+		// call the readLive function in Serial.java
 		if (Serial.exit == false) {
 			Serial.exit = true;
 		} else {
@@ -277,12 +288,13 @@ public class FileUploadController {
 			}).start();
 		}
 
-		//Set these headers so that you can access from LocalHost
+		// Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		return ResponseEntity.ok().headers(responseHeaders).body(String.format("Live data collection started on port %s", port));
+		return ResponseEntity.ok().headers(responseHeaders)
+				.body(String.format("Live data collection started on port %s", port));
 	}
 
 	@ExceptionHandler(StorageFileNotFoundException.class)

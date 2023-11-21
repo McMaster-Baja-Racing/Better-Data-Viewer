@@ -42,7 +42,7 @@ const Chart = ({ chartInformation }) => {
         let inputColumns = columnInfo.map(col => col.header);
         console.log(inputColumns);
         // Using async / await rather than .then() allows me to return the data from the function easily
-        const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}?inputColumns=${inputColumns}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
+        const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&inputColumns=${inputColumns}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
             method: 'GET'
         })
 
@@ -52,7 +52,7 @@ const Chart = ({ chartInformation }) => {
         }
 
         const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
-        setFileNames (prevState => {
+        setFileNames(prevState => {
             // return without duplicates
             return [...prevState, filename]
         })
@@ -60,7 +60,7 @@ const Chart = ({ chartInformation }) => {
         const text = await response.text()
 
         var headers = text.trim().split("\n")[0].split(",");
-        headers[headers.length-1] = headers[headers.length-1].replace("\r", "")
+        headers[headers.length - 1] = headers[headers.length - 1].replace("\r", "")
         var h = [];
 
         // This will find the index of the headers in the file (works for any number of headers)
@@ -98,7 +98,7 @@ const Chart = ({ chartInformation }) => {
                 }
             }
             // Fixed this little if statement with .filter(e => e)
-            data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis,chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
+            data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
         }
 
         setParsedData(data)
@@ -106,7 +106,7 @@ const Chart = ({ chartInformation }) => {
 
 
     useEffect(() => {
-        
+
         // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
         if (chartInformation.files.length === 0) {
             return;
@@ -115,7 +115,7 @@ const Chart = ({ chartInformation }) => {
         setLoading(true);
         setParsedData([]);
         setFileNames([]);
-        
+
         // Now complete a request for each series
         getFileFormat();
 
@@ -134,7 +134,7 @@ const Chart = ({ chartInformation }) => {
             //console.log(parsedData)
             return {
                 ...prevState,
-                series: ( () => {
+                series: (() => {
                     var series = [];
                     var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
                     for (var i = 0; i < parsedData.length; i++) {
@@ -179,7 +179,7 @@ const Chart = ({ chartInformation }) => {
 
     function throttle(f, delay) {
         let timer = 0;
-        return function(...args) {
+        return function (...args) {
             clearTimeout(timer);
             timer = setTimeout(() => f.apply(this, args), delay);
         }
@@ -202,19 +202,19 @@ const Chart = ({ chartInformation }) => {
         //run observer with a delay
         resizeObserver.observe(chartContainer);
     }, [])
-    
+
     // This function loops when live is true, and updates the chart every 500ms
     useEffect(() => {
         let intervalId;
-            
-        if (chartInformation.live){
+
+        if (chartInformation.live) {
             intervalId = setInterval(() => {
                 getFileFormat();
             }, 2000);
         }
 
         return () => clearInterval(intervalId);
-      }, [chartInformation.live]);
+    }, [chartInformation.live]);
 
     return (
 
