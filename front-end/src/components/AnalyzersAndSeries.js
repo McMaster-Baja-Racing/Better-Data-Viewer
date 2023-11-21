@@ -1,13 +1,13 @@
 import '../styles/analyzersAndSeriesStyles.css';
 
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setDimensions, graphType}) => {
 
     const columnGenerator = (n) => {
         let arr = [];
         for (let i = 0; i < n; i++) {
             arr.push(
                 <div >
-                    <div className="boldText">{i === 0 ? "X-Axis" : "Y-Axis"} </div>
+                    <div className="boldText">{i === 0 ? "X-Axis" : (i==1 ? "Y Axis": "Z Axis")} </div>
                     <select className={i} key={i}>
                         {columns.map(column => (
                             <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
@@ -67,6 +67,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
             <div className="columnHeaders">
+                {graphType === "colour" ? (setDimensions(3)) : (setDimensions(2))}
                 {columnGenerator(dimensions)}
             </div>
 

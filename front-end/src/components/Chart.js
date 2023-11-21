@@ -80,9 +80,8 @@ const Chart = ({ chartInformation }) => {
             .split("\n")
             .slice(1)
             .map((line) => line.split(","))
-            .map((line) => ({x:parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: Math.floor(Math.random() * 35)}));
+            .map((line) => ({x:parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: Math.floor(line[h[2]])}));
             
-
         console.log(data)
 
         return data;
@@ -93,7 +92,6 @@ const Chart = ({ chartInformation }) => {
         // In here the data is all added up, which prevents the chart from updating until all data is fetched
         // This also prevents liveData from adding more data as new series, and will update the graph instead
         var data = [];
-
         for (var i = 0; i < chartInformation.files.length; i++) {
             // Create a list of all files in order (formatting for backend)
             var files = [];
