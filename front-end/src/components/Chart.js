@@ -37,8 +37,12 @@ const Chart = ({ chartInformation }) => {
     const [fileNames, setFileNames] = useState([]);
 
     const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions, columnInfo) => {
+        // TODO: Remove debug code
+        console.log(columnInfo);
+        let inputColumns = columnInfo.map(col => col.header);
+        console.log(inputColumns);
         // Using async / await rather than .then() allows me to return the data from the function easily
-        const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
+        const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}?inputColumns=${inputColumns}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
             method: 'GET'
         })
 
@@ -54,6 +58,7 @@ const Chart = ({ chartInformation }) => {
         })
 
         const text = await response.text()
+
         var headers = text.trim().split("\n")[0].split(",");
         headers[headers.length-1] = headers[headers.length-1].replace("\r", "")
         var h = [];
@@ -73,6 +78,7 @@ const Chart = ({ chartInformation }) => {
             .slice(1)
             .map((line) => line.split(","))
             .map((line) => [parseFloat(line[h[0]]), parseFloat(line[h[1]])]);
+        console.log(data, h);
 
         return data;
     }
