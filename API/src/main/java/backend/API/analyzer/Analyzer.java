@@ -1,6 +1,7 @@
 package backend.API.analyzer;
 
 import java.io.IOException;
+import java.util.List;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,10 +13,19 @@ public abstract class Analyzer {
     
     // Input and output files are arrays because some analyzers may need multiple input files
     protected String[] inputFiles;
+    protected String[] inputColumns;
     protected String[] outputFiles;
 
+    public Analyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
+        this.inputFiles = inputFiles;
+        this.inputColumns = inputColumns;
+        this.outputFiles = outputFiles;
+    }
+
+    // FIXME: temporary constructor so I don't need to implement the new one in every single analyzer just to test
     public Analyzer(String[] inputFiles, String[] outputFiles) {
         this.inputFiles = inputFiles;
+        this.inputColumns = new String[1];
         this.outputFiles = outputFiles;
     }
     
@@ -114,7 +124,7 @@ public abstract class Analyzer {
                 }
                 double m = Double.parseDouble((String) params[0]);
                 double b = Double.parseDouble((String) params[0]);
-                return new LinearMultiplyAnalyzer(inputFiles, outputFiles, m,b);
+                return new LinearMultiplyAnalyzer(inputFiles, inputColumns, outputFiles, m,b);
 
             case "average":
                 if (outputFiles.length == 10) {
@@ -129,6 +139,19 @@ public abstract class Analyzer {
             default:
                 return null;
         }
+    }
+
+  
+    // From this list of headers, which one are we actually doing analysis on
+    // fileIndex is basically the axis, 0=X, 1=Y, I made it a int to futureproof adding new columns
+    public int getAnalysisColumnIndex(int fileIndex, List<String> fileHeaders) throws RuntimeException {
+        for(int i = 0; i < fileHeaders.size(); i++) {
+            if(fileHeaders.get(i).trim().equals(this.inputColumns[fileIndex])) {
+                return i;
+            }
+        }
+        // The inputColum is wrong somehow, should never happen with working frontend
+        throw new RuntimeException("No column in file exists with analysis column name");
     }
 
     public static void main(String[] args) {
