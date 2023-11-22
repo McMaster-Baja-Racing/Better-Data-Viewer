@@ -23,7 +23,7 @@ public abstract class Analyzer {
         this.outputFiles = outputFiles;
     }
 
-    // FIXME: temporary constructor so I don't need to implement the new one in every single analyzer just to test
+    // Some analyzers work on entire rows and don't need to select columns (e.g. compression), they should use this constructor
     public Analyzer(String[] inputFiles, String[] outputFiles) {
         this.inputFiles = inputFiles;
         this.inputColumns = new String[1];
@@ -114,7 +114,7 @@ public abstract class Analyzer {
                 }
                 int start = Integer.parseInt((String) params[0]);
                 int end = Integer.parseInt((String) params[1]);
-                return new SplitAnalyzer(inputFiles, outputFiles, start,end);
+                return new SplitAnalyzer(inputFiles, inputColumns, outputFiles, start,end);
             case "linearMultiply":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_mult.csv";

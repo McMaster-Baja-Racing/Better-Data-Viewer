@@ -43,7 +43,8 @@ public class AccelCurveAnalyzer extends Analyzer {
         // Then interpolate
         System.out.println("Interpolating...");
 
-        LinearInterpolaterAnalyzer linearInterpolate = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
+        // LinearInterp with Timestamp as independent variable, but we didn't actually select Timestamp as an axis in the front-end so we hardcode it in here
+        LinearInterpolaterAnalyzer linearInterpolate = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]}, Arrays.copyOfRange(outputFiles, 2, 3));
         linearInterpolate.analyze();
 
         // LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
