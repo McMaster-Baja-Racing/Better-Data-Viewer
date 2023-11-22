@@ -61,7 +61,7 @@ public abstract class Analyzer {
                     outputFiles[2] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4).replace("/", "") + ".csv";
                     outputFiles[9] = outputFiles[2];
                 }
-                return new AccelCurveAnalyzer(inputFiles, outputFiles);
+                return new AccelCurveAnalyzer(inputFiles, inputColumns, outputFiles);
             case "rollAvg":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_roll.csv";
@@ -80,11 +80,11 @@ public abstract class Analyzer {
                 }
                 // Check if passed a window size
                 if (params.length == 0) {
-                    return new SGolayFilter(inputFiles, outputFiles);
+                    return new SGolayFilter(inputFiles, inputColumns, outputFiles);
                 }
                 windowSize = Integer.parseInt((String) params[0]);
                 int polynomialDegree = Integer.parseInt((String) params[1]);
-                return new SGolayFilter(inputFiles, outputFiles, windowSize, polynomialDegree);
+                return new SGolayFilter(inputFiles, inputColumns, outputFiles, windowSize, polynomialDegree);
             case "linearInterpolate":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4).replace("/", "") + ".csv";
