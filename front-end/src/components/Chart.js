@@ -3,12 +3,10 @@ import React, { useState, useEffect } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
-import HighchartsColorAxis from "highcharts/modules/coloraxis"; 
+import HighchartsColorAxis from "highcharts/modules/coloraxis";
 
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
-
-
 
 const Chart = ({ chartInformation }) => {
     //File information is array of column names and associated file names
@@ -30,9 +28,8 @@ const Chart = ({ chartInformation }) => {
         accessibility: {
             enabled: false
         },
-        // Leaving this enabled will disable colorAxis, and so should only be enabled when necessary
         boost: {
-            enabled: false
+            enabled: true
         }
     });
 
@@ -56,21 +53,21 @@ const Chart = ({ chartInformation }) => {
         }
 
         const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
-        setFileNames (prevState => {
+        setFileNames(prevState => {
             // return without duplicates
             return [...prevState, filename]
         })
 
         const text = await response.text()
         var headers = text.trim().split("\n")[0].split(",");
-        headers[headers.length-1] = headers[headers.length-1].replace("\r", "")
+        headers[headers.length - 1] = headers[headers.length - 1].replace("\r", "")
         var h = [];
 
         // This will find the index of the headers in the file (works for any number of headers)
-        for (var i = 0; i < headers.length; i++) {
-            for (var j = 0; j < columnInfo.length; j++) {
-                if (headers[i] === columnInfo[j].header) {
-                    h.push(i);
+        for (var i = 0; i < columnInfo.length; i++) {
+            for (var j = 0; j < headers.length; j++) {
+                if (columnInfo[i].header === headers[j]) {
+                    h.push(j);
                 }
             }
         }
@@ -80,9 +77,14 @@ const Chart = ({ chartInformation }) => {
             .split("\n")
             .slice(1)
             .map((line) => line.split(","))
-            .map((line) => ({x:parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: Math.floor(line[h[2]])}));
-            
-        console.log(data)
+            .map((line) => {
+                if (chartInformation.type !== "colour") {
+                    return [parseFloat(line[h[0]]), parseFloat(line[h[1]])];
+                } else {
+                    return { x: parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: parseFloat(line[h[2]]) };
+                }
+            })
+
 
         return data;
     }
@@ -101,7 +103,7 @@ const Chart = ({ chartInformation }) => {
                 }
             }
             // Fixed this little if statement with .filter(e => e)
-            data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis,chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
+            data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
         }
 
         setParsedData(data)
@@ -116,7 +118,7 @@ const Chart = ({ chartInformation }) => {
         setLoading(true);
         setParsedData([]);
         setFileNames([]);
-        
+
         // Now complete a request for each series
         getFileFormat();
 
@@ -134,7 +136,7 @@ const Chart = ({ chartInformation }) => {
         setChartOptions((prevState) => {
             //console.log(parsedData)
             return {
-                series: ( () => {
+                series: (() => {
                     var series = [];
                     if (chartInformation.type !== "colour") {
                         console.log("Not colour")
@@ -145,7 +147,6 @@ const Chart = ({ chartInformation }) => {
                                 name: fileNames[i],
                                 data: parsedData[i],
                                 colour: colours[i],
-                                turboThreshold: 0,
                                 opacity: 1,
                                 colorAxis: false
                             })
@@ -158,7 +159,7 @@ const Chart = ({ chartInformation }) => {
                                 data: parsedData[i],
                                 colorKey: 'colorValue',
                                 turboThreshold: 0,
-                                opacity: 1
+                                opacity: 1,
                             })
                         }
                     }
@@ -189,21 +190,21 @@ const Chart = ({ chartInformation }) => {
                 colorAxis: (() => {
                     if (chartInformation.type === "colour") {
                         return {
-                            min: 0,
-                            max: 35,
+                            dataMin: null,
+                            dataMax: null,
                             minColor: '#000fb0',
                             maxColor: '#e3e5ff',
-                            labels: {
-                                format: '{value}%'
-                            },
-                            reversed: true
                         }
                     } else {
                         return {
                             showInLegend: false
                         }
                     }
-                })()
+                })(),
+                boost: {
+                    enabled: chartInformation.type === "colour" ? false : true
+                }
+
             }
         })
         setLoading(false);
@@ -212,7 +213,7 @@ const Chart = ({ chartInformation }) => {
     // This function is used to throttle the resize observer
     function throttle(f, delay) {
         let timer = 0;
-        return function(...args) {
+        return function (...args) {
             clearTimeout(timer);
             timer = setTimeout(() => f.apply(this, args), delay);
         }
@@ -235,19 +236,19 @@ const Chart = ({ chartInformation }) => {
         //run observer with a delay
         resizeObserver.observe(chartContainer);
     }, [])
-    
+
     // This function loops when live is true, and updates the chart every 500ms
     useEffect(() => {
         let intervalId;
-            
-        if (chartInformation.live){
+
+        if (chartInformation.live) {
             intervalId = setInterval(() => {
                 getFileFormat();
             }, 2000);
         }
 
         return () => clearInterval(intervalId);
-      }, [chartInformation.live]);
+    }, [chartInformation.live]);
 
     return (
 
