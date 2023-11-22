@@ -18,6 +18,7 @@ public abstract class Analyzer {
 
     public Analyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
         this.inputFiles = inputFiles;
+        // inputColumns is the names of the columns we are analyzing. index 0 is the independent variable (usually timestamp), 1+ are dependent variable(s)
         this.inputColumns = inputColumns;
         this.outputFiles = outputFiles;
     }
@@ -69,10 +70,10 @@ public abstract class Analyzer {
                 }
                 // Check if passed a window size
                 if (params.length == 0) {
-                    return new RollingAvgAnalyzer(inputFiles, outputFiles);
+                    return new RollingAvgAnalyzer(inputFiles, inputColumns, outputFiles);
                 }
                 int windowSize = Integer.parseInt((String) params[0]);
-                return new RollingAvgAnalyzer(inputFiles, outputFiles, windowSize);
+                return new RollingAvgAnalyzer(inputFiles, inputColumns, outputFiles, windowSize);
             case "sGolay":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_sgolay.csv";
@@ -90,7 +91,7 @@ public abstract class Analyzer {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4).replace("/", "") + ".csv";
                     outputFiles[9] = outputFiles[0];
                 }
-                return new LinearInterpolaterAnalyzer(inputFiles, outputFiles);
+                return new LinearInterpolaterAnalyzer(inputFiles, new String[]{"Timestamp (ms)", inputColumns[0], inputColumns[1]}, outputFiles);
             case "RDPCompression":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_rdp.csv";

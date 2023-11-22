@@ -11,13 +11,13 @@ import backend.API.readwrite.CSVWriter;
 public class RollingAvgAnalyzer extends Analyzer {
     private int windowSize;
 
-    public RollingAvgAnalyzer(String[] inputFiles, String[] outputFiles, int windowSize) {
-        super(inputFiles, outputFiles);
+    public RollingAvgAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles, int windowSize) {
+        super(inputFiles, inputColumns, outputFiles);
         this.windowSize = windowSize;
     }
 
-    public RollingAvgAnalyzer(String[] inputFiles, String[] outputFiles) {
-        super(inputFiles, outputFiles);
+    public RollingAvgAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
+        super(inputFiles, inputColumns, outputFiles);
         this.windowSize = 30;
     }
 
@@ -40,23 +40,26 @@ public class RollingAvgAnalyzer extends Analyzer {
         List<List<String>> dataPoints = new ArrayList<List<String>>();
         List<String> dataPoint = new ArrayList<String>(2);
 
+        int independentColumn = this.getAnalysisColumnIndex(0, data.get(0));
+        int dependentColumn = this.getAnalysisColumnIndex(1, data.get(0));
+
         // Add header
-        dataPoint.add(data.get(0).get(0));
-        dataPoint.add(data.get(0).get(1));
+        dataPoint.add(data.get(0).get(independentColumn));
+        dataPoint.add(data.get(0).get(dependentColumn));
         dataPoints.add(dataPoint);
 
         // Reset
         dataPoint = new ArrayList<String>(2);
         
         for (int i = 1; i < data.size(); i++) {
-            dataPoint.add(data.get(i).get(0)); // Add timestamp
+            dataPoint.add(data.get(i).get(independentColumn)); // Add timestamp
 
-            rollSum += Double.parseDouble(data.get(i).get(1));
+            rollSum += Double.parseDouble(data.get(i).get(dependentColumn));
             if (i <= windowSize) {
                 // Round this double to 2 decimal places
                 dataPoint.add(Double.toString(Math.round((rollSum / i) * 100.0) / 100.0));
             } else {
-                rollSum -= Double.parseDouble(data.get(i - windowSize).get(1));
+                rollSum -= Double.parseDouble(data.get(i - windowSize).get(dependentColumn));
                 dataPoint.add(Double.toString(Math.round((rollSum / windowSize) * 100.0) / 100.0));
             }
             
@@ -69,10 +72,10 @@ public class RollingAvgAnalyzer extends Analyzer {
 
     // make a main to test it
     public static void main(String[] args) {
-        String[] filepaths = new String[1];
-        filepaths[0] = "C:/Users/Ariel/OneDrive/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM.csv";
-        RollingAvgAnalyzer r = new RollingAvgAnalyzer(filepaths, filepaths, 30);
-        r.analyze();
+        // String[] filepaths = new String[1];
+        // filepaths[0] = "C:/Users/Ariel/OneDrive/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM.csv";
+        // RollingAvgAnalyzer r = new RollingAvgAnalyzer(filepaths, filepaths, 30);
+        // r.analyze();
     }
     
 }
