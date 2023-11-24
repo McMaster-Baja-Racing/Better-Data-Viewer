@@ -4,6 +4,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
+require('highcharts-multicolor-series')(Highcharts);
 
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
@@ -78,10 +79,11 @@ const Chart = ({ chartInformation }) => {
             .slice(1)
             .map((line) => line.split(","))
             .map((line) => {
+                const colors = Highcharts.getOptions().colors
                 if (chartInformation.type !== "colour") {
                     return [parseFloat(line[h[0]]), parseFloat(line[h[1]])];
                 } else {
-                    return { x: parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: parseFloat(line[h[2]]) };
+                    return { x: parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: parseFloat(line[h[2]]), segmentColor: getColourValue(150, 0, 0, 70, parseFloat(line[h[2]]))}; // Make a random variable 
                 }
             })
 
@@ -169,7 +171,7 @@ const Chart = ({ chartInformation }) => {
                     text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
                 },
                 chart: {
-                    type: chartInformation.type === "colour" ? 'scatter' : chartInformation.type,
+                    type: chartInformation.type === "colour" ? 'coloredline' : chartInformation.type,
                     zoomType: 'x'
                 },
                 xAxis: {
@@ -190,10 +192,10 @@ const Chart = ({ chartInformation }) => {
                 colorAxis: (() => {
                     if (chartInformation.type === "colour") {
                         return {
-                            dataMin: null,
-                            dataMax: null,
-                            minColor: '#000fb0',
-                            maxColor: '#e3e5ff',
+                            min: 0,
+                            max: 70,
+                            minColor: `hsl(150, 100%, 50%)`,
+                            maxColor: `hsl(0, 100%, 50%)`,
                         }
                     } else {
                         return {
@@ -249,6 +251,11 @@ const Chart = ({ chartInformation }) => {
 
         return () => clearInterval(intervalId);
     }, [chartInformation.live]);
+
+    const getColourValue = (minhue, maxhue, minval, maxval, val) => {
+        var hue = minhue + (maxhue - minhue) * (val - minval) / (maxval - minval);
+        return `hsl(${hue}, 100%, 50%)`;
+    }
 
     return (
 
