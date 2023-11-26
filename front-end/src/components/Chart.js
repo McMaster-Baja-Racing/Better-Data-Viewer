@@ -60,6 +60,7 @@ const Chart = ({ chartInformation }) => {
         })
 
         const text = await response.text()
+        console.log(text)
         var headers = text.trim().split("\n")[0].split(",");
         headers[headers.length - 1] = headers[headers.length - 1].replace("\r", "")
         var h = [];
@@ -73,22 +74,52 @@ const Chart = ({ chartInformation }) => {
             }
         }
 
-        const data = text
-            .trim()
-            .split("\n")
-            .slice(1)
-            .map((line) => line.split(","))
-            .map((line) => {
-                const colors = Highcharts.getOptions().colors
-                if (chartInformation.type !== "colour") {
-                    return [parseFloat(line[h[0]]), parseFloat(line[h[1]])];
-                } else {
-                    return { x: parseFloat(line[h[0]]), y: parseFloat(line[h[1]]), colorValue: parseFloat(line[h[2]]), segmentColor: getColourValue(150, 0, 0, 70, parseFloat(line[h[2]]))}; // Make a random variable 
-                }
+        // Get all the lines of the file, and split them into arrays
+        const lines = text.trim().split("\n").slice(1).map((line) => line.split(","))
+
+        // If not colour, just return the data as is in array format
+        if (chartInformation.type !== "colour") {
+            return lines.map((line) => {
+                return [parseFloat(line[h[0]]), parseFloat(line[h[1]])];
             })
+        }
+
+        // If colour, return the data in object format
+        let minhue = 150;
+        let maxhue = 0;
+        
+        // Make a request to get the maximum and minimum values of the colour value
+        // Use method @GetMapping("/files/{filename:.+}/maxmin")
+        
+        const minMaxResponse = await fetch(`http://${window.location.hostname}:8080/files/${filename}/maxmin?headerName=${columnInfo[2].header}`, {
+            method: 'GET'
+        })
+
+        if (!minMaxResponse.ok) {
+            alert(`An error has occured!\nCode: ${minMaxResponse.status}\n${await minMaxResponse.text()}`);
+            return
+        }
+
+        const minMax = await minMaxResponse.text()
+
+        console.log(minMax)
+        
+        let minval = parseFloat(minMax.split(",")[0])
+        let maxval = parseFloat(minMax.split(",")[1])
+
+        return lines.map((line) => {
+                
+                    let val = parseFloat(line[h[2]])
+                    
+                    let hue = minhue + (maxhue - minhue) * (val - minval) / (maxval - minval);
+                    return { 
+                        x: parseFloat(line[h[0]]), 
+                        y: parseFloat(line[h[1]]), 
+                        colorValue: parseFloat(line[h[2]]), 
+                        segmentColor: `hsl(${hue}, 100%, 50%)`}; // Make a random variable 
+                })
 
 
-        return data;
     }
 
     // This function handles the higher level calling of getFile to handle it for all files as well as live data
