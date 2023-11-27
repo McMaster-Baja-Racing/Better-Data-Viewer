@@ -4,6 +4,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
+// TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
 HighchartsColorAxis(Highcharts);
@@ -283,11 +284,6 @@ const Chart = ({ chartInformation }) => {
 
         return () => clearInterval(intervalId);
     }, [chartInformation.live]);
-
-    const getColourValue = (minhue, maxhue, minval, maxval, val) => {
-        var hue = minhue + (maxhue - minhue) * (val - minval) / (maxval - minval);
-        return `hsl(${hue}, 100%, 50%)`;
-    }
 
     return (
 

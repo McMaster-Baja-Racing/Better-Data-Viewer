@@ -6,6 +6,8 @@ import { useState, useRef } from 'react';
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage, setDimensions, graphType }) => {
 
     const columnGenerator = (n) => {
+        // TODO: Refactor this so that it doesn't use variables such as "arr" and "arr2"
+        // TODO: Further should be more dynamic, so that it can handle any number of dimensions in a "smart" way (probably using some css)
         let arr = [];
         for (let i = 0; i < 2; i++) {
             arr.push(
@@ -71,6 +73,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
          
+                {/* TODO: Very hardcoded in, should be based off of a list of graph types and their respetive dimensions
+                Example: Gauge should have 1 dimension, line should have 2, etc. */}
                 {graphType === "colour" ? (setDimensions(3)) : (setDimensions(2))}
                 {columnGenerator(dimensions)}
          
