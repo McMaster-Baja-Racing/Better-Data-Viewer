@@ -222,8 +222,12 @@ const Chart = ({ chartInformation }) => {
                         return {
                             min: minMax.current[0],
                             max: minMax.current[1],
-                            minColor: `rgb(32,255,96)`,
-                            maxColor: "rgb(255,0,0)",
+                            stops: [
+                                [0.1, '#20ff60'], // green
+                                [0.5, '#DDDF0D'], // yellow
+                                [0.9, '#ff0000'] // red
+                            ]
+                            
                         }
                     } else {
                         return {
