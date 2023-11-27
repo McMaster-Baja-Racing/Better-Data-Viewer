@@ -87,7 +87,7 @@ const CustomFolderRenderer = (props) => {
 }
 
 
-const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, setColumns, setDisplayPage}) => {
+const FileStorage = ({ files, selectedFiles, setSelectedFiles, setColumns, setDisplayPage}) => {
     // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
     // Here is the implementation of the file browser with props passed in
 
@@ -128,7 +128,6 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setDimensions, se
                     return;
                 }
                 getHeaders(selectedFiles)
-                setDimensions(2)
                 setDisplayPage(3);
                 }} >Next</button>
             </div>

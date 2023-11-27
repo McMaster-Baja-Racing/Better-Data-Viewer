@@ -13,7 +13,7 @@ const GraphSettings = ({ setDisplayPage, setFiles, setGraphType, setLiveCheck })
     fetch(`http://${window.location.hostname}:8080/files`)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
         setFiles(data.files);
       })
   }
@@ -47,6 +47,7 @@ const GraphSettings = ({ setDisplayPage, setFiles, setGraphType, setLiveCheck })
               <option value="line">Line</option>
               <option value="spline">Spline</option>
               <option value="scatter">Scatter</option>
+              <option value="colour">XYColour</option>
             </select>
           </div>
         </div>
