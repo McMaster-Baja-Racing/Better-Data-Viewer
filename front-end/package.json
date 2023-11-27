@@ -35,6 +35,7 @@
     "react-hook-form": "^7.41.3",
     "react-keyed-file-browser": "^1.14.0",
     "react-scripts": "5.0.1",
+    "serve": "^14.2.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
