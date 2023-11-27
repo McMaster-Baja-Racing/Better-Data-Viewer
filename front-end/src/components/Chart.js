@@ -114,8 +114,9 @@ const Chart = ({ chartInformation }) => {
             return { 
                 x: parseFloat(line[h[0]]), 
                 y: parseFloat(line[h[1]]), 
-                colorValue: parseFloat(line[h[2]]), 
-                segmentColor: `hsl(${hue}, 100%, 50%)`}; // Make a random variable 
+                colorValue: val, 
+                segmentColor: `hsl(${hue}, 100%, 50%)`
+            };
         })
     }
 
@@ -135,7 +136,6 @@ const Chart = ({ chartInformation }) => {
             // Fixed this little if statement with .filter(e => e)
             data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
         }
-
         setParsedData(data)
     }
 
@@ -222,8 +222,8 @@ const Chart = ({ chartInformation }) => {
                         return {
                             min: minMax.current[0],
                             max: minMax.current[1],
-                            minColor: `hsl(150, 100%, 50%)`,
-                            maxColor: `hsl(0, 100%, 50%)`,
+                            minColor: `rgb(32,255,96)`,
+                            maxColor: "rgb(255,0,0)",
                         }
                     } else {
                         return {
