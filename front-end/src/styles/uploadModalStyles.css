@@ -83,3 +83,10 @@
   color: white;
   cursor: pointer;
 }
+
+.fileButton{
+  color: white;
+  background-color: red;
+  margin: 0;
+  padding: 7px 7px;
+}
