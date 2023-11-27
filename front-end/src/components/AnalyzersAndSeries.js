@@ -3,7 +3,7 @@ import Help from './Help';
 import analyzerData from './analyzerData';
 import '../styles/analyzersAndSeriesStyles.css';
 import { useState, useRef } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage, setDimensions, graphType }) => {
 
     const columnGenerator = (n) => {
         let arr = [];
