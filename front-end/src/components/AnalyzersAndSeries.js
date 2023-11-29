@@ -77,7 +77,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         } else {
             setDimensions(2);
         }
-    }, [graphType]);
+    }, [graphType, setDimensions]);
 
     return (
         <div className="analyzersAndSeriesContainer">

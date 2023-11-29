@@ -155,10 +155,11 @@ const Chart = ({ chartInformation }) => {
         setFileNames([]);
 
         // Now complete a request for each series
+        
         getFileFormat();
 
         // Set files to be all filenames in fileInformation, without duplicates
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chartInformation]);
 
     // Once necessary data is fetched, format it for the chart
@@ -247,7 +248,7 @@ const Chart = ({ chartInformation }) => {
             }
         })
         
-    }, [parsedData])
+    }, [parsedData, chartInformation, fileNames])
 
     // This function is used to throttle the resize observer
     function throttle(f, delay) {
@@ -287,6 +288,7 @@ const Chart = ({ chartInformation }) => {
         }
 
         return () => clearInterval(intervalId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chartInformation.live]);
 
     return (
