@@ -128,7 +128,7 @@ public abstract class Analyzer {
                     return null;
                 }
                 double m = Double.parseDouble((String) params[0]);
-                double b = Double.parseDouble((String) params[0]);
+                double b = Double.parseDouble((String) params[1]);
                 return new LinearMultiplyAnalyzer(inputFiles, inputColumns, outputFiles, m,b);
 
             case "average":
