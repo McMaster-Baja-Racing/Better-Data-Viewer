@@ -48,7 +48,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
         dataPoint.add(data.get(0).get(dependentColumn));
         dataPoints.add(dataPoint);
 
-        dataPoints = new ArrayList<List<String>>();
+        dataPoint = new ArrayList<String>(2);
 
         //loop through the data and multiply the second coloum by m and then add b
         for (int i = 1; i < data.size(); i++) {
