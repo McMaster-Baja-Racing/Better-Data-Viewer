@@ -25,6 +25,8 @@ export const HelpModal = ({ setShowHelpModal }) => {
             allowFullScreen
           ></iframe>
         </div>
+        <h2>Baja Wiki:<a href=" http://130.113.72.191:6969/" > http://130.113.72.191:6969/ </a></h2>
+        
       </div>
     </div>,
     document.getElementById("portal")
