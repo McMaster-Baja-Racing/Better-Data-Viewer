@@ -93,9 +93,9 @@ const Chart = ({ chartInformation }) => {
         let maxhue = 0;
         
         // Make a request to get the maximum and minimum values of the colour value
-        // Use method @GetMapping("/files/{filename:.+}/maxmin")
+        // Use method @GetMapping("/files/maxmin/{filename:.+}")
         
-        const minMaxResponse = await fetch(`http://${window.location.hostname}:8080/files/${filename}/maxmin?headerName=${columnInfo[2].header}`, {
+        const minMaxResponse = await fetch(`http://${window.location.hostname}:8080/files/maxmin/${filename}?headerName=${columnInfo[2].header}`, {
             method: 'GET'
         })
 
@@ -176,21 +176,21 @@ const Chart = ({ chartInformation }) => {
                     if (chartInformation.type !== "colour") {
                         // Normal type of graph
                         var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
-                        for (var i = 0; i < parsedData.length; i++) {
+                        for (var j = 0; j < parsedData.length; j++) {
                             series.push({
-                                name: fileNames[i],
-                                data: parsedData[i],
-                                colour: colours[i],
+                                name: fileNames[j],
+                                data: parsedData[j],
+                                colour: colours[j],
                                 opacity: 1,
                                 colorAxis: false
                             })
                         }
                     } else {
                         // XYColour graph
-                        for (var i = 0; i < parsedData.length; i++) {
+                        for (j = 0; j < parsedData.length; j++) {
                             series.push({
-                                name: fileNames[i],
-                                data: parsedData[i],
+                                name: fileNames[j],
+                                data: parsedData[j],
                                 colorKey: 'colorValue',
                                 turboThreshold: 0,
                                 opacity: 1,
