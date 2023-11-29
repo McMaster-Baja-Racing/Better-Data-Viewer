@@ -31,7 +31,8 @@ export const HelpModal = ({ setShowHelpModal }) => {
             allowFullScreen
           ></iframe>
         </div>
-        <h2 >Baja Wiki:<a href=" http://130.113.72.191:6969/" > http://130.113.72.191:6969/ </a></h2>
+        <h2 style={{ marginBottom: "-4px" }}>Baja Wiki:<a href=" http://130.113.72.191:6969/" > http://130.113.72.191:6969/</a></h2>
+        <p>(Make sure you're connected to the VPN or on the school wifi!)</p>
         </div>
       </div>
     </div>,
