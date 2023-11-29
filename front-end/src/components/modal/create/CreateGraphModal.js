@@ -20,7 +20,7 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
   const modalRef = useRef();
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setShowModal(false);
+      setShowModal('');
     }
   };
 
@@ -86,7 +86,7 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
     <div className="container" ref={modalRef} onClick={closeModal} >
       <div className="modal">
         {updatePage(displayPage)}
-        <button className="closeButton" onClick={() => setShowModal(false)}>X</button>
+        <button className="closeButton" onClick={() => setShowModal('')}>X</button>
       </div>
     </div>,
     document.getElementById("portal")

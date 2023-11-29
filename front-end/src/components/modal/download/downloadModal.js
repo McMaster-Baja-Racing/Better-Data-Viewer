@@ -17,7 +17,7 @@ export const DownloadModal = ({ setShowDownloadModal, setSuccessMessage }) => {
   const modalRef = useRef();
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setShowDownloadModal(false);
+      setShowDownloadModal('');
     }
   };
 
@@ -88,7 +88,7 @@ export const DownloadModal = ({ setShowDownloadModal, setSuccessMessage }) => {
             }}>Download</button>
           </div>
         </div>
-        <button className="closeButton" onClick={() => setShowDownloadModal(false)}>X</button>
+        <button className="closeButton" onClick={() => setShowDownloadModal('')}>X</button>
       </div>
     </div>,
     document.getElementById("portal")

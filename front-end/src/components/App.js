@@ -10,27 +10,29 @@ import { DownloadModal } from './modal/download/downloadModal';
 
 const App = () => {
 
+  const [modal, setModal] = useState('')
+
   // All for create graph popup
   const [showCreateGraphModal, setShowCreateGraphModal] = useState(false);
   const openCreateGraphModal = () => {
-    setShowCreateGraphModal(true);
+    setModal('Create')
   }
   // All for upload popup
   const [showUploadModal, setShowUploadModal] = useState(false);
   const openUploadModal = () => {
-    setShowUploadModal(true);
+    setModal('Upload')
   }
 
   // All for download popup
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const openDownloadModal = () => {
-    setShowDownloadModal(true);
+    setModal('Download')
   }
 
   // All for help popup
   const [showHelpModal, setShowHelpModal] = useState(false);
   const openHelpModal = () => {
-    setShowHelpModal(true);
+    setModal('Help')
   }
 
   // All for information transfer between children and parent
@@ -78,10 +80,10 @@ const App = () => {
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openDownloadModal={openDownloadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
         <div className="success">{successMessage.message}</div>
-        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
-        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} setSuccessMessage={setSuccessMessage}/> : null}
-        {showDownloadModal ? <DownloadModal setShowDownloadModal={setShowDownloadModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
-        {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
+        {modal === 'Create' ? <CreateGraphModal setShowModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Upload' ? <UploadModal setShowUploadModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Download' ? <DownloadModal setShowDownloadModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Help' ? <HelpModal setShowHelpModal={setModal} /> : null}
 
         <Chart chartInformation={chartInformation} />
 

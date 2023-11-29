@@ -32,7 +32,7 @@ export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
   const modalRef = useRef();
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setShowUploadModal(false);
+      setShowUploadModal('');
     }
   };
 
@@ -73,7 +73,7 @@ export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
     });
 
     setLoading(false);
-    setShowUploadModal(false);
+    setShowUploadModal('');
     setSuccessMessage({ message: "Files Uploaded" });// + fileLists.map((file) => file.name).join(", ")
   };
 
@@ -112,7 +112,7 @@ export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
           <input id = "submitButton" className="uploadSubmit" type="submit" />
           </form>
         </div>
-        <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
+        <button className="closeButton" onClick={() => setShowUploadModal('')}>X</button>
       </div>
     </div>,
     document.getElementById("portal")

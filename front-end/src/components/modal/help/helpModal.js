@@ -14,7 +14,7 @@ export const HelpModal = ({ setShowHelpModal }) => {
   return ReactDOM.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
-        <button className="closeButton" onClick={() => setShowHelpModal(false)}>X</button>
+        <button className="closeButton" onClick={() => setShowHelpModal('')}>X</button>
         <div className="video-container">
           <iframe
             width="560"
