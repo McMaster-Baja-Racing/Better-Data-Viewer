@@ -1,7 +1,7 @@
 //CreateGraphModal.js
 import ReactDom from "react-dom";
 import '../styles/modalStyles.css';
-import { useState} from 'react';
+import { useState } from 'react';
 import { useRef } from 'react';
 import FileStorage from './FileStorage';
 import GraphSettings from './GraphSettings';
@@ -33,10 +33,10 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
       "type": graphType
     })
   }
-  
 
-  const updatePage = (pageVar) => {
-    
+
+  const updatePage = () => {
+
     if (displayPage === 2) {
       return (<FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setColumns={setColumns} setDisplayPage={setDisplayPage}/>)
     } else if (displayPage === 3) {

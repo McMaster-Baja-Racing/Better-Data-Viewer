@@ -39,6 +39,7 @@ const Help = ({ data, openPopup, setOpenPopup }) => {
       setOpenPopup(data.title);
     }
   };
+  
   return (
     <div>
       <HelpButton onClick={togglePopup} /> {}

@@ -117,6 +117,7 @@ public class FileUploadController {
 
 	//This method returns information about a specific file, given the filename.
 	//It should return the first row of the file (the header row) + [datetime, and the number of rows eventually]
+	// Can be deleted?
 	@GetMapping("/files/{filename:.+}/info")
 	@ResponseBody
 	public ResponseEntity<String> listFileInformation(@PathVariable String filename) throws IOException{
