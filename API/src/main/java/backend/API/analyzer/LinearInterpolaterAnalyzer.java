@@ -34,13 +34,14 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
 
         // We're assuming that both series will have their independent variables in the same column(probably 0), so just one independentColumn variable
         int independentColumn = this.getAnalysisColumnIndex(0, data1.get(0));
-        int dependentColumn1 = this.getAnalysisColumnIndex(1, data1.get(0));
-        int dependentColumn2 = this.getAnalysisColumnIndex(2, data2.get(0));
-        
+        // Which column in data2 contains the variable we're adding to data1
+        int dependentColumn2 = this.getAnalysisColumnIndex(1, data2.get(0));
 
         // Add header
-        dataPoint.add(data1.get(0).get(independentColumn));
-        dataPoint.add(data1.get(0).get(dependentColumn1));
+        // We're appending data 2 to ALL columns of data1, not just the one we selected
+        for (int col = 0; col < data1.get(0).size(); col++) {
+            dataPoint.add(data1.get(0).get(col));
+        }
         dataPoint.add(data2.get(0).get(dependentColumn2));
         dataPoints.add(dataPoint);
 
@@ -52,8 +53,10 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
         int j = 2;
 
         while (i < data1.size() && j < data2.size()) {
-            dataPoint.add(data1.get(i).get(independentColumn)); // Add timestamp
-            dataPoint.add(data1.get(i).get(dependentColumn1)); // Add data1 value
+            // Add all columns of data1
+            for (int col = 0; col < data1.get(0).size(); col++) {
+                dataPoint.add(data1.get(0).get(col));
+            }
 
             // Find the closest data point in data1
             Double targetTime = Double.parseDouble(data1.get(i).get(independentColumn));

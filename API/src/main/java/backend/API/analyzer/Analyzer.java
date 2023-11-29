@@ -91,7 +91,11 @@ public abstract class Analyzer {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_inter_" + inputFiles[1].substring(13, inputFiles[1].length() - 4).replace("/", "") + ".csv";
                     outputFiles[9] = outputFiles[0];
                 }
-                return new LinearInterpolaterAnalyzer(inputFiles, new String[]{"Timestamp (ms)", inputColumns[0], inputColumns[1]}, outputFiles);
+                // We use timestamp and inputColumns[1] as the inputColumns because we don't
+                // actually care which column in the first file we're interpolating with, we'll just
+                // add every column from the first file to the new file
+                return new LinearInterpolaterAnalyzer(inputFiles,
+                        new String[] {"Timestamp (ms)", inputColumns[1]}, outputFiles);
             case "RDPCompression":
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_rdp.csv";
