@@ -126,7 +126,7 @@ const Chart = ({ chartInformation }) => {
         // In here the data is all added up, which prevents the chart from updating until all data is fetched
         // This also prevents liveData from adding more data as new series, and will update the graph instead
         setLoading(true);
-        console.log("Loading...")
+
         var data = [];
         for (var i = 0; i < chartInformation.files.length; i++) {
             // Create a list of all files in order (formatting for backend)
@@ -141,7 +141,6 @@ const Chart = ({ chartInformation }) => {
         }
         setParsedData(data)
         setLoading(false);
-        console.log("Done Loading!")
     }
 
     // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
