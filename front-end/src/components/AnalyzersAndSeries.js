@@ -2,7 +2,7 @@ import '../styles/modalStyles.css';
 import Help from './Help';
 import analyzerData from './analyzerData';
 import '../styles/analyzersAndSeriesStyles.css';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage, setDimensions, graphType }) => {
 
     const columnGenerator = (n) => {
@@ -11,9 +11,9 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         let arr = [];
         for (let i = 0; i < 2; i++) {
             arr.push(
-                <div>
+                <div key={`axis-${i}`}>
                     <div className="boldText">{i === 0 ? "X-Axis" : "Y Axis"} </div>
-                    <select className={i} key={i} defaultValue={JSON.stringify(columns[i])}>
+                    <select className={i} defaultValue={JSON.stringify(columns[i])}>
                         {columns.map(column => (
                             <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
                         ))}
@@ -23,8 +23,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
         let arr2 = [];
         if (n === 3) {
             arr2.push(
-                <br></br>,
-                <div>
+                <br key="axis-br"></br>,
+                <div key={`axis-3`}>
                     <div className="boldText">Z Axis</div>
                     <select className={2} key={2} defaultValue={JSON.stringify(columns[2])}>
                         {columns.map(column => (
@@ -69,22 +69,24 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
 
     const [openPopup, setOpenPopup] = useState(null);
 
+    // TODO: Very hardcoded in, should be based off of a list of graph types and their respetive dimensions
+    // TODO: Gauge should have 1 dimension, line should have 2, etc.
+    useEffect(() => {
+        if (graphType === "colour") {
+            setDimensions(3);
+        } else {
+            setDimensions(2);
+        }
+    }, [graphType]);
+
     return (
         <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
-         
-                {/* TODO: Very hardcoded in, should be based off of a list of graph types and their respetive dimensions
-                Example: Gauge should have 1 dimension, line should have 2, etc. */}
-                {graphType === "colour" ? (setDimensions(3)) : (setDimensions(2))}
                 {columnGenerator(dimensions)}
-         
-
             <h3>Select Analyzer</h3>
             <div className="analyzerContainer">
                 {analyzerData.map((analyzer) => {
-                    //console.log(analyzer)
                     return (
-
                         <div className="analyzerBox" key={analyzer.title}>
                             <input type="radio" id={analyzer.title} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}/>
                             
@@ -93,8 +95,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
                                     <summary><strong>{analyzer.title}</strong></summary>
                                         {analyzer.parameters.map((param, index) => {
                                             return (
-                                                <div className="parambox">
-                                                    <label htmlFor={`param${index}`}>{`${param.name} ->`}</label>
+                                                <div className="parambox" key={`param-${index}`}>
+                                                    <label htmlFor={`param${index}`}>{`${param.name} →`}</label>
                                                     <input type="number" id={param.name} className={`param${index}`} defaultValue={param.default} />
                                                 </div>
                                             

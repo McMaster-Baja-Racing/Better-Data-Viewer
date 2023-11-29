@@ -125,6 +125,8 @@ const Chart = ({ chartInformation }) => {
     const getFileFormat = async () => {
         // In here the data is all added up, which prevents the chart from updating until all data is fetched
         // This also prevents liveData from adding more data as new series, and will update the graph instead
+        setLoading(true);
+        console.log("Loading...")
         var data = [];
         for (var i = 0; i < chartInformation.files.length; i++) {
             // Create a list of all files in order (formatting for backend)
@@ -138,6 +140,8 @@ const Chart = ({ chartInformation }) => {
             data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
         }
         setParsedData(data)
+        setLoading(false);
+        console.log("Done Loading!")
     }
 
     // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
@@ -146,7 +150,7 @@ const Chart = ({ chartInformation }) => {
             return;
         }
 
-        setLoading(true);
+        
         setParsedData([]);
         setFileNames([]);
 
@@ -242,7 +246,7 @@ const Chart = ({ chartInformation }) => {
 
             }
         })
-        setLoading(false);
+        
     }, [parsedData])
 
     // This function is used to throttle the resize observer
