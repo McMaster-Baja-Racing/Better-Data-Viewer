@@ -89,7 +89,7 @@ export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
             }}/>
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : ""}>
               <div>
-                {fileLists.length == 0 ? <p>Drag and drop your file here or click to browse your files</p> : fileLists.map((file, index) => {
+                {fileLists.length === 0 ? <p>Drag and drop your file here or click to browse your files</p> : fileLists.map((file, index) => {
                   return (
                   <div>
                     <button className="fileButton" type="button" onClick={() => {

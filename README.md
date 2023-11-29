@@ -1,6 +1,17 @@
 # Better-Data-Viewer
 This is the second iteration of a telemetry viewer headed by Kai, Travis, Ariel and Gavin
 
+## What is the Data Viewer
+Welcome to The Data Viewer, a powerful and user-friendly software tool designed to help you navigate and explore data collected by the McMaster Baja DAQ team!
+
+The Data Viewer serves as a streamlined portal, offering a seamless experience for users to interact with data effortlessly. Its primary function revolves around uploading data through a straightforward form and subsequently exploring, analyzing, and visualizing this information. Once data is uploaded, users gain access to a comprehensive set of analytical tools—referred to as "analyzers"—that enable them to apply filters and manipulate the data for deeper insights.
+
+For McMaster Baja and its affiliates, The Data Viewer is an invaluable asset. It facilitates swift and efficient data interpretation after rigorous data collection sessions, enabling quick comprehension and actionable insights. Whether it's assessing performance metrics, scrutinizing vehicle diagnostics, or examining test runs, The Data Viewer empowers users to swiftly grasp essential patterns, trends, and anomalies within the collected data.
+
+![Example Image of the Data Viewer](https://i.imgur.com/zzV76p0.png)
+
+For an in-depth user guide, consult the McMaster Baja Wiki.
+
 ## How to run
 ### Required tools:
 
@@ -33,31 +44,7 @@ Setup complete!
 - once that is complete, copy the resulting dll file(windows) that is now in the `target/release/` folder
 - paste this folder in the `Better-Data-Viewer\API\src\main\java\backend\API\binary_csv\` Folder
 
-## TODO
-
-### Front End
-- Add more feedback, such as a loading screen, success messages, etc
-- Multiple graphs at same time
-- Flush the graph before re-rendering data to avoid weird line connections, or use scatter
-- Warning for intense data (too big, too slow)
-- Cookies - Remember users previous setup and autoload
-
-### Back End
-- Incorporate folders into the storage service, have a folder for live data, separate for saved data, etc
-- GAVIN Serial connects properly without unplugging
-- DataAnalyzers can be called statically
-- Added information for shift curve -graham
 
 
-## Sources
-https://jar-download.com/artifacts/org.openmuc/jrxtx/1.0.1/source-code/gnu/io/SerialPort.java
-https://www.thingsconnected.io/java-serial-tools/
-https://www.papaparse.com/docs
-https://medium.com/how-to-react/how-to-parse-or-read-csv-files-in-reactjs-81e8ee4870b0
-https://github.com/highcharts/highcharts-react
-https://dzone.com/articles/how-to-read-a-big-csv-file-with-java-8-and-stream
-https://css-tricks.com/snippets/css/a-guide-to-flexbox/
-pass info from child to parent - https://bobbyhadz.com/blog/react-pass-data-from-child-to-parent#:~:text=To%20pass%20data%20from%20child,the%20function%20in%20the%20Parent%20.
-spring boot stuff - https://spring.io/guides/gs/uploading-files/
 
 

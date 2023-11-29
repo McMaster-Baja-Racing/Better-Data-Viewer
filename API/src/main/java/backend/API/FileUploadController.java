@@ -216,6 +216,23 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
 	}
 
+	// Method to get the maximum and minimum values of a column in a file
+	@GetMapping("/files/{filename:.+}/maxmin")
+	@ResponseBody
+	public ResponseEntity<String> getMaxMin(@PathVariable String filename, @RequestParam(value = "headerName", required = true) String headerName) throws IOException{
+
+		System.out.println("Getting max and min for " + headerName + " in " + filename);
+		//Set these headers so that you can access from LocalHost
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		// Get size, headers, datetime, etc.
+		String maxmin = storageService.getMaxMin(filename, headerName);
+
+		return ResponseEntity.ok().headers(responseHeaders).body(maxmin);
+	}
+
 	//This is the method that uploads the file
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,

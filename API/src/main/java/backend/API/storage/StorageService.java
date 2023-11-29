@@ -20,10 +20,12 @@ public interface StorageService {
 
 	void deleteAll();
 
-	String readHeaders(String filename);
-
 	void delete(String filename);
 
 	void copyFile(String filename, String newFilename);
+
+	String readHeaders(String filename);
+
+	String getMaxMin(String filename, String headerName);
 
 }

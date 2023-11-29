@@ -3,22 +3,37 @@ import Help from './Help';
 import analyzerData from './analyzerData';
 import '../styles/analyzersAndSeriesStyles.css';
 import { useState, useRef } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage, setDimensions, graphType }) => {
 
     const columnGenerator = (n) => {
+        // TODO: Refactor this so that it doesn't use variables such as "arr" and "arr2"
+        // TODO: Further should be more dynamic, so that it can handle any number of dimensions in a "smart" way (probably using some css)
         let arr = [];
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < 2; i++) {
             arr.push(
-                <div >
-                    <div className="boldText">{i === 0 ? "X-Axis" : "Y-Axis"} </div>
-                    <select className={i} key={i}>
+                <div>
+                    <div className="boldText">{i === 0 ? "X-Axis" : "Y Axis"} </div>
+                    <select className={i} key={i} defaultValue={JSON.stringify(columns[i])}>
                         {columns.map(column => (
                             <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
                         ))}
                     </select>
                 </div>);
         }
-        return arr;
+        let arr2 = [];
+        if (n === 3) {
+            arr2.push(
+                <br></br>,
+                <div>
+                    <div className="boldText">Z Axis</div>
+                    <select className={2} key={2} defaultValue={JSON.stringify(columns[2])}>
+                        {columns.map(column => (
+                            <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
+                        ))}
+                    </select>
+                </div>);
+        }
+        return <div><div className='columnHeaders'>{arr}</div> <div className='columnHeaders2'>{arr2}</div></div>;
     }
 
     var seriesInfo = useRef([]);
@@ -57,9 +72,12 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
     return (
         <div className="analyzersAndSeriesContainer">
             <h3>Select Axis</h3>
-            <div className="columnHeaders">
+         
+                {/* TODO: Very hardcoded in, should be based off of a list of graph types and their respetive dimensions
+                Example: Gauge should have 1 dimension, line should have 2, etc. */}
+                {graphType === "colour" ? (setDimensions(3)) : (setDimensions(2))}
                 {columnGenerator(dimensions)}
-            </div>
+         
 
             <h3>Select Analyzer</h3>
             <div className="analyzerContainer">
