@@ -1,7 +1,7 @@
 import '../styles/topbar.css';
 import { useState } from 'react';
 
-const Topbar = ({ openCreateGraphModal, openUploadModal, openHelpModal}) => {
+const Topbar = ({ openCreateGraphModal, openUploadModal, openDownloadModal, openHelpModal}) => {
 
     const [liveStatus, setLiveStatus] = useState("Begin Live Data");
     //This function notifies the backend to begin listening on a certain port for live data
@@ -34,7 +34,8 @@ const Topbar = ({ openCreateGraphModal, openUploadModal, openHelpModal}) => {
             <div className="buttons">
                 <button className="beginLive" onClick={beginLiveData}>{liveStatus}</button>
                 <button className="createGraph" onClick={openCreateGraphModal}>Create Graph</button>
-                <button className="createGraph" onClick={openUploadModal}>Upload Files</button>
+                <button className="uploadFiles" onClick={openUploadModal}>Upload Files</button>
+                <button className="downloadFiles" onClick={openDownloadModal}>Download Files</button>
                 <button className="helpModal" onClick={openHelpModal}>Help</button>
             </div>
         </div>

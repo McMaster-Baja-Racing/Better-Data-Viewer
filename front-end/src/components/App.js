@@ -1,11 +1,12 @@
 import '../styles/App.css';
-import { CreateGraphModal } from "./CreateGraphModal";
-import { UploadModal } from "./uploadModal";
-import { HelpModal } from "./helpModal";
+import { CreateGraphModal } from "./modal/create/CreateGraphModal";
+import { UploadModal } from "./modal/upload/uploadModal";
+import { HelpModal } from "./modal/help/helpModal";
 import React, { useEffect, useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
 import $ from 'jquery';
+import { DownloadModal } from './modal/download/downloadModal';
 
 const App = () => {
 
@@ -20,13 +21,17 @@ const App = () => {
     setShowUploadModal(true);
   }
 
+  // All for download popup
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const openDownloadModal = () => {
+    setShowDownloadModal(true);
+  }
+
   // All for help popup
   const [showHelpModal, setShowHelpModal] = useState(false);
   const openHelpModal = () => {
     setShowHelpModal(true);
   }
-
-
 
   // All for information transfer between children and parent
   // sample format for fileInformation: 
@@ -70,11 +75,12 @@ const App = () => {
   
   return (
     <div className="App">
-      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
+      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openDownloadModal={openDownloadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
         <div className="success">{successMessage.message}</div>
         {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
         {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} setSuccessMessage={setSuccessMessage}/> : null}
+        {showDownloadModal ? <DownloadModal setShowDownloadModal={setShowDownloadModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
         {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
 
         <Chart chartInformation={chartInformation} />

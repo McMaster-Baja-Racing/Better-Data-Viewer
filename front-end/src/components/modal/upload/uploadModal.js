@@ -1,7 +1,7 @@
 //UploadModal.js
 import ReactDom from "react-dom";
-import '../styles/modalStyles.css';
-import '../styles/uploadModalStyles.css';
+import '../../../styles/modalStyles.css';
+import '../../../styles/uploadModalStyles.css';
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';

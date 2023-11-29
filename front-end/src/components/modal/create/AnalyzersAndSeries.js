@@ -1,7 +1,7 @@
-import '../styles/modalStyles.css';
+import '../../../styles/modalStyles.css';
 import Help from './Help';
-import analyzerData from './analyzerData';
-import '../styles/analyzersAndSeriesStyles.css';
+import analyzerData from '../../analyzerData';
+import '../../../styles/analyzersAndSeriesStyles.css';
 import { useState, useRef } from 'react';
 const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage }) => {
 

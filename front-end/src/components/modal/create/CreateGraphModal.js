@@ -1,9 +1,9 @@
 //CreateGraphModal.js
 import ReactDom from "react-dom";
-import '../styles/modalStyles.css';
+import '../../../styles/modalStyles.css';
 import { useState} from 'react';
 import { useRef } from 'react';
-import FileStorage from './FileStorage';
+import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 
@@ -12,7 +12,6 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [files, setFiles] = useState([])
   const [displayPage, setDisplayPage] = useState(1);
   const [graphType, setGraphType] = useState("");
   const [liveCheck, setLiveCheck] = useState(false);
@@ -33,16 +32,52 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
       "type": graphType
     })
   }
+
+  // This method will return headers when supplied with a list of files. Added support for folders is neccesary
+  const getHeaders = async (files) => {
+    var col = [];
+
+    files.forEach(file => {
+      file.fileHeaders.forEach(header => {
+        col.push({
+          "header": header,
+          "filename": file.key
+        })
+      })
+    })
+
+    setColumns(col);
+  }
   
 
   const updatePage = (pageVar) => {
     
     if (displayPage === 2) {
-      return (<FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} setDimensions={setDimensions} setColumns={setColumns} setDisplayPage={setDisplayPage}/>)
+      return (
+        <div className='file-Storage-Container'>
+          <div className="file-browser">
+            <h3>Choose Files</h3>
+            <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+          </div>
+          <div className="fileButtons">
+            <button className="pageTwoBackButton" onClick={() => {setDisplayPage(1)}}>Back</button>
+            <button className="pageTwoNextButton" onClick={() => {
+            // OnClick, it should get the selected files from the file storage component
+            if (selectedFiles.length === 0) {
+                alert("Please select at least one file.");
+                return;
+            }
+            getHeaders(selectedFiles)
+            setDimensions(2)
+            setDisplayPage(3);
+            }}>Next</button>
+          </div>
+        </div>
+      )
     } else if (displayPage === 3) {
         return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage}/>)
     } else{
-      return( <GraphSettings setDisplayPage={setDisplayPage} setFiles={setFiles} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
+      return( <GraphSettings setDisplayPage={setDisplayPage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }
   }
 
