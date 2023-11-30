@@ -6,13 +6,9 @@ import React, { useState } from 'react';
 import FileStorage from "../FileStorage";
 import JSZip from 'jszip'
 
-export const DownloadModal = ({ setModal, setSuccessMessage }) => {
+export const DownloadModal = ({ setModal }) => {
   const [selectedFiles, setSelectedFiles] = useState([]); // holds the files that the user has selected from the file menu
   
-  const handleOrgChange = (value) => {
-    setDownloadOrg(value);
-  }
-
   const modalRef = useRef();
   const closeModal = (e) => {
     if (e.target === modalRef.current) {

@@ -10,20 +10,8 @@ import { DownloadModal } from './modal/download/downloadModal';
 
 const App = () => {
 
-  // State for holding modal and functions for setting them to the respective modal
+  // State for holding which modal should be open
   const [modal, setModal] = useState('')
-  const openCreateGraphModal = () => {
-    setModal('Create')
-  }
-  const openUploadModal = () => {
-    setModal('Upload')
-  }
-  const openDownloadModal = () => {
-    setModal('Download')
-  }
-  const openHelpModal = () => {
-    setModal('Help')
-  }
 
   // All for information transfer between children and parent
   // sample format for fileInformation: 
@@ -67,12 +55,12 @@ const App = () => {
   
   return (
     <div className="App">
-      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openDownloadModal={openDownloadModal} openHelpModal={openHelpModal}/>
+      <Topbar setModal={setModal}/>
       <header className="App-header">
         <div className="success">{successMessage.message}</div>
         {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
         {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
-        {modal === 'Download' ? <DownloadModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
         <Chart chartInformation={chartInformation} />

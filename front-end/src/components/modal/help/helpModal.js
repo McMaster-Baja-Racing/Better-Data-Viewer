@@ -7,7 +7,7 @@ export const HelpModal = ({ setModal }) => {
 
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setModal(false);
+      setModal('');
     }
   };
 
