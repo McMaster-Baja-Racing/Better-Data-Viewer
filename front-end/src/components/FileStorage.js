@@ -3,6 +3,14 @@ import '../styles/fileStorage.css'
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
 
+const formatSize = (size) => {
+    // Finds the order of magnitude of the size in base 1024 (e.g. how many digits it would have)
+    const magnitude = Math.floor(Math.log(size) / Math.log(1024));
+    const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'ZB', 'YB', 'RB', 'QB'];
+    // Uses order of magnitude to get units and calculate value
+    return `${Math.round(size / (1024 ** magnitude))} ${units[magnitude]}`
+};
+
 // Here is a custom file renderer to be used in place of the default react-keyed-file-browser file renderer.
 // This was done to give the "checked" property to the file element, which is used to allow the selection of multiple files at once.
 const CustomFileRenderer = (props) => {
@@ -41,19 +49,6 @@ const CustomFileRenderer = (props) => {
     // Idk what this is for but it might be important?
     const { connectDragSource, connectDropTarget } = browserProps;
 
-    // Check if size is in the range of MB or KB and return the appropriate string
-    const formatSize = (size) => {
-        if (size > 1024 * 1024) {
-            return `${Math.round(size / (1024 * 1024))} MB`;
-        }
-
-        if (size > 1024) {
-            return `${Math.round(size / 1024)} KB`;
-        }
-
-        return `${size} B`;
-    };
-
     return (
         // Add in table row and then table data for each file, default styling will space it properly
         <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile} >
@@ -66,8 +61,11 @@ const CustomFileRenderer = (props) => {
 };
 
 const CustomFolderRenderer = (props) => {
-    const { isOpen, browserProps } = props;
+    const { files, isOpen, browserProps } = props;
     const { connectDragSource, connectDropTarget } = browserProps;
+
+    // Calculates folder size by going through all the files and adding those in the folder to a total
+    const folderSize = files.reduce((total, file) => total + (file.key.split('/')[0] === props.name ? file.size : 0), 0);
 
     const handleFolderClick = (e) => {
         browserProps.toggleFolder(props.fileKey);
@@ -79,7 +77,7 @@ const CustomFolderRenderer = (props) => {
     return (
         <tr {...connectDragSource} {...connectDropTarget} className={`folder ${isOpen ? 'open' : ''}`} onClick={handleFolderClick}>
             <td className="name" style={{ paddingLeft: depthPadding }}><i className={`${isOpen ? "fa fa-folder-open-o" : "fa fa-folder-o"}`} aria-hidden="true"/>{props.name}</td>
-            <td className="size">-</td>
+            <td className="size">{formatSize(folderSize)}</td>
             <td className="modified">-</td>
         </tr>
     );
@@ -116,6 +114,7 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setColumns, setDi
                     icons={Icons.FontAwesome(4)}
                     fileRendererProps={{ files, selectedFiles, setSelectedFiles }}
                     fileRenderer={CustomFileRenderer}
+                    folderRendererProps={{files}}
                     folderRenderer={CustomFolderRenderer}
                 />
             </div>
