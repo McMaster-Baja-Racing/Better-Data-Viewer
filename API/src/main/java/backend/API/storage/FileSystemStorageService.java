@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.DoubleSummaryStatistics;
 import java.util.stream.Stream; 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,49 @@ public class FileSystemStorageService implements StorageService {
 			Files.copy(file, newFile, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String getMaxMin(String filename, String headerName) {
+		// Find the maximum and minimum values in the file for a given column
+		try {
+			// First find the index of the column
+			String[] headerArray = readHeaders(filename).split(",");
+			int index = -1;
+
+			for (int i = 0; i < headerArray.length; i++) {
+				if (headerArray[i].equals(headerName)) {
+					index = i;
+					break;
+				}
+			}
+
+			if (index == -1) {
+				return null;
+			}
+
+			// Now find the max and min values
+
+			Path file = load(filename);
+			final int finalIndex = index;
+			try (Stream<String> lines = Files.lines(file)) {
+				DoubleSummaryStatistics stats = lines
+					.skip(1)  // Skip the header line
+					.map(line -> line.split(",")[finalIndex])
+					.mapToDouble(Double::parseDouble)
+					.summaryStatistics();
+
+				double min = stats.getMin();
+				double max = stats.getMax();
+
+				return min + "," + max;
+			}
+			
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

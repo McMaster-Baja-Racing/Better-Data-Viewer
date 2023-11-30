@@ -107,16 +107,13 @@ const FileStorage = ({ selectedFiles, setSelectedFiles }) => {
       }, []); // Empty dependency array ensures that the fetch is only performed once
 
     return (
-            // <div className="file-browser">
-            //     <h3>Choose Files</h3>
-                <RawFileBrowser
-                    files={files}
-                    icons={Icons.FontAwesome(4)}
-                    fileRendererProps={{ files, selectedFiles, setSelectedFiles }}
-                    fileRenderer={CustomFileRenderer}
-                    folderRenderer={CustomFolderRenderer}
-                />
-            // </div>
+        <RawFileBrowser
+            files={files}
+            icons={Icons.FontAwesome(4)}
+            fileRendererProps={{ files, selectedFiles, setSelectedFiles }}
+            fileRenderer={CustomFileRenderer}
+            folderRenderer={CustomFolderRenderer}
+        />
     )
 }
 

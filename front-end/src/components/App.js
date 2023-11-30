@@ -14,7 +14,7 @@ const App = () => {
   const [modal, setModal] = useState('')
 
   // All for information transfer between children and parent
-  // sample format for fileInformation: 
+  // sample format for chartInformation: 
   // {
   //    files:
   //    [

@@ -31,26 +31,16 @@ const GraphSettings = ({ setDisplayPage, setGraphType, setLiveCheck }) => {
               <option value="line">Line</option>
               <option value="spline">Spline</option>
               <option value="scatter">Scatter</option>
+              <option value="colour">XYColour</option>
             </select>
           </div>
         </div>
         <div className='liveDataBox'>
           <div className="graphOptionsText">Live Data</div>
           <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
-        </div>
-        
-        
+        </div> 
       </div>
-
       <button className="PageButton" onClick={() => { liveData(); graphType(); setDisplayPage(2); }}>Next</button>
-      {/* 
-      
-
-      
-
-      
-      
-      <button className="pageOneNextButton" onClick={() => { liveData(); graphType(); listFiles(); setDisplayPage(2); }}>Next</button> */}
     </div>
   )
 

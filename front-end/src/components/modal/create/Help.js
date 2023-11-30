@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import "../../../styles/help.css";
 
 const HelpButton = ({ onClick }) => {
@@ -39,6 +39,7 @@ const Help = ({ data, openPopup, setOpenPopup }) => {
       setOpenPopup(data.title);
     }
   };
+  
   return (
     <div>
       <HelpButton onClick={togglePopup} /> {}

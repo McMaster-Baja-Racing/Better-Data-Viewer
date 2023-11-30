@@ -1,7 +1,7 @@
 //CreateGraphModal.js
 import ReactDom from "react-dom";
 import '../../../styles/modalStyles.css';
-import { useState} from 'react';
+import { useState } from 'react';
 import { useRef } from 'react';
 import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
@@ -49,8 +49,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
     setColumns(col);
   }
   
-
-  const updatePage = (pageVar) => {
+  const updatePage = () => {
     
     if (displayPage === 2) {
       return (
@@ -75,7 +74,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
         </div>
       )
     } else if (displayPage === 3) {
-        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage}/>)
+      return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>)
     } else{
       return( <GraphSettings setDisplayPage={setDisplayPage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }
