@@ -14,7 +14,7 @@ export const HelpModal = ({ setModal }) => {
   return ReactDOM.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
-        <button className="closeButton" onClick={() => setShowHelpModal('')}>X</button>
+        <button className="closeButton" onClick={() => setModal('')}>X</button>
         <div style={{textAlign: "center"}}>
         <h1>Help!</h1>
         <p>

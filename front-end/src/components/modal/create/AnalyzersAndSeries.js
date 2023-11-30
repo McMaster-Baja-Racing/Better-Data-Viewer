@@ -1,9 +1,9 @@
 import '../../../styles/modalStyles.css';
 import Help from './Help';
-import analyzerData from './analyzerData';
+import analyzerData from '../../analyzerData.js'
 import '../../../styles/analyzersAndSeriesStyles.css';
 import { useState, useRef, useEffect } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal, handleSubmit, setSuccessMessage, setDimensions, graphType }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, handleSubmit, setSuccessMessage, setDimensions, graphType }) => {
 
     const columnGenerator = (n) => {
         // TODO: Refactor this so that it doesn't use variables such as "arr" and "arr2"
@@ -118,7 +118,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setShowModal,
             <div className="buttonFlexBox">
                 <button className="pageThreeBackButton" onClick={() => { setDisplayPage(2) }}>Back</button>
                 <button className="addSeries" onClick={() => {addSeries(true); }}>Add Series</button>
-                <button className="pageThreeNextButton" onClick={() => {addSeries(false); handleSubmit(seriesInfo.current); setShowModal(''); }}>Submit</button>
+                <button className="pageThreeNextButton" onClick={() => {addSeries(false); handleSubmit(seriesInfo.current); setModal(''); }}>Submit</button>
             </div>
         </div>
     )
