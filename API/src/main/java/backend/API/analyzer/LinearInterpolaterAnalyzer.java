@@ -55,7 +55,7 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
         while (i < data1.size() && j < data2.size()) {
             // Add all columns of data1
             for (int col = 0; col < data1.get(0).size(); col++) {
-                dataPoint.add(data1.get(0).get(col));
+                dataPoint.add(data1.get(i).get(col));
             }
 
             // Find the closest data point in data1
