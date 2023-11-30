@@ -10,27 +10,17 @@ import { DownloadModal } from './modal/download/downloadModal';
 
 const App = () => {
 
+  // State for holding modal and functions for setting them to the respective modal
   const [modal, setModal] = useState('')
-
-  // All for create graph popup
-  const [showCreateGraphModal, setShowCreateGraphModal] = useState(false);
   const openCreateGraphModal = () => {
     setModal('Create')
   }
-  // All for upload popup
-  const [showUploadModal, setShowUploadModal] = useState(false);
   const openUploadModal = () => {
     setModal('Upload')
   }
-
-  // All for download popup
-  const [showDownloadModal, setShowDownloadModal] = useState(false);
   const openDownloadModal = () => {
     setModal('Download')
   }
-
-  // All for help popup
-  const [showHelpModal, setShowHelpModal] = useState(false);
   const openHelpModal = () => {
     setModal('Help')
   }
@@ -80,10 +70,10 @@ const App = () => {
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openDownloadModal={openDownloadModal} openHelpModal={openHelpModal}/>
       <header className="App-header">
         <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setShowModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
-        {modal === 'Upload' ? <UploadModal setShowUploadModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
-        {modal === 'Download' ? <DownloadModal setShowDownloadModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
-        {modal === 'Help' ? <HelpModal setShowHelpModal={setModal} /> : null}
+        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Download' ? <DownloadModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
         <Chart chartInformation={chartInformation} />
 

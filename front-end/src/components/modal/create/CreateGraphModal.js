@@ -7,7 +7,7 @@ import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 
-export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccessMessage }) => {
+export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -20,7 +20,7 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
   const modalRef = useRef();
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setShowModal('');
+      setModal('');
     }
   };
 
@@ -75,7 +75,7 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
         </div>
       )
     } else if (displayPage === 3) {
-        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setShowModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage}/>)
+        return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setShowModal={setModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage}/>)
     } else{
       return( <GraphSettings setDisplayPage={setDisplayPage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }
@@ -86,7 +86,7 @@ export const CreateGraphModal = ({ setShowModal, setChartInformation, setSuccess
     <div className="container" ref={modalRef} onClick={closeModal} >
       <div className="modal">
         {updatePage(displayPage)}
-        <button className="closeButton" onClick={() => setShowModal('')}>X</button>
+        <button className="closeButton" onClick={() => setModal('')}>X</button>
       </div>
     </div>,
     document.getElementById("portal")

@@ -6,9 +6,8 @@ import React, { useState } from 'react';
 import FileStorage from "../FileStorage";
 import JSZip from 'jszip'
 
-export const DownloadModal = ({ setShowDownloadModal, setSuccessMessage }) => {
+export const DownloadModal = ({ setModal, setSuccessMessage }) => {
   const [selectedFiles, setSelectedFiles] = useState([]); // holds the files that the user has selected from the file menu
-  const [downloadOrg, setDownloadOrg] = useState('Individual'); // holds how the user wants the downloaded files to be structured
   
   const handleOrgChange = (value) => {
     setDownloadOrg(value);
@@ -17,11 +16,16 @@ export const DownloadModal = ({ setShowDownloadModal, setSuccessMessage }) => {
   const modalRef = useRef();
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setShowDownloadModal('');
+      setModal('');
     }
   };
 
   const downloadFiles = async () => {
+    // confirms that there are selected files before download
+    if (selectedFiles.length === 0) {
+      alert("Please select at least one file.");
+      return;
+    }
     try {
       // Create a new JSZip instance
       const zip = new JSZip();
@@ -69,26 +73,13 @@ export const DownloadModal = ({ setShowDownloadModal, setSuccessMessage }) => {
             <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
           </div>
           <div className="downloadContainer">
-            {/* <div className="org-container">
-              <h3 className="organization-title">Download Organization:</h3>
-              <button onClick={() => handleOrgChange('Individual')} className={downloadOrg === 'Individual' ? 'orgLeftSelected' : 'orgLeftNotSelected'}>
-                Individual
-              </button>
-              <button onClick={() => handleOrgChange('Folder')} className={downloadOrg === 'Folder' ? 'orgRightSelected' : 'orgRightNotSelected'}>
-                Folder
-              </button>
-            </div> */}
             <button className="downloadButton" onClick={() => {
             // OnClick, it will download the selected files
-            if (selectedFiles.length === 0) {
-                alert("Please select at least one file.");
-                return;
-            }
             downloadFiles()
             }}>Download</button>
           </div>
         </div>
-        <button className="closeButton" onClick={() => setShowDownloadModal('')}>X</button>
+        <button className="closeButton" onClick={() => setModal('')}>X</button>
       </div>
     </div>,
     document.getElementById("portal")
