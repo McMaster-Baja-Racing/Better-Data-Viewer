@@ -57,7 +57,7 @@ const CustomFileRenderer = (props) => {
     return (
         // Add in table row and then table data for each file, default styling will space it properly
         <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile} >
-            <td className="name" style={{ paddingLeft: depthPadding }}>{file.name}</td>
+            <td className="name" style={{ paddingLeft: depthPadding, maxWidth: '250px' }}>{file.name}</td>
             <td className="size">{formatSize(file.size)}</td>
             <td className="modified">{file.modified ? file.modified : "-"}</td>
         </tr>
