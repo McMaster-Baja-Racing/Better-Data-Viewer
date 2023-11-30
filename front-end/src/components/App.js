@@ -2,11 +2,11 @@ import '../styles/App.css';
 import { CreateGraphModal } from "./modal/create/CreateGraphModal";
 import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
+import { DownloadModal } from './modal/download/downloadModal';
 import React, { useEffect, useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
 import $ from 'jquery';
-import { DownloadModal } from './modal/download/downloadModal';
 
 const App = () => {
 
