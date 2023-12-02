@@ -107,7 +107,7 @@ public abstract class Analyzer {
                 double epsilon = Double.parseDouble((String) params[0]);
                 return new RDPCompressionAnalyzer(inputFiles, outputFiles, epsilon);
 
-                case "split":
+            case "split":
                 System.out.println("SplitAnalyzer");
                 if (outputFiles.length == 10) {
                     outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_split.csv";

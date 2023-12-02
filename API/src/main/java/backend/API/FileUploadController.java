@@ -14,6 +14,8 @@ package backend.API;
 */
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -32,12 +34,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import backend.API.storage.StorageFileNotFoundException;
 import backend.API.storage.StorageService;
-
+import jakarta.servlet.http.HttpServletRequest;
 import backend.API.binary_csv.BinaryTOCSV;
 import backend.API.live.Serial;
 
@@ -116,9 +119,9 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(files);
 	}
 
-	// This method returns information about a specific file, given the filename.
-	// It should return the first row of the file (the header row) + [datetime, and
-	// the number of rows eventually]
+	//This method returns information about a specific file, given the filename.
+	//It should return the first row of the file (the header row) + [datetime, and the number of rows eventually]
+	// Can be deleted?
 	@GetMapping("/files/{filename:.+}/info")
 	@ResponseBody
 	public ResponseEntity<String> listFileInformation(@PathVariable String filename) throws IOException {
@@ -223,7 +226,29 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
 	}
 
-	// This is the method that uploads the file
+	// Method to get the maximum and minimum values of a column in a file
+	@GetMapping("/files/maxmin/**")
+	@ResponseBody
+	public ResponseEntity<String> getMaxMin(HttpServletRequest request, @RequestParam(value = "headerName", required = true) String headerName) throws IOException{
+
+		String filename = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+    	filename = filename.substring("/files/maxmin/".length());
+		// Decode to add spaces back in and special characters
+		filename = URLDecoder.decode(filename, StandardCharsets.UTF_8);
+		
+		System.out.println("Getting max and min for " + headerName + " in " + filename);
+		//Set these headers so that you can access from LocalHost
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		// Get size, headers, datetime, etc.
+		String maxmin = storageService.getMaxMin(filename, headerName);
+
+		return ResponseEntity.ok().headers(responseHeaders).body(maxmin);
+	}
+
+	//This is the method that uploads the file
 	@PostMapping("/")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes) {

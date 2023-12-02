@@ -29,7 +29,7 @@ const App = () => {
 
 
   // All for information transfer between children and parent
-  // sample format for fileInformation: 
+  // sample format for chartInformation: 
   // {
   //    files:
   //    [
