@@ -294,13 +294,25 @@ public class FileUploadController {
 	public ResponseEntity<String> handleLive(@RequestParam(name = "port", required = false) String port) {
 		//Start the live data collection
 
+		String response = "";
+
 		//call the readLive function in Serial.java
 		if (Serial.exit == false) {
 			Serial.exit = true;
+			response = "Live data collection stopped";
 		} else {
-			new Thread(() -> {
-				Serial.readLive();
-			}).start();
+			String portConnected=Serial.connectPort(port);
+			if (!portConnected.equals("")){
+				response = String.format("Live data collection started on port %s", portConnected);
+				new Thread(() -> {
+					Serial.readLive();
+				}).start();
+			}
+			else {
+				response = "No Arduino found";
+				//Serial.exit = true;
+			}
+			
 		}
 
 		//Set these headers so that you can access from LocalHost
@@ -308,7 +320,7 @@ public class FileUploadController {
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		return ResponseEntity.ok().headers(responseHeaders).body(String.format("Live data collection started on port %s", port));
+		return ResponseEntity.ok().headers(responseHeaders).body(response);
 	}
 
 	@ExceptionHandler(StorageFileNotFoundException.class)

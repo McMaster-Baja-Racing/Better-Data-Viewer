@@ -8,33 +8,52 @@ import backend.API.binary_csv.Packet;
 
 public class Serial {
     public static volatile boolean exit = true;
+    public static volatile SerialPort comPort;
+
+    public static SerialPort findPort(){
+        SerialPort comPort = null;
+        SerialPort portList[] = SerialPort.getCommPorts();
+        for (int i = 0; i < portList.length; i++) {
+            //check if the comport desciption contains the word arduino
+            System.out.println(portList[i].getDescriptivePortName());
+            if (portList[i].getDescriptivePortName().contains("USB Serial Device")) {
+                //if it does, set the comport to the current port
+                comPort = portList[i];
+                //break out of the loop
+                break;
+            }
+        }
+        return comPort;
+    }
+
+    public static String connectPort(String port){
+        if (port == null) {
+            comPort = findPort();
+        } else {
+            comPort = SerialPort.getCommPort(port);
+        }
+        if (comPort == null) {
+            System.out.println("No port found");
+            return "";
+        }
+        //System.out.println("Connecting to port: " + comPort.getSystemPortName());
+        if (comPort.isOpen()){
+            System.out.println("Port already open");
+            return "";
+        }
+        comPort.setBaudRate(115200);
+        if (comPort.openPort()) {
+            return comPort.getSystemPortName();
+        } else {
+            System.out.println("Failed to connect to port: " + comPort.getSystemPortName());
+            return "";
+        }
+
+    }
 
     public static void readLive() {
         exit = false;
-        String port = "COM4";
-        SerialPort comPort = SerialPort.getCommPort(port);
-        boolean setPort = false;
 
-        while (!setPort) {
-            SerialPort portList[] = SerialPort.getCommPorts();
-            for (int i = 0; i < portList.length; i++) {
-                //check if the comport desciption contains the word arduino
-                if (portList[i].getDescriptivePortName().contains("Arduino")) {
-                    //if it does, set the comport to the current port
-                    comPort = portList[i];
-                    //break out of the loop
-                    setPort = true;
-                    break;
-                }
-            } 
-            if (!setPort) {
-                setPort = true;
-            }
-        }
-
-        comPort.setBaudRate(115200);
-        boolean connected = comPort.openPort();
-        System.out.println(connected);
         //comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 10000, 0);
         comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
     
@@ -61,11 +80,12 @@ public class Serial {
         } catch (Exception e) { e.printStackTrace(); }
         try {
         while (!exit)
-        {
+        {       
+            if (comPort.bytesAvailable() != -1) {
                 byte[] readBuffer = new byte[8];
 
                 int numRead = comPort.readBytes(readBuffer, readBuffer.length);
-
+                System.out.println("Available: " + comPort.bytesAvailable());
                 System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " + readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", " + readBuffer[7] );
                 //make a packet object from the byte array
 
@@ -89,9 +109,11 @@ public class Serial {
                     //flush the file writer
                     fw42.flush();
                 }
+            }
         }
         } catch (Exception e) { e.printStackTrace(); }
         comPort.closePort();
+        System.out.println("Port Closed");
 
         //close fw and fw2
         try {

@@ -68,6 +68,7 @@ const App = () => {
     $( "div.success" ).slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
   
+  
   return (
     <div className="App">
       <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>

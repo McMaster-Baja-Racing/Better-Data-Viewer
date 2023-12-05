@@ -6,22 +6,25 @@ const Topbar = ({ openCreateGraphModal, openUploadModal, openHelpModal}) => {
     const [liveStatus, setLiveStatus] = useState("Begin Live Data");
     //This function notifies the backend to begin listening on a certain port for live data
     var formData = new FormData();
-    formData.append("port", "COM2");
+    //formData.append("port", "COM2");
     const beginLiveData = () => {
         fetch(`http://${window.location.hostname}:8080/live`, {
             method: "POST",
             body: formData,
-        }).then((res) => {
+        }).then((res) => res.text()).then((res) =>{
             console.log(res);
+            //if the response contains started or stopped, then the live data has been started or stopped and the button should be updated
+            if (res.includes("started")) {
+                setLiveStatus("Stop Live Data");
+            } else if (res.includes("stopped")) {
+                setLiveStatus("Begin Live Data");
+            }
+            else {
+                console.log("Error: " + res);
+            }
         }).catch((err) => {
             console.log(err);
         });
-
-        if (liveStatus === "Begin Live Data") {
-            setLiveStatus("Stop Live Data");
-        } else {
-            setLiveStatus("Begin Live Data");
-        }
     }
 
     return (
