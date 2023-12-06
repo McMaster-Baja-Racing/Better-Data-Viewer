@@ -17,6 +17,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
         super(inputFiles, inputColumns, outputFiles);
     }
 
+    // Class to store timestamp and file index
     class TimestampData {
         double timestamp;
         int fileIndex;

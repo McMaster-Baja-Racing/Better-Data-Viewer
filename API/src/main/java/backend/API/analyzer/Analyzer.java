@@ -16,11 +16,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public abstract class Analyzer {
-    // Default values for CSV reader and writer
-    private static final char DEFAULT_SEPARATOR = ',';
-    private static final char DEFAULT_QUOTE_CHARACTER = '"';
-    private static final char DEFAULT_ESCAPE_CHARACTER = '\\';
-    private static final String DEFAULT_LINE_END = "\n";
     
     // Input and output files are arrays because some analyzers may need multiple input files
     protected String[] inputFiles;
@@ -58,10 +53,10 @@ public abstract class Analyzer {
         FileWriter fileWriter = new FileWriter(filePath);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         return new CSVWriterBuilder(bufferedWriter)
-                .withSeparator(DEFAULT_SEPARATOR)
+                .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
                 .withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
-                .withEscapeChar(DEFAULT_ESCAPE_CHARACTER)
-                .withLineEnd(DEFAULT_LINE_END)
+                .withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
+                .withLineEnd(CSVWriter.DEFAULT_LINE_END)
                 .build();
     }
 
@@ -163,7 +158,18 @@ public abstract class Analyzer {
                 range[0] = Integer.parseInt((String) params[0]);
                 range[1] = Integer.parseInt((String) params[1]);
                 return new AverageAnalyzer(inputFiles, outputFiles, range);
-
+            
+            case "interpolaterPro":
+                if (outputFiles.length == 10) {
+                    // For each file, add to the output string
+                    String outputString = inputFiles[0].substring(0, inputFiles[0].lastIndexOf("/") + 1);;
+                    for (int i = 0; i < inputFiles.length; i++) {
+                        outputString += inputFiles[i].substring(inputFiles[i].lastIndexOf("/") + 1, inputFiles[i].length() - 4) + "_";
+                    }
+                    outputFiles[0] = outputString + "inter.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
+                return new InterpolaterProAnalyzer(inputFiles, inputColumns, outputFiles);
             default:
                 return null;
         }
