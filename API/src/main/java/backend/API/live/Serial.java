@@ -85,13 +85,12 @@ public class Serial {
                 byte[] readBuffer = new byte[8];
 
                 int numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                System.out.println("Available: " + comPort.bytesAvailable());
                 System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " + readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", " + readBuffer[7] );
                 //make a packet object from the byte array
 
                 //make a new byte array that is a flipped version of readBuffer
                 Packet p = new Packet(readBuffer);
-                System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
+                //System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
                 if (p.getPacketType() == 37) {
                     //write the timestamp and the float data to the file
                     fw.write(p.getTimestamp() + "," + p.getFloatData()+"\n");

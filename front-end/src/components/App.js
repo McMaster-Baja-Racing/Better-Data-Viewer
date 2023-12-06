@@ -64,14 +64,20 @@ const App = () => {
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
     if (successMessage === "" || Object.keys(successMessage).length === 0) return;
+    //set color to red if message included error
+    if (successMessage.message.includes("Error")) {
+      $( "div.success" ).css("background-color", "red");
+    } else {
+      $( "div.success" ).css("background-color", "#dff0d8");
+    }
     $( "div.success" ).hide().stop(true, false) // This could use some work to show that they are different messages more clearly
     $( "div.success" ).slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
-  
+
   
   return (
     <div className="App">
-      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
+      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal} setSuccessMessage={setSuccessMessage}/>
       <header className="App-header">
         <div className="success">{successMessage.message}</div>
         {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}

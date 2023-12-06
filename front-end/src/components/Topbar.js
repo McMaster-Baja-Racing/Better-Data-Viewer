@@ -1,7 +1,7 @@
 import '../styles/topbar.css';
 import { useState } from 'react';
 
-const Topbar = ({ openCreateGraphModal, openUploadModal, openHelpModal}) => {
+const Topbar = ({ openCreateGraphModal, openUploadModal, openHelpModal, setSuccessMessage}) => {
 
     const [liveStatus, setLiveStatus] = useState("Begin Live Data");
     //This function notifies the backend to begin listening on a certain port for live data
@@ -16,11 +16,15 @@ const Topbar = ({ openCreateGraphModal, openUploadModal, openHelpModal}) => {
             //if the response contains started or stopped, then the live data has been started or stopped and the button should be updated
             if (res.includes("started")) {
                 setLiveStatus("Stop Live Data");
+                setSuccessMessage({ message: "Live Data Started" });
             } else if (res.includes("stopped")) {
                 setLiveStatus("Begin Live Data");
+                setSuccessMessage({ message: "Live Data Stopped" });
             }
             else {
                 console.log("Error: " + res);
+                
+                setSuccessMessage({ message: "Live Data Error" });
             }
         }).catch((err) => {
             console.log(err);
