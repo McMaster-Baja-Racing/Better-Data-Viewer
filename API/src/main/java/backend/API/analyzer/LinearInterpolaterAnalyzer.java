@@ -18,11 +18,19 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
     public void analyze() {
         System.out.println("Interpolating \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\" to \"" + outputFiles[0] + "\"");
 
+        // Begin timer
+        long startTime = System.nanoTime();
+
         Reader r1 = new CSVReader(inputFiles[0]);
         Reader r2 = new CSVReader(inputFiles[1]);
         Writer w = new CSVWriter(outputFiles[0]);
 
         w.write(linearInterpolate(r1.read(), r2.read()));
+
+        // End timer
+        long endTime = System.nanoTime();
+
+        System.out.println("Interpolation took " + (endTime - startTime) / 1000000 + " milliseconds");
 
     }
     
@@ -87,27 +95,14 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
         return dataPoints;
     }
 
-
-    // main test code
     public static void main(String[] args) {
-        // String[] filepaths = new String[2];
-        // filepaths[0] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_PRIM.csv";
-        // filepaths[1] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_SEC.csv";
+        String[] inputFiles = {"X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/151408/GPS LONGITUDE.csv", "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/151408/GPS LATITUDE.csv"
+        };
+        String[] outputFiles = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/temp2.csv"};
+        String[] inputColumns = {"GPS LONGITUDE", "GPS LATITUDE"};
 
-        // RollingAvgAnalyzer r1 = new RollingAvgAnalyzer(filepaths, filepaths, 30);
-        // r1.analyze();
-
-        // filepaths[1] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_PRIM.csv";
-        // filepaths[0] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_SEC.csv";
-
-        // RollingAvgAnalyzer r2 = new RollingAvgAnalyzer(filepaths, filepaths, 30);
-        // r2.analyze();
-
-        // filepaths[0] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_PRIM.csv_averaged.csv";
-        // filepaths[1] = "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/live_F_RPM_SEC.csv_averaged.csv";
-
-        // LinearInterpolaterAnalyzer l = new LinearInterpolaterAnalyzer(filepaths, filepaths);
-        // l.analyze();
+        LinearInterpolaterAnalyzer analyzer = new LinearInterpolaterAnalyzer(inputFiles, inputColumns, outputFiles);
+        analyzer.analyze();
     }
     
 }

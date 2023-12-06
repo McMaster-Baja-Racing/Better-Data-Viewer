@@ -147,6 +147,12 @@ public class FileUploadController {
 			@RequestParam(value = "outputFiles", required = false) String[] outputFiles,
 			@RequestParam(value = "analyzer", required = false) String[] analyzer,
 			@RequestParam(value = "liveOptions", required = false) String[] liveOptions) throws InterruptedException {
+
+		System.out.print("Input Columns:");
+		for (int i = 0; i < inputColumns.length; i++) {
+			System.out.print(inputColumns[i]);
+		}
+		System.out.println("");
 		// Catch exceptions first
 		if (inputFiles == null || inputFiles.length == 0) {
 			throw new IllegalArgumentException("No input files selected");
@@ -165,8 +171,12 @@ public class FileUploadController {
 
 		// Then run the selected analyzer
 		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
+			try {
 			Analyzer.createAnalyzer(analyzer[0], inputFiles, inputColumns, outputFiles,
 					Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 		} else {
 			// If no analyzer is selected, only one file is selected, copy it
 			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);

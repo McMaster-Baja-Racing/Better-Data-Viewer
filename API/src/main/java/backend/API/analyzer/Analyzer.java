@@ -3,13 +3,24 @@ package backend.API.analyzer;
 import java.io.IOException;
 import java.util.List;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+import com.opencsv.CSVWriterBuilder;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-
 public abstract class Analyzer {
+    // Default values for CSV reader and writer
+    private static final char DEFAULT_SEPARATOR = ',';
+    private static final char DEFAULT_QUOTE_CHARACTER = '"';
+    private static final char DEFAULT_ESCAPE_CHARACTER = '\\';
+    private static final String DEFAULT_LINE_END = "\n";
     
     // Input and output files are arrays because some analyzers may need multiple input files
     protected String[] inputFiles;
@@ -31,16 +42,27 @@ public abstract class Analyzer {
     }
     
     // Abstract method to be implemented by subclasses
-    public abstract void analyze();
+    public abstract void analyze() throws IOException, CsvValidationException;
 
     // I/O methods
     // Streams as they avoid loading the entire file into memory at once
-    protected BufferedReader getReader(String inputFile) throws IOException {
-        return new BufferedReader(new FileReader(inputFile));
+    public CSVReader getReader(String filePath) throws IOException {
+        FileReader fileReader = new FileReader(filePath);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        return new CSVReaderBuilder(bufferedReader)
+                .withSkipLines(0) // Skip header if needed
+                .build();
     }
 
-    protected BufferedWriter getWriter(String outputFile) throws IOException {
-        return new BufferedWriter(new FileWriter(outputFile));
+    public ICSVWriter getWriter(String filePath) throws IOException {
+        FileWriter fileWriter = new FileWriter(filePath);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        return new CSVWriterBuilder(bufferedWriter)
+                .withSeparator(DEFAULT_SEPARATOR)
+                .withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
+                .withEscapeChar(DEFAULT_ESCAPE_CHARACTER)
+                .withLineEnd(DEFAULT_LINE_END)
+                .build();
     }
 
     // Factory method allows creation of different types of analyzers without having to change the code that calls it
@@ -94,6 +116,7 @@ public abstract class Analyzer {
                 // We use timestamp and inputColumns[1] as the inputColumns because we don't
                 // actually care which column in the first file we're interpolating with, we'll just
                 // add every column from the first file to the new file
+                // Print all input columns
                 return new LinearInterpolaterAnalyzer(inputFiles,
                         new String[] {"Timestamp (ms)", inputColumns[1]}, outputFiles);
             case "RDPCompression":
@@ -156,6 +179,15 @@ public abstract class Analyzer {
             }
         }
         // The inputColum is wrong somehow, should never happen with working frontend
+        throw new RuntimeException("No column in file exists with analysis column name");
+    }
+
+    public int getColumnIndex(String columnName, String[] fileHeaders) throws RuntimeException {
+        for(int i = 0; i < fileHeaders.length; i++) {
+            if(fileHeaders[i].trim().equals(columnName)) {
+                return i;
+            }
+        }
         throw new RuntimeException("No column in file exists with analysis column name");
     }
 

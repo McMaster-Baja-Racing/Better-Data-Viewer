@@ -134,9 +134,9 @@ const Chart = ({ chartInformation }) => {
             // Create a list of all files in order (formatting for backend)
             var files = [];
             for (var j = 0; j < chartInformation.files[i].columns.length; j++) {
-                if (!files.includes(chartInformation.files[i].columns[j].filename)) {
+                //if (!files.includes(chartInformation.files[i].columns[j].filename)) {
                     files.push(chartInformation.files[i].columns[j].filename);
-                }
+                //}
             }
             // Fixed this little if statement with .filter(e => e)
             data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
@@ -150,6 +150,9 @@ const Chart = ({ chartInformation }) => {
         if (chartInformation.files.length === 0) {
             return;
         }
+
+        console.log("Chart Information: ")
+        console.log(chartInformation)
 
         
         setParsedData([]);
