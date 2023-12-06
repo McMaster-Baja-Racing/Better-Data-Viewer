@@ -74,7 +74,7 @@ const Chart = ({ chartInformation }) => {
         // This will find the index of the headers in the file (works for any number of headers)
         for (var i = 0; i < columnInfo.length; i++) {
             for (var j = 0; j < headers.length; j++) {
-                if (columnInfo[i].header === headers[j]) {
+                if (columnInfo[i].header === headers[j].trim()) {
                     h.push(j);
                 }
             }
@@ -150,10 +150,6 @@ const Chart = ({ chartInformation }) => {
         if (chartInformation.files.length === 0) {
             return;
         }
-
-        console.log("Chart Information: ")
-        console.log(chartInformation)
-
         
         setParsedData([]);
         setFileNames([]);
@@ -187,7 +183,8 @@ const Chart = ({ chartInformation }) => {
                                 data: parsedData[j],
                                 colour: colours[j],
                                 opacity: 1,
-                                colorAxis: false
+                                colorAxis: false, 
+                                findNearestPointBy: 'x',
                             })
                         }
                     } else {
@@ -199,6 +196,7 @@ const Chart = ({ chartInformation }) => {
                                 colorKey: 'colorValue',
                                 turboThreshold: 0,
                                 opacity: 1,
+                                findNearestPointBy: 'xy',
                             })
                         }
                     }
