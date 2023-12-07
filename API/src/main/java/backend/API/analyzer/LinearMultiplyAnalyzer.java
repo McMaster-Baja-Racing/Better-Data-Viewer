@@ -16,8 +16,8 @@ public class LinearMultiplyAnalyzer extends Analyzer {
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
-    public LinearMultiplyAnalyzer(String[] inputFiles, String[] outputFiles, double m, double b) {
-        super(inputFiles, outputFiles);
+    public LinearMultiplyAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles, double m, double b) {
+        super(inputFiles, inputColumns, outputFiles);
         this.m = m;
         this.b = b;
     }
@@ -40,17 +40,20 @@ public class LinearMultiplyAnalyzer extends Analyzer {
         List<List<String>> dataPoints = new ArrayList<List<String>>();
         List<String> dataPoint = new ArrayList<String>(2);
 
+        int independentColumn = this.getAnalysisColumnIndex(0, data.get(0));
+        int dependentColumn = this.getAnalysisColumnIndex(1, data.get(0));
+
         // Add header
-        dataPoint.add(data.get(0).get(0));
-        dataPoint.add(data.get(0).get(1));
+        dataPoint.add(data.get(0).get(independentColumn));
+        dataPoint.add(data.get(0).get(dependentColumn));
         dataPoints.add(dataPoint);
 
-        dataPoints = new ArrayList<List<String>>();
+        dataPoint = new ArrayList<String>(2);
 
         //loop through the data and multiply the second coloum by m and then add b
         for (int i = 1; i < data.size(); i++) {
-            dataPoint.add(data.get(i).get(0));
-            dataPoint.add(df.format(Double.parseDouble(data.get(i).get(1)) * m + b));
+            dataPoint.add(data.get(i).get(independentColumn));
+            dataPoint.add(df.format(Double.parseDouble(data.get(i).get(dependentColumn)) * m + b));
             dataPoints.add(dataPoint);
             dataPoint = new ArrayList<String>(2);
         }
@@ -60,12 +63,12 @@ public class LinearMultiplyAnalyzer extends Analyzer {
 
     // make a main to test it
     public static void main(String[] args) {
-        String[] filepaths = new String[1];
-        String[] outputFiles = new String[1];
-        filepaths[0] = "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split.csv";
-        outputFiles[0] = "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split_multi.csv";
-        LinearMultiplyAnalyzer r = new LinearMultiplyAnalyzer(filepaths, outputFiles, 0.5, 0.0);
-        r.analyze();
+        // String[] filepaths = new String[1];
+        // String[] outputFiles = new String[1];
+        // filepaths[0] = "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split.csv";
+        // outputFiles[0] = "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split_multi.csv";
+        // LinearMultiplyAnalyzer r = new LinearMultiplyAnalyzer(filepaths, outputFiles, 0.5, 0.0);
+        // r.analyze();
     }
     
 }

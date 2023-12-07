@@ -15,14 +15,14 @@ public class SGolayFilter extends Analyzer {
     private int windowSize;
     private int polynomialDegree;
 
-    public SGolayFilter(String[] inputFiles, String[] outputFiles, int windowSize, int polynomialDegree) {
-        super(inputFiles, outputFiles);
+    public SGolayFilter(String[] inputFiles, String[] inputColumns, String[] outputFiles, int windowSize, int polynomialDegree) {
+        super(inputFiles, inputColumns, outputFiles);
         this.windowSize = windowSize;
         this.polynomialDegree = polynomialDegree;
     }
 
-    public SGolayFilter(String[] inputFiles, String[] outputFiles) {
-        super(inputFiles, outputFiles);
+    public SGolayFilter(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
+        super(inputFiles, inputColumns, outputFiles);
         this.windowSize = 300;
         this.polynomialDegree = 3;
     }
@@ -42,15 +42,18 @@ public class SGolayFilter extends Analyzer {
         List<List<String>> dataPoints = new ArrayList<List<String>>();
         List<String> dataPoint = new ArrayList<String>(2);
 
+        int independentColumn = this.getAnalysisColumnIndex(0, data.get(0));
+        int dependentColumn = this.getAnalysisColumnIndex(1, data.get(0));
+
         // Add header
-        dataPoint.add(data.get(0).get(0));
-        dataPoint.add(data.get(0).get(1));
+        dataPoint.add(data.get(0).get(independentColumn));
+        dataPoint.add(data.get(0).get(dependentColumn));
         dataPoints.add(dataPoint);
         dataPoint = new ArrayList<String>(2);
 
         // Put first row of data in
-        dataPoint.add(data.get(1).get(0));
-        dataPoint.add(data.get(1).get(1));
+        dataPoint.add(data.get(1).get(independentColumn));
+        dataPoint.add(data.get(1).get(dependentColumn));
         dataPoints.add(dataPoint);
         dataPoint = new ArrayList<String>(2);
 
@@ -58,13 +61,13 @@ public class SGolayFilter extends Analyzer {
         RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);
 
         for (int i = 2; i < data.size(); i++) {
-            dataPoint.add(data.get(i).get(0)); // Add timestamp
+            dataPoint.add(data.get(i).get(independentColumn)); // Add timestamp
 
             double smoothedValue = 0.0;
 
             for (int j = -halfWindowSize; j < halfWindowSize; j++) {
                 int dataIndex = Math.min(Math.max(i + j, 1), data.size() - 1);
-                double dataValue = Double.parseDouble(data.get(dataIndex).get(1));
+                double dataValue = Double.parseDouble(data.get(dataIndex).get(dependentColumn));
                 smoothedValue += coeffMatrix.getEntry(halfWindowSize + j, 0) * dataValue;
             }
 
@@ -96,16 +99,16 @@ public class SGolayFilter extends Analyzer {
 
     // make a main to test it
     public static void main(String[] args) {
-        String[] filepaths = new String[1];
-        filepaths[0] = "C:/Users/graha/Downloads/F_RPM_PRIM.csv";
+        // String[] filepaths = new String[1];
+        // filepaths[0] = "C:/Users/graha/Downloads/F_RPM_PRIM.csv";
 
-        String[] outputFiles = new String[1];
-        outputFiles[0] = "C:/Users/graha/Downloads/F_RPM_PRIM_not_fussy.csv";
+        // String[] outputFiles = new String[1];
+        // outputFiles[0] = "C:/Users/graha/Downloads/F_RPM_PRIM_not_fussy.csv";
 
-        int windowSize = 1000;
-        int polynomialDegree = 2;
+        // int windowSize = 1000;
+        // int polynomialDegree = 2;
 
-        SGolayFilter s = new SGolayFilter(filepaths, outputFiles, windowSize, polynomialDegree);
-        s.analyze();
+        // SGolayFilter s = new SGolayFilter(filepaths, outputFiles, windowSize, polynomialDegree);
+        // s.analyze();
     }
 }

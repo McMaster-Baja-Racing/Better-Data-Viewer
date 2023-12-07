@@ -12,6 +12,7 @@
     margin: 0;
     font-family: 'Lato', sans-serif;
     font-weight: 200;
+    word-break: break-all;
 }
 
 .file.selected {
@@ -118,4 +119,8 @@ div.footer {
     background: crimson;
     color: white;
     cursor: pointer;
+}
+
+.name {
+    max-width: 250px
 }

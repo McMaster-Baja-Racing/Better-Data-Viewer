@@ -19,8 +19,8 @@ public class AccelCurveAnalyzer extends Analyzer {
 
     // inputFiles are first primary RPM, then secondary RPM
     // outputFiles are first primary RPM rolling average, then secondary RPM rolling average, then interpolated, then accel curve (runs)
-    public AccelCurveAnalyzer(String[] inputFiles, String[] outputFiles) {
-        super(inputFiles, outputFiles);
+    public AccelCurveAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
+        super(inputFiles, inputColumns, outputFiles);
     }
 
     @Override
@@ -29,9 +29,10 @@ public class AccelCurveAnalyzer extends Analyzer {
         // Roll average first
         System.out.println("sGolay Averaging...");
 
-        SGolayFilter s = new SGolayFilter(Arrays.copyOfRange(inputFiles, 0, 1), Arrays.copyOfRange(outputFiles, 0, 1), 300, 3);
+        // SGolay filtering with Timestamp as independent variable, but we didn't actually select Timestamp as an axis in the front-end so we hardcode it in here
+        SGolayFilter s = new SGolayFilter(Arrays.copyOfRange(inputFiles, 0, 1), new String[] {"Timestamp (ms)", inputColumns[0]}, Arrays.copyOfRange(outputFiles, 0, 1), 300, 3);
         s.analyze();
-        SGolayFilter s2 = new SGolayFilter(Arrays.copyOfRange(inputFiles, 1, 2), Arrays.copyOfRange(outputFiles, 1, 2), 300, 3);
+        SGolayFilter s2 = new SGolayFilter(Arrays.copyOfRange(inputFiles, 1, 2), new String[] {"Timestamp (ms)", inputColumns[1]}, Arrays.copyOfRange(outputFiles, 1, 2), 300, 3);
         s2.analyze();
 
         // RollingAvgAnalyzer rollingAvg1 = new RollingAvgAnalyzer(Arrays.copyOfRange(inputFiles, 0, 1), Arrays.copyOfRange(outputFiles, 0, 1), 30);
@@ -42,7 +43,8 @@ public class AccelCurveAnalyzer extends Analyzer {
         // Then interpolate
         System.out.println("Interpolating...");
 
-        LinearInterpolaterAnalyzer linearInterpolate = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
+        // LinearInterp with Timestamp as independent variable, but we didn't actually select Timestamp as an axis in the front-end so we hardcode it in here
+        LinearInterpolaterAnalyzer linearInterpolate = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]}, Arrays.copyOfRange(outputFiles, 2, 3));
         linearInterpolate.analyze();
 
         // LinearInterpolaterAnalyzer linearInt = new LinearInterpolaterAnalyzer(Arrays.copyOfRange(outputFiles, 0, 2), Arrays.copyOfRange(outputFiles, 2, 3));
@@ -239,28 +241,28 @@ public class AccelCurveAnalyzer extends Analyzer {
     // my mother is a fish
 
     static public void main(String[] args) {
-        //This will test the accelCurve analyzer
+        // //This will test the accelCurve analyzer
 
-        //Read in the data
-        Date start = new Date();
+        // //Read in the data
+        // Date start = new Date();
 
-        String[] files = new String[2];
-        files[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/data/live_F_RPM_PRIM.csv";
-        files[1] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/data/live_F_RPM_SEC.csv";
+        // String[] files = new String[2];
+        // files[0] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/data/live_F_RPM_PRIM.csv";
+        // files[1] = "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/data/live_F_RPM_SEC.csv";
 
-        String[] output = new String[3];
-        output[0] = "prim_roll.csv";
-        output[1] = "sec_roll.csv";
-        output[2] = "accelCurve.csv";
+        // String[] output = new String[3];
+        // output[0] = "prim_roll.csv";
+        // output[1] = "sec_roll.csv";
+        // output[2] = "accelCurve.csv";
     
-        //run the accelCurve analyzer
-        AccelCurveAnalyzer accelCurve = new AccelCurveAnalyzer(files, output);
-        accelCurve.analyze();
+        // //run the accelCurve analyzer
+        // AccelCurveAnalyzer accelCurve = new AccelCurveAnalyzer(files, output);
+        // accelCurve.analyze();
 
-        System.out.println("Done");
+        // System.out.println("Done");
 
 
-        Date end = new Date();
-        System.out.println("Time: " + (end.getTime() - start.getTime()) + "ms");
+        // Date end = new Date();
+        // System.out.println("Time: " + (end.getTime() - start.getTime()) + "ms");
     }
 }

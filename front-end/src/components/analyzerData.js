@@ -51,7 +51,7 @@ const analyzerData = [
   },
   {
     title: "Interpolation",
-    code: "linearInterpolate",
+    code: "interpolaterPro",
     parameters: [], // One day should take in column
     description: "Interpolation is the act of adding new data points between existing data points. This is useful for making data more readable, or for making it easier to compare data sets. This is implemented linearly.",
     image: {
