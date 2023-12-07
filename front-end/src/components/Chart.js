@@ -48,8 +48,9 @@ const Chart = ({ chartInformation }) => {
 
     // This function handles the fetching of the data from the backend
     const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions, columnInfo) => {
+        let inputColumns = columnInfo.map(col => col.header);
         // Using async / await rather than .then() allows me to return the data from the function easily
-        const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
+        const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&inputColumns=${inputColumns}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
             method: 'GET'
         })
 
@@ -65,6 +66,7 @@ const Chart = ({ chartInformation }) => {
         })
 
         const text = await response.text()
+
         var headers = text.trim().split("\n")[0].split(",");
         headers[headers.length - 1] = headers[headers.length - 1].replace("\r", "")
         var h = [];
@@ -72,7 +74,7 @@ const Chart = ({ chartInformation }) => {
         // This will find the index of the headers in the file (works for any number of headers)
         for (var i = 0; i < columnInfo.length; i++) {
             for (var j = 0; j < headers.length; j++) {
-                if (columnInfo[i].header === headers[j]) {
+                if (columnInfo[i].header === headers[j].trim()) {
                     h.push(j);
                 }
             }
@@ -132,9 +134,9 @@ const Chart = ({ chartInformation }) => {
             // Create a list of all files in order (formatting for backend)
             var files = [];
             for (var j = 0; j < chartInformation.files[i].columns.length; j++) {
-                if (!files.includes(chartInformation.files[i].columns[j].filename)) {
+                //if (!files.includes(chartInformation.files[i].columns[j].filename)) {
                     files.push(chartInformation.files[i].columns[j].filename);
-                }
+                //}
             }
             // Fixed this little if statement with .filter(e => e)
             data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
@@ -148,7 +150,6 @@ const Chart = ({ chartInformation }) => {
         if (chartInformation.files.length === 0) {
             return;
         }
-
         
         setParsedData([]);
         setFileNames([]);
@@ -182,7 +183,8 @@ const Chart = ({ chartInformation }) => {
                                 data: parsedData[j],
                                 colour: colours[j],
                                 opacity: 1,
-                                colorAxis: false
+                                colorAxis: false, 
+                                findNearestPointBy: 'x',
                             })
                         }
                     } else {
@@ -194,6 +196,7 @@ const Chart = ({ chartInformation }) => {
                                 colorKey: 'colorValue',
                                 turboThreshold: 0,
                                 opacity: 1,
+                                findNearestPointBy: 'xy',
                             })
                         }
                     }

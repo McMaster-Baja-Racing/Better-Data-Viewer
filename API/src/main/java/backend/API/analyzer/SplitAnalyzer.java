@@ -12,8 +12,8 @@ public class SplitAnalyzer extends Analyzer {
     private int start;
     private int end;
 
-    public SplitAnalyzer(String[] inputFiles, String[] outputFiles, int start, int end) {
-        super(inputFiles, outputFiles);
+    public SplitAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles, int start, int end) {
+        super(inputFiles, inputColumns, outputFiles);
         this.start = start;
         this.end = end;
     }
@@ -40,17 +40,20 @@ public class SplitAnalyzer extends Analyzer {
         List<List<String>> dataPoints = new ArrayList<List<String>>();
         List<String> dataPoint = new ArrayList<String>(2);
 
+        int independentColumn = this.getAnalysisColumnIndex(0, data.get(0));
+        int dependentColumn = this.getAnalysisColumnIndex(1, data.get(0));
+
         // Add header
-        dataPoint.add(data.get(0).get(0));
-        dataPoint.add(data.get(0).get(1));
+        dataPoint.add(data.get(0).get(independentColumn));
+        dataPoint.add(data.get(0).get(dependentColumn));
         dataPoints.add(dataPoint);
 
         dataPoint = new ArrayList<String>(2);
         //loop through the data and add the date from once the start time is reached to the end time is reached, the first coloumn is the timestamp
         for (int i = 1; i < data.size(); i++) {
-            if (Integer.parseInt(data.get(i).get(0)) >= start && Integer.parseInt(data.get(i).get(0)) <= end) {
-                dataPoint.add(data.get(i).get(0));
-                dataPoint.add(data.get(i).get(1));
+            if (Integer.parseInt(data.get(i).get(independentColumn)) >= start && Integer.parseInt(data.get(i).get(independentColumn)) <= end) {
+                dataPoint.add(data.get(i).get(independentColumn));
+                dataPoint.add(data.get(i).get(dependentColumn));
                 dataPoints.add(dataPoint);
                 dataPoint = new ArrayList<String>(2);
             }
@@ -61,12 +64,12 @@ public class SplitAnalyzer extends Analyzer {
 
     // make a main to test it
     public static void main(String[] args) {
-        String[] filepaths = new String[1];
-        String[] outputFiles = new String[1];
-        filepaths[0] = "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM.csv";
-        outputFiles[0] = "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split.csv";
-        SplitAnalyzer r = new SplitAnalyzer(filepaths, outputFiles, 7749475, 7749619);
-        r.analyze();
+        // String[] filepaths = new String[1];
+        // String[] outputFiles = new String[1];
+        // filepaths[0] = "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM.csv";
+        // outputFiles[0] = "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split.csv";
+        // SplitAnalyzer r = new SplitAnalyzer(filepaths, outputFiles, 7749475, 7749619);
+        // r.analyze();
     }
     
 }

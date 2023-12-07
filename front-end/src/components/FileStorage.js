@@ -98,7 +98,7 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setColumns, setDi
       files.forEach(file => {
         file.fileHeaders.forEach(header => {
           col.push({
-            "header": header,
+            "header": header.trim(),
             "filename": file.key
           })
         })
