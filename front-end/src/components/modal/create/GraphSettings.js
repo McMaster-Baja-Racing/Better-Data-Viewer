@@ -1,22 +1,6 @@
-import '../styles/GraphSettingsStyles.css';
+import '../../../styles/GraphSettingsStyles.css';
 
-const GraphSettings = ({ setDisplayPage, setFiles, setGraphType, setLiveCheck }) => {
-
-  const listFiles = () => {
-    //If live data is checked, only show the default live data files
-    // if (document.getElementById("liveDataCheckbox").checked) {
-    //   setFiles(["F_GPS_SPEED.csv", "F_RPM_PRIM.csv", "F_RPM_SEC.csv", "F_THROTTLE.csv", "F_VEHICLE_SPEED.csv"]);
-    //   return;
-    // }
-
-    // Should be of format [{key: "F_GPS_SPEED.csv", size: 1234, headers: ["header1", "header2", "header3"]}, ...]
-    fetch(`http://${window.location.hostname}:8080/files`)
-      .then(response => response.json())
-      .then(data => {
-        //console.log(data)
-        setFiles(data.files);
-      })
-  }
+const GraphSettings = ({ setDisplayPage, setGraphType, setLiveCheck }) => {
 
   const graphType = () => {
     setGraphType(document.getElementById("graphTypeSelect").value);
@@ -54,20 +38,9 @@ const GraphSettings = ({ setDisplayPage, setFiles, setGraphType, setLiveCheck })
         <div className='liveDataBox'>
           <div className="graphOptionsText">Live Data</div>
           <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
-        </div>
-        
-        
+        </div> 
       </div>
-
-      <button className="PageButton" onClick={() => { liveData(); graphType(); listFiles(); setDisplayPage(2); }}>Next</button>
-      {/* 
-      
-
-      
-
-      
-      
-      <button className="pageOneNextButton" onClick={() => { liveData(); graphType(); listFiles(); setDisplayPage(2); }}>Next</button> */}
+      <button className="PageButton" onClick={() => { liveData(); graphType(); setDisplayPage(2); }}>Next</button>
     </div>
   )
 

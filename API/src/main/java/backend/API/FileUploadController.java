@@ -38,9 +38,10 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import backend.API.storage.StorageFileNotFoundException;
 import backend.API.storage.StorageService;
-import jakarta.servlet.http.HttpServletRequest;
 import backend.API.binary_csv.BinaryTOCSV;
 import backend.API.live.Serial;
 
@@ -71,19 +72,24 @@ public class FileUploadController {
 		return "uploadForm";
 	}
 
-	// This is the default method that returns a single file
-	@GetMapping("/files/{filename:.+}")
+	//This is the default method that returns a single file
+	@GetMapping("/files/**")
 	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+	public ResponseEntity<Resource> serveFile(HttpServletRequest request) {
 		// Catch the exception if the file is not found
+		String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		path = path.substring("/files/".length());
+		path = URLDecoder.decode(path, StandardCharsets.UTF_8);
 
-		Resource file = storageService.loadAsResource(filename);
+		System.out.println("Serving file " + path);
+
+		Resource file = storageService.loadAsResource(path);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 
 		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-				"attachment; filename=\"" + file.getFilename() + "\"");
-		// Set these headers so that you can access from LocalHost
+		"attachment; filename=\"" + file.getFilename() + "\"");
+		//Set these headers so that you can access from LocalHost
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 

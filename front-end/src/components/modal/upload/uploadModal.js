@@ -1,11 +1,11 @@
 //UploadModal.js
 import ReactDom from "react-dom";
-import '../styles/modalStyles.css';
-import '../styles/uploadModalStyles.css';
+import '../../../styles/modalStyles.css';
+import '../../../styles/uploadModalStyles.css';
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
-export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
+export const UploadModal = ({ setModal, setSuccessMessage}) => {
 
   const [dragActive, setDragActive] = React.useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
   const modalRef = useRef();
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setShowUploadModal(false);
+      setModal('');
     }
   };
 
@@ -73,7 +73,7 @@ export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
     });
 
     setLoading(false);
-    setShowUploadModal(false);
+    setModal('');
     setSuccessMessage({ message: "Files Uploaded" });// + fileLists.map((file) => file.name).join(", ")
   };
 
@@ -112,7 +112,7 @@ export const UploadModal = ({ setShowUploadModal, setSuccessMessage}) => {
           <input id = "submitButton" className="uploadSubmit" type="submit" />
           </form>
         </div>
-        <button className="closeButton" onClick={() => setShowUploadModal(false)}>X</button>
+        <button className="closeButton" onClick={() => setModal('')}>X</button>
       </div>
     </div>,
     document.getElementById("portal")

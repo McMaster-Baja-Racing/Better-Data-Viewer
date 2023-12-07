@@ -2,19 +2,19 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 
-export const HelpModal = ({ setShowHelpModal }) => {
+export const HelpModal = ({ setModal }) => {
   const modalRef = useRef();
 
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
-      setShowHelpModal(false);
+      setModal('');
     }
   };
 
   return ReactDOM.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
-        <button className="closeButton" onClick={() => setShowHelpModal(false)}>X</button>
+        <button className="closeButton" onClick={() => setModal('')}>X</button>
         <div style={{textAlign: "center"}}>
         <h1>Help!</h1>
         <p>
