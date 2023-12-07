@@ -148,11 +148,6 @@ public class FileUploadController {
 			@RequestParam(value = "analyzer", required = false) String[] analyzer,
 			@RequestParam(value = "liveOptions", required = false) String[] liveOptions) throws InterruptedException {
 
-		System.out.print("Input Columns:");
-		for (int i = 0; i < inputColumns.length; i++) {
-			System.out.print(inputColumns[i]);
-		}
-		System.out.println("");
 		// Catch exceptions first
 		if (inputFiles == null || inputFiles.length == 0) {
 			throw new IllegalArgumentException("No input files selected");
