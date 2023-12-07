@@ -64,7 +64,6 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
                 })
             }
         })
-        console.log(seriesInfo)
     }
 
     const [openPopup, setOpenPopup] = useState(null);

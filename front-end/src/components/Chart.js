@@ -214,12 +214,17 @@ const Chart = ({ chartInformation }) => {
                         //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
                         type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
                         text: chartInformation.files[0].columns[0].header
-                    }
+                    },
+                    lineColor: 'grey',
+                    tickColor: 'grey',
                 },
                 yAxis: {
                     title: {
                         text: chartInformation.files[0].columns[1].header
-                    }
+                    },
+                    lineColor: 'grey',
+                    tickColor: 'grey',
+                    lineWidth: 1,
                 },
                 legend: {
                     enabled: true
