@@ -61,11 +61,11 @@ const CustomFileRenderer = (props) => {
 };
 
 const CustomFolderRenderer = (props) => {
-    const { files, isOpen, browserProps } = props;
+    const { isOpen, browserProps, children } = props;
     const { connectDragSource, connectDropTarget } = browserProps;
 
     // Calculates folder size by going through all the files and adding those in the folder to a total
-    const folderSize = files.reduce((total, file) => total + (file.key.split('/')[0] === props.name ? file.size : 0), 0);
+    const folderSize = children.reduce((total, file) => total + file.size, 0);
 
     const handleFolderClick = (e) => {
         browserProps.toggleFolder(props.fileKey);
@@ -112,7 +112,7 @@ const FileStorage = ({ files, selectedFiles, setSelectedFiles, setColumns, setDi
                 <RawFileBrowser
                     files={files}
                     icons={Icons.FontAwesome(4)}
-                    fileRendererProps={{ files, selectedFiles, setSelectedFiles }}
+                    fileRendererProps={{ selectedFiles, setSelectedFiles }}
                     fileRenderer={CustomFileRenderer}
                     folderRendererProps={{files}}
                     folderRenderer={CustomFolderRenderer}
