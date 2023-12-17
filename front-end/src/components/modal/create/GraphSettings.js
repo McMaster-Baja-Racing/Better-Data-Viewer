@@ -1,6 +1,6 @@
 import '../../../styles/GraphSettingsStyles.css';
 
-const GraphSettings = ({ setDisplayPage, setGraphType, setLiveCheck }) => {
+const GraphSettings = ({ movePage, setGraphType, setLiveCheck }) => {
 
   const graphType = () => {
     setGraphType(document.getElementById("graphTypeSelect").value);
@@ -40,7 +40,7 @@ const GraphSettings = ({ setDisplayPage, setGraphType, setLiveCheck }) => {
           <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
         </div> 
       </div>
-      <button className="PageButton" onClick={() => { liveData(); graphType(); setDisplayPage(2); }}>Next</button>
+      <button className="PageButton" onClick={() => { liveData(); graphType(); movePage(1); }}>Next</button>
     </div>
   )
 
