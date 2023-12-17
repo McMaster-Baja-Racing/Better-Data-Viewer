@@ -1,5 +1,5 @@
 import React from 'react';
-import "../styles/help.css";
+import "../../../styles/help.css";
 
 const HelpButton = ({ onClick }) => {
   return (

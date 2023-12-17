@@ -1,7 +1,8 @@
 import 'font-awesome/css/font-awesome.min.css';
-import '../styles/fileStorage.css'
+import '../../styles/fileStorage.css'
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
+import { useState, useEffect } from 'react';
 
 const formatSize = (size) => {
     // Finds the order of magnitude of the size in base 1024 (e.g. how many digits it would have)
@@ -85,52 +86,30 @@ const CustomFolderRenderer = (props) => {
 }
 
 
-const FileStorage = ({ files, selectedFiles, setSelectedFiles, setColumns, setDisplayPage}) => {
+const FileStorage = ({ selectedFiles, setSelectedFiles }) => {
     // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
     // Here is the implementation of the file browser with props passed in
+    
+    // holds all the files which have been uploaded
+    const [files, setFiles] = useState([])
 
-    // This method will return headers when supplied with a list of files. Added support for folders is neccesary
-    const getHeaders = async (files) => {
-      var col = [];
-  
-      files.forEach(file => {
-        file.fileHeaders.forEach(header => {
-          col.push({
-            "header": header,
-            "filename": file.key
-          })
-        })
-      })
-  
-      setColumns(col);
-    }
+    useEffect(() => {
+        // Fetch data when the component mounts
+        fetch(`http://${window.location.hostname}:8080/files`)
+          .then((response) => response.json())
+          .then((data) => {
+            setFiles(data.files);
+          });
+      }, []); // Empty dependency array ensures that the fetch is only performed once
 
     return (
-        <div className='file-Storage-Container'>
-            <div className="file-browser">
-                <h3>Choose Files</h3>
-                <RawFileBrowser
-                    files={files}
-                    icons={Icons.FontAwesome(4)}
-                    fileRendererProps={{ selectedFiles, setSelectedFiles }}
-                    fileRenderer={CustomFileRenderer}
-                    folderRendererProps={{files}}
-                    folderRenderer={CustomFolderRenderer}
-                />
-            </div>
-            <div className="fileButtons">
-                <button className="pageTwoBackButton" onClick={() => {setDisplayPage(1)}}>Back</button>
-                <button className="pageTwoNextButton" onClick={() => {
-                // OnClick, it should get the selected files from the file storage component
-                if (selectedFiles.length === 0) {
-                    alert("Please select at least one file.");
-                    return;
-                }
-                getHeaders(selectedFiles)
-                setDisplayPage(3);
-                }} >Next</button>
-            </div>
-        </div>
+        <RawFileBrowser
+            files={files}
+            icons={Icons.FontAwesome(4)}
+            fileRendererProps={{ files, selectedFiles, setSelectedFiles }}
+            fileRenderer={CustomFileRenderer}
+            folderRenderer={CustomFolderRenderer}
+        />
     )
 }
 

@@ -1,7 +1,8 @@
 import '../styles/App.css';
-import { CreateGraphModal } from "./CreateGraphModal";
-import { UploadModal } from "./uploadModal";
-import { HelpModal } from "./helpModal";
+import { CreateGraphModal } from "./modal/create/CreateGraphModal";
+import { UploadModal } from "./modal/upload/uploadModal";
+import { HelpModal } from "./modal/help/helpModal";
+import { DownloadModal } from './modal/download/downloadModal';
 import React, { useEffect, useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
@@ -9,24 +10,8 @@ import $ from 'jquery';
 
 const App = () => {
 
-  // All for create graph popup
-  const [showCreateGraphModal, setShowCreateGraphModal] = useState(false);
-  const openCreateGraphModal = () => {
-    setShowCreateGraphModal(true);
-  }
-  // All for upload popup
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const openUploadModal = () => {
-    setShowUploadModal(true);
-  }
-
-  // All for help popup
-  const [showHelpModal, setShowHelpModal] = useState(false);
-  const openHelpModal = () => {
-    setShowHelpModal(true);
-  }
-
-
+  // State for holding which modal should be open
+  const [modal, setModal] = useState('')
 
   // All for information transfer between children and parent
   // sample format for chartInformation: 
@@ -70,12 +55,13 @@ const App = () => {
   
   return (
     <div className="App">
-      <Topbar openCreateGraphModal={openCreateGraphModal} openUploadModal={openUploadModal} openHelpModal={openHelpModal}/>
+      <Topbar setModal={setModal}/>
       <header className="App-header">
         <div className="success">{successMessage.message}</div>
-        {showCreateGraphModal ? <CreateGraphModal setShowModal={setShowCreateGraphModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
-        {showUploadModal ? <UploadModal setShowUploadModal={setShowUploadModal} setSuccessMessage={setSuccessMessage}/> : null}
-        {showHelpModal ? <HelpModal setShowHelpModal={setShowHelpModal} /> : null}
+        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
+        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
         <Chart chartInformation={chartInformation} />
 
