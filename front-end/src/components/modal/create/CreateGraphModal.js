@@ -50,9 +50,9 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   }
   
   const updatePage = () => {
-    
-    if (displayPage === 2) {
-      return (
+    switch (displayPage) {
+      case 1: return( <GraphSettings setDisplayPage={setDisplayPage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
+      case 2: return (
         <div className='file-Storage-Container'>
           <div className="file-browser">
             <h3>Choose Files</h3>
@@ -73,10 +73,8 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
           </div>
         </div>
       )
-    } else if (displayPage === 3) {
-      return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setModal={setModal} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>)
-    } else{
-      return( <GraphSettings setDisplayPage={setDisplayPage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
+      case 3: return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setModal={setModal} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>)
+      default: console.log("Default"); break;
     }
   }
 
