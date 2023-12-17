@@ -15,7 +15,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [displayPage, setDisplayPage] = useState(1);
   const [graphType, setGraphType] = useState("");
   const [liveCheck, setLiveCheck] = useState(false);
-  //const [seriesInfo, setSeriesInfo] = useState([]);
+  const [seriesInfo, setSeriesInfo] = useState([]);
 
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -74,7 +74,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
         </div>
       )
     } else if (displayPage === 3) {
-      return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setModal={setModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>)
+      return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setModal={setModal} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>)
     } else{
       return( <GraphSettings setDisplayPage={setDisplayPage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
     }

@@ -3,7 +3,7 @@ import Help from './Help';
 import analyzerData from '../../analyzerData.js'
 import '../../../styles/analyzersAndSeriesStyles.css';
 import { useState, useRef, useEffect } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, handleSubmit, setSuccessMessage, setDimensions, graphType }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, seriesInfo, handleSubmit, setSeriesInfo, setSuccessMessage, setDimensions, graphType }) => {
 
     const columnGenerator = (n) => {
         // TODO: Refactor this so that it doesn't use variables such as "arr" and "arr2"
@@ -36,9 +36,6 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
         return <div><div className='columnHeaders'>{arr}</div> <div className='columnHeaders2'>{arr2}</div></div>;
     }
 
-    var seriesInfo = useRef([]);
-    
-
     const addSeries = (isSeries) => {
 
         if (isSeries) {
@@ -54,7 +51,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
 
         var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
 
-        seriesInfo.current.push({
+        // appends the new series to the seriesInfo array
+        setSeriesInfo([...seriesInfo, {
             "columns": selectColumns,
             "analyze": {
                 "analysis": checkedAnalyzer.code,
@@ -63,7 +61,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
                     return value === '' ? null : value;
                 })
             }
-        })
+        }])
     }
 
     const [openPopup, setOpenPopup] = useState(null);
@@ -117,7 +115,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
             <div className="buttonFlexBox">
                 <button className="pageThreeBackButton" onClick={() => { setDisplayPage(2) }}>Back</button>
                 <button className="addSeries" onClick={() => {addSeries(true); }}>Add Series</button>
-                <button className="pageThreeNextButton" onClick={() => {addSeries(false); handleSubmit(seriesInfo.current); setModal(''); }}>Submit</button>
+                <button className="pageThreeNextButton" onClick={() => {addSeries(false); handleSubmit(seriesInfo); setModal(''); }}>Submit</button>
             </div>
         </div>
     )
