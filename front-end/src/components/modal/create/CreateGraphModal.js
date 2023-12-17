@@ -57,7 +57,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   // This method returns the page that should be displayed based on the displayPage state
   const selectPage = () => {
     switch (displayPage) {
-      case 1: return( <GraphSettings movePage={movePage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
+      case 1: return <GraphSettings movePage={movePage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>;
       case 2: return (
         <div className='file-Storage-Container'>
           <div className="file-browser">
@@ -79,8 +79,8 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
           </div>
         </div>
       )
-      case 3: return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} setModal={setModal} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>)
-      default: handleSubmit(); setModal(''); return null;
+      case 3: return <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>;
+      default: handleSubmit(); setModal(''); return null; // after the final page, the data is sent to the chart component and the modal is closed
     }
   }
 
