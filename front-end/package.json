@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@react-three/drei": "^9.92.6",
+    "@react-three/fiber": "^8.15.12",
+    "@types/three": "^0.160.0",
     "font-awesome": "^4.7.0",
     "highcharts": "^11.2.0",
     "highcharts-multicolor-series": "^2.4.1",
@@ -13,10 +16,12 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
     "react-keyed-file-browser": "^1.14.0",
-    "react-scripts": "^5.0.1"
+    "react-router-dom": "^6.21.1",
+    "react-scripts": "^5.0.1",
+    "three": "^0.160.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set GENERATE_SOURCEMAP=false && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

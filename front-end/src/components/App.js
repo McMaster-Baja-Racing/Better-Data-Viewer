@@ -3,7 +3,9 @@ import { CreateGraphModal } from "./modal/create/CreateGraphModal";
 import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
 import { DownloadModal } from './modal/download/downloadModal';
+import ModelViewer from './ModelViewer';
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Chart from './Chart';
 import Topbar from './Topbar';
 import $ from 'jquery';
@@ -54,20 +56,30 @@ const App = () => {
   }, [successMessage]);
   
   return (
-    <div className="App">
-      <Topbar setModal={setModal}/>
-      <header className="App-header">
-        <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
-        {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
-        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
-        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
+    <Router>
+      <div className="App">
+        <Topbar setModal={setModal}/>
+        <Routes>
+        <Route exact path="/" element={
+          <header className="App-header">
+            <div className="success">{successMessage.message}</div>
+            {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+            {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
+            {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
+            {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <Chart chartInformation={chartInformation} />
+            <Chart chartInformation={chartInformation} />
 
-      </header>
+          </header>
+        }/>
+        <Route path="*" element={
+          <div style={{padding: "5rem 0 0 3rem"}}><h1>Error 404 - Not Found</h1></div>
+          }/>
+        <Route path="/IMU" element={<ModelViewer />} />
+        </Routes>
 
-    </div>
+      </div>
+    </Router>
   );
 }
 
