@@ -15,7 +15,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [displayPage, setDisplayPage] = useState(1);
   const [graphType, setGraphType] = useState("");
   const [liveCheck, setLiveCheck] = useState(false);
-  //const [seriesInfo, setSeriesInfo] = useState([]);
+  const [seriesInfo, setSeriesInfo] = useState([]);
 
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -25,7 +25,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   };
 
   //Stuff for handling final submit
-  const handleSubmit = (seriesInfo) => {
+  const handleSubmit = () => {
     setChartInformation({
       "files": seriesInfo,
       "live": liveCheck,
@@ -49,17 +49,23 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
     setColumns(col);
   }
   
-  const updatePage = () => {
-    
-    if (displayPage === 2) {
-      return (
+  // This method will update the displayPage state by the given amount
+  const movePage = (amount) => { 
+    setDisplayPage(displayPage + amount);
+  }
+
+  // This method returns the page that should be displayed based on the displayPage state
+  const selectPage = () => {
+    switch (displayPage) {
+      case 1: return <GraphSettings movePage={movePage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>;
+      case 2: return (
         <div className='file-Storage-Container'>
           <div className="file-browser">
             <h3>Choose Files</h3>
             <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
           </div>
           <div className="fileButtons">
-            <button className="pageTwoBackButton" onClick={() => {setDisplayPage(1)}}>Back</button>
+            <button className="pageTwoBackButton" onClick={() => {movePage(-1)}}>Back</button>
             <button className="pageTwoNextButton" onClick={() => {
             // OnClick, it should get the selected files from the file storage component
             if (selectedFiles.length === 0) {
@@ -68,15 +74,13 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
             }
             getHeaders(selectedFiles)
             setDimensions(2)
-            setDisplayPage(3);
+            movePage(1);
             }}>Next</button>
           </div>
         </div>
       )
-    } else if (displayPage === 3) {
-      return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setModal={setModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>)
-    } else{
-      return( <GraphSettings setDisplayPage={setDisplayPage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
+      case 3: return <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>;
+      default: handleSubmit(); setModal(''); return null; // after the final page, the data is sent to the chart component and the modal is closed
     }
   }
 
@@ -84,7 +88,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal} >
       <div className="modal">
-        {updatePage(displayPage)}
+        {selectPage()}
         <button className="closeButton" onClick={() => setModal('')}>X</button>
       </div>
     </div>,
