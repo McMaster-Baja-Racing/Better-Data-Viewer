@@ -69,12 +69,12 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
             <button className="pageTwoNextButton" onClick={() => {
             // OnClick, it should get the selected files from the file storage component
             if (selectedFiles.length === 0) {
-                alert("Please select at least one file.");
-                return;
+              alert("Please select at least one file.");
+            } else {
+              getHeaders(selectedFiles)
+              setDimensions(2)
+              movePage(1);
             }
-            getHeaders(selectedFiles)
-            setDimensions(2)
-            movePage(1);
             }}>Next</button>
           </div>
         </div>

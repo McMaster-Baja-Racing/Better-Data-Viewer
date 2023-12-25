@@ -5,6 +5,15 @@ import '../../../styles/analyzersAndSeriesStyles.css';
 import { useState, useRef, useEffect } from 'react';
 const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType }) => {
 
+    // Determines if a series already exists with the same columns and analyzer
+    const isDuplicateSeries = (newSeries) => {
+        return seriesInfo.some((series) => {
+            const isSameColumns = JSON.stringify(series.columns) === JSON.stringify(newSeries.columns);
+            const isSameAnalyzer = series.analyze.analysis === newSeries.analyze.analysis;
+            return isSameColumns && isSameAnalyzer;
+        });
+    };
+
     const columnGenerator = (n) => {
         // TODO: Refactor this so that it doesn't use variables such as "arr" and "arr2"
         // TODO: Further should be more dynamic, so that it can handle any number of dimensions in a "smart" way (probably using some css)
@@ -36,13 +45,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
         return <div><div className='columnHeaders'>{arr}</div> <div className='columnHeaders2'>{arr2}</div></div>;
     }
 
-    const addSeries = (isSeries) => {
-
-        if (isSeries) {
-            setSuccessMessage({ message: "Series Added" });
-        } else {
-            setSuccessMessage({ message: "Graph Created" });
-        }
+    const addSeries = (nextPage) => {
 
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
@@ -51,8 +54,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
 
         var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
 
-        // appends the new series to the seriesInfo array
-        setSeriesInfo([...seriesInfo, {
+        // Create the new series
+        const newSeries = {
             "columns": selectColumns,
             "analyze": {
                 "analysis": checkedAnalyzer.code,
@@ -61,7 +64,22 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
                     return value === '' ? null : value;
                 })
             }
-        }])
+        };
+
+        const duplicateSeries = isDuplicateSeries(newSeries);
+
+        // If the series is not a duplicate, add it to the seriesInfo state
+        // If it is a duplicate, alert the user only if they are not trying to move to the next page
+        if (!duplicateSeries) {
+            setSeriesInfo([...seriesInfo, newSeries]);
+            if (nextPage) {
+                setSuccessMessage({ message: "Graph Created" });
+            } else {
+                setSuccessMessage({ message: "Series Added" });
+            }
+        } else if (!nextPage) {
+            alert("Series already exists");
+        } 
     }
 
     const [openPopup, setOpenPopup] = useState(null);
@@ -114,8 +132,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
             </div>
             <div className="buttonFlexBox">
                 <button className="pageThreeBackButton" onClick={() => { movePage(-1) }}>Back</button>
-                <button className="addSeries" onClick={() => {addSeries(true); }}>Add Series</button>
-                <button className="pageThreeNextButton" onClick={() => {addSeries(false); movePage(1); }}>Submit</button>
+                <button className="addSeries" onClick={() => {addSeries(false); }}>Add Series</button>
+                <button className="pageThreeNextButton" onClick={() => {addSeries(true); movePage(1); }}>Submit</button>
             </div>
         </div>
     )
