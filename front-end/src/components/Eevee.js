@@ -9,7 +9,9 @@ import { GridHelper, AxesHelper, BoxHelper, Mesh, BufferGeometry, BufferAttribut
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 
 export function Eevee(props) {
-    
+
+    // TODO: Get data from server and parse it, then run function to replay it
+
     const data = 
     `timestamp,x,y,z,w
     0,0,0,0,0
@@ -66,10 +68,6 @@ export function Eevee(props) {
         }
     }
 
-    
-
-
-
     const { scene } = useThree();
     const meshRef = useRef();
     const boxHelperRef = useRef();
@@ -91,7 +89,7 @@ export function Eevee(props) {
             const quaternion = new Quaternion();
             quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.random() * delta);
             // meshRef.current.rotation.x += Math.random() * delta;
-            // meshRef.current.quaternion.y += Math.random() * delta;
+            // meshRef.current.rotation.y += Math.random() * delta;
             //meshRef.current.rotation.z += Math.random() * delta;
             //meshRef.current.quaternion.multiply(quaternion);
 
