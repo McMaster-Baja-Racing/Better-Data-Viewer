@@ -66,18 +66,15 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
             }
         };
 
-        // If the series is not a duplicate, add it to the seriesInfo state
-        // If it is a duplicate, alert the user only if they are not trying to move to the next page
-        if (!isDuplicateSeries(newSeries)) {
-            setSeriesInfo([...seriesInfo, newSeries]);
-            if (nextPage) {
-                setSuccessMessage({ message: "Graph Created" });
-            } else {
-                setSuccessMessage({ message: "Series Added" });
-            }
-        } else if (!nextPage) {
-            alert("Series already exists");
-        } 
+        const duplicateSeries = isDuplicateSeries(newSeries);
+
+        // Add the new series to the seriesInfo state only if it is not a duplicate
+        setSeriesInfo(duplicateSeries ? seriesInfo : [...seriesInfo, newSeries]);
+        
+        // Adding a duplicate series through Add Series button returns an alert
+        // Moving to the next page results in Graph Created regardless of duplicate series
+        // If a new non-duplicate series is added, the success message is set to Series Added
+        (!nextPage && duplicateSeries) ? alert("Series already exists") : setSuccessMessage({ message: nextPage ? "Graph Created" : "Series Added" });
     }
 
     const [openPopup, setOpenPopup] = useState(null);
