@@ -66,11 +66,9 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
             }
         };
 
-        const duplicateSeries = isDuplicateSeries(newSeries);
-
         // If the series is not a duplicate, add it to the seriesInfo state
         // If it is a duplicate, alert the user only if they are not trying to move to the next page
-        if (!duplicateSeries) {
+        if (!isDuplicateSeries(newSeries)) {
             setSeriesInfo([...seriesInfo, newSeries]);
             if (nextPage) {
                 setSuccessMessage({ message: "Graph Created" });
