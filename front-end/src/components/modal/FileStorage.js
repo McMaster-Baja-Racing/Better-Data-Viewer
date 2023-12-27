@@ -49,6 +49,12 @@ const CustomFileRenderer = (props) => {
 
     // Idk what this is for but it might be important?
     const { connectDragSource, connectDropTarget } = browserProps;
+    
+    // If there's a slash in the file's path, use the folder it's in as the date modified
+    let pathArr = file.key.split('/')
+    if (pathArr.length > 1) {
+        file.modified = pathArr[pathArr.length - 2];
+    }
 
     return (
         // Add in table row and then table data for each file, default styling will space it properly
