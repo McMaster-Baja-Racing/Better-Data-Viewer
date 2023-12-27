@@ -3,6 +3,7 @@ import { CreateGraphModal } from "./modal/create/CreateGraphModal";
 import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
 import { DownloadModal } from './modal/download/downloadModal';
+import { VideoModal } from './modal/video/videoModal';
 import React, { useEffect, useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
@@ -61,6 +62,7 @@ const App = () => {
         {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
         {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
+        {modal === 'Video' ? <VideoModal setModal={setModal} setSuccessMessage={setSuccessMessage} chartInformation={chartInformation} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
         <Chart chartInformation={chartInformation} />
