@@ -95,8 +95,8 @@ const CustomHeaderRenderer = (props) => {
     return(
         <tr>
             <th>File</th>
-            <th style={{textAlign: "right"}}>Size</th>
-            <th style={{textAlign: "right"}}>Date Created</th>
+            <th style={{textAlign: "right", width: "5rem"}}>Size</th>
+            <th style={{textAlign: "right", width: "10rem"}}>Date Created</th>
         </tr>
     )
 }
