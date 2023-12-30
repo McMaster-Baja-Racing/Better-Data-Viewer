@@ -16,13 +16,11 @@ const formatSize = (size) => {
 // This was done to give the "checked" property to the file element, which is used to allow the selection of multiple files at once.
 const CustomFileRenderer = (props) => {
     const { files, selectedFiles, setSelectedFiles, browserProps } = props;
-
     // Get all information from props about the file
     const file = {
         key: props.fileKey,
         name: props.name.split('.')[0],
         size: props.size,
-        modified: props.modified,
         extension: props.name.split('.').pop(),
         depth: props.depth,
     };
@@ -50,10 +48,10 @@ const CustomFileRenderer = (props) => {
     // Idk what this is for but it might be important?
     const { connectDragSource, connectDropTarget } = browserProps;
     
-    // If there's a slash in the file's path, use the folder it's in as the date modified
+    // If there's a slash in the file's path, use the folder it's in as the date created
     let pathArr = file.key.split('/')
     if (pathArr.length > 1) {
-        file.modified = pathArr[pathArr.length - 2];
+        file.created = pathArr[pathArr.length - 2];
     }
 
     return (
@@ -61,7 +59,8 @@ const CustomFileRenderer = (props) => {
         <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile} >
             <td className="name" style={{ paddingLeft: depthPadding }}>{file.name}</td>
             <td className="size">{formatSize(file.size)}</td>
-            <td className="modified">{file.modified ? file.modified : "-"}</td>
+            {/* Classname  "modified" is hardcoded from file browser lib for styling, we're showing date created though */}
+            <td className="modified">{file.created ? file.created : "-"}</td>
         </tr>
 
     );
@@ -85,10 +84,21 @@ const CustomFolderRenderer = (props) => {
         <tr {...connectDragSource} {...connectDropTarget} className={`folder ${isOpen ? 'open' : ''}`} onClick={handleFolderClick}>
             <td className="name" style={{ paddingLeft: depthPadding }}><i className={`${isOpen ? "fa fa-folder-open-o" : "fa fa-folder-o"}`} aria-hidden="true"/>{props.name}</td>
             <td className="size">{formatSize(folderSize)}</td>
+            {/* Classname  "modified" is hardcoded from file browser lib for styling, we're showing date created though */}
             <td className="modified">-</td>
         </tr>
     );
 
+}
+
+const CustomHeaderRenderer = (props) => {
+    return(
+        <tr>
+            <th>File</th>
+            <th style={{textAlign: "right"}}>Size</th>
+            <th style={{textAlign: "right"}}>Date Created</th>
+        </tr>
+    )
 }
 
 
@@ -115,6 +125,7 @@ const FileStorage = ({ selectedFiles, setSelectedFiles }) => {
             fileRendererProps={{ files, selectedFiles, setSelectedFiles }}
             fileRenderer={CustomFileRenderer}
             folderRenderer={CustomFolderRenderer}
+            headerRenderer={CustomHeaderRenderer}
         />
     )
 }
