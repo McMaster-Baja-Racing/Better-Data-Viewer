@@ -12,19 +12,23 @@ export function Eevee(props) {
 
     // TODO: Get data from server and parse it, then run function to replay it
 
-    const data = 
+    let data = 
     `timestamp,x,y,z,w
-    0,0,0,0,0
-    1000, 0, 0.1, 0, 0
-    2000, 0, 0.2, 0, 0
-    3000, 0, 0.3, 0, 0
-    4000, 0, 0.4, 0, 0
-    5000, 0, 0.5, 0, 0
-    6000, 0, 0.6, 0, 0
-    7000, 0, 0.7, 0, 0
-    8000, 0, 0.8, 0, 0
-    9000, 0, 0.9, 0, 0
-    10000, 0, 1, 0, 0`
+    0,0,0,0,0`
+
+    // Now generate some random data added onto data variable
+    for (let i = 0; i < 1000; i++) {
+        // Take x, y, z, w values from the last row and add some random values to them
+        const lastRow = data.split('\n').slice(-1)[0];
+        const lastRowValues = lastRow.split(',');
+        const X = parseFloat(lastRowValues[1]) + Math.random() * 0.01;
+        const Y = parseFloat(lastRowValues[2]) + Math.random() * 0.01;
+        const Z = parseFloat(lastRowValues[3]) + Math.random() * 0.01;
+        const W = parseFloat(lastRowValues[4]) + Math.random() * 0.01;
+        const newRow = `${parseInt(lastRowValues[0]) + 10},${X},${Y},${Z},${W}`;
+        data += `\n${newRow}`;
+    }
+
 
     // Now make a list of each column, so we should make 5 lists
 
@@ -33,15 +37,12 @@ export function Eevee(props) {
 
     // Then, split each line into columns
     const columns = lines.map(line => line.split(','));
-    console.log("Columns ", columns)
 
     // Then, remove the first column, which is the header
     const columnsWithoutHeader = columns.slice(1);
-    console.log("Columns without header ", columnsWithoutHeader)
 
     // Then, transpose the columns into rows
     const rows = columnsWithoutHeader[0].map((_, colIndex) => columnsWithoutHeader.map(row => row[colIndex]));
-    console.log("Rows ", rows)
 
     // Then make a list for each column
     const timestamps = rows[0];
@@ -50,11 +51,13 @@ export function Eevee(props) {
     const z = rows[3];
     const w = rows[4];
 
-    // And print timestamps
-    console.log("Timestamps ", timestamps)
+    let startTime, endTime, elapsedTime;
 
     // Timestamp stuff
     const replayTimestamps = (index = 0) => {
+        if (index === 0) {
+            startTime = Date.now();
+        }
         if (index < timestamps.length) {
             // Print ALL the data in one line
             //console.log(timestamps[index], x[index], y[index], z[index], w[index]);
@@ -64,6 +67,12 @@ export function Eevee(props) {
             if (index < timestamps.length - 1) {
                 const delay = timestamps[index + 1] - timestamps[index];
                 setTimeout(() => replayTimestamps(index + 1), delay);
+            } else {
+                endTime = Date.now();
+                elapsedTime = endTime - startTime;
+                console.log("Elapsed time:", elapsedTime, "ms");
+                // Then print difference in first and last timestamp
+                console.log("Difference in first and last timestamp:", timestamps[timestamps.length - 1] - timestamps[0], "ms");
             }
         }
     }
@@ -76,8 +85,9 @@ export function Eevee(props) {
     // This is so we can pass in the quaternion values from the server
     const updateQuaternion = (x, y, z, w) => {
         if (meshRef.current) {
-            console.log("Updating quaternion", x, y, z, w)
-            meshRef.current.quaternion.set(x, y, z, w);
+            //console.log("Updating quaternion", x, y, z, w)
+            //meshRef.current.quaternion.set(x, y, z, w);
+            meshRef.current.rotation.set(x, y, z)
         }
     }
     
@@ -92,6 +102,7 @@ export function Eevee(props) {
             // meshRef.current.rotation.y += Math.random() * delta;
             //meshRef.current.rotation.z += Math.random() * delta;
             //meshRef.current.quaternion.multiply(quaternion);
+            
 
             if (boxHelperRef.current) {
                 boxHelperRef.current.update();
@@ -104,14 +115,16 @@ export function Eevee(props) {
     useEffect(() => {
         const loader = new OBJLoader();
 
+        
+
         loader.load('/Eevee.obj', (object) => {
             // Add the loaded object to the scene
             scene.add(object);
             meshRef.current = object;
 
             boxHelperRef.current = new BoxHelper(meshRef.current, 0xffff00);
-            scene.add(boxHelperRef.current);
-
+            scene.add(boxHelperRef.current);      
+            
             replayTimestamps();
         });
 

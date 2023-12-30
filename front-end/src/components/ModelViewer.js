@@ -10,11 +10,11 @@ const ModelViewer = () => {
 
     return (
         <div className="modelContainer">
-            <Canvas size={[`2000px`, `3000px`]} shadows dpr={[1, 2]} camera={{ fov: 40, position: [40, 0, 0] }}>
+            <Canvas size={[`2000px`, `4000px`]} shadows dpr={[1, 2]} camera={{ fov: 40, position: [40, 0, 0] }}>
                 <Suspense fallback={null}>
                     <Stage controls={ref} preset="rembrandt" intensity={1} environment="lobby">
-                    <directionalLight position={[-5, 10, -35]} intensity={2.0}  />
-                    <directionalLight position={[5, 10, 5]} intensity={2.0}  />
+                    <directionalLight position={[-5, 10, -35]} intensity={2.0} color="red" />
+                    <directionalLight position={[5, 10, 5]} intensity={2.0}  color="blue"/>
                     <ambientLight intensity={0.3} />
                         false
                         <Eevee />
