@@ -32,21 +32,21 @@ const Topbar = ({ setModal }) => {
                 <img src={process.env.PUBLIC_URL + 'eeee.gif'} alt="baja_logo"/>
             </div>
             <div className="buttons">
-                <button className="beginLive" onClick={beginLiveData}>
+                <button title="Start Live Data" className="beginLive" onClick={beginLiveData}>
                     {liveStatus
                         ? <img className="icon" src={process.env.PUBLIC_URL + 'icons/liveOn.svg'} alt="Live Mode On" />
                         : <img className="icon" src={process.env.PUBLIC_URL + 'icons/liveOff.svg'} alt="Live Mode Off" />}
                 </button>
-                <button className="createGraph" onClick={() => setModal('Create')}>
+                <button title="Create Graph" className="createGraph" onClick={() => setModal('Create')}>
                     <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph.svg'} alt="Create Graph" />
                 </button>
-                <button className="uploadFiles" onClick={() => setModal('Upload')}>
-                <img className="icon"src={process.env.PUBLIC_URL + 'icons/cloudUpload.svg'} alt="Upload" />
+                <button title="Upload Files" className="uploadFiles" onClick={() => setModal('Upload')}>
+                <img className="icon"src={process.env.PUBLIC_URL + 'icons/upload.svg'} alt="Upload" />
                 </button>
-                <button className="downloadFiles" onClick={() => setModal('Download')}>
-                <img className="icon"src={process.env.PUBLIC_URL + 'icons/cloudDownload.svg'} alt="Download" />
+                <button title="Download Files" className="downloadFiles" onClick={() => setModal('Download')}>
+                <img className="icon"src={process.env.PUBLIC_URL + 'icons/download.svg'} alt="Download" />
                 </button>
-                <button className="helpModal" onClick={() => setModal('Help')}>
+                <button title="Help" className="helpModal" onClick={() => setModal('Help')}>
                     <img className="icon"src={process.env.PUBLIC_URL + 'icons/help.svg'} alt="Help" />
                 </button>
             </div>
