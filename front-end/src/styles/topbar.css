@@ -21,9 +21,22 @@
 }
 
 .buttons > * {
-    margin: 0 0 0 1rem;
+    margin: 0 0 0 0rem;
     font-family: "HelveticaNeueW01-77BdCnObl";
-    letter-spacing: 0.1rem;
+    background: none !important;
+    font-size: 2.5rem;
+    padding: 0px 16px !important;
+}
+
+.button > *:hover {
+    background-color: #ffffff !important;
+}
+
+img.icon {
+    width: 1em;
+    height: 1em;
+    color: "green";
+    vertical-align: text-top;
 }
 
 .title {
