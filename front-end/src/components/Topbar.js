@@ -38,7 +38,7 @@ const Topbar = ({ setModal }) => {
                         : <img className="icon" src={process.env.PUBLIC_URL + 'icons/liveOff.svg'} alt="Live Mode Off" />}
                 </button>
                 <button title="Create Graph" className="createGraph" onClick={() => setModal('Create')}>
-                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph.svg'} alt="Create Graph" />
+                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph2.svg'} alt="Create Graph" />
                 </button>
                 <button title="Upload Files" className="uploadFiles" onClick={() => setModal('Upload')}>
                 <img className="icon"src={process.env.PUBLIC_URL + 'icons/upload.svg'} alt="Upload" />
