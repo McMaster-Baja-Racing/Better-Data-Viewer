@@ -20,7 +20,7 @@ const Topbar = ({ setModal }) => {
         if (liveStatus === false) {
             setLiveStatus(true);
         } else {
-            setLiveStatus(true);
+            setLiveStatus(false);
         }
     }
 
@@ -38,7 +38,7 @@ const Topbar = ({ setModal }) => {
                         : <img className="icon" src={process.env.PUBLIC_URL + 'icons/liveOff.svg'} alt="Live Mode Off" />}
                 </button>
                 <button className="createGraph" onClick={() => setModal('Create')}>
-                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/add.svg'} alt="Create Graph" />
+                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph.svg'} alt="Create Graph" />
                 </button>
                 <button className="uploadFiles" onClick={() => setModal('Upload')}>
                 <img className="icon"src={process.env.PUBLIC_URL + 'icons/cloudUpload.svg'} alt="Upload" />

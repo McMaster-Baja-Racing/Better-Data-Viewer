@@ -28,10 +28,6 @@
     padding: 0px 16px !important;
 }
 
-.button > *:hover {
-    background-color: #ffffff !important;
-}
-
 img.icon {
     width: 1em;
     height: 1em;
