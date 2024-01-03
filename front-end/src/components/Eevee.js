@@ -12,44 +12,57 @@ export function Eevee(props) {
 
     // TODO: Get data from server and parse it, then run function to replay it
 
-    let data = 
-    `timestamp,x,y,z,w
-    0,0,0,0,0`
-
-    // Now generate some random data added onto data variable
-    for (let i = 0; i < 1000; i++) {
-        // Take x, y, z, w values from the last row and add some random values to them
-        const lastRow = data.split('\n').slice(-1)[0];
-        const lastRowValues = lastRow.split(',');
-        const X = parseFloat(lastRowValues[1]) + Math.random() * 0.01;
-        const Y = parseFloat(lastRowValues[2]) + Math.random() * 0.01;
-        const Z = parseFloat(lastRowValues[3]) + Math.random() * 0.01;
-        const W = parseFloat(lastRowValues[4]) + Math.random() * 0.01;
-        const newRow = `${parseInt(lastRowValues[0]) + 10},${X},${Y},${Z},${W}`;
-        data += `\n${newRow}`;
+    const fetchData = async () => {
+        const response = await fetch(`http://${window.location.hostname}:8080/files/rotation.csv`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.text(); 
+        return data;
     }
 
+    const parseData = async (data) => {
+        // Make a list of each column, so we should make 5 lists
+        console.log(data)
 
-    // Now make a list of each column, so we should make 5 lists
+        // First, split the data into lines
+        const lines = data.split('\n');
 
-    // First, split the data into lines
-    const lines = data.split('\n');
+        // Then, split each line into columns
+        const columns = lines.map(line => line.split(','));
 
-    // Then, split each line into columns
-    const columns = lines.map(line => line.split(','));
+        // Then, remove the first column, which is the header
+        const columnsWithoutHeader = columns.slice(1);
 
-    // Then, remove the first column, which is the header
-    const columnsWithoutHeader = columns.slice(1);
+        // Then, transpose the columns into rows
+        const rows = columnsWithoutHeader[0].map((_, colIndex) => columnsWithoutHeader.map(row => row[colIndex]));
 
-    // Then, transpose the columns into rows
-    const rows = columnsWithoutHeader[0].map((_, colIndex) => columnsWithoutHeader.map(row => row[colIndex]));
+        // Then make a list for each column
+        const timestamps = rows[0];
+        const x = rows[1];
+        const y = rows[2];
+        const z = rows[3];
+        const w = rows[4];
 
-    // Then make a list for each column
-    const timestamps = rows[0];
-    const x = rows[1];
-    const y = rows[2];
-    const z = rows[3];
-    const w = rows[4];
+        return [timestamps, x, y, z, w];
+    }
+
+    let timestamps, x, y, z, w;
+
+    const lineupfunction = async () => {
+        let tempData = await fetchData();
+        let tempData2 = await parseData(tempData);
+        console.log(tempData2);
+        timestamps = tempData2[0];
+        x = tempData2[1];
+        y = tempData2[2];
+        z = tempData2[3];
+        w = tempData2[4];
+    }
+
+    useEffect(() => {
+        lineupfunction();
+    }, []);
 
     let startTime, endTime, elapsedTime;
 
@@ -59,13 +72,11 @@ export function Eevee(props) {
             startTime = Date.now();
         }
         if (index < timestamps.length) {
-            // Print ALL the data in one line
-            //console.log(timestamps[index], x[index], y[index], z[index], w[index]);
             // Cast to float and update the quaternion
             updateQuaternion(parseFloat(x[index]), parseFloat(y[index]), parseFloat(z[index]), parseFloat(w[index]));
     
             if (index < timestamps.length - 1) {
-                const delay = timestamps[index + 1] - timestamps[index];
+                const delay = (timestamps[index + 1] - timestamps[index]) * 50;
                 setTimeout(() => replayTimestamps(index + 1), delay);
             } else {
                 endTime = Date.now();
@@ -86,8 +97,13 @@ export function Eevee(props) {
     const updateQuaternion = (x, y, z, w) => {
         if (meshRef.current) {
             //console.log("Updating quaternion", x, y, z, w)
-            //meshRef.current.quaternion.set(x, y, z, w);
-            meshRef.current.rotation.set(x, y, z)
+            meshRef.current.quaternion.set(z, w, y, x);
+            // x and w and y
+            // y x z w is close but inverted
+            // z x y w is close but inverted and slanted
+            // y w z x is correct I think    and slanted
+            // z w y x
+            //meshRef.current.rotation.set(x, y, z)
         }
     }
     
@@ -96,26 +112,22 @@ export function Eevee(props) {
         if (meshRef.current) {
             // Add a random amount of rotation to the object each frame times delta
             // This is so the rotation is smooth and not dependent on the frame rate
-            const quaternion = new Quaternion();
-            quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.random() * delta);
+            //const quaternion = new Quaternion();
+            //quaternion.setFromAxisAngle(new Vector3(0, 1, 0), Math.random() * delta);
             // meshRef.current.rotation.x += Math.random() * delta;
             // meshRef.current.rotation.y += Math.random() * delta;
             //meshRef.current.rotation.z += Math.random() * delta;
             //meshRef.current.quaternion.multiply(quaternion);
-            
 
             if (boxHelperRef.current) {
                 boxHelperRef.current.update();
             }
-            
         }
         
     });
 
     useEffect(() => {
         const loader = new OBJLoader();
-
-        
 
         loader.load('/Eevee.obj', (object) => {
             // Add the loaded object to the scene
