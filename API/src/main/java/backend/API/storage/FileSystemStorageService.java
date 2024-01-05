@@ -7,6 +7,7 @@
 
 package backend.API.storage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -23,6 +24,11 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.drew.imaging.mp4.Mp4MetadataReader;
+import com.drew.metadata.MetadataException;
+import com.drew.metadata.Tag;
+import com.drew.metadata.mp4.Mp4Directory;
 
 @Service
 public class FileSystemStorageService implements StorageService {
@@ -44,21 +50,27 @@ public class FileSystemStorageService implements StorageService {
 			if (file.isEmpty()) {
 				throw new StorageException("Failed to store empty file.");
 			}
-			Path destinationFile = this.rootLocation.resolve(
-					Paths.get(file.getOriginalFilename()))
+			String fileExtension = getFileExtension(file.getOriginalFilename());
+			Path destinationFile = this.rootLocation.resolve(Paths.get(fileExtension, file.getOriginalFilename()))
 					.normalize().toAbsolutePath();
 			if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
 				// This is a security check
-				throw new StorageException(
-						"Cannot store file outside current directory.");
+				throw new StorageException("Cannot store file outside current directory.");
 			}
 			try (InputStream inputStream = file.getInputStream()) {
-				Files.copy(inputStream, destinationFile,
-						StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 			}
 		} catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);
 		}
+	}
+
+	private String getFileExtension(String filename) {
+		int dotIndex = filename.lastIndexOf(".");
+		if (dotIndex == -1) {
+			return ""; // No extension found
+		}
+		return filename.substring(dotIndex + 1);
 	}
 
 	@Override
@@ -115,7 +127,12 @@ public class FileSystemStorageService implements StorageService {
 		// Basically read the first line of the file and return it
 		try {
 			Path file = load(filename);
-			String headers = Files.lines(file).findFirst().get();
+			String headers;
+			if (filename.toLowerCase().endsWith(".mp4")) {
+				headers = extractMetadata(file);
+			} else {
+				headers = Files.lines(file).findFirst().get();
+			}
 			return headers;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -186,4 +203,28 @@ public class FileSystemStorageService implements StorageService {
 			return null;
 		}
 	}
+
+	// Returns all of the metadata in the file as string with commas between each value
+	// Each value will be in the format "key=value"
+	private String extractMetadata(Path file) {
+        try {
+            // Gets all the  metadata from the file in the form of a directory
+            Mp4Directory metadata = Mp4MetadataReader.readMetadata(file.toFile()).getFirstDirectoryOfType(Mp4Directory.class);
+
+			//Extracts all the key value pairs
+			String metadataString = "";
+			for (Tag tag : metadata.getTags()) {
+				metadataString += tag.toString() + ",";
+			}
+			return metadataString;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+
+	    
+
 }
