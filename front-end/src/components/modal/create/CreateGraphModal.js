@@ -1,7 +1,7 @@
 //CreateGraphModal.js
 import ReactDom from "react-dom";
 import '../../../styles/modalStyles.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
@@ -54,6 +54,13 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
     setDisplayPage(displayPage + amount);
   }
 
+  useEffect(() => {
+    if (displayPage === 4) {
+      handleSubmit()
+      setModal('')
+    }
+  }, [displayPage])
+
   // This method returns the page that should be displayed based on the displayPage state
   const selectPage = () => {
     switch (displayPage) {
@@ -80,7 +87,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
         </div>
       )
       case 3: return <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>;
-      default: handleSubmit(); setModal(''); return null; // after the final page, the data is sent to the chart component and the modal is closed
+      default: return null;
     }
   }
 
