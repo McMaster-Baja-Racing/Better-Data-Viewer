@@ -169,29 +169,39 @@ public class FileUploadController {
 		if (liveOptions[0].equals("true")) {
 			// Maybe do the serial stuff here, but definitely look in live folder for data
 		}
+		
+		// For all of the input and output files, add the root location to the front
+		for (int i = 0; i < inputFiles.length; i++) {
+			inputFiles[i] = storageService.getRootLocation().toString() + "/" + inputFiles[i];
+		}
+		for (int i = 0; i < outputFiles.length; i++) {
+			outputFiles[i] = storageService.getRootLocation().toString() + "/" + outputFiles[i];
+		}
 
 		// Then run the selected analyzer
 		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
 			try {
-			Analyzer.createAnalyzer(analyzer[0], inputFiles, inputColumns, outputFiles,
-					Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
+				Analyzer.createAnalyzer(analyzer[0], inputFiles, inputColumns, outputFiles,
+						(Object[]) Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
 			} catch (Exception e) {
 				System.out.println(e);
 			}
 		} else {
 			// If no analyzer is selected, only one file is selected, copy it
 			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
-			outputFiles[outputFiles.length - 1] = "./upload-dir/" + inputFiles[0];
+			outputFiles[outputFiles.length - 1] = storageService.getRootLocation().toString() + "/" + inputFiles[0];
 		}
 		// Then return the final file, removing the prefix for upload dir
-		Resource file = storageService.loadAsResource(
-				outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
+		String filePath = outputFiles[outputFiles.length - 1];
+		Path path = Paths.get(filePath);
+		Path newPath = path.subpath(1, path.getNameCount());
+
+		Resource file = storageService.loadAsResource(newPath.toString());
 
 		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();
-		Path absoluteFilePath = storageService
-				.load(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
-		String relativePath = Paths.get("upload-dir").relativize(absoluteFilePath).toString();
+		Path absoluteFilePath = storageService.load(newPath.toString());
+		String relativePath = storageService.getRootLocation().relativize(absoluteFilePath).toString();
 		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
 				"attachment; filename=\"" + relativePath + "\"");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
