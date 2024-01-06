@@ -1,7 +1,7 @@
 //CreateGraphModal.js
 import ReactDom from "react-dom";
 import '../../../styles/modalStyles.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
@@ -12,10 +12,10 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [displayPage, setDisplayPage] = useState(1);
+  const [displayPage, setDisplayPage] = useState(0);
   const [graphType, setGraphType] = useState("");
   const [liveCheck, setLiveCheck] = useState(false);
-  //const [seriesInfo, setSeriesInfo] = useState([]);
+  const [seriesInfo, setSeriesInfo] = useState([]);
 
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -25,7 +25,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   };
 
   //Stuff for handling final submit
-  const handleSubmit = (seriesInfo) => {
+  const handleSubmit = () => {
     setChartInformation({
       "files": seriesInfo,
       "live": liveCheck,
@@ -49,42 +49,47 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
     setColumns(col);
   }
   
-  const updatePage = () => {
-    
-    if (displayPage === 2) {
-      return (
-        <div className='file-Storage-Container'>
-          <div className="file-browser">
-            <h3>Choose Files</h3>
-            <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
-          </div>
-          <div className="fileButtons">
-            <button className="pageTwoBackButton" onClick={() => {setDisplayPage(1)}}>Back</button>
-            <button className="pageTwoNextButton" onClick={() => {
-            // OnClick, it should get the selected files from the file storage component
-            if (selectedFiles.length === 0) {
-                alert("Please select at least one file.");
-                return;
-            }
-            getHeaders(selectedFiles)
-            setDimensions(2)
-            setDisplayPage(3);
-            }}>Next</button>
-          </div>
-        </div>
-      )
-    } else if (displayPage === 3) {
-      return (<AnalyzersAndSeries dimensions={dimensions} columns={columns} setDisplayPage={setDisplayPage} setModal={setModal} handleSubmit={handleSubmit} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>)
-    } else{
-      return( <GraphSettings setDisplayPage={setDisplayPage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>);
-    }
+  // This method will update the displayPage state by the given amount
+  const movePage = (amount) => { 
+    setDisplayPage(displayPage + amount);
   }
+
+  useEffect(() => {
+    if (displayPage === pages.length) {
+      handleSubmit()
+      setModal('')
+    }
+  }, [displayPage])
+
+  const pages = [
+    <GraphSettings movePage={movePage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>,
+    <div className='file-Storage-Container'>
+      <div className="file-browser">
+        <h3>Choose Files</h3>
+        <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+      </div>
+      <div className="fileButtons">
+        <button className="pageTwoBackButton" onClick={() => {movePage(-1)}}>Back</button>
+        <button className="pageTwoNextButton" onClick={() => {
+        // OnClick, it should get the selected files from the file storage component
+        if (selectedFiles.length === 0) {
+          alert("Please select at least one file.");
+        } else {
+          getHeaders(selectedFiles)
+          setDimensions(2)
+          movePage(1);
+        }
+        }}>Next</button>
+      </div>
+    </div>,
+    <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>
+  ]
 
   //render the modal JSX in the portal div.
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal} >
       <div className="modal">
-        {updatePage(displayPage)}
+        {pages[displayPage]}
         <button className="closeButton" onClick={() => setModal('')}>X</button>
       </div>
     </div>,
