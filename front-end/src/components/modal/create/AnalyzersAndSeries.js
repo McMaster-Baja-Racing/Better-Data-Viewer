@@ -73,7 +73,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
         
         // Display a success message if the series is not a duplicate or if the user is moving to the next page
         // Moving to the next page does not fail on a duplicate series so the message is still displayed in that case
-        if (nextPage || !duplicateSeries) setSuccessMessage({ message: nextPage ? "Graph Created" : "Series Added" });
+        (!nextPage && duplicateSeries) ? setSuccessMessage({ message: "Duplicate Series"}) : setSuccessMessage({ message: nextPage ? "Graph Created" : "Series Added" });
     }
 
     const [openPopup, setOpenPopup] = useState(null);
