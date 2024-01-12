@@ -7,7 +7,6 @@
 
 package backend.API.storage;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -26,7 +25,6 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.drew.imaging.mp4.Mp4MetadataReader;
-import com.drew.metadata.MetadataException;
 import com.drew.metadata.Tag;
 import com.drew.metadata.mp4.Mp4Directory;
 
@@ -136,7 +134,7 @@ public class FileSystemStorageService implements StorageService {
 		try {
 			Path file = load(filename);
 			String headers;
-			if (filename.toLowerCase().endsWith(".mp4")) {
+			if (getFileExtension(filename).equals("mp4")) {
 				headers = extractMetadata(file);
 			} else {
 				headers = Files.lines(file).findFirst().get();

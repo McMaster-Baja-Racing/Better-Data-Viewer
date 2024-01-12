@@ -84,7 +84,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
         <div className="uploadContainer">
           <h1>Upload Files</h1>
             <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
+            <input type="file" accept=".csv, .bin, .mp4" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
               setfileLists([...e.target.files, ...fileLists])
             }}/>
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : ""}>
