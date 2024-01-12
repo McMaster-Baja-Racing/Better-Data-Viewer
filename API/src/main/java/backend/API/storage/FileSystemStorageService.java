@@ -50,10 +50,9 @@ public class FileSystemStorageService implements StorageService {
 			if (file.isEmpty()) {
 				throw new StorageException("Failed to store empty file.");
 			}
-			String fileExtension = getFileExtension(file.getOriginalFilename());
-			Path destinationFile = this.rootLocation.resolve(Paths.get(fileExtension, file.getOriginalFilename()))
+			Path destinationFile = this.rootLocation.resolve(Paths.get(getFileExtension(file.getOriginalFilename()), file.getOriginalFilename()))
 					.normalize().toAbsolutePath();
-			if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+			if (!destinationFile.startsWith(this.rootLocation.toAbsolutePath())) {
 				// This is a security check
 				throw new StorageException("Cannot store file outside current directory.");
 			}
@@ -63,14 +62,6 @@ public class FileSystemStorageService implements StorageService {
 		} catch (IOException e) {
 			throw new StorageException("Failed to store file.", e);
 		}
-	}
-
-	private String getFileExtension(String filename) {
-		int dotIndex = filename.lastIndexOf(".");
-		if (dotIndex == -1) {
-			return ""; // No extension found
-		}
-		return filename.substring(dotIndex + 1);
 	}
 
 	@Override
@@ -94,7 +85,9 @@ public class FileSystemStorageService implements StorageService {
 	@Override
 	public Resource loadAsResource(String filename) {
 		try {
+			System.out.println(filename);
 			Path file = load(filename);
+			System.out.println(file);
 			Resource resource = new UrlResource(file.toUri());
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
@@ -117,6 +110,9 @@ public class FileSystemStorageService implements StorageService {
 	public void init() {
 		try {
 			Files.createDirectories(rootLocation);
+			// Create sub folders for csv and mp4 files
+			Files.createDirectories(rootLocation.resolve("csv"));
+			Files.createDirectories(rootLocation.resolve("mp4"));
 		} catch (IOException e) {
 			throw new StorageException("Could not initialize storage", e);
 		}
@@ -202,6 +198,17 @@ public class FileSystemStorageService implements StorageService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	// Returns the extension of the file for folder organization
+	private String getFileExtension(String filename) {
+		int dotIndex = filename.lastIndexOf(".");
+		if (dotIndex == -1) {
+			return ""; // No extension found
+		}
+		String extension = filename.substring(dotIndex + 1);
+		// Store bins in csv folder for conversion
+		return extension.equals("bin") ? "csv" : extension;
 	}
 
 	// Returns all of the metadata in the file as string with commas between each value
