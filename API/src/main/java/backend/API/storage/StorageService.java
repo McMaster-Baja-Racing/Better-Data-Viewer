@@ -16,6 +16,8 @@ public interface StorageService {
 
 	Stream<Path> loadAll();
 
+	Stream<Path> loadFolder(String foldername);
+
 	Path load(String filename);
 
 	Resource loadAsResource(String filename);
@@ -29,5 +31,7 @@ public interface StorageService {
 	String readHeaders(String filename);
 
 	String getMaxMin(String filename, String headerName);
+
+	String getFileExtension(String filename);
 
 }

@@ -67,7 +67,7 @@ public class FileSystemStorageService implements StorageService {
 	@Override
 	public Stream<Path> loadAll() {
 		try {
-			return Files.walk(this.rootLocation, 2) //optional depth parameter
+			return Files.walk(this.rootLocation, 3) //optional depth parameter
 			.filter(path -> !Files.isDirectory(path))
 			.map(this.rootLocation::relativize);
 
@@ -78,16 +78,28 @@ public class FileSystemStorageService implements StorageService {
 	}
 
 	@Override
+	public Stream<Path> loadFolder(String foldername) {
+		try {
+			Path folder = this.rootLocation.resolve(foldername);
+			return Files.walk(folder, 2) //optional depth parameter
+			.filter(path -> !Files.isDirectory(path))
+			.map(folder::relativize);
+
+		} catch (IOException e) {
+			throw new StorageException("Failed to read stored files", e);
+		}
+
+	}
+
+	@Override
 	public Path load(String filename) {
-		return rootLocation.resolve(filename);
+		return rootLocation.resolve(getFileExtension(filename) + "/" + filename);
 	}
 
 	@Override
 	public Resource loadAsResource(String filename) {
 		try {
-			System.out.println(filename);
 			Path file = load(filename);
-			System.out.println(file);
 			Resource resource = new UrlResource(file.toUri());
 			if (resource.exists() || resource.isReadable()) {
 				return resource;
@@ -201,7 +213,9 @@ public class FileSystemStorageService implements StorageService {
 	}
 
 	// Returns the extension of the file for folder organization
-	private String getFileExtension(String filename) {
+	@Override
+	public String getFileExtension(String filename) {
+		if (filename == null) return "";
 		int dotIndex = filename.lastIndexOf(".");
 		if (dotIndex == -1) {
 			return ""; // No extension found

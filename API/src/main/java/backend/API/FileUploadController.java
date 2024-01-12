@@ -125,6 +125,33 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(files);
 	}
 
+	// Returns the file information for all the files in a foler
+	@GetMapping("/files/folder/{foldername:.+}")
+	@ResponseBody
+	public ResponseEntity<fileList> listFolderFiles(@PathVariable String foldername) throws IOException {
+
+		// Set these headers so that you can access from LocalHost
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		fileList files = new fileList();
+
+		// Get name, headers and size of each file
+		storageService.loadFolder(foldername).forEach(path -> {
+			try {
+				// Get the path and filename of each file and print it
+				long size = storageService.loadAsResource(path.toString()).contentLength();
+				String[] headers = storageService.readHeaders(path.toString()).split(",");
+				files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+
+		return ResponseEntity.ok().headers(responseHeaders).body(files);
+	}
+
 	//This method returns information about a specific file, given the filename.
 	//It should return the first row of the file (the header row) + [datetime, and the number of rows eventually]
 	// Can be deleted?
@@ -172,10 +199,10 @@ public class FileUploadController {
 		
 		// For all of the input and output files, add the root location to the front
 		for (int i = 0; i < inputFiles.length; i++) {
-			inputFiles[i] = storageService.getRootLocation().toString() + "/" + inputFiles[i];
+			inputFiles[i] = storageService.getRootLocation().toString() + "/" + storageService.getFileExtension(inputFiles[i]) + "/" + inputFiles[i];
 		}
 		for (int i = 0; i < outputFiles.length; i++) {
-			outputFiles[i] = storageService.getRootLocation().toString() + "/" + outputFiles[i];
+			outputFiles[i] = storageService.getRootLocation().toString() + "/" + storageService.getFileExtension(outputFiles[i]) + "/" + outputFiles[i];
 		}
 
 		// Then run the selected analyzer
@@ -189,12 +216,12 @@ public class FileUploadController {
 		} else {
 			// If no analyzer is selected, only one file is selected, copy it
 			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
-			outputFiles[outputFiles.length - 1] = storageService.getRootLocation().toString() + "/" + inputFiles[0];
+			outputFiles[outputFiles.length - 1] = storageService.getRootLocation().toString() + "/" + storageService.getFileExtension(inputFiles[0]) + "/" + inputFiles[0];
 		}
 		// Then return the final file, removing the prefix for upload dir
 		String filePath = outputFiles[outputFiles.length - 1];
 		Path path = Paths.get(filePath);
-		Path newPath = path.subpath(1, path.getNameCount());
+		Path newPath = path.subpath(4, path.getNameCount());
 
 		Resource file = storageService.loadAsResource(newPath.toString());
 
@@ -304,7 +331,7 @@ public class FileUploadController {
 		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
-			filename = "csv/" + filename;
+			// filename = "csv/" + filename;
 			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
 					storageService.load("").toAbsolutePath().toString() + "\\", true);
 			storageService.delete(filename);
