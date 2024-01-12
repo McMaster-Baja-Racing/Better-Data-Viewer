@@ -213,14 +213,19 @@ public class FileSystemStorageService implements StorageService {
 	// Returns the extension of the file for folder organization
 	@Override
 	public String getFileExtension(String filename) {
-		if (filename == null) return "";
+		if (filename == null) return ""; // No file
 		int dotIndex = filename.lastIndexOf(".");
-		if (dotIndex == -1) {
-			return ""; // No extension found
+		if (dotIndex == -1) return ""; // No extension
+		String extension = filename.substring(dotIndex + 1).toLowerCase();
+		// Returns csv for bin and mp4 for mov for file conversion
+		switch (extension) {
+			case "bin":
+				return "csv";
+			case "mov":
+				return "mp4";
+			default:
+				return extension;
 		}
-		String extension = filename.substring(dotIndex + 1);
-		// Store bins in csv folder for conversion
-		return extension.equals("bin") ? "csv" : extension;
 	}
 
 	// Returns all of the metadata in the file as string with commas between each value

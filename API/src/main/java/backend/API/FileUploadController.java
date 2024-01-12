@@ -331,9 +331,12 @@ public class FileUploadController {
 		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
-			// filename = "csv/" + filename;
 			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
 					storageService.load("").toAbsolutePath().toString() + "\\", true);
+			storageService.delete(filename);
+		} else if (filename.substring(filename.lastIndexOf(".") + 1).toLowerCase().equals("mov")) {
+			storageService.store(file);
+			storageService.copyFile(filename, filename.substring(0, filename.lastIndexOf(".")) + ".mp4");
 			storageService.delete(filename);
 		} else {
 			storageService.store(file);
