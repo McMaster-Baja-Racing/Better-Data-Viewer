@@ -342,8 +342,8 @@ pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(
                         format!(
                             "{},{},{},{}\n",
                             packet.timestamp,
-                            (&packet.data & (0b11111111 << 16)).unwrap(),
-                            (&packet.data & (0b11111111 << 8)).unwrap(),
+                            ((&packet.data & (0b11111111 << 16)).unwrap() >> 16),
+                            ((&packet.data & (0b11111111 << 8)).unwrap() >> 8),
                             (&packet.data & (0b11111111)).unwrap()
                         )
                         .as_bytes(),
