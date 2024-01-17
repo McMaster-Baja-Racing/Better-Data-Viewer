@@ -14,7 +14,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.DoubleSummaryStatistics;
+import java.util.Locale;
 import java.util.stream.Stream; 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,6 +212,40 @@ public class FileSystemStorageService implements StorageService {
 			return null;
 		}
 	}
+	
+	@Override
+	public String getTimespan(String filename) {
+		// Finds the start and end time of the file
+		switch (getFileExtension(filename)) {
+			case "csv":
+				// Gets the first and last millisecond timestamps in the file
+				String[] timestampArray = getMaxMin(filename, "Timestamp (ms)").split(",");
+				
+				// Gets the dateTime of the folder at 0 timestamp
+				LocalDateTime zeroTime = getZeroDateTime(load(filename).getParent());
+
+				// Adds the timestamps to the zero time to get the start and end times
+				LocalDateTime startTime = zeroTime.plusNanos(Long.parseLong(timestampArray[0]) * 1_000_000);
+				LocalDateTime endTime = zeroTime.plusNanos(Long.parseLong(timestampArray[1]) * 1_000_000);
+
+				// Returns the start and end times as strings
+				return startTime.toString() + "," + endTime.toString();
+			case "mp4":
+				// Gets the metadata of the file to find the creation time and duration
+				String metadata = extractMetadata(load(filename));
+				
+				// Converts the creation time to a LocalDateTime
+				LocalDateTime creationTime = LocalDateTime.parse(getTagValue(metadata, "Creation Time"), DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH));
+				
+				// Below calculation gives a better estimate than Duration in Seconds tag
+				long duration = Long.parseLong(getTagValue(metadata, "Duration")) / Long.parseLong(getTagValue(metadata, "Media Time Scale"));
+
+				// Returns the start and end times as strings
+				return creationTime.toString() + "," + creationTime.plusSeconds(duration).toString();
+			default:
+				return "";
+		}
+	}
 
 	// Returns the extension of the file for folder organization
 	@Override
@@ -229,7 +266,7 @@ public class FileSystemStorageService implements StorageService {
 	}
 
 	// Returns all of the metadata in the file as string with commas between each value
-	// Each value will be in the format "key=value"
+	// Each value will be in the format "key - value"
 	private String extractMetadata(Path file) {
         try {
             // Gets all the  metadata from the file in the form of a directory
@@ -248,6 +285,45 @@ public class FileSystemStorageService implements StorageService {
         
         return null;
     }
+
+    // Returns the DateTime of the folder at 0 timestamp
+    // Only works for converted bins from the DAQ Box
+    private LocalDateTime getZeroDateTime(Path folder) {
+        try {
+			// Get the values of the first line from the gps files ingoring the header
+            String[] smhArray = Files.lines(folder.resolve("GPS SECONDS MINUTES HOURS.csv")).skip(1).findFirst().orElseThrow().split(",");
+            String[] dmyArray = Files.lines(folder.resolve("GPS DAY MONTH YEAR.csv")).skip(1).findFirst().orElseThrow().split(",");
+
+			// Convert the values to a LocalDateTime and subtract the timestamp
+            long timestamp = Long.parseLong(smhArray[0]);
+            LocalDateTime zeroTime = LocalDateTime.of(
+                    Integer.parseInt(dmyArray[5]),
+                    Integer.parseInt(dmyArray[4]),
+                    Integer.parseInt(dmyArray[3]),
+                    Integer.parseInt(smhArray[2]),
+                    Integer.parseInt(smhArray[1]),
+                    Integer.parseInt(smhArray[0])
+            ).minusNanos(timestamp * 1_000_000);
+
+            return zeroTime;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+	// Gets the value of a tag from the metadata of a file
+	private String getTagValue(String metadata, String tag) {
+		// Finds the tag in the metadata
+		String[] metadataArray = metadata.split(",");
+		for (String tagString : metadataArray) {
+			if (tagString.contains(tag)) {
+				return tagString.split("-")[1];
+			}
+		}
+
+		return null;
+	}
 
 	    
 

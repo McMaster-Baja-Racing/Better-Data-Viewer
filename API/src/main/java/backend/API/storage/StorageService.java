@@ -32,6 +32,8 @@ public interface StorageService {
 
 	String getMaxMin(String filename, String headerName);
 
+	String getTimespan(String filename);
+
 	String getFileExtension(String filename);
 
 }

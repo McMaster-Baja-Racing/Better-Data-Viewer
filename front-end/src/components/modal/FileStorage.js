@@ -114,7 +114,6 @@ const FileStorage = ({ selectedFiles, setSelectedFiles }) => {
         fetch(`http://${window.location.hostname}:8080/files/folder/csv`)
           .then((response) => response.json())
           .then((data) => {
-            console.log(data.files)
             setFiles(data.files);
           });
       }, []); // Empty dependency array ensures that the fetch is only performed once
