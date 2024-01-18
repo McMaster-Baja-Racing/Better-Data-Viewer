@@ -1,4 +1,5 @@
 import '../styles/App.css';
+import '../styles/charts.css';
 import { CreateGraphModal } from "./modal/create/CreateGraphModal";
 import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
@@ -14,28 +15,30 @@ const App = () => {
   const [modal, setModal] = useState('')
 
   // All for information transfer between children and parent
-  // sample format for chartInformation: 
-  // {
-  //    files:
-  //    [
-  //      {
-  //        columns: [
-  //          {header:"Timestampt", filename:"PRIM_RPM.csv"},
-  //          {header:"RPM", filename:"PRIM_RPM.csv"},
-  //        ],
-  //        analysis: "none"
-  //      },
-  //      {
-  //        columns: [
-  //          {header:"RPM", filename:"SEC_RPM.csv"},
-  //          {header:"Timestampt", filename:"SEC_RPM.csv"}
-  //        ],
-  //        analysis: "rollAvg"
-  //      }
-  //   ],
-  //   live: false,
-  //   type: "line"
-  // }
+  /*
+  sample format for chartInformation: 
+  {
+     files:
+     [
+       {
+         columns: [
+           {header:"Timestampt", filename:"PRIM_RPM.csv"},
+           {header:"RPM", filename:"PRIM_RPM.csv"},
+         ],
+         analysis: "none"
+       },
+       {
+         columns: [
+           {header:"RPM", filename:"SEC_RPM.csv"},
+           {header:"Timestampt", filename:"SEC_RPM.csv"}
+         ],
+         analysis: "rollAvg"
+       }
+    ],
+    live: false,
+    type: "line"
+  } 
+  */
 
   const [chartInformation, setChartInformation] = useState({
     files: [],
@@ -63,7 +66,9 @@ const App = () => {
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <Chart chartInformation={chartInformation} />
+        <div className="charts">
+          <Chart chartInformation={chartInformation} />
+        </div>
 
       </header>
 
