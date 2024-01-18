@@ -125,7 +125,7 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(files);
 	}
 
-	// Returns the file information for all the files in a foler
+	// Returns the file information for all the files in a folder
 	@GetMapping("/files/folder/{foldername:.+}")
 	@ResponseBody
 	public ResponseEntity<fileList> listFolderFiles(@PathVariable String foldername) throws IOException {
@@ -168,6 +168,38 @@ public class FileUploadController {
 		String fileinfo = storageService.readHeaders(filename);
 
 		return ResponseEntity.ok().headers(responseHeaders).body(fileinfo);
+	}
+
+	// Returns the timespan of all the files in a type folder
+	@GetMapping("/timespan/folder/{foldername:.+}")
+	@ResponseBody
+	public ResponseEntity<fileList> listFolderTimespans(@PathVariable String foldername) throws IOException {
+
+		// Set these headers so that you can access from LocalHost
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+		fileList files = new fileList();
+
+		// Get name, headers and size of each file
+		storageService.loadFolder(foldername).forEach(path -> {
+			System.out.println("testing path: " + path.toString());
+			// Skip files if they are a direct child of csv since only converted bin files work
+			if (storageService.getFileExtension(path.toString()).equals("mp4") || path.getParent() != null){
+				System.out.println("testing path 2: " + path.toString());
+				try {
+					// Get the path and filename of each file and print it
+					long size = storageService.loadAsResource(path.toString()).contentLength();
+					String[] headers = storageService.getTimespan(path.toString()).split(",");
+					files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		return ResponseEntity.ok().headers(responseHeaders).body(files);
 	}
 
 	// This is the be all end all method that should take in any number of file

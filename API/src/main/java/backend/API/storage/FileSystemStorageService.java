@@ -225,8 +225,10 @@ public class FileSystemStorageService implements StorageService {
 				LocalDateTime zeroTime = getZeroDateTime(load(filename).getParent());
 
 				// Adds the timestamps to the zero time to get the start and end times
-				LocalDateTime startTime = zeroTime.plusNanos(Long.parseLong(timestampArray[0]) * 1_000_000);
-				LocalDateTime endTime = zeroTime.plusNanos(Long.parseLong(timestampArray[1]) * 1_000_000);
+				LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[0]) * 1_000_000);
+				LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[1]) * 1_000_000);
+
+				System.out.println(startTime.toString() + "," + endTime.toString());
 
 				// Returns the start and end times as strings
 				return startTime.toString() + "," + endTime.toString();
@@ -291,18 +293,18 @@ public class FileSystemStorageService implements StorageService {
     private LocalDateTime getZeroDateTime(Path folder) {
         try {
 			// Get the values of the first line from the gps files ingoring the header
-            String[] smhArray = Files.lines(folder.resolve("GPS SECONDS MINUTES HOURS.csv")).skip(1).findFirst().orElseThrow().split(",");
+            String[] smhArray = Files.lines(folder.resolve("GPS SECOND MINUTE HOUR.csv")).skip(1).findFirst().orElseThrow().split(",");
             String[] dmyArray = Files.lines(folder.resolve("GPS DAY MONTH YEAR.csv")).skip(1).findFirst().orElseThrow().split(",");
 
 			// Convert the values to a LocalDateTime and subtract the timestamp
             long timestamp = Long.parseLong(smhArray[0]);
             LocalDateTime zeroTime = LocalDateTime.of(
-                    Integer.parseInt(dmyArray[5]),
-                    Integer.parseInt(dmyArray[4]),
-                    Integer.parseInt(dmyArray[3]),
+                    2000 + Integer.parseInt(dmyArray[3]),
+                    Integer.parseInt(dmyArray[2]),
+                    Integer.parseInt(dmyArray[1]),
+                    Integer.parseInt(smhArray[3]),
                     Integer.parseInt(smhArray[2]),
-                    Integer.parseInt(smhArray[1]),
-                    Integer.parseInt(smhArray[0])
+                    Integer.parseInt(smhArray[1])
             ).minusNanos(timestamp * 1_000_000);
 
             return zeroTime;
@@ -318,7 +320,7 @@ public class FileSystemStorageService implements StorageService {
 		String[] metadataArray = metadata.split(",");
 		for (String tagString : metadataArray) {
 			if (tagString.contains(tag)) {
-				return tagString.split("-")[1];
+				return tagString.split(" - ")[1];
 			}
 		}
 
