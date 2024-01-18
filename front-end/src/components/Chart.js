@@ -4,6 +4,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
+import { useResizeDetector } from 'react-resize-detector';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
@@ -15,7 +16,7 @@ const Chart = ({ chartInformation }) => {
     const [chartOptions, setChartOptions] = useState({
         chart: {
             type: 'scatter',
-            zoomType: 'x'
+            zoomType: 'x',
         },
         title: {
             text: 'Template'
@@ -257,33 +258,6 @@ const Chart = ({ chartInformation }) => {
         
     }, [parsedData, chartInformation, fileNames])
 
-    // This function is used to throttle the resize observer
-    function throttle(f, delay) {
-        let timer = 0;
-        return function (...args) {
-            clearTimeout(timer);
-            timer = setTimeout(() => f.apply(this, args), delay);
-        }
-    }
-
-    // Observe the chartContainer div and resize the chart when it changes size
-    // Keep in mind this will need to change when we have multiple charts
-    useEffect(() => {
-        const chartContainer = document.querySelector('.chartContainer');
-        const resizeObserver = new ResizeObserver(throttle(entries => {
-            for (let entry of entries) {
-                const cr = entry.contentRect;
-                for (var i = 0; i < Highcharts.charts.length; i++) {
-                    if (Highcharts.charts[i] !== undefined) {
-                        Highcharts.charts[i].setSize(cr.width, cr.height);
-                    }
-                }
-            }
-        }, 100));
-        //run observer with a delay
-        resizeObserver.observe(chartContainer);
-    }, [])
-
     // This function loops when live is true, and updates the chart every 500ms
     useEffect(() => {
         let intervalId;
@@ -298,9 +272,21 @@ const Chart = ({ chartInformation }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chartInformation.live]);
 
+    const { width, height, ref } = useResizeDetector({
+        onResize: () => {
+            for (var i = 0; i < Highcharts.charts.length; i++) {
+                if (Highcharts.charts[i] !== undefined) {
+                    Highcharts.charts[i].setSize(width, height);
+                }
+            }
+        },
+        refreshMode: 'debounce',
+        refreshRate: 100,
+    });
+
     return (
 
-        <div className="chartContainer">
+        <div className="chartContainer" ref={ref}>
             <div className='chart'>
                 <HighchartsReact
                     highcharts={Highcharts}
