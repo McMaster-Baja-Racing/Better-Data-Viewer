@@ -212,42 +212,62 @@ public class FileSystemStorageService implements StorageService {
 			return null;
 		}
 	}
-	
+
+	// Get timspan for mp4 file from metadata
 	@Override
 	public String getTimespan(String filename) {
-		// Finds the start and end time of the file
-		switch (getFileExtension(filename)) {
-			case "csv":
-				// Gets the first and last millisecond timestamps in the file
-				String[] timestampArray = getMaxMin(filename, "Timestamp (ms)").split(",");
-				
-				// Gets the dateTime of the folder at 0 timestamp
-				LocalDateTime zeroTime = getZeroDateTime(load(filename).getParent());
+		// Gets the metadata of the file to find the creation time and duration
+		String metadata = extractMetadata(load(filename));
+		
+		// Converts the creation time to a LocalDateTime
+		LocalDateTime creationTime = LocalDateTime.parse(getTagValue(metadata, "Creation Time"), DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH));
+		
+		// Below calculation gives a better estimate than Duration in Seconds tag
+		long duration = Long.parseLong(getTagValue(metadata, "Duration")) / Long.parseLong(getTagValue(metadata, "Media Time Scale"));
 
-				// Adds the timestamps to the zero time to get the start and end times
-				LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[0]) * 1_000_000);
-				LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[1]) * 1_000_000);
-
-				System.out.println(startTime.toString() + "," + endTime.toString());
-
-				// Returns the start and end times as strings
-				return startTime.toString() + "," + endTime.toString();
-			case "mp4":
-				// Gets the metadata of the file to find the creation time and duration
-				String metadata = extractMetadata(load(filename));
-				
-				// Converts the creation time to a LocalDateTime
-				LocalDateTime creationTime = LocalDateTime.parse(getTagValue(metadata, "Creation Time"), DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH));
-				
-				// Below calculation gives a better estimate than Duration in Seconds tag
-				long duration = Long.parseLong(getTagValue(metadata, "Duration")) / Long.parseLong(getTagValue(metadata, "Media Time Scale"));
-
-				// Returns the start and end times as strings
-				return creationTime.toString() + "," + creationTime.plusSeconds(duration).toString();
-			default:
-				return "";
-		}
+		// Returns the start and end times as strings
+		return creationTime.toString() + "," + creationTime.plusSeconds(duration).toString();
 	}
+	
+	// Get timspan for csv file from a parsed bin file
+	@Override
+	public String getTimespan(String filename, LocalDateTime zeroTime) {
+		// Gets the first and last millisecond timestamps in the file
+		String[] timestampArray = getMaxMin(filename, "Timestamp (ms)").split(",");
+
+		// Adds the timestamps to the zero time to get the start and end times
+		LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[0]) * 1_000_000);
+		LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[1]) * 1_000_000);
+
+		// Returns the start and end times as strings
+		return startTime.toString() + "," + endTime.toString();
+	}
+
+	    // Returns the DateTime of the folder at 0 timestamp
+    // Only works for converted bins from the DAQ Box
+    public LocalDateTime getZeroTime(Path folder) {
+        try {
+			// Get the values of the first line from the gps files ingoring the header
+            String[] smhArray = Files.lines(rootLocation.resolve("csv/" + folder.toString() + "/GPS SECOND MINUTE HOUR.csv")).skip(1).findFirst().orElseThrow().split(",");
+            String[] dmyArray = Files.lines(rootLocation.resolve("csv/" + folder.toString() + "/GPS DAY MONTH YEAR.csv")).skip(1).findFirst().orElseThrow().split(",");
+
+			// Convert the values to a LocalDateTime and subtract the timestamp
+            long timestamp = Long.parseLong(smhArray[0]);
+            LocalDateTime zeroTime = LocalDateTime.of(
+                    2000 + Integer.parseInt(dmyArray[3]),
+                    Integer.parseInt(dmyArray[2]),
+                    Integer.parseInt(dmyArray[1]),
+                    Integer.parseInt(smhArray[3]),
+                    Integer.parseInt(smhArray[2]),
+                    Integer.parseInt(smhArray[1])
+            ).minusNanos(timestamp * 1_000_000);
+
+            return zeroTime;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 	// Returns the extension of the file for folder organization
 	@Override
@@ -266,6 +286,7 @@ public class FileSystemStorageService implements StorageService {
 				return extension;
 		}
 	}
+	
 
 	// Returns all of the metadata in the file as string with commas between each value
 	// Each value will be in the format "key - value"
@@ -286,32 +307,6 @@ public class FileSystemStorageService implements StorageService {
         }
         
         return null;
-    }
-
-    // Returns the DateTime of the folder at 0 timestamp
-    // Only works for converted bins from the DAQ Box
-    private LocalDateTime getZeroDateTime(Path folder) {
-        try {
-			// Get the values of the first line from the gps files ingoring the header
-            String[] smhArray = Files.lines(folder.resolve("GPS SECOND MINUTE HOUR.csv")).skip(1).findFirst().orElseThrow().split(",");
-            String[] dmyArray = Files.lines(folder.resolve("GPS DAY MONTH YEAR.csv")).skip(1).findFirst().orElseThrow().split(",");
-
-			// Convert the values to a LocalDateTime and subtract the timestamp
-            long timestamp = Long.parseLong(smhArray[0]);
-            LocalDateTime zeroTime = LocalDateTime.of(
-                    2000 + Integer.parseInt(dmyArray[3]),
-                    Integer.parseInt(dmyArray[2]),
-                    Integer.parseInt(dmyArray[1]),
-                    Integer.parseInt(smhArray[3]),
-                    Integer.parseInt(smhArray[2]),
-                    Integer.parseInt(smhArray[1])
-            ).minusNanos(timestamp * 1_000_000);
-
-            return zeroTime;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
 	// Gets the value of a tag from the metadata of a file

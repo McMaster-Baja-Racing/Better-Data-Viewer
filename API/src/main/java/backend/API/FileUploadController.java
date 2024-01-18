@@ -18,8 +18,10 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -182,22 +184,56 @@ public class FileUploadController {
 
 		fileList files = new fileList();
 
-		// Get name, headers and size of each file
-		storageService.loadFolder(foldername).forEach(path -> {
-			System.out.println("testing path: " + path.toString());
-			// Skip files if they are a direct child of csv since only converted bin files work
-			if (storageService.getFileExtension(path.toString()).equals("mp4") || path.getParent() != null){
-				System.out.println("testing path 2: " + path.toString());
-				try {
-					// Get the path and filename of each file and print it
-					long size = storageService.loadAsResource(path.toString()).contentLength();
-					String[] headers = storageService.getTimespan(path.toString()).split(",");
-					files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		Stream<Path> paths = storageService.loadFolder(foldername);
+
+		switch (foldername) {
+			case "csv":
+				// Holds the parent folder and the zero time
+				Object[] container = {null, null};
+				paths.forEach(path -> {
+					if (path.getParent() != null) {
+						// Updates the parent folder and zero time if the parent folder changes to avoid recalculating the zero time
+						try {
+							if (container[0] != path.getParent()) {
+								container[0] = path.getParent();
+								container[1] = storageService.getZeroTime((Path) container[0]);
+							}
+							// Get the path and filename of each file and print it
+							long size = storageService.loadAsResource(path.toString()).contentLength();
+							String[] headers = storageService.getTimespan(path.toString(), (LocalDateTime) container[1]).split(",");
+							files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				break;
+			case "mp4":
+				paths.forEach(path -> {
+					try {
+						// Get the path and filename of each file and print it
+						long size = storageService.loadAsResource(path.toString()).contentLength();
+						String[] headers = storageService.readHeaders(path.toString()).split(",");
+						files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+				break;
+			default: throw new IllegalArgumentException("Invalid folder name");
+		}
+
+		// // Get name, headers and size of each file
+		// storageService.loadFolder(foldername).forEach(path -> {
+		// 	try {
+		// 		// Get the path and filename of each file and print it
+		// 		long size = storageService.loadAsResource(path.toString()).contentLength();
+		// 		String[] headers = storageService.readHeaders(path.toString()).split(",");
+		// 		files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+		// 	} catch (IOException e) {
+		// 		e.printStackTrace();
+		// 	}
+		// });
 
 		return ResponseEntity.ok().headers(responseHeaders).body(files);
 	}

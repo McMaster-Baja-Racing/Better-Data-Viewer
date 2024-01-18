@@ -4,6 +4,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 public interface StorageService {
@@ -33,6 +34,10 @@ public interface StorageService {
 	String getMaxMin(String filename, String headerName);
 
 	String getTimespan(String filename);
+
+	String getTimespan(String filename, LocalDateTime zeroTime);
+
+	LocalDateTime getZeroTime(Path folder);
 
 	String getFileExtension(String filename);
 
