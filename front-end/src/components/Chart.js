@@ -10,12 +10,13 @@ require('highcharts-multicolor-series')(Highcharts);
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
-const Chart = ({ chartInformation }) => {
+const Chart = ({ chartInformation, bg='#ffffff' }) => {
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
         chart: {
             type: 'scatter',
-            zoomType: 'x'
+            zoomType: 'x',
+            backgroundColor: bg
         },
         title: {
             text: 'Template'

@@ -1,9 +1,10 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-const MapDisplay = () => {
+const MapDisplay = ({ center, zoom }) => {
     return (
-        <MapContainer center={[43.26162, -79.93038]} zoom={19} zoomControl={false} scrollWheelZoom={false} dragging={false} style={{ height: "700px", width: "100vw"}}>
+        <div id="mapBackground" style={{ height: "50%", width: "100%"}}>
+            <MapContainer center={center} zoom={zoom} zoomControl={false} scrollWheelZoom={false} dragging={false} style={{height: "100%"}}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -14,6 +15,8 @@ const MapDisplay = () => {
                 </Popup>
             </Marker>
         </MapContainer>
+        </div>
+
 
     )
 }

@@ -7,6 +7,8 @@ import React, { useEffect, useState } from 'react';
 import Chart from './Chart';
 import Topbar from './Topbar';
 import $ from 'jquery';
+import MapDisplay from './map/MapDisplay';
+import MapChart from './map/MapChart';
 
 const App = () => {
 
@@ -63,12 +65,19 @@ const App = () => {
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <Chart chartInformation={chartInformation} />
 
+        {/* <Chart chartInformation={chartInformation} /> */}
+        <MapChart chartInformation={chartInformation} center={[43.26162, -79.93038]} zoom={19} />
       </header>
-
+      
     </div>
   );
+
+  // return(
+  //   <div className="App">
+  //     <MapDisplay />
+  //   </div>
+  // )
 }
 
 export default App;

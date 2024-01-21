@@ -1,0 +1,10 @@
+#mapBackground {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    z-index: -1;
+}
+
+#chartForeground {
+    z-index: 10;
+}
