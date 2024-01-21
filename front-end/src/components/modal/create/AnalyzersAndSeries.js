@@ -3,7 +3,16 @@ import Help from './Help';
 import analyzerData from '../../analyzerData.js'
 import '../../../styles/analyzersAndSeriesStyles.css';
 import { useState, useRef, useEffect } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, handleSubmit, setSuccessMessage, setDimensions, graphType }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType }) => {
+
+    // Determines if a series already exists with the same columns and analyzer
+    const isDuplicateSeries = (newSeries) => {
+        return seriesInfo.some((series) => {
+            const isSameColumns = JSON.stringify(series.columns) === JSON.stringify(newSeries.columns);
+            const isSameAnalyzer = series.analyze.analysis === newSeries.analyze.analysis;
+            return isSameColumns && isSameAnalyzer;
+        });
+    };
 
     const columnGenerator = (n) => {
         // TODO: Refactor this so that it doesn't use variables such as "arr" and "arr2"
@@ -36,16 +45,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
         return <div><div className='columnHeaders'>{arr}</div> <div className='columnHeaders2'>{arr2}</div></div>;
     }
 
-    var seriesInfo = useRef([]);
-    
-
-    const addSeries = (isSeries) => {
-
-        if (isSeries) {
-            setSuccessMessage({ message: "Series Added" });
-        } else {
-            setSuccessMessage({ message: "Graph Created" });
-        }
+    const addSeries = (nextPage) => {
 
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
@@ -54,7 +54,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
 
         var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
 
-        seriesInfo.current.push({
+        // Create the new series
+        const newSeries = {
             "columns": selectColumns,
             "analyze": {
                 "analysis": checkedAnalyzer.code,
@@ -63,7 +64,16 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
                     return value === '' ? null : value;
                 })
             }
-        })
+        };
+
+        const duplicateSeries = isDuplicateSeries(newSeries);
+
+        // Add the new series to the seriesInfo state only if it is not a duplicate
+        setSeriesInfo(duplicateSeries ? seriesInfo : [...seriesInfo, newSeries]);
+        
+        // Display a success message if the series is not a duplicate or if the user is moving to the next page
+        // Moving to the next page does not fail on a duplicate series so the message is still displayed in that case
+        (!nextPage && duplicateSeries) ? setSuccessMessage({ message: "Duplicate Series"}) : setSuccessMessage({ message: nextPage ? "Graph Created" : "Series Added" });
     }
 
     const [openPopup, setOpenPopup] = useState(null);
@@ -115,9 +125,9 @@ const AnalyzersAndSeries = ({ dimensions, columns, setDisplayPage, setModal, han
                 )}
             </div>
             <div className="buttonFlexBox">
-                <button className="pageThreeBackButton" onClick={() => { setDisplayPage(2) }}>Back</button>
-                <button className="addSeries" onClick={() => {addSeries(true); }}>Add Series</button>
-                <button className="pageThreeNextButton" onClick={() => {addSeries(false); handleSubmit(seriesInfo.current); setModal(''); }}>Submit</button>
+                <button className="pageThreeBackButton" onClick={() => { movePage(-1) }}>Back</button>
+                <button className="addSeries" onClick={() => {addSeries(false); }}>Add Series</button>
+                <button className="pageThreeNextButton" onClick={() => {addSeries(true); movePage(1); }}>Submit</button>
             </div>
         </div>
     )
