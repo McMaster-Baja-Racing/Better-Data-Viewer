@@ -3,6 +3,8 @@
     top: 100px;
     left: 0;
     z-index: -1;
+    height: 100%;
+    width: 100%;
 }
 
 #chartForeground {
