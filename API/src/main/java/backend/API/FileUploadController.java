@@ -213,7 +213,7 @@ public class FileUploadController {
 					try {
 						// Get the path and filename of each file and print it
 						long size = storageService.loadAsResource(path.toString()).contentLength();
-						String[] headers = storageService.readHeaders(path.toString()).split(",");
+						String[] headers = storageService.getTimespan(path.toString()).split(",");
 						files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
 					} catch (IOException e) {
 						e.printStackTrace();

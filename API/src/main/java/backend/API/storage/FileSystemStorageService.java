@@ -15,6 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.DoubleSummaryStatistics;
 import java.util.Locale;
@@ -219,14 +221,19 @@ public class FileSystemStorageService implements StorageService {
 		// Gets the metadata of the file to find the creation time and duration
 		String metadata = extractMetadata(load(filename));
 		
-		// Converts the creation time to a LocalDateTime
-		LocalDateTime creationTime = LocalDateTime.parse(getTagValue(metadata, "Creation Time"), DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH));
+		// Converts the creation time to a ZonedDateTime with GMT timezone
+		ZonedDateTime creationTime = ZonedDateTime.parse(getTagValue(metadata, "Creation Time"),
+		DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH))
+		.withZoneSameInstant(ZoneId.of("GMT"));
 		
 		// Below calculation gives a better estimate than Duration in Seconds tag
-		long duration = Long.parseLong(getTagValue(metadata, "Duration")) / Long.parseLong(getTagValue(metadata, "Media Time Scale"));
+		// Each is converted to nanoseconds and then divided to preserve precision
+		long duration = (Long.parseLong(getTagValue(metadata, "Duration")) * 1_000_000_000) / (Long.parseLong(getTagValue(metadata, "Media Time Scale")) * 1_000_000_000);
 
-		// Returns the start and end times as strings
-		return creationTime.toString() + "," + creationTime.plusSeconds(duration).toString();
+		// System.out.println(duration);
+
+        // Returns the start and end times as strings in GMT with milliseconds
+        return creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")) + "," + creationTime.plusSeconds(duration).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
 	}
 	
 	// Get timspan for csv file from a parsed bin file
@@ -240,10 +247,10 @@ public class FileSystemStorageService implements StorageService {
 		LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[1]) * 1_000_000);
 
 		// Returns the start and end times as strings
-		return startTime.toString() + "," + endTime.toString();
+		return startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+ "," + endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
 	}
 
-	    // Returns the DateTime of the folder at 0 timestamp
+	// Returns the DateTime of the folder at 0 timestamp
     // Only works for converted bins from the DAQ Box
     public LocalDateTime getZeroTime(Path folder) {
         try {
