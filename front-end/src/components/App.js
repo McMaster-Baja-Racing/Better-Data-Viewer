@@ -73,11 +73,6 @@ const App = () => {
     </div>
   );
 
-  // return(
-  //   <div className="App">
-  //     <MapDisplay />
-  //   </div>
-  // )
 }
 
 export default App;

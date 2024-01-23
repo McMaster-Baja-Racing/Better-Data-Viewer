@@ -1,35 +1,30 @@
 import { MapContainer, TileLayer, Marker, Popup, Rectangle, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+// let coords = require('./testData.json')
 
 const MapDisplay = ({ bounds, zoom }) => {
     // let testLine = {"type": "LineString","coordinates": [[43.2614, -79.93], [43.262, -79.932]]}
+    // GEOJSON USES LONG, LAT NOT LAT, LONG
     let testLine = {
-        "type": "Feature",
+        type: "Feature",
         "properties": {
             "name": "Coors Field",
             "amenity": "Baseball Stadium",
             "popupContent": "This is where the Rockies play!"
         },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [43.262, -79.932]
+        geometry: {
+            type: "LineString",
+            coordinates: []
         }
     };
     return (
         <div id="mapBackground">
-            <MapContainer bounds={bounds} zoom={zoom} zoomControl={false} scrollWheelZoom={false} dragging={false} style={{height: "100%"}}>
-            {/* <Rectangle bounds={bounds}></Rectangle> */}
-            
+            <MapContainer bounds={bounds} style={{height: "100%"}} dragging={true} scrollWheelZoom={true}>
+            {/* <GeoJSON key={testLine} data={testLine} style={{stroke: true, color: "#ff00ff", weight: 1}}></GeoJSON> */}
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={[43.2614, -79.93]}>
-                <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
-            </Marker>
-            <GeoJSON key={testLine} attribution="pog swag" data={testLine}></GeoJSON>
         </MapContainer>
         </div>
 
