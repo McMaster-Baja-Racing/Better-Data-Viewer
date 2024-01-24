@@ -6,7 +6,6 @@
 
 .App-body {
   height: calc(100vh - 5rem);
-  max-height: 500px;
   background-color: #3d0202;
   display: flex;
   flex-direction: column;
