@@ -45,8 +45,6 @@ const Chart = ({ chartInformation }) => {
     // useref for minMax
     let minMax = useRef([0, 0]);
 
-    
-
     // This function handles the fetching of the data from the backend
     const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions, columnInfo) => {
         let inputColumns = columnInfo.map(col => col.header);
@@ -272,17 +270,22 @@ const Chart = ({ chartInformation }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chartInformation.live]);
 
+    const chartRef = useRef(null);
     const { width, height, ref } = useResizeDetector({
         onResize: () => {
-            for (var i = 0; i < Highcharts.charts.length; i++) {
-                if (Highcharts.charts[i] !== undefined) {
-                    Highcharts.charts[i].setSize(width, height);
-                }
+            if (chartRef.current) {
+                chartRef.current.setSize(width, height);
             }
         },
         refreshMode: 'debounce',
         refreshRate: 100,
     });
+
+    useEffect(() => {
+        if (ref.current) {
+            chartRef.current = Highcharts.chart(ref.current, chartOptions);
+        }
+    }, [ref, chartOptions]);
 
     return (
 
