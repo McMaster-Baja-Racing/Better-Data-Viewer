@@ -1,6 +1,7 @@
 .chartContainer {
     resize: both;
     overflow: hidden;
+    height: 100%;
 }
 
 .chartContainer > * {

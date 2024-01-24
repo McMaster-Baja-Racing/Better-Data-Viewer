@@ -1,6 +1,12 @@
 .charts {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
     width: 100%;
+    height: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.bigChart {
+    grid-column: 1/4;
+    overflow: hidden;
 }
