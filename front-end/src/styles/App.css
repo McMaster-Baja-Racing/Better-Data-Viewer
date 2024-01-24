@@ -1,11 +1,13 @@
 .App {
   text-align: center;
   font-family: "HelveticaNeueW01-77BdCnObl";
+  height: calc(100vh);
 }
 
-.App-header {
+.App-body {
+  height: calc(100vh - 5rem);
+  max-height: 500px;
   background-color: #3d0202;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,7 +16,7 @@
   color: white;
 }
 
-.App-header > * {
+.App-body > * {
   padding: 0rem;
 }
 
