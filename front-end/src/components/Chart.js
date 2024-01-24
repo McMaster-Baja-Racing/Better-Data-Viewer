@@ -1,4 +1,5 @@
 import '../styles/chart.css'
+import { defaultChartOptions, getChartConfig } from './chartOptions/chartOptions.js'
 import React, { useState, useEffect, useRef } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -13,29 +14,7 @@ Boost(Highcharts);
 
 const Chart = ({ chartInformation }) => {
     //File information is array of column names and associated file names
-    const [chartOptions, setChartOptions] = useState({
-        chart: {
-            type: 'scatter',
-            zoomType: 'x',
-        },
-        title: {
-            text: 'Template'
-        },
-        subtitle: {
-            text: document.ontouchstart === undefined ?
-                'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-        },
-        legend: {
-            enabled: false
-        },
-        accessibility: {
-            enabled: false
-        },
-        boost: {
-            enabled: true
-        }
-    });
-
+    const [chartOptions, setChartOptions] = useState(defaultChartOptions);
     //loading
     const [loading, setLoading] = useState(false);
 
@@ -169,92 +148,18 @@ const Chart = ({ chartInformation }) => {
 
         // Update the chart options with the new data
         setChartOptions((prevState) => {
-
             return {
-                series: (() => {
-                    var series = [];
-                    if (chartInformation.type !== "colour") {
-                        // Normal type of graph
-                        var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
-                        for (var j = 0; j < parsedData.length; j++) {
-                            series.push({
-                                name: fileNames[j],
-                                data: parsedData[j],
-                                colour: colours[j],
-                                opacity: 1,
-                                colorAxis: false, 
-                                findNearestPointBy: 'x',
-                            })
-                        }
-                    } else {
-                        // XYColour graph
-                        for (j = 0; j < parsedData.length; j++) {
-                            series.push({
-                                name: fileNames[j],
-                                data: parsedData[j],
-                                colorKey: 'colorValue',
-                                turboThreshold: 0,
-                                opacity: 1,
-                                findNearestPointBy: 'xy',
-                            })
-                        }
-                    }
-                    return series;
-                })(),
-                title: {
-                    text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
-                },
-                chart: {
-                    type: chartInformation.type === "colour" ? 'coloredline' : chartInformation.type,
-                    zoomType: 'x'
-                },
-                xAxis: {
-                    title: {
-                        //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-                        type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
-                        text: chartInformation.files[0].columns[0].header
-                    },
-                    lineColor: 'grey',
-                    tickColor: 'grey',
-                },
-                yAxis: {
-                    title: {
-                        text: chartInformation.files[0].columns[1].header
-                    },
-                    lineColor: 'grey',
-                    tickColor: 'grey',
-                    lineWidth: 1,
-                },
-                legend: {
-                    enabled: true
-                },
-                colorAxis: (() => {
-                    if (chartInformation.type === "colour") {
-                        console.log(`minMax[0]: ${minMax.current[0]}, minMax[1]: ${minMax.current[1]}`)
-                        return {
-                            min: minMax.current[0],
-                            max: minMax.current[1],
-                            stops: [
-                                [0.1, '#20ff60'], // green
-                                [0.5, '#DDDF0D'], // yellow
-                                [0.9, '#ff0000'] // red
-                            ]
-                            
-                        }
-                    } else {
-                        return {
-                            showInLegend: false
-                        }
-                    }
-                })(),
-                boost: {
-                    enabled: chartInformation.type === "colour" ? false : true
-                }
-
+                ...prevState,
+                ...getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
             }
-        })
+        });
         
     }, [parsedData, chartInformation, fileNames])
+
+    useEffect(() => {
+        console.log(chartOptions)
+
+    }, [chartOptions])
 
     // This function loops when live is true, and updates the chart every 500ms
     useEffect(() => {
@@ -281,11 +186,11 @@ const Chart = ({ chartInformation }) => {
         refreshRate: 100,
     });
 
-    useEffect(() => {
-        if (ref.current) {
-            chartRef.current = Highcharts.chart(ref.current, chartOptions);
-        }
-    }, [ref, chartOptions]);
+    // useEffect(() => {
+    //     if (ref.current) {
+    //         chartRef.current = Highcharts.chart(ref.current, chartOptions);
+    //     }
+    // }, [ref, chartOptions]);
 
     return (
 
