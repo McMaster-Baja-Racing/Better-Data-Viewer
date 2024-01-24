@@ -5,7 +5,7 @@ import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
 import { DownloadModal } from './modal/download/downloadModal';
 import React, { useEffect, useState } from 'react';
-import Chart from './Chart';
+import Charts from './Charts';
 import Topbar from './Topbar';
 import $ from 'jquery';
 
@@ -59,18 +59,16 @@ const App = () => {
   return (
     <div className="App">
       <Topbar setModal={setModal}/>
-      <header className="App-header">
+      <div className="App-body">
         <div className="success">{successMessage.message}</div>
         {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
         {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <div className="charts">
-          <Chart chartInformation={chartInformation} />
-        </div>
+        <Charts chartInformation={chartInformation} />
 
-      </header>
+      </div>
 
     </div>
   );
