@@ -8,10 +8,6 @@ const Charts = ({ chartInformation }) => {
             <div className="bigChart">
                 <Chart chartInformation={chartInformation} />
             </div>
-            <Chart chartInformation={chartInformation} />
-            <Chart chartInformation={chartInformation} />
-            <Chart chartInformation={chartInformation} />
-
         </div>
     )
 }
