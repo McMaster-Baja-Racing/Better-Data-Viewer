@@ -40,11 +40,14 @@ const App = () => {
   } 
   */
 
-  const [chartInformation, setChartInformation] = useState({
-    files: [],
-    live: false,
-    type: "line"
-  });
+  const [chartInformation, setChartInformation] = useState([
+    {
+      files: [],
+      live: false,
+      type: "line"
+    }
+  ]
+  );
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
   const [successMessage, setSuccessMessage] = useState({})

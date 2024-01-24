@@ -26,11 +26,11 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   //Stuff for handling final submit
   const handleSubmit = () => {
-    setChartInformation({
+    setChartInformation([{
       "files": seriesInfo,
       "live": liveCheck,
       "type": graphType
-    })
+    }])
   }
 
   // This method will return headers when supplied with a list of files. Added support for folders is neccesary
