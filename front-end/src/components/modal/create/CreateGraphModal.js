@@ -6,6 +6,7 @@ import { useRef } from 'react';
 import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
+import { VideoSelect } from "./VideoSelect";
 
 export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage }) => {
 
@@ -16,6 +17,17 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [graphType, setGraphType] = useState("");
   const [liveCheck, setLiveCheck] = useState(false);
   const [seriesInfo, setSeriesInfo] = useState([]);
+  const [files, setFiles] = useState([])
+  const [selectedVideo, setSelectedVideo] = useState("");
+
+  useEffect(() => {
+      // Fetch data when the component mounts
+      fetch(`http://${window.location.hostname}:8080/files/folder/csv`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFiles(data.files);
+        });
+    }, []); // Empty dependency array ensures that the fetch is only performed once
 
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -62,14 +74,15 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   }, [displayPage])
 
   const pages = [
-    <GraphSettings movePage={movePage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>,
+    <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck}/>,
+    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}/>,
     <div className='file-Storage-Container'>
       <div className="file-browser">
         <h3>Choose Files</h3>
-        <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+        <FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
       </div>
       <div className="fileButtons">
-        <button className="pageTwoBackButton" onClick={() => {movePage(-1)}}>Back</button>
+        <button className="pageTwoBackButton" onClick={() => {movePage(graphType == "video" ? -1 : -2)}}>Back</button>
         <button className="pageTwoNextButton" onClick={() => {
         // OnClick, it should get the selected files from the file storage component
         if (selectedFiles.length === 0) {
@@ -82,6 +95,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
         }}>Next</button>
       </div>
     </div>,
+
     <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>
   ]
 

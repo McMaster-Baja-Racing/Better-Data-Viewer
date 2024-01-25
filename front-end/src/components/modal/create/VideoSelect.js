@@ -3,7 +3,7 @@ import ReactDom from "react-dom";
 import '../../../styles/modalStyles.css';
 import { useEffect, useState } from 'react';
 
-export const VideoSelect = ({ movePage, chartInformation, selectedSeries, setSelectedSeries, selectedVideo, setSelectedVideo, }) => {
+export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, }) => {
 
     // holds all the files which have been uploaded
     const [videos, setVideos] = useState([])

@@ -36,7 +36,6 @@ const Topbar = ({ setModal }) => {
                 <button className="createGraph" onClick={() => setModal('Create')}>Create Graph</button>
                 <button className="uploadFiles" onClick={() => setModal('Upload')}>Upload Files</button>
                 <button className="downloadFiles" onClick={() => setModal('Download')}>Download Files</button>
-                <button className="videoModal" onClick={() => setModal('Video')}>Sync Video</button>
                 <button className="helpModal" onClick={() => setModal('Help')}>Help</button>
             </div>
         </div>

@@ -1,13 +1,23 @@
 import ReactDom from "react-dom";
 import '../../../styles/modalStyles.css';
 import '../../../styles/downloadModalStyles.css';
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import React, { useState } from 'react';
 import FileStorage from "../FileStorage";
 import JSZip from 'jszip'
 
 export const DownloadModal = ({ setModal }) => {
   const [selectedFiles, setSelectedFiles] = useState([]); // holds the files that the user has selected from the file menu
+  const [files, setFiles] = useState([]) // holds all the files which have been uploaded
+
+  useEffect(() => {
+      // Fetch data when the component mounts
+      fetch(`http://${window.location.hostname}:8080/files/folder/csv`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFiles(data.files);
+        });
+    }, []); // Empty dependency array ensures that the fetch is only performed once
   
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -66,7 +76,7 @@ export const DownloadModal = ({ setModal }) => {
       <div className='file-Storage-Container'>
           <div className="download-browser">
             <h1 className="download-title"> Download Files </h1>
-            <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+            <FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
           </div>
           <div className="downloadContainer">
             <button className="downloadButton" onClick={() => {
