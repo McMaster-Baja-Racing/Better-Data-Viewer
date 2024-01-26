@@ -66,7 +66,7 @@ export const ApiUtil = {
      */
     deleteAllFiles: async () => {
         const response = await fetch(`http://${window.location.hostname}:8080/deleteAll`, {
-            method: "DELETE"
+            // method: "DELETE"
         });
 
         if (!response.ok) throw Error(response.statusText);

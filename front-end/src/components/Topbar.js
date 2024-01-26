@@ -1,17 +1,14 @@
 import '../styles/topbar.css';
 import { useState } from 'react';
+import { ApiUtil } from '../lib/apiUtils.js';
 
 const Topbar = ({ setModal }) => {
 
     const [liveStatus, setLiveStatus] = useState(false);
     //This function notifies the backend to begin listening on a certain port for live data
-    var formData = new FormData();
-    formData.append("port", "COM2");
     const beginLiveData = () => {
-        fetch(`http://${window.location.hostname}:8080/live`, {
-            method: "POST",
-            body: formData,
-        }).then((res) => {
+
+        ApiUtil.toggleLiveData("COM2").then((res) => {
             console.log(res);
         }).catch((err) => {
             console.log(err);

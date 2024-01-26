@@ -5,6 +5,8 @@ import '../../../styles/uploadModalStyles.css';
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
+import { ApiUtil } from '../../../lib/apiUtils.js';
+
 export const UploadModal = ({ setModal, setSuccessMessage}) => {
 
   const [dragActive, setDragActive] = React.useState(false);
@@ -40,7 +42,6 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
   //This stuff is for backend API
   const onSubmit = async () => {
     //upload multiple files
-    const formData = new FormData();
     // THIS SHOULD BE A POPUP THAT DECAYS AWAY, NOT AN ALERT
     if (fileLists.length === 0) { 
       alert("Please select a file")
@@ -51,11 +52,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
     //console.log(loading);
     await new Promise((resolve, reject) => {
       for (let i = 0; i < fileLists.length; i++) {
-        formData.set("file", fileLists[i]);
-        fetch(`http://${window.location.hostname}:8080/upload`, {
-          method: "POST",
-          body: formData,
-        }).then((res) => {
+        ApiUtil.uploadFile(fileLists[i]).then((res) => {
           res.text().then(text => {
             if(res.status !== 200) {
               alert(JSON.stringify(`${text}, status: ${res.status}`))
@@ -102,7 +99,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
             </label>
             {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
             <button id = "delete" type="button" onClick={(() => {
-            fetch(`http://${window.location.hostname}:8080/deleteAll`).then((res) => {
+            ApiUtil.deleteAllFiles().then((res) => {
               alert(res)
             }).catch((err) => {
               console.log(err)

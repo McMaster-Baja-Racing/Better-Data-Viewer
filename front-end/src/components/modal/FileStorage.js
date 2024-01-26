@@ -3,6 +3,7 @@ import '../../styles/fileStorage.css'
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
 import { useState, useEffect } from 'react';
+import { ApiUtil } from '../../lib/apiUtils.js';
 
 const formatSize = (size) => {
     // Finds the order of magnitude of the size in base 1024 (e.g. how many digits it would have)
@@ -110,13 +111,12 @@ const FileStorage = ({ selectedFiles, setSelectedFiles }) => {
     const [files, setFiles] = useState([])
 
     useEffect(() => {
-        // Fetch data when the component mounts
-        fetch(`http://${window.location.hostname}:8080/files`)
+        ApiUtil.getFiles()
           .then((response) => response.json())
           .then((data) => {
             setFiles(data.files);
           });
-      }, []); // Empty dependency array ensures that the fetch is only performed once
+      }, []); // Empty dependency array ensures that the call is only performed once
 
     return (
         <RawFileBrowser
