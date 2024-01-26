@@ -27,7 +27,7 @@ const GraphSettings = ({ movePage, graphType, setGraphType, liveCheck, setLiveCh
         <div className="graphTypesBox">
           <div className="graphOptionsText">Graph Types</div>
           <div className="GraphTypeSelect">
-            <select id="graphTypeSelect" onChange={getGraphType}>
+            <select id="graphTypeSelect" value={graphType} onChange={getGraphType}>
               <option value="line">Line</option>
               <option value="spline">Spline</option>
               <option value="scatter">Scatter</option>
