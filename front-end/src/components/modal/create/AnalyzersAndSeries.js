@@ -1,8 +1,8 @@
 import '../../../styles/modalStyles.css';
 import Help from './Help';
-import analyzerData from '../../analyzerData.js'
+import analyzerData from '../../analyzerData'
 import '../../../styles/analyzersAndSeriesStyles.css';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType }) => {
 
     // Determines if a series already exists with the same columns and analyzer
