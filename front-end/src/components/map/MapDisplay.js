@@ -29,7 +29,7 @@ const MapDisplay = ({ bounds, zoom }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     maxZoom={20}
             />
-                <Marker position={[coords[0][1], coords[0][0]]} icon={marker} />
+                {/* <Marker position={[coords[0][1], coords[0][0]]} icon={marker} /> */}
                 <Marker position={[coords[coords.length-1][1], coords[coords.length-1][0]]} icon={marker} />
         </MapContainer>
         </div>
