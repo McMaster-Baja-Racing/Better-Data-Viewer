@@ -76,7 +76,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   const pages = [
     <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck}/>,
-    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} setFilteredFiles={setFilteredFiles}/>,
+    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} filteredFiles={filteredFiles} setFilteredFiles={setFilteredFiles}/>,
     <div className='file-Storage-Container'>
       <div className="file-browser">
         <h3>Choose Files</h3>
