@@ -14,7 +14,8 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
             if (fileTimestamp == undefined) return
             const fileStart = new Date(fileTimestamp.fileHeaders[0])
             const fileEnd = new Date(fileTimestamp.fileHeaders[1])
-            /*if (fileStart < videoEnd && videoStart < fileEnd)*/ tempFilteredFiles.push(file)
+            /*if (fileStart < videoEnd && videoStart < fileEnd)*/ 
+            if (Math.random() >= 0.95) tempFilteredFiles.push(file)
         })
         setSelectedVideo(videoTimestamp)
         setFilteredFiles(tempFilteredFiles)
@@ -27,24 +28,30 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
             <div className="videoSelect">
                 <div className="videoContainer">
                     {videoTimestamps.map((videoTimestamp, index) => (
-                                <div key={index}>
-                                <input 
-                                    type="radio" 
-                                    name="video" 
-                                    value={videoTimestamp} 
-                                    onChange={() => {filterFiles(videoTimestamp)}} 
-                                    checked={selectedVideo === videoTimestamp}
-                                    disabled={fileTimestamps.length == 0}/>
-                                <label htmlFor={`video-${index}`}>{videoTimestamp.key.split('.')[0]}</label>
-                              </div>
+                        <label
+                            key={index}
+                            className={`videoLabel ${selectedVideo === videoTimestamp ? 'selected' : ''}`}
+                            htmlFor={`video-${index}`}
+                        >
+                            <input 
+                                type="radio"
+                                id={`video-${index}`} 
+                                name="video" 
+                                value={videoTimestamp} 
+                                onChange={() => {filterFiles(videoTimestamp)}} 
+                                checked={selectedVideo === videoTimestamp}
+                                disabled={fileTimestamps.length === 0}
+                            />
+                            {(videoTimestamp.key.split('.')[0]).replace('_', ' ')}
+                        </label>
                     ))}
                 </div>
                 <div className="folderContainer">
                 {[...new Set(filteredFiles.map(file => file.key.split('/')[0]))].map((folder, index) => (
-                    <div key={index}>
-                        <AiFillFolder />
-                        <label htmlFor={`folder-${index}`}>{folder}</label>
-                    </div>
+                    <label key={index} htmlFor={`folder-${index}`} className='folderLabel'>
+                        <AiFillFolder size={20} style={{ marginBottom: '-2%', marginRight: '3px' }}/>
+                        {folder}
+                    </label>
                 ))}
                 </div>
             </div>
