@@ -6,6 +6,10 @@
     flex: 1;
   }
 
+h3 {
+  font-size: x-large;
+}
+
 .fileButtons {
     display: flex;
     flex-direction: row;
@@ -24,7 +28,7 @@
   }
 
 .videoContainer {
-    flex: 3;
+    flex: 2.7;
     display: flex;
     flex-direction: column;
     border: 2px solid black;
@@ -55,33 +59,18 @@
     display: flex;
     flex-direction: column;
     border: 2px solid black;
-    margin-left: 10px;
+    padding-top: 1rem;
+    align-items: center;
+    overflow-y: auto;
 }
 
 .folderLabel {
-    margin-left: 10px;
+    margin-top: 10px;
 }
 
-.nextButton {
-    padding: 13px 29px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    background: crimson;
-    color: white;
-    cursor: pointer;
+.folderContainerLabel {
+    font-weight: 600;
+    margin: auto;
+    text-align: center;
 }
 
-.backButton {
-    padding: 13px 29px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    background: crimson;
-    color: white;
-    cursor: pointer;
-}

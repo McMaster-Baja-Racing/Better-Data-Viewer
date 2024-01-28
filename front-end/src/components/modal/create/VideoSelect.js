@@ -15,7 +15,7 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
             const fileStart = new Date(fileTimestamp.fileHeaders[0])
             const fileEnd = new Date(fileTimestamp.fileHeaders[1])
             /*if (fileStart < videoEnd && videoStart < fileEnd)*/ 
-            if (Math.random() >= 0.95) tempFilteredFiles.push(file)
+            if (Math.random() >= 0) tempFilteredFiles.push(file)
         })
         setSelectedVideo(videoTimestamp)
         setFilteredFiles(tempFilteredFiles)
@@ -47,6 +47,9 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
                     ))}
                 </div>
                 <div className="folderContainer">
+                    <div className='folderContainerLabel'>
+                        Available Folders
+                    </div>
                 {[...new Set(filteredFiles.map(file => file.key.split('/')[0]))].map((folder, index) => (
                     <label key={index} htmlFor={`folder-${index}`} className='folderLabel'>
                         <AiFillFolder size={20} style={{ marginBottom: '-2%', marginRight: '3px' }}/>
