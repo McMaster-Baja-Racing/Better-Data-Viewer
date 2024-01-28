@@ -1,4 +1,6 @@
 import '../../../styles/modalStyles.css';
+import '../../../styles/videoSelectStyles.css';
+import { AiFillFolder } from 'react-icons/ai';
 
 export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, filteredFiles, setFilteredFiles, fileTimestamps, videoTimestamps }) => {
     
@@ -12,7 +14,7 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
             if (fileTimestamp == undefined) return
             const fileStart = new Date(fileTimestamp.fileHeaders[0])
             const fileEnd = new Date(fileTimestamp.fileHeaders[1])
-            if (fileStart < videoEnd && videoStart < fileEnd) tempFilteredFiles.push(file)
+            /*if (fileStart < videoEnd && videoStart < fileEnd)*/ tempFilteredFiles.push(file)
         })
         setSelectedVideo(videoTimestamp)
         setFilteredFiles(tempFilteredFiles)
@@ -40,6 +42,7 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
                 <div className="folderContainer">
                 {[...new Set(filteredFiles.map(file => file.key.split('/')[0]))].map((folder, index) => (
                     <div key={index}>
+                        <AiFillFolder />
                         <label htmlFor={`folder-${index}`}>{folder}</label>
                     </div>
                 ))}
