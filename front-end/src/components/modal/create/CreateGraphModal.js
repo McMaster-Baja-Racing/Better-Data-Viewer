@@ -20,6 +20,8 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [files, setFiles] = useState([])
   const [filteredFiles, setFilteredFiles] = useState([])
   const [selectedVideo, setSelectedVideo] = useState("")
+  const [videoTimestamps, setVideoTimestamps] = useState([])
+  const [fileTimestamps, setFileTimestamps] = useState([])
 
   useEffect(() => {
       // Fetch data when the component mounts
@@ -27,6 +29,18 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
         .then((response) => response.json())
         .then((data) => {
           setFiles(data.files);
+        });
+      fetch(`http://${window.location.hostname}:8080/files/folder/mp4`)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.files)
+            setVideoTimestamps(data.files);
+        });
+    fetch(`http://${window.location.hostname}:8080/timespan/folder/csv`)
+        .then((response) => response.json())
+        .then((data) => {
+            // console.log(data.files)
+            setFileTimestamps(data.files);
         });
     }, []); // Empty dependency array ensures that the fetch is only performed once
 
@@ -76,11 +90,11 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   const pages = [
     <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck}/>,
-    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} filteredFiles={filteredFiles} setFilteredFiles={setFilteredFiles}/>,
+    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} filteredFiles={filteredFiles} setFilteredFiles={setFilteredFiles} fileTimestamps={fileTimestamps} videoTimestamps={videoTimestamps}/>,
     <div className='file-Storage-Container'>
       <div className="file-browser">
         <h3>Choose Files</h3>
-        <FileStorage files={filteredFiles.length == 0 ? files : filteredFiles} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+        <FileStorage files={graphType == 'video' ? files : filteredFiles} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
       </div>
       <div className="fileButtons">
         <button className="pageTwoBackButton" onClick={() => {movePage(graphType == "video" ? -1 : -2)}}>Back</button>

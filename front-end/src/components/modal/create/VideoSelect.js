@@ -1,25 +1,6 @@
 import '../../../styles/modalStyles.css';
-import { useEffect, useState } from 'react';
 
-export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, filteredFiles, setFilteredFiles }) => {
-
-    const [videoTimestamps, setVideoTimestamps] = useState([])
-
-    const [fileTimestamps, setFileTimestamps] = useState([])
-
-    useEffect(() => {
-        // Fetch data when the component mounts
-        fetch(`http://${window.location.hostname}:8080/timespan/folder/mp4`)
-            .then((response) => response.json())
-            .then((data) => {
-                setVideoTimestamps(data.files);
-            });
-        fetch(`http://${window.location.hostname}:8080/timespan/folder/csv`)
-            .then((response) => response.json())
-            .then((data) => {
-                setFileTimestamps(data.files);
-            });
-        }, []); // Empty dependency array ensures that the fetch is only performed once
+export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, filteredFiles, setFilteredFiles, fileTimestamps, videoTimestamps }) => {
     
     // Filter files to those that have a timestamp wihtin the range of the selected video
     const filterFiles = (videoTimestamp) => {
@@ -27,9 +8,10 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
         const videoStart = new Date (videoTimestamp.fileHeaders[0])
         const videoEnd = new Date (videoTimestamp.fileHeaders[1])
         files.forEach(file => {
-            const fileTimespan = fileTimestamps.find(timestamp => timestamp.key == file.key).fileHeaders
-            const fileStart = new Date(fileTimespan[0])
-            const fileEnd = new Date(fileTimespan[1])
+            const fileTimestamp = fileTimestamps.find(timestamp => timestamp.key == file.key)
+            if (fileTimestamp == undefined) return
+            const fileStart = new Date(fileTimestamp.fileHeaders[0])
+            const fileEnd = new Date(fileTimestamp.fileHeaders[1])
             if (fileStart < videoEnd && videoStart < fileEnd) tempFilteredFiles.push(file)
         })
         setSelectedVideo(videoTimestamp)
@@ -49,7 +31,8 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
                                     name="video" 
                                     value={videoTimestamp} 
                                     onChange={() => {filterFiles(videoTimestamp)}} 
-                                    checked={selectedVideo === videoTimestamp}/>
+                                    checked={selectedVideo === videoTimestamp}
+                                    disabled={fileTimestamps.length == 0}/>
                                 <label htmlFor={`video-${index}`}>{videoTimestamp.key.split('.')[0]}</label>
                               </div>
                     ))}

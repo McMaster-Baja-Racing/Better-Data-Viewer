@@ -2,7 +2,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import '../../styles/fileStorage.css'
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
-import { useState, useEffect } from 'react';
 
 const formatSize = (size) => {
     // Finds the order of magnitude of the size in base 1024 (e.g. how many digits it would have)
