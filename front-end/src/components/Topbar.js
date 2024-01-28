@@ -8,11 +8,7 @@ const icons = {};
 const importAll = r => {
     r.keys().forEach(key => icons[key] = r(key));
 }
-
 importAll(require.context('../assets/icons', false, /\.(png|jpe?g|svg)$/));
-
-
-
 
 const Topbar = ({ setModal }) => {
 

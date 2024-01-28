@@ -83,7 +83,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
     // TODO: Very hardcoded in, should be based off of a list of graph types and their respetive dimensions
     // TODO: Gauge should have 1 dimension, line should have 2, etc.
     useEffect(() => {
-        if (graphType === "colour") {
+        if (graphType === "coloredline") {
             setDimensions(3);
         } else {
             setDimensions(2);
