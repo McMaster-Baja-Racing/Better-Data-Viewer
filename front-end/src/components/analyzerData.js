@@ -1,3 +1,10 @@
+const images = {};
+const importAll = r => {
+    r.keys().forEach(key => images[key] = r(key));
+}
+
+importAll(require.context('../assets/help', false, /\.(png|jpe?g|svg|gif)$/));
+
 // probably too verbose to put in the actual code
 const analyzerData = [
   {
@@ -24,7 +31,8 @@ const analyzerData = [
     description: "Given both primary (on y-axis) and secondary (x-axis) RPM values, this tool will first apply a noise reduction algorithm, and then interpolate between them to achieve a graph that displays the shift curve. ",
     image: {
       link: "./accel.png",
-      alt: "fuck u"
+      alt: "fuck u",
+      src:  images['./accel.png'],
     },
     links: [
       {
@@ -40,7 +48,8 @@ const analyzerData = [
     description: "Implements the Savitzky-Golay algorithm in order to smooth out a curve. This is a very powerful tool that can help capture many trends not visible. Input variables are the window and polynomial order.",
     image: {
       link: "sgolay.gif",
-      alt: "sGolay Image"
+      alt: "sGolay Image",
+      src: images[`./sgolay.gif`]
     },
     links: [
       {
@@ -56,7 +65,8 @@ const analyzerData = [
     description: "Interpolation is the act of adding new data points between existing data points. This is useful for making data more readable, or for making it easier to compare data sets. This is implemented linearly.",
     image: {
       link: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/LinearInterpolation.svg/450px-LinearInter  polation.svg.png",
-      alt: "Linear Interpolate Image"
+      alt: "Linear Interpolate Image",
+      src: images[`./interpolate.png`],
     },
     links: [
       {
@@ -72,7 +82,8 @@ const analyzerData = [
     description: "Given noisy data, this will take the average over a window of points. This should help reduce noise, but can add other imperfections.",
     image: {
       link: "./rollAvg.png",
-      alt: "rollAvg Image"
+      alt: "rollAvg Image",
+      src: images[`./rollAvg.png`],
     },
     links: [
       {
@@ -88,7 +99,8 @@ const analyzerData = [
     description: "The Ramer-Douglas-Peucker algorithm helps simplify a curve by removing some of its points while keeping its overall shape intact. It's a handy tool for looking at large files!",
     image: {
       link: "rdp.gif",
-      alt: "RDP Image"
+      alt: "RDP Image",
+      src: images[`./rdp.gif`],
     },
     links: [
       {
@@ -104,7 +116,8 @@ const analyzerData = [
     description: "Splits the data into two parts, given a start and end point (timestamp)",
     image: {
       link: "split.png",
-      alt: "Split Image"
+      alt: "Split Image",
+      src: images[`./split.png`],
     },
     links: [
       {
@@ -120,7 +133,8 @@ const analyzerData = [
     description: "Given a multiplier and offset, this will multiply the data by the multiplier and add the offset.",
     image: {
       link: "linmult.png",
-      alt: "Multiply Image"
+      alt: "Multiply Image",
+      src: images[`./linmult.png`],
     },
     links: [
       {
