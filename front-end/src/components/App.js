@@ -45,12 +45,26 @@ const App = () => {
       files: [],
       live: false,
       type: "line"
-    }
-  ]
-  );
+    },
+    {
+      files: [],
+      live: false,
+      type: "line"
+    },
+    {
+      files: [],
+      live: false,
+      type: "line"
+    },
+    {
+      files: [],
+      live: false,
+      type: "line"
+    }]);
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
   const [successMessage, setSuccessMessage] = useState({})
+  const [buttonID, setButtonID] = useState(null);
 
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
@@ -64,12 +78,12 @@ const App = () => {
       <Topbar setModal={setModal}/>
       <div className="App-body">
         <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} chartInformation={chartInformation} buttonID={buttonID}/>  : null}
         {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <Charts chartInformation={chartInformation} />
+        <Charts chartInformation={chartInformation} setModal={setModal} setButtonID={setButtonID}/>
 
       </div>
 

@@ -52,6 +52,9 @@ const Chart = ({ chartInformation }) => {
 
     // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
     useEffect(() => {
+        if(!chartInformation) {
+            return;
+        }
         if (chartInformation.files.length === 0) {
             return;
         }
@@ -64,6 +67,9 @@ const Chart = ({ chartInformation }) => {
 
     // Once necessary data is fetched, format it for the chart
     useEffect(() => {
+        if (!chartInformation){
+            return;
+        }
         if (chartInformation.files.length === 0) {
             return;
         }
@@ -80,6 +86,9 @@ const Chart = ({ chartInformation }) => {
 
     // This function loops when live is true, and updates the chart every 500ms
     useEffect(() => {
+        if (!chartInformation){
+            return;
+        }
         let intervalId;
 
         if (chartInformation.live) {
@@ -90,7 +99,7 @@ const Chart = ({ chartInformation }) => {
 
         return () => clearInterval(intervalId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chartInformation.live]);
+    }, [chartInformation]);
 
     const chartRef = useRef(null);
     const { width, height, ref } = useResizeDetector({

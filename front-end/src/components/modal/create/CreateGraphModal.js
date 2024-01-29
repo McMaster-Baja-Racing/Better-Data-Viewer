@@ -7,7 +7,7 @@ import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 
-export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage }) => {
+export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage, chartInformation, buttonID }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -26,12 +26,60 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   //Stuff for handling final submit
   const handleSubmit = () => {
-    setChartInformation([{
-      "files": seriesInfo,
-      "live": liveCheck,
-      "type": graphType
-    }])
-  }
+    switch (buttonID) {
+      case 0:
+        setChartInformation([
+          {
+            files: seriesInfo,
+            live: liveCheck,
+            type: graphType,
+          },
+          chartInformation[1],
+          chartInformation[2],
+          chartInformation[3],
+        ])
+        break;
+      case 1:
+        setChartInformation([
+          chartInformation[0],
+          {
+            files: seriesInfo,
+            live: liveCheck,
+            type: graphType,
+          },
+          chartInformation[2],
+          chartInformation[3],
+        ])
+        break;
+      case 2:
+        setChartInformation([
+          chartInformation[0],
+          chartInformation[1],
+          {
+            files: seriesInfo,
+            live: liveCheck,
+            type: graphType,
+          },
+          chartInformation[3],
+        ])
+        break;
+      case 3:
+        setChartInformation([
+          chartInformation[0],
+          chartInformation[1],
+          chartInformation[2],
+          {
+            files: selectedFiles,
+            live: liveCheck,
+            type: graphType,
+          },
+        ])
+        break;
+      default:
+        break;
+    }
+  }  
+  
 
   // This method will return headers when supplied with a list of files. Added support for folders is neccesary
   const getHeaders = async (files) => {
