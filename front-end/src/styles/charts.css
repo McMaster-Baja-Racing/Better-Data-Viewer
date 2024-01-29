@@ -4,11 +4,28 @@
     height: 100%;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    grid-gap: 15px;
+    grid-gap: 5px;
 }
 
 .bigChart {
     grid-column: 1/4;
     overflow: hidden;
+    position: relative;
+}
+
+.smallChart {
+    overflow: hidden;
+    position: relative;
+}
+
+.createGraph {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    box-shadow: 0 0 5px #000;
 }
 

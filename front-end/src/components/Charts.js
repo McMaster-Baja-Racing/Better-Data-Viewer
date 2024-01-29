@@ -1,29 +1,23 @@
 import Chart from './Chart';
 import '../styles/charts.css';
+import newGraphImg from '../assets/icons/newGraph2.svg';
 
 const Charts = ({ chartInformation, setModal, setButtonID }) => {
 
+    const chartSizes = ["bigChart", "smallChart", "smallChart", "smallChart"]
+
     return (
         <div className="charts">
-            <div className="bigChart">
-                <button  title="Create Graph" className="createGraph" onClick={() => { setButtonID(0); setModal('Create'); }}>
-                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph2.svg'} alt="Create Graph" />
-                </button>
-                <Chart chartInformation={chartInformation[0]}  />
-                
-            </div>
-            <div><button  title="Create Graph" className="createGraph" onClick={() => { setButtonID(1); setModal('Create'); }}>
-                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph2.svg'} alt="Create Graph" />
-                </button>
-            <Chart chartInformation={chartInformation[1]} /></div>
-            <div><button  title="Create Graph" className="createGraph" onClick={() => { setButtonID(2); setModal('Create'); }}>
-                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph2.svg'} alt="Create Graph" />
-                </button>
-            <Chart chartInformation={chartInformation[2]} /></div>
-            <div><button  title="Create Graph" className="createGraph" onClick={() => { setButtonID(3); setModal('Create'); }}>
-                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph2.svg'} alt="Create Graph" />
-                </button>
-            <Chart chartInformation={chartInformation[3]} /></div>
+            {chartSizes.map((name, index) => {
+                return (
+                    <div key={index} className={name}>
+                        <Chart chartInformation={chartInformation[index]} />
+                        <button title="Create Graph" className="createGraph" onClick={() => { setButtonID(index); setModal('Create'); }}>
+                            <img className="icon" src={newGraphImg} alt="Create Graph" />
+                        </button>
+                    </div>
+                )
+            })}
         </div>
     )
 }
