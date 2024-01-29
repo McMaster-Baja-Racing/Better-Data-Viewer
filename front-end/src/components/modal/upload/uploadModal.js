@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
 import { ApiUtil } from '../../../lib/apiUtils.js';
+import loadingImg from '../../../assets/loading.gif';
 
 export const UploadModal = ({ setModal, setSuccessMessage}) => {
 
@@ -105,7 +106,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
               console.log(err)
             })
           })}>Delete All</button>
-          {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..."/>}
+          {loading && <img className="loading" src={loadingImg} alt="Loading..."/>}
           <input id = "submitButton" className="uploadSubmit" type="submit" />
           </form>
         </div>

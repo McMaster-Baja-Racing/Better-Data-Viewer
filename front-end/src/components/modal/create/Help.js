@@ -10,11 +10,13 @@ const HelpButton = ({ onClick }) => {
 const HelpPopup = ({ data }) => {
   const { title, description, image, links } = data;
 
+  console.log(image)
+
   return (
     <div className="popuptext">
       <h1>{title}</h1>
       <p>{description}</p>
-      {image && <img src={image.link} alt={image.alt} style={{ width: 250, height: 200 }} />}
+      {image && <img src={image.src} alt={image.alt} style={{ width: 250, height: 200 }} />}
       <div></div>
       {links && (
         <div>

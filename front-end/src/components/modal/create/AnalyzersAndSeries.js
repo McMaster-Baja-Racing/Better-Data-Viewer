@@ -5,6 +5,8 @@ import '../../../styles/analyzersAndSeriesStyles.css';
 import { useState, useEffect } from 'react';
 const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType }) => {
 
+
+    console.log(analyzerData);
     // Determines if a series already exists with the same columns and analyzer
     const isDuplicateSeries = (newSeries) => {
         return seriesInfo.some((series) => {
@@ -81,7 +83,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
     // TODO: Very hardcoded in, should be based off of a list of graph types and their respetive dimensions
     // TODO: Gauge should have 1 dimension, line should have 2, etc.
     useEffect(() => {
-        if (graphType === "colour") {
+        if (graphType === "coloredline") {
             setDimensions(3);
         } else {
             setDimensions(2);

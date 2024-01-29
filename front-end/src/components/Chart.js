@@ -8,6 +8,8 @@ import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
 import { useResizeDetector } from 'react-resize-detector';
+// import loading from assets folder
+import loadingImg from '../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
@@ -127,7 +129,7 @@ const Chart = ({ chartInformation }) => {
                     options={chartOptions}
                 />
             </div>
-            {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..." />}
+            {loading && <img className="loading" src={loadingImg} alt="Loading..." />}
         </div>
 
     )
