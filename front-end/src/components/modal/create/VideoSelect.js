@@ -14,8 +14,7 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
             if (fileTimestamp == undefined) return
             const fileStart = new Date(fileTimestamp.fileHeaders[0])
             const fileEnd = new Date(fileTimestamp.fileHeaders[1])
-            /*if (fileStart < videoEnd && videoStart < fileEnd)*/ 
-            if (Math.random() >= 0) tempFilteredFiles.push(file)
+            if (fileStart < videoEnd && videoStart < fileEnd) tempFilteredFiles.push(file)
         })
         setSelectedVideo(videoTimestamp)
         setFilteredFiles(tempFilteredFiles)
@@ -47,19 +46,18 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
                     ))}
                 </div>
                 <div className="folderContainer">
-                    <div className='folderContainerLabel'>
-                        Available Folders
-                    </div>
+                <label className='folderContainerLabel'>Available Folders</label>
+                {filteredFiles.length == 0 && selectedVideo != '' ? <label>No files found</label> : null}
                 {[...new Set(filteredFiles.map(file => file.key.split('/')[0]))].map((folder, index) => (
                     <label key={index} htmlFor={`folder-${index}`} className='folderLabel'>
-                        <AiFillFolder size={20} style={{ marginBottom: '-2%', marginRight: '3px' }}/>
+                        <AiFillFolder size={20} style={{ marginBottom: '-5%', marginRight: '3px' }}/>
                         {folder}
                     </label>
                 ))}
                 </div>
             </div>
             <div className="fileButtons">
-                <button className="backButton" onClick={() => {movePage(-1)}}>Back</button>
+                <button className="backButton" onClick={() => {setSelectedVideo(''); movePage(-1)}}>Back</button>
                 <button className="nextButton" onClick={() => {movePage(1)}}>Next</button>
             </div>
         </div>
