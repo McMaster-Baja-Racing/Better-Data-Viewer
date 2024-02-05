@@ -30,16 +30,14 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
         .then((data) => {
           setFiles(data.files);
         });
-      fetch(`http://${window.location.hostname}:8080/files/folder/mp4`)
+      fetch(`http://${window.location.hostname}:8080/timespan/folder/mp4`)
         .then((response) => response.json())
         .then((data) => {
-            console.log(data.files)
             setVideoTimestamps(data.files);
         });
     fetch(`http://${window.location.hostname}:8080/timespan/folder/csv`)
         .then((response) => response.json())
         .then((data) => {
-            // console.log(data.files)
             setFileTimestamps(data.files);
         });
     }, []); // Empty dependency array ensures that the fetch is only performed once
@@ -56,7 +54,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
     setChartInformation({
       "files": seriesInfo,
       "live": liveCheck,
-      "type": graphType
+      "type": graphType == "video" ? "line" : graphType
     })
   }
 
