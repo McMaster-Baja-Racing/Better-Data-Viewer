@@ -108,7 +108,7 @@ const MapDisplay = ({ bounds, zoom }) => {
 
 
 
-    const marker = L.icon({ iconUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-icon.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconAnchor: [13, 38] })
+    const marker = L.icon({ iconUrl: "/topdown.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconSize: [50, 50], iconAnchor: [25, 25] })
     return (
         <div id="mapBackground">
             <MapContainer bounds={bounds} style={{ height: "100%" }} dragging={false} scrollWheelZoom={true} >
