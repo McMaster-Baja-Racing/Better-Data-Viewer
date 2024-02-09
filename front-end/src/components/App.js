@@ -67,7 +67,7 @@ const App = () => {
 
 
         {/* <Chart chartInformation={chartInformation} /> */}
-        <MapChart chartInformation={chartInformation} bounds={[[43.2614, -79.93], [43.262, -79.933]]} zoom={16} />
+        <MapChart />
       </header>
       
     </div>
