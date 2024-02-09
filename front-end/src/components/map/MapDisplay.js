@@ -171,7 +171,7 @@ const MapDisplay = ({ coords, toolType }) => {
 
     const marker = L.icon({ iconUrl: "/topdown.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconSize: [50, 50], iconAnchor: [25, 25] })
     return (
-        <div id="mapBackground" style={{ height: "100%", width: "50%" }}>
+        <div id="mapBackground" style={{ height: "100%", width: "100%" }}>
             <button onClick={() => findLapTimes(coords, rects)}> analyze </button>
             <MapContainer bounds={bounds} style={{ height: "100%", width: "100%" }} dragging={true} scrollWheelZoom={true} >
                 <GeoJSON key={testLine} data={testLine} style={{ stroke: true, color: "#2222ff", weight: 5 }}></GeoJSON>

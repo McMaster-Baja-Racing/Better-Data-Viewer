@@ -12,11 +12,11 @@ const MapChart = () => {
         setCurrTool(tools[index]);
     }
     return (
-        <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
-            <div id={"ui"} style={{display: "block", flex: "0 0", margin:"8px", textAlign: "left"}}>
+        <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap"}}>
+            <div id={"ui"} style={{flex: "0 0 100%",  height: "100px", margin:"8px", textAlign: "left"}}>
                 <ToolSelection options={tools} onChange={changeTool}> </ToolSelection>
             </div>
-            <div style={{flex: "1 0"}}>
+            <div style={{flex: "0 0 100%"}}>
                 <MapDisplay coords={coords} toolType={currTool}/>
             </div>
         </div>
