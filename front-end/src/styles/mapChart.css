@@ -5,3 +5,7 @@
 .map_ui_button.selected {
     filter: brightness(75%);
 }
+
+.map_ui_rect {
+    cursor: url('../../public/icons/delete.svg') 10 10, crosshair;
+}
