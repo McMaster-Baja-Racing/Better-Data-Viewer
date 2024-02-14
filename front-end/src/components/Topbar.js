@@ -26,19 +26,19 @@ const Topbar = ({ setModal }) => {
 
     return (
         <div className="topbar">
-            <div className="title">
+            <div className="title" onClick={() => window.location.href='/'}>
                 <img src={process.env.PUBLIC_URL + 'bajalogo.png'} alt="baja_logo"/>
                 Data Visualizer
                 <img src={process.env.PUBLIC_URL + 'eeee.gif'} alt="baja_logo"/>
             </div>
             <div className="buttons">
-                <button title="Go to map" className="map" onClick={() => window.location.href='/map'}>
-                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/map.svg'} alt="Go to map" />
-                </button>
                 <button title="Start Live Data" className="beginLive" onClick={beginLiveData}>
                     {liveStatus
                         ? <img className="icon" src={process.env.PUBLIC_URL + 'icons/liveOn.svg'} alt="Live Mode On" />
                         : <img className="icon" src={process.env.PUBLIC_URL + 'icons/liveOff.svg'} alt="Live Mode Off" />}
+                </button>
+                <button title="Go to map" className="map" onClick={() => window.location.href='/map'}>
+                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/map.svg'} alt="Go to map" />
                 </button>
                 <button title="Create Graph" className="createGraph" onClick={() => setModal('Create')}>
                     <img className="icon" src={process.env.PUBLIC_URL + 'icons/newGraph2.svg'} alt="Create Graph" />
