@@ -30,7 +30,7 @@ function getBounds(coords) {
     let latMargin = (maxLat - minLat) * 0.5;
     let lngMargin = (maxLng - minLng) * 0.5;
     let bounds = [[minLat - latMargin, minLng - lngMargin], [maxLat + latMargin, maxLng + lngMargin]]
-    console.log("Boudns are:", bounds, minLat, maxLat, minLng, maxLng)
+    // console.log("Boudns are:", bounds, minLat, maxLat, minLng, maxLng)
     // console.log("coords is:", coords);
     return bounds;
 }
@@ -77,17 +77,17 @@ function findLapTimes(coords, rects) {
     for (let event of events) {
         if (event.event === EXIT && rects[event.rect].type === "Start") {
             currLap.start = event.time;
-            console.log(event.time + ": Start lap");
+            // console.log(event.time + ": Start lap");
         }
         else if (event.event === ENTER && rects[event.rect].type === "End") {
             currLap.end = event.time;
             laps.push(currLap);
-            console.log(event.time + ": End lap time: " + (currLap.end - currLap.start) / 1000 + "s");
+            // console.log(event.time + ": End lap time: " + (currLap.end - currLap.start) / 1000 + "s");
             currLap = { start: 0, end: 0, checkpoints: [] };
         }
         else if (event.event === ENTER && rects[event.rect].type === "Checkpoint") {
             currLap.checkpoints.push(event.time);
-            console.log(event.time + ": Checkpoint");
+            // console.log(event.time + ": Checkpoint");
         }
         // console.log(event.time, ": " +event.event + " " + rects[event.rect].type + " " + event.rect);
     }
@@ -121,14 +121,14 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
     useEffect(() => {
         if (coords.length === 0) return;
         setBounds(getBounds(coords));
-        console.log("new bounds!")
+        // console.log("new bounds!")
     }, [coords])
 
     // Go to selected lap in animation
     useEffect(() => {
         for(let i = 0; i < coords.length; i++) {
             if(coords[i][TIME_INDEX] >= gotoTime){
-                console.log("Going to time", gotoTime, "at pos", i);
+                // console.log("Going to time", gotoTime, "at pos", i);
                 setCounter(i);
                 break;
             }
@@ -148,7 +148,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
                     }
                 }
                 setFiles(prefixes);
-                console.log(prefixes)
+                // console.log(prefixes)
             });
     }, [])
 
@@ -195,7 +195,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
         setCoords([]);
         setBounds([]);
         let chosen = e.target.value;
-        console.log(chosen);
+        // console.log(chosen);
         fetch(`http://${window.location.hostname}:8080/analyze?` + new URLSearchParams({
             inputFiles: `${chosen}/${LAT_COLUMNNAME}.csv,${chosen}/${LNG_COLUMNNAME}.csv`,
             inputColumns: `${LAT_COLUMNNAME}, ${LNG_COLUMNNAME}`,
@@ -208,7 +208,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
             .then(text => {
                 const lines = text.trim().split("\n").map((line) => line.split(","));
                 setCoords(lines.slice(1).map(c => c.map(p => parseFloat(p))));
-                console.log(lines)
+                // console.log(lines)
             });
     }
 
@@ -217,15 +217,16 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
     const marker = L.icon({ iconUrl: "/topdown.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconSize: [50, 50], iconAnchor: [25, 25] })
     return (
         <div id="mapBackground" style={{ height: "100%", width: "100%" }}>
-            <ToolSelection options={tools} onChange={setCurrTool}> </ToolSelection>
-            {/* <button onClick={() => setLapsCallback(findLapTimes(coords, rects))} className="map_ui_button"> Analyze </button> */}
-            <button onClick={() => setRects([])} className="map_ui_button">Clear</button>
-            <select name="pog" defaultValue="none" onChange={loadFile}>
+            <select className="map_ui_select" defaultValue="none" onChange={loadFile}>
                 <option value="none" selected disabled hidden>Select a file to analyze</option>
                 {files.map((f) => {
                     return (<option key={f} value={f}>{f}</option>);
                 })}
             </select>
+            <ToolSelection options={tools} onChange={setCurrTool}> </ToolSelection>
+            {/* <button onClick={() => setLapsCallback(findLapTimes(coords, rects))} className="map_ui_button"> Analyze </button> */}
+            <button onClick={() => setRects([])} className="map_ui_button">Clear</button>
+            
             {bounds.length > 0 && coords.length > 0 ?
                 <MapContainer key={bounds} bounds={bounds} style={{ height: "100%", width: "100%", zIndex: "0" }} dragging={true} scrollWheelZoom={true} >
                     <GeoJSON key={coords[0]} data={[{

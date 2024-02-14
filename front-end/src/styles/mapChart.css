@@ -1,5 +1,21 @@
 .map_ui_button {
-    margin-right: 8px;
+    margin: 8px;
+}
+
+.map_ui_tool {
+    margin-left: 0px;
+    margin-right: 0px;
+    border-radius: 0%;
+}
+
+.map_ui_tool:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.map_ui_tool:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .map_ui_button.selected {
@@ -8,4 +24,9 @@
 
 .map_ui_rect {
     cursor: url('../../public/icons/delete.svg') 10 10, crosshair;
+}
+
+.map_ui_select {
+    margin: 10px;
+    float: left;
 }

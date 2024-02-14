@@ -51,25 +51,28 @@ const App = () => {
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
     if (successMessage === "" || Object.keys(successMessage).length === 0) return;
-    $( "div.success" ).hide().stop(true, false) // This could use some work to show that they are different messages more clearly
-    $( "div.success" ).slideDown(500).delay(2000).slideUp(1000);
+    $("div.success").hide().stop(true, false) // This could use some work to show that they are different messages more clearly
+    $("div.success").slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
-  
+
   return (
     <div className="App">
-      <Topbar setModal={setModal}/>
+      <Topbar setModal={setModal} />
       <header className="App-header">
         <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
-        {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} /> : null}
+        {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
+        {window.location.pathname === '/map' ?
+          <MapChart />
+          : <Chart chartInformation={chartInformation} />
+        }
 
-        {/* <Chart chartInformation={chartInformation} /> */}
-        <MapChart />
+
       </header>
-      
+
     </div>
   );
 
