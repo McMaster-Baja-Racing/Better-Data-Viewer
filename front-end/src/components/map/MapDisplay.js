@@ -95,8 +95,10 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
     const [boundsEnd, setBoundsEnd] = useState([0, 0]);
     const [rects, setRects] = useState([]);
     const [currTool, setCurrTool] = useState(0);
+    const [files, setFiles] = useState([]);
 
     useEffect(() => {
+
         const timerId = setInterval(() => {
             setCounter(counter + 1);
             if (counter >= coords.length - 1) {
@@ -105,6 +107,22 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
         }, 5)
         return () => clearInterval(timerId);
     });
+
+    useEffect(() => {
+        fetch(`http://${window.location.hostname}:8080/files`)
+            .then((response) => response.json())
+            .then((json) => {
+                let prefixes = [];
+                for (let file of json.files) {
+                    let prefix = file.key.split("/")[0];
+                    if (!prefixes.includes(prefix)) {
+                        prefixes.push(prefix);
+                    }
+                }
+                setFiles(prefixes);
+                console.log(prefixes)
+            });
+    }, [])
 
     // Update the laps sidebar if the coords or rects changes
     useEffect(() => {
@@ -162,12 +180,19 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
 
 
 
+
+
     const marker = L.icon({ iconUrl: "/topdown.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconSize: [50, 50], iconAnchor: [25, 25] })
     return (
         <div id="mapBackground" style={{ height: "100%", width: "100%" }}>
             <ToolSelection options={tools} onChange={setCurrTool}> </ToolSelection>
             {/* <button onClick={() => setLapsCallback(findLapTimes(coords, rects))} className="map_ui_button"> Analyze </button> */}
             <button onClick={() => setRects([])} className="map_ui_button">Clear</button>
+            <select name="pog">
+                {files.map((f) => {
+                    return (<option value={f}>{f}</option>);
+                })}
+            </select>
             <MapContainer bounds={bounds} style={{ height: "100%", width: "100%" }} dragging={true} scrollWheelZoom={true} >
                 <GeoJSON key={testLine} data={testLine} style={{ stroke: true, color: "#2222ff", weight: 5 }}></GeoJSON>
                 <TileLayer
@@ -194,9 +219,11 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
                         default:
                             break;
                     }
-                    return <Rectangle className="map_ui_rect" bounds={rect.bounds} key={[rect.bounds, inside]} color={inside ? '#00ff00' : '#000000'} fillColor={fillColor} eventHandlers={{click: (e) => {
-                        setRects(rects.toSpliced(index, 1));
-                    }}}/>
+                    return <Rectangle className="map_ui_rect" bounds={rect.bounds} key={[rect.bounds, inside]} color={inside ? '#00ff00' : '#000000'} fillColor={fillColor} eventHandlers={{
+                        click: (e) => {
+                            setRects(rects.toSpliced(index, 1));
+                        }
+                    }} />
                 })}
                 {/* <Marker position={[coords[0][1], coords[0][0]]} icon={marker} /> */}
                 <Marker position={[coords[counter][1], coords[counter][0]]} icon={marker} />
