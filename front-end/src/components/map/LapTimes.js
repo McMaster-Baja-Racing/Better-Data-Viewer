@@ -6,13 +6,11 @@ const LapTimes = ({ laps, gotoTimeCallback }) => {
     if (laps.length === 0) {
         return (
             <>
-                <h1 style={{ color: "black", fontSize: "21px" }}>
-                    Right click and drag to draw gates<br/>
+                <p style={{ color: "black", fontSize: "21px" }}>
+                    Right click and drag to draw gates<br />
                     Choose the gate type at the top <br />
                     Place a start and end to show lap times<br />
-                    
-                    </h1>
-                <p></p>
+                </p>
             </>
         )
     }
