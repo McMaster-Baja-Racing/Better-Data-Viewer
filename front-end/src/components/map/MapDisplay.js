@@ -8,6 +8,12 @@ const tools = ["Start", "End", "Checkpoint"]
 const ENTER = "enter";
 const EXIT = "exit";
 
+const LAT_COLUMNNAME = "GPS LATITUDE";
+const LNG_COLUMNNAME = "GPS LONGITUDE";
+const TIME_INDEX = 0;
+const LAT_INDEX = 1;
+const LNG_INDEX = 2;
+
 function getBounds(coords) {
     /**
      * Gets the bounding box that surrounds a list of coordinates
@@ -15,15 +21,18 @@ function getBounds(coords) {
      */
     let minLat = Infinity, minLng = Infinity, maxLat = -Infinity, maxLng = -Infinity;
     coords.forEach(elem => {
-        if (elem[1] > maxLat) maxLat = elem[0];
-        if (elem[1] < minLat) minLat = elem[0];
-        if (elem[0] > maxLng) maxLng = elem[1];
-        if (elem[0] < minLng) minLng = elem[1];
+        if (elem[LAT_INDEX] > maxLat) maxLat = elem[0];
+        if (elem[LAT_INDEX] < minLat) minLat = elem[0];
+        if (elem[LNG_INDEX] > maxLng) maxLng = elem[1];
+        if (elem[LNG_INDEX] < minLng) minLng = elem[1];
     });
     // Add some margin on sides so the line isn't right on the edge of the screen
     let latMargin = (maxLat - minLat) * 0.5;
     let lngMargin = (maxLng - minLng) * 0.5;
-    return [[minLng - lngMargin, minLat - latMargin], [maxLng + lngMargin, maxLat + latMargin]];
+    let bounds = [[minLng - lngMargin, minLat - latMargin], [maxLng + lngMargin, maxLat + latMargin]]
+    // console.log("Boudns are:", bounds, minLat, maxLat, minLng, maxLng)
+    // console.log("coords is:", coords);
+    return bounds;
 }
 
 function boundaryEvent(event, rect, time) {
@@ -53,13 +62,13 @@ function findLapTimes(coords, rects) {
     let events = [];
     for (let i = 0; i < coords.length; i++) {
         for (let [index, elem] of rects.entries()) {
-            if (!inside && pointInRect([coords[i][1], coords[i][0]], elem.bounds)) {
+            if (!inside && pointInRect([coords[i][LAT_INDEX], coords[i][LNG_INDEX]], elem.bounds)) {
                 inside = true;
-                events.push(boundaryEvent(ENTER, index, coords[i][2]));
+                events.push(boundaryEvent(ENTER, index, coords[i][TIME_INDEX]));
             }
-            else if (inside && events[events.length - 1].rect === index && !pointInRect([coords[i][1], coords[i][0]], elem.bounds)) {
+            else if (inside && events[events.length - 1].rect === index && !pointInRect([coords[i][LAT_INDEX], coords[i][LNG_INDEX]], elem.bounds)) {
                 inside = false;
-                events.push(boundaryEvent(EXIT, index, coords[i][2]));
+                events.push(boundaryEvent(EXIT, index, coords[i][TIME_INDEX]));
             }
         }
     }
@@ -85,10 +94,10 @@ function findLapTimes(coords, rects) {
     return laps;
 }
 
-const MapDisplay = ({ coords, setLapsCallback }) => {
+const MapDisplay = ({ setLapsCallback }) => {
 
-    const bounds = getBounds(coords);
-
+    const [coords, setCoords] = useState([[0, 0, 0], [20, 20, 1]]);
+    const [bounds, setBounds] = useState(getBounds(coords));
     const [counter, setCounter] = useState(0);
     const [drawing, setDrawing] = useState(false);
     const [boundsStart, setBoundsStart] = useState([0, 0]);
@@ -107,6 +116,11 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
         }, 5)
         return () => clearInterval(timerId);
     });
+
+    useEffect(() => {
+        setBounds(getBounds(coords));
+        console.log("new bounds!")
+    }, [coords])
 
     useEffect(() => {
         fetch(`http://${window.location.hostname}:8080/files`)
@@ -163,24 +177,26 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
         return false;
     }
 
+    function loadFile(e) {
+        let chosen = e.target.value;
+        console.log(chosen);
+        fetch(`http://${window.location.hostname}:8080/analyze?` + new URLSearchParams({
+            inputFiles: `${chosen}/${LAT_COLUMNNAME}.csv,${chosen}/${LNG_COLUMNNAME}.csv`,
+            inputColumns: `${LAT_COLUMNNAME}, ${LNG_COLUMNNAME}`,
+            outputFiles: '',
+            analyzer: 'interpolaterPro',
+            liveOptions: 'false'
+        }), {
+            method: 'GET'
+        }).then((response) => response.text())
+            .then(text => {
+                const lines = text.trim().split("\n").map((line) => line.split(","));
+                setCoords(lines.slice(1).map(c => c.map(p => parseFloat(p))));
+                console.log(lines)
+            });
+    }
+
     // GEOJSON USES LONG, LAT NOT LAT, LONG
-    let testLine = [{
-        type: "LineString",
-        coordinates: coords
-    },
-        // {
-        //     type: "Point",
-        //     coordinates: coords[0]
-        // },
-        // {
-        //     type: "Point",
-        //     coordinates: coords[coords.length - 1]
-        // }
-    ];
-
-
-
-
 
     const marker = L.icon({ iconUrl: "/topdown.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconSize: [50, 50], iconAnchor: [25, 25] })
     return (
@@ -188,13 +204,18 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
             <ToolSelection options={tools} onChange={setCurrTool}> </ToolSelection>
             {/* <button onClick={() => setLapsCallback(findLapTimes(coords, rects))} className="map_ui_button"> Analyze </button> */}
             <button onClick={() => setRects([])} className="map_ui_button">Clear</button>
-            <select name="pog">
+            <select name="pog" defaultValue="none" onChange={loadFile}>
+                <option value="none" selected disabled hidden>Select a file to analyze</option>
                 {files.map((f) => {
-                    return (<option value={f}>{f}</option>);
+                    return (<option key={f} value={f}>{f}</option>);
                 })}
             </select>
-            <MapContainer bounds={bounds} style={{ height: "100%", width: "100%" }} dragging={true} scrollWheelZoom={true} >
-                <GeoJSON key={testLine} data={testLine} style={{ stroke: true, color: "#2222ff", weight: 5 }}></GeoJSON>
+            <MapContainer key={bounds} bounds={bounds} style={{ height: "100%", width: "100%", zIndex: "0" }} dragging={true} scrollWheelZoom={true} >
+                {/* <GeoJSON key={coords[0]} data={[{
+                    type: "LineString",
+                    coordinates: coords.map(c => [c[LAT_INDEX], c[LNG_INDEX]])
+                },
+                ]} style={{ stroke: true, color: "#2222ff", weight: 5 }}></GeoJSON> */}
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
@@ -204,7 +225,7 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
                 <MapEvents />
                 {drawing ? <Rectangle bounds={[boundsStart, boundsEnd]} /> : null}
                 {rects.map((rect, index) => {
-                    let inside = pointInRect([coords[counter][1], coords[counter][0]], rect.bounds);
+                    let inside = pointInRect([coords[counter][LAT_INDEX], coords[counter][LNG_INDEX]], rect.bounds);
                     let fillColor;
                     switch (rect.type) {
                         case "Start":
@@ -226,7 +247,7 @@ const MapDisplay = ({ coords, setLapsCallback }) => {
                     }} />
                 })}
                 {/* <Marker position={[coords[0][1], coords[0][0]]} icon={marker} /> */}
-                <Marker position={[coords[counter][1], coords[counter][0]]} icon={marker} />
+                <Marker position={[coords[counter][LAT_INDEX], coords[counter][LNG_INDEX]]} icon={marker} />
                 {/* <Marker position={mousePos} icon={marker} /> */}
             </MapContainer>
         </div>
