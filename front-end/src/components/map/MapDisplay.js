@@ -21,16 +21,16 @@ function getBounds(coords) {
      */
     let minLat = Infinity, minLng = Infinity, maxLat = -Infinity, maxLng = -Infinity;
     coords.forEach(elem => {
-        if (elem[LAT_INDEX] > maxLat) maxLat = elem[0];
-        if (elem[LAT_INDEX] < minLat) minLat = elem[0];
-        if (elem[LNG_INDEX] > maxLng) maxLng = elem[1];
-        if (elem[LNG_INDEX] < minLng) minLng = elem[1];
+        if (elem[LAT_INDEX] > maxLat) maxLat = elem[LAT_INDEX];
+        if (elem[LAT_INDEX] < minLat) minLat = elem[LAT_INDEX];
+        if (elem[LNG_INDEX] > maxLng) maxLng = elem[LNG_INDEX];
+        if (elem[LNG_INDEX] < minLng) minLng = elem[LNG_INDEX];
     });
     // Add some margin on sides so the line isn't right on the edge of the screen
     let latMargin = (maxLat - minLat) * 0.5;
     let lngMargin = (maxLng - minLng) * 0.5;
-    let bounds = [[minLng - lngMargin, minLat - latMargin], [maxLng + lngMargin, maxLat + latMargin]]
-    // console.log("Boudns are:", bounds, minLat, maxLat, minLng, maxLng)
+    let bounds = [[minLat - latMargin, minLng - lngMargin], [maxLat + latMargin, maxLng + lngMargin]]
+    console.log("Boudns are:", bounds, minLat, maxLat, minLng, maxLng)
     // console.log("coords is:", coords);
     return bounds;
 }
@@ -96,8 +96,8 @@ function findLapTimes(coords, rects) {
 
 const MapDisplay = ({ setLapsCallback }) => {
 
-    const [coords, setCoords] = useState([[0, 0, 0], [20, 20, 1]]);
-    const [bounds, setBounds] = useState(getBounds(coords));
+    const [coords, setCoords] = useState([]);
+    const [bounds, setBounds] = useState([]);
     const [counter, setCounter] = useState(0);
     const [drawing, setDrawing] = useState(false);
     const [boundsStart, setBoundsStart] = useState([0, 0]);
@@ -118,6 +118,7 @@ const MapDisplay = ({ setLapsCallback }) => {
     });
 
     useEffect(() => {
+        if (coords.length == 0) return;
         setBounds(getBounds(coords));
         console.log("new bounds!")
     }, [coords])
@@ -178,6 +179,8 @@ const MapDisplay = ({ setLapsCallback }) => {
     }
 
     function loadFile(e) {
+        setCoords([]);
+        setBounds([]);
         let chosen = e.target.value;
         console.log(chosen);
         fetch(`http://${window.location.hostname}:8080/analyze?` + new URLSearchParams({
@@ -210,46 +213,50 @@ const MapDisplay = ({ setLapsCallback }) => {
                     return (<option key={f} value={f}>{f}</option>);
                 })}
             </select>
-            <MapContainer key={bounds} bounds={bounds} style={{ height: "100%", width: "100%", zIndex: "0" }} dragging={true} scrollWheelZoom={true} >
-                {/* <GeoJSON key={coords[0]} data={[{
-                    type: "LineString",
-                    coordinates: coords.map(c => [c[LAT_INDEX], c[LNG_INDEX]])
-                },
-                ]} style={{ stroke: true, color: "#2222ff", weight: 5 }}></GeoJSON> */}
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
-                    subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
-                    maxZoom={20}
-                />
-                <MapEvents />
-                {drawing ? <Rectangle bounds={[boundsStart, boundsEnd]} /> : null}
-                {rects.map((rect, index) => {
-                    let inside = pointInRect([coords[counter][LAT_INDEX], coords[counter][LNG_INDEX]], rect.bounds);
-                    let fillColor;
-                    switch (rect.type) {
-                        case "Start":
-                            fillColor = "#00ff00";
-                            break;
-                        case "End":
-                            fillColor = "#ff0000";
-                            break;
-                        case "Checkpoint":
-                            fillColor = "#0000ff";
-                            break;
-                        default:
-                            break;
-                    }
-                    return <Rectangle className="map_ui_rect" bounds={rect.bounds} key={[rect.bounds, inside]} color={inside ? '#00ff00' : '#000000'} fillColor={fillColor} eventHandlers={{
-                        click: (e) => {
-                            setRects(rects.toSpliced(index, 1));
+            {bounds.length > 0 && coords.length > 0 ?
+                <MapContainer key={bounds} bounds={bounds} style={{ height: "100%", width: "100%", zIndex: "0" }} dragging={true} scrollWheelZoom={true} >
+                    <GeoJSON key={coords[0]} data={[{
+                        type: "LineString",
+                        coordinates: coords.map(c => [c[LNG_INDEX], c[LAT_INDEX]])
+                    },
+                    ]} style={{ stroke: true, color: "#2222ff", weight: 1 }}></GeoJSON>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+                        subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+                        maxZoom={20}
+                    />
+                    <MapEvents />
+                    {drawing ? <Rectangle bounds={[boundsStart, boundsEnd]} /> : null}
+                    {rects.map((rect, index) => {
+                        let inside = pointInRect([coords[counter][LAT_INDEX], coords[counter][LNG_INDEX]], rect.bounds);
+                        let fillColor;
+                        switch (rect.type) {
+                            case "Start":
+                                fillColor = "#00ff00";
+                                break;
+                            case "End":
+                                fillColor = "#ff0000";
+                                break;
+                            case "Checkpoint":
+                                fillColor = "#0000ff";
+                                break;
+                            default:
+                                break;
                         }
-                    }} />
-                })}
-                {/* <Marker position={[coords[0][1], coords[0][0]]} icon={marker} /> */}
-                <Marker position={[coords[counter][LAT_INDEX], coords[counter][LNG_INDEX]]} icon={marker} />
-                {/* <Marker position={mousePos} icon={marker} /> */}
-            </MapContainer>
+                        return <Rectangle className="map_ui_rect" bounds={rect.bounds} key={[rect.bounds, inside]} color={inside ? '#00ff00' : '#000000'} fillColor={fillColor} eventHandlers={{
+                            click: (e) => {
+                                setRects(rects.toSpliced(index, 1));
+                            }
+                        }} />
+                    })}
+                    {/* <Marker position={[coords[0][1], coords[0][0]]} icon={marker} /> */}
+                    <Marker position={[coords[counter][LAT_INDEX], coords[counter][LNG_INDEX]]} icon={marker} />
+                    {/* <Marker position={mousePos} icon={marker} /> */}
+                </MapContainer>
+                : <></>
+            }
+
         </div>
 
 

@@ -18,12 +18,12 @@ const LapTimes = ({ laps }) => {
         )
     }
     return (
-        <>
+        <div className="laptimes_container">
             {laps.toSorted((a, b) => a.start - b.start).map((lap, index) => {
                 return (
-                    <div key={[lap, index]} className="laptimes">
+                    <div key={[lap, index]} className="laptimes_lap">
                         <button className="laptimes_accordion" onClick={() => toggleOpen(index)}>Lap {index}: {((lap.end - lap.start) / 1000).toFixed(SIGFIGS)}s <span className="laptimes_drilldown">V</span></button>
-                        <div className="laptimes_panel" style={{maxHeight: closedIndices[index] ? "0px" : "100vh"}}>
+                        <div className="laptimes_panel" style={{display: closedIndices[index] ? "none" : 'block'}}>
                             <table style={{width: "100%"}}>
                                 <tbody>
                                     {lap.checkpoints.map((checkpoint, index) => {
@@ -40,7 +40,7 @@ const LapTimes = ({ laps }) => {
                     </div>
                 )
             })}
-        </>
+        </div>
     )
 
 }

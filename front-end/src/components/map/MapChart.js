@@ -11,7 +11,7 @@ const MapChart = () => {
             <div style={{flex: "4 0 75%"}}>
                 <MapDisplay coords={coords} setLapsCallback={setLaps}/>
             </div>
-            <div style ={{flex: "0 0 25%", color: "black"}}>
+            <div style ={{flex: "0 0 25%", color: "black", height: "100%"}}>
                 <LapTimes laps={laps}/>
             </div>
         </div>
