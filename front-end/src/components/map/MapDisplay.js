@@ -94,7 +94,7 @@ function findLapTimes(coords, rects) {
     return laps;
 }
 
-const MapDisplay = ({ setLapsCallback }) => {
+const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
     const [coords, setCoords] = useState([]);
     const [bounds, setBounds] = useState([]);
@@ -106,8 +106,8 @@ const MapDisplay = ({ setLapsCallback }) => {
     const [currTool, setCurrTool] = useState(0);
     const [files, setFiles] = useState([]);
 
+    // Move car around track
     useEffect(() => {
-
         const timerId = setInterval(() => {
             setCounter(counter + 1);
             if (counter >= coords.length - 1) {
@@ -117,11 +117,24 @@ const MapDisplay = ({ setLapsCallback }) => {
         return () => clearInterval(timerId);
     });
 
+    // Re-zoom map when coords change
     useEffect(() => {
-        if (coords.length == 0) return;
+        if (coords.length === 0) return;
         setBounds(getBounds(coords));
         console.log("new bounds!")
     }, [coords])
+
+    // Go to selected lap in animation
+    useEffect(() => {
+        for(let i = 0; i < coords.length; i++) {
+            if(coords[i][TIME_INDEX] >= gotoTime){
+                console.log("Going to time", gotoTime, "at pos", i);
+                setCounter(i);
+                break;
+            }
+
+        }
+    }, [gotoTime, coords]);
 
     useEffect(() => {
         fetch(`http://${window.location.hostname}:8080/files`)

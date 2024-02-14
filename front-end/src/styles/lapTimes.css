@@ -11,6 +11,12 @@
      transition: 0.4s;
  }
 
+ .laptimes_accordion:active {
+     box-shadow: 0px 0px 5px #000000;
+     transition: box-shadow 1s;
+     transition-delay: -0.5s;
+ }
+
  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
  .laptimes_active,
  .laptimes_accordion:hover {
@@ -30,18 +36,34 @@
  }
 
  td:last-child {
-    text-align: right;
+     text-align: right;
  }
 
-.laptimes_lap {
-    font-size: 20px;
+ .laptimes_lap {
+     font-size: 20px;
  }
 
  .laptimes_drilldown {
-    float: right;
+     float: right;
  }
 
  .laptimes_container {
-    overflow: auto;
-    height: 90%;
+     overflow: auto;
+     height: 90%;
+ }
+
+ .laptimes_download {
+     background-color: #aaa;
+     color: #444;
+     cursor: pointer;
+     padding: 15px;
+     width: 100%;
+     text-align: left;
+     border: none;
+     outline: none;
+     transition: 0.4s;
+ }
+
+ .laptimes_download:hover {
+     background-color: #999;
  }
