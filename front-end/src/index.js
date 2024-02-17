@@ -2,12 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import App from './components/App';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
-    
+    <Router>
+      <Routes>
+        <Route path="/" Component={App} />
+        {/* <Route path="/video/:key" component={VideoPage} /> */}
+      </Routes>
+    </Router>
   </React.StrictMode>
 );
 

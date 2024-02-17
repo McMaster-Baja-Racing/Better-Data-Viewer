@@ -14,7 +14,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [columns, setColumns] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [displayPage, setDisplayPage] = useState(0);
-  const [graphType, setGraphType] = useState("");
+  const [graphType, setGraphType] = useState("line");
   const [liveCheck, setLiveCheck] = useState(false);
   const [seriesInfo, setSeriesInfo] = useState([]);
   const [files, setFiles] = useState([])
@@ -51,6 +51,8 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   //Stuff for handling final submit
   const handleSubmit = () => {
+    if (graphType == "video") {
+    }
     setChartInformation({
       "files": seriesInfo,
       "live": liveCheck,
