@@ -52,6 +52,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   //Stuff for handling final submit
   const handleSubmit = () => {
     if (graphType == "video") {
+      window.open('http://localhost:3000/video', 'Popup', 'width=400,height=400');
     }
     setChartInformation({
       "files": seriesInfo,
