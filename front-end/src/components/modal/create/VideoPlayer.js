@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import '../../../styles/videoPlayerStyles.css';
 
 const VideoPlayer = () => {
-    
-  const [videoURL, setVideoURL] = useState('');
 
   useEffect(() => {
     // Fetch data when the component mounts
@@ -13,9 +12,21 @@ const VideoPlayer = () => {
       });
   }, []); // Empty dependency array ensures that the fetch is only performed once
 
+  
+  const [videoURL, setVideoURL] = useState('');
+  const videoRef = useRef(null);
+
+  const togglePlay = () => {
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  }
+
   return (
     <div>
-      <video src={videoURL} autoPlay={true} />
+      <video src={videoURL} ref={videoRef} onClick={togglePlay} />
     </div>
   );
 };
