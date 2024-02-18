@@ -3,21 +3,40 @@ import '../../../styles/videoPlayerStyles.css';
 import { useParams } from 'react-router-dom';
 
 const VideoPlayer = () => {
-
+  
   const { key } = useParams();
+    
+  const [videoURL, setVideoURL] = useState('');
+  const [currentTime, setCurrentTime] = useState(0);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     // Fetch data when the component mounts
     fetch(`http://${window.location.hostname}:8080/files/${key}`)
       .then((response) => response.blob())
       .then((blob) => {
-        setVideoURL(URL.createObjectURL(blob));
+        const url = URL.createObjectURL(blob)
+        setVideoURL(url);
+
+        return () => {
+          URL.revokeObjectURL(url);
+        };
       });
   }, []); // Empty dependency array ensures that the fetch is only performed once
 
-  
-  const [videoURL, setVideoURL] = useState('');
-  const videoRef = useRef(null);
+  useEffect(() => {
+    const handleTimeUpdate = () => {
+      setCurrentTime(Math.round(videoRef.current.currentTime * 1000)); // Convert to milliseconds
+    };
+    videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
+    return () => {
+      videoRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('Current time:', currentTime);
+  }, [currentTime]);
 
   const togglePlay = () => {
     if (videoRef.current.paused) {
