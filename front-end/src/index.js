@@ -11,7 +11,7 @@ root.render(
     <Router>
       <Routes>
         <Route path="/" Component={App} />
-        <Route path="/video" Component={VideoPlayer} />
+        <Route path="/video/:key" Component={VideoPlayer} />
       </Routes>
     </Router>
   </React.StrictMode>

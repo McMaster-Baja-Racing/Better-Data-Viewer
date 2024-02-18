@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../../styles/videoPlayerStyles.css';
+import { useParams } from 'react-router-dom';
 
 const VideoPlayer = () => {
 
+  const { key } = useParams();
+
   useEffect(() => {
     // Fetch data when the component mounts
-    fetch(`http://${window.location.hostname}:8080/files/IMG_1012.mp4`)
+    fetch(`http://${window.location.hostname}:8080/files/${key}`)
       .then((response) => response.blob())
       .then((blob) => {
         setVideoURL(URL.createObjectURL(blob));
