@@ -172,6 +172,17 @@ const Chart = ({ chartInformation }) => {
         setChartOptions((prevState) => {
 
             return {
+                plotOptions: {
+                    series: {
+                        point: {
+                            events: {
+                                mouseOver: function () {
+                                    console.log('Timestamp:', this.x);
+                                }
+                            }
+                        }
+                    }
+                },
                 series: (() => {
                     var series = [];
                     if (chartInformation.type !== "colour") {
