@@ -15,17 +15,8 @@ export const TimestampProvider = ({ children }) => {
 
   useEffect(() => {
     setOffset(new Date(fileStart) - new Date(videoStart))
+    console.log('New offset:', new Date(fileStart) - new Date(videoStart))
   }, [videoStart, fileStart])
-
-  useEffect(() => {
-    const newTimestamp = chartTimestamp - offset
-    if (videoTimestamp != newTimestamp) setVideoTimestamp(newTimestamp)
-  }, [chartTimestamp, offset])
-
-  useEffect(() => {
-    const newTimestamp = videoTimestamp + offset
-    if (videoTimestamp != newTimestamp) setChartTimestamp(newTimestamp)
-  }, [videoTimestamp, offset])
 
   return (
     <TimestampContext.Provider

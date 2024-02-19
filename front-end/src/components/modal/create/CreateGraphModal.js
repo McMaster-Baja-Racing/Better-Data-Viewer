@@ -7,8 +7,11 @@ import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 import { VideoSelect } from "./VideoSelect";
+import { useTimestampContext } from "../../../TimestampProvider";
 
 export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage }) => {
+
+  const { setVideoStart, setFileStart } = useTimestampContext()
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -52,6 +55,8 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   //Stuff for handling final submit
   const handleSubmit = () => {
     if (graphType == "video") {
+      setVideoStart(selectedVideo.fileHeaders[0])
+      setFileStart(fileTimestamps.find(timestamp => timestamp.key == selectedFiles[0].key).fileHeaders[0])
       window.open(`http://localhost:3000/video/${selectedVideo.key}`, 'Popup', 'width=1000,height=1000');
     }
     setChartInformation({
