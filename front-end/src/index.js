@@ -4,15 +4,18 @@ import './styles/index.css';
 import App from './components/App';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import VideoPlayer from './components/modal/create/VideoPlayer';
+import { TimestampProvider } from './TimestampProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Router>
-      <Routes>
-        <Route path="/" Component={App} />
-        <Route path="/video/:key" Component={VideoPlayer} />
-      </Routes>
+      <TimestampProvider>
+        <Routes>
+          <Route path="/" Component={App} />
+          <Route path="/video/:key" Component={VideoPlayer} />
+        </Routes>
+      </TimestampProvider>
     </Router>
   </React.StrictMode>
 );
