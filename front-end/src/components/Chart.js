@@ -4,7 +4,6 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
-import { useTimestampContext } from '../TimestampProvider';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
@@ -12,7 +11,6 @@ HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
 const Chart = ({ chartInformation }) => {
-    const { chartTimestamp, setChartTimestamp } = useTimestampContext()
 
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
@@ -180,8 +178,7 @@ const Chart = ({ chartInformation }) => {
                         point: {
                             events: {
                                 mouseOver: function () {
-                                    console.log('Chart Timestamp:', this.x);
-                                    setChartTimestamp(this.x)
+                                    // console.log('Chart Timestamp:', this.x);
                                 }
                             }
                         }

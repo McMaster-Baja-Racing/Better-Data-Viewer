@@ -54,6 +54,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
 
         var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
 
+        console.log(selectColumns)
+
         // Create the new series
         const newSeries = {
             "columns": selectColumns,

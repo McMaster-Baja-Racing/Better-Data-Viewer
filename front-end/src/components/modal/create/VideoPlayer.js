@@ -1,14 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../../styles/videoPlayerStyles.css';
 import { useParams } from 'react-router-dom';
-import { useTimestampContext } from '../../../TimestampProvider';
 
 const VideoPlayer = () => {
   
   const { key } = useParams();
-  const { videoTimestamp, setVideoTimestamp, chartTimestamp, offset } = useTimestampContext()
-
-  console.log('Timestamp:', chartTimestamp, 'Offset:', offset)
     
   const [videoURL, setVideoURL] = useState('');
   const videoRef = useRef(null);
@@ -29,7 +25,7 @@ const VideoPlayer = () => {
 
   useEffect(() => {
     const handleTimeUpdate = () => {
-      setVideoTimestamp(videoRef.current.currentTime * 1000); // Convert to milliseconds
+      // setvideoTimespan(videoRef.current.currentTime * 1000); // Convert to milliseconds
     };
     videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
     return () => {
@@ -37,11 +33,11 @@ const VideoPlayer = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const newTimestamp = chartTimestamp - offset;
-    if (videoTimestamp != newTimestamp) setVideoTimestamp(newTimestamp);
-    if (newTimestamp) videoRef.current.currentTime = newTimestamp / 1000
-  }, [chartTimestamp, offset]);
+  // useEffect(() => {
+  //   const newTimestamp = chartTimestamp - offset;
+  //   if (videoTimespan != newTimestamp) setvideoTimespan(newTimestamp);
+  //   if (newTimestamp) videoRef.current.currentTime = newTimestamp / 1000
+  // }, [chartTimestamp, offset]);
 
   const togglePlay = () => {
     if (videoRef.current.paused) {

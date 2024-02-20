@@ -2,21 +2,21 @@ import '../../../styles/modalStyles.css';
 import '../../../styles/videoSelectStyles.css';
 import { AiFillFolder } from 'react-icons/ai';
 
-export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, filteredFiles, setFilteredFiles, fileTimestamps, videoTimestamps }) => {
+export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, filteredFiles, setFilteredFiles, fileTimespans, videoTimespans }) => {
     
     // Filter files to those that have a timestamp wihtin the range of the selected video
-    const filterFiles = (videoTimestamp) => {
+    const filterFiles = (videoTimespan) => {
         let tempFilteredFiles = []
-        const videoStart = new Date (videoTimestamp.fileHeaders[0])
-        const videoEnd = new Date (videoTimestamp.fileHeaders[1])
+        const videoStart = new Date (videoTimespan.fileHeaders[0])
+        const videoEnd = new Date (videoTimespan.fileHeaders[1])
         files.forEach(file => {
-            const fileTimestamp = fileTimestamps.find(timestamp => timestamp.key == file.key)
-            if (fileTimestamp == undefined) return
-            const fileStart = new Date(fileTimestamp.fileHeaders[0])
-            const fileEnd = new Date(fileTimestamp.fileHeaders[1])
+            const fileTimespan = fileTimespans.find(timespan => timespan.key == file.key)
+            if (fileTimespan == undefined) return
+            const fileStart = new Date(fileTimespan.fileHeaders[0])
+            const fileEnd = new Date(fileTimespan.fileHeaders[1])
             if (fileStart < videoEnd && videoStart < fileEnd) tempFilteredFiles.push(file)
         })
-        setSelectedVideo(videoTimestamp)
+        setSelectedVideo(videoTimespan)
         setFilteredFiles(tempFilteredFiles)
     }
 
@@ -26,22 +26,22 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
             <h3>Select Video</h3>
             <div className="videoSelect">
                 <div className="videoContainer">
-                    {videoTimestamps.map((videoTimestamp, index) => (
+                    {videoTimespans.map((videoTimespan, index) => (
                         <label
                             key={index}
-                            className={`videoLabel ${selectedVideo === videoTimestamp ? 'selected' : ''}`}
+                            className={`videoLabel ${selectedVideo === videoTimespan ? 'selected' : ''}`}
                             htmlFor={`video-${index}`}
                         >
                             <input 
                                 type="radio"
                                 id={`video-${index}`} 
                                 name="video" 
-                                value={videoTimestamp} 
-                                onChange={() => {filterFiles(videoTimestamp)}} 
-                                checked={selectedVideo === videoTimestamp}
-                                disabled={fileTimestamps.length === 0}
+                                value={videoTimespan} 
+                                onChange={() => {filterFiles(videoTimespan)}} 
+                                checked={selectedVideo === videoTimespan}
+                                disabled={fileTimespans.length === 0}
                             />
-                            {(videoTimestamp.key.split('.')[0]).replace('_', ' ')}
+                            {(videoTimespan.key.split('.')[0]).replace('_', ' ')}
                         </label>
                     ))}
                 </div>

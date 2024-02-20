@@ -7,11 +7,8 @@ import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 import { VideoSelect } from "./VideoSelect";
-import { useTimestampContext } from "../../../TimestampProvider";
 
 export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage }) => {
-
-  const { setVideoStart, setFileStart } = useTimestampContext()
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -23,8 +20,8 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [files, setFiles] = useState([])
   const [filteredFiles, setFilteredFiles] = useState([])
   const [selectedVideo, setSelectedVideo] = useState("")
-  const [videoTimestamps, setVideoTimestamps] = useState([])
-  const [fileTimestamps, setFileTimestamps] = useState([])
+  const [videoTimespans, setvideoTimespans] = useState([])
+  const [fileTimespans, setfileTimespans] = useState([])
 
   useEffect(() => {
       // Fetch data when the component mounts
@@ -36,12 +33,12 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
       fetch(`http://${window.location.hostname}:8080/timespan/folder/mp4`)
         .then((response) => response.json())
         .then((data) => {
-            setVideoTimestamps(data.files);
+            setvideoTimespans(data.files);
         });
     fetch(`http://${window.location.hostname}:8080/timespan/folder/csv`)
         .then((response) => response.json())
         .then((data) => {
-            setFileTimestamps(data.files);
+            setfileTimespans(data.files);
         });
     }, []); // Empty dependency array ensures that the fetch is only performed once
 
@@ -55,8 +52,6 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   //Stuff for handling final submit
   const handleSubmit = () => {
     if (graphType == "video") {
-      setVideoStart(selectedVideo.fileHeaders[0])
-      setFileStart(fileTimestamps.find(timestamp => timestamp.key == selectedFiles[0].key).fileHeaders[0])
       window.open(`http://localhost:3000/video/${selectedVideo.key}`, 'Popup', 'width=1000,height=1000');
     }
     setChartInformation({
@@ -96,7 +91,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   const pages = [
     <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck}/>,
-    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} filteredFiles={filteredFiles} setFilteredFiles={setFilteredFiles} fileTimestamps={fileTimestamps} videoTimestamps={videoTimestamps}/>,
+    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} filteredFiles={filteredFiles} setFilteredFiles={setFilteredFiles} fileTimespans={fileTimespans} videoTimespans={videoTimespans}/>,
     <div className='file-Storage-Container'>
       <div className="file-browser">
         <h3>Choose Files</h3>
