@@ -3,7 +3,7 @@ import Help from './Help';
 import analyzerData from '../../analyzerData.js'
 import '../../../styles/analyzersAndSeriesStyles.css';
 import { useState, useRef, useEffect } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType }) => {
+const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType, fileTimespans }) => {
 
     // Determines if a series already exists with the same columns and analyzer
     const isDuplicateSeries = (newSeries) => {
@@ -49,12 +49,13 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
 
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
-            selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
+            const columnJSON = JSON.parse(document.getElementsByClassName(i)[0].value)
+            const fileTimespan = fileTimespans.find(timespan => timespan.key === columnJSON.filename)
+            columnJSON["timespan"] = fileTimespan.fileHeaders
+            selectColumns.push(columnJSON);
         }
 
         var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
-
-        console.log(selectColumns)
 
         // Create the new series
         const newSeries = {

@@ -20,25 +20,27 @@ const App = () => {
   //    [
   //      {
   //        columns: [
-  //          {header:"Timestampt", filename:"PRIM_RPM.csv"},
-  //          {header:"RPM", filename:"PRIM_RPM.csv"},
+  //          {header:"Timestampt", filename:"PRIM_RPM.csv", timespan: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"]},
+  //          {header:"RPM", filename:"PRIM_RPM.csv", timespan: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"]},
   //        ],
   //        analysis: "none"
   //      },
   //      {
   //        columns: [
-  //          {header:"RPM", filename:"SEC_RPM.csv"},
-  //          {header:"Timestampt", filename:"SEC_RPM.csv"}
+  //          {header:"RPM", filename:"SEC_RPM.csv", timespan: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"]},
+  //          {header:"Timestampt", filename:"SEC_RPM.csv", timespan: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"]}
   //        ],
   //        analysis: "rollAvg"
   //      }
   //   ],
+  //   video: {fileHearders: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"], key: "video.mp4", size: 1234567890"},
   //   live: false,
   //   type: "line"
   // }
 
   const [chartInformation, setChartInformation] = useState({
     files: [],
+    video: { fileHearders: [], key: "", size: 0 },
     live: false,
     type: "line"
   });

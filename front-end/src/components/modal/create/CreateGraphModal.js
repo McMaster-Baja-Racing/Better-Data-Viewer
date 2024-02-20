@@ -19,7 +19,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [seriesInfo, setSeriesInfo] = useState([]);
   const [files, setFiles] = useState([])
   const [filteredFiles, setFilteredFiles] = useState([])
-  const [selectedVideo, setSelectedVideo] = useState("")
+  const [selectedVideo, setSelectedVideo] = useState({ fileHearders: [], key: "", size: 0 })
   const [videoTimespans, setvideoTimespans] = useState([])
   const [fileTimespans, setfileTimespans] = useState([])
 
@@ -56,6 +56,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
     }
     setChartInformation({
       "files": seriesInfo,
+      "video": selectedVideo,
       "live": liveCheck,
       "type": graphType == "video" ? "line" : graphType
     })
@@ -112,7 +113,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
       </div>
     </div>,
 
-    <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>
+    <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType} fileTimespans={fileTimespans}/>
   ]
 
   //render the modal JSX in the portal div.
