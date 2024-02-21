@@ -26,59 +26,20 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   //Stuff for handling final submit
   const handleSubmit = () => {
-    switch (buttonID) {
-      case 0:
-        setChartInformation([
-          {
-            files: seriesInfo,
-            live: liveCheck,
-            type: graphType,
-          },
-          chartInformation[1],
-          chartInformation[2],
-          chartInformation[3],
-        ])
-        break;
-      case 1:
-        setChartInformation([
-          chartInformation[0],
-          {
-            files: seriesInfo,
-            live: liveCheck,
-            type: graphType,
-          },
-          chartInformation[2],
-          chartInformation[3],
-        ])
-        break;
-      case 2:
-        setChartInformation([
-          chartInformation[0],
-          chartInformation[1],
-          {
-            files: seriesInfo,
-            live: liveCheck,
-            type: graphType,
-          },
-          chartInformation[3],
-        ])
-        break;
-      case 3:
-        setChartInformation([
-          chartInformation[0],
-          chartInformation[1],
-          chartInformation[2],
-          {
-            files: selectedFiles,
-            live: liveCheck,
-            type: graphType,
-          },
-        ])
-        break;
-      default:
-        break;
-    }
-  }  
+    const updatedChartInformation = chartInformation.map((chart, index) => {
+      if (index === buttonID) {
+        return {
+          files: (index === 4) ? selectedFiles : seriesInfo,
+          live: liveCheck,
+          type: graphType,
+        };
+      } else {
+        return chart;
+      }
+    });
+  
+    setChartInformation(updatedChartInformation);
+  }
   
 
   // This method will return headers when supplied with a list of files. Added support for folders is neccesary
