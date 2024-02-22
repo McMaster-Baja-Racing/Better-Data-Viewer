@@ -4,6 +4,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
+import { set } from 'react-hook-form';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
@@ -268,6 +269,44 @@ const Chart = ({ chartInformation }) => {
         })
         
     }, [parsedData, chartInformation, fileNames])
+
+    const [videoTimestamp, setVideoTimestamp] = useState(0);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        if (!chartInformation.window) return;
+
+        const handleWindowLoad = () => {
+            setIsLoaded(true)
+        }
+
+        chartInformation.window.addEventListener('load', handleWindowLoad)
+
+        return () => {
+            chartInformation.window.removeEventListener('load', handleWindowLoad)
+        }
+    }, [chartInformation.window])
+
+    useEffect(() => {
+        if (!chartInformation.window || !isLoaded) return;
+    
+        const videoElement = chartInformation.window.document.getElementById('video');
+        if (!videoElement) return;
+    
+        const handleTimeUpdate = () => {
+            setVideoTimestamp(videoElement.currentTime);
+        };
+        
+        videoElement.addEventListener('timeupdate', handleTimeUpdate);
+        
+        return () => {
+            videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+        };
+    }, [isLoaded]);
+
+    useEffect(() => {
+        console.log(videoTimestamp)
+    }, [videoTimestamp])
 
     // This function is used to throttle the resize observer
     function throttle(f, delay) {

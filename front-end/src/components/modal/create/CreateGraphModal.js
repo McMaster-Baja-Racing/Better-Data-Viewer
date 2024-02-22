@@ -55,14 +55,17 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
       "files": seriesInfo,
       "video": selectedVideo,
       "live": liveCheck,
-      "type": graphType == "video" ? "line" : graphType
-    }
-
+      "type": graphType === "video" ? "line" : graphType,
+      "window": null
+    };
+  
     if (graphType == "video") {
-      window.open(`http://localhost:3000/video?chartInformation=${encodeURIComponent(JSON.stringify(chartInformation))}`, 'Popup', 'width=1000,height=1000');
+      chartInformation.window = window.open(`http://localhost:3000/video?chartInformation=${encodeURIComponent(JSON.stringify(chartInformation))}`, 'Popup', 'width=1000,height=1000');
     }
-    setChartInformation(chartInformation)
-  }
+  
+    setChartInformation(chartInformation);
+  };
+  
 
   // This method will return headers when supplied with a list of files. Added support for folders is neccesary
   const getHeaders = async (files) => {

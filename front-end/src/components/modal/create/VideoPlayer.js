@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom';
 const VideoPlayer = () => {
   
   const chartInformation = JSON.parse(decodeURIComponent(new URLSearchParams(useLocation().search).get('chartInformation')));
-  console.log(chartInformation);
     
   const [videoURL, setVideoURL] = useState('');
   const videoRef = useRef(null);
@@ -50,7 +49,7 @@ const VideoPlayer = () => {
 
   return (
     <div>
-      <video src={videoURL} ref={videoRef} onClick={togglePlay} />
+      <video src={videoURL} ref={videoRef} onClick={togglePlay} id='video'/>
     </div>
   );
 };

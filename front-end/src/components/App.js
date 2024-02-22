@@ -36,13 +36,15 @@ const App = () => {
   //   video: {fileHearders: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"], key: "video.mp4", size: 1234567890"},
   //   live: false,
   //   type: "line"
+  //   window: Window | null
   // }
 
   const [chartInformation, setChartInformation] = useState({
     files: [],
     video: { fileHearders: [], key: "", size: 0 },
     live: false,
-    type: "line"
+    type: "line",
+    window: null,
   });
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
