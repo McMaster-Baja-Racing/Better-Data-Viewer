@@ -101,7 +101,6 @@ const Chart = ({ chartInformation }) => {
         }
 
         return () => clearInterval(intervalId);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chartInformation]);
 
     const chartRef = useRef(null);
@@ -115,12 +114,6 @@ const Chart = ({ chartInformation }) => {
         refreshRate: 100,
     });
 
-    // useEffect(() => {
-    //     if (ref.current) {
-    //         chartRef.current = Highcharts.chart(ref.current, chartOptions);
-    //     }
-    // }, [ref, chartOptions]);
-
     return (
 
         <div className="chartContainer" ref={ref}>
@@ -128,6 +121,7 @@ const Chart = ({ chartInformation }) => {
                 <HighchartsReact
                     highcharts={Highcharts}
                     options={chartOptions}
+                    callback={chart => { chartRef.current = chart; }}
                 />
             </div>
             {loading && <img className="loading" src={loadingImg} alt="Loading..." />}
