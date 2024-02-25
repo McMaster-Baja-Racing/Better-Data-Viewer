@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ApiUtil } from '../lib/apiUtils.js';
 import bajalogo from '../assets/bajalogo.png';
 import loadingImg from '../assets/loading.gif';
+import { MAX_CHARTS } from './chartsConfig';
 
 const icons = {};
 const importAll = r => {
@@ -33,8 +34,8 @@ const Topbar = ({ setModal, numGraphs, setNumGraphs }) => {
         if (num < 1) {
             num = 1;
         }
-        if (num > 6) {
-            num = 6;
+        if (num > MAX_CHARTS) {
+            num = MAX_CHARTS;
         }
         setNumGraphs(num);
     }

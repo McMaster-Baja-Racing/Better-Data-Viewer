@@ -5,8 +5,6 @@ import '../../../styles/analyzersAndSeriesStyles.css';
 import { useState, useEffect } from 'react';
 const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType }) => {
 
-
-    console.log(analyzerData);
     // Determines if a series already exists with the same columns and analyzer
     const isDuplicateSeries = (newSeries) => {
         return seriesInfo.some((series) => {

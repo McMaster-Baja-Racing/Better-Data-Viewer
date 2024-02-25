@@ -6,6 +6,7 @@ import { useRef } from 'react';
 import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
+import { MAX_CHARTS } from '../../chartsConfig';
 
 export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage, chartInformation, buttonID }) => {
 
@@ -29,7 +30,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
     const updatedChartInformation = chartInformation.map((chart, index) => {
       if (index === buttonID) {
         return {
-          files: (index === 4) ? selectedFiles : seriesInfo,
+          files: (index === MAX_CHARTS) ? selectedFiles : seriesInfo,
           live: liveCheck,
           type: graphType,
         };

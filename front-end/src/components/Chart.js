@@ -36,7 +36,7 @@ const Chart = ({ chartInformation }) => {
         for (var i = 0; i < chartInformation.files.length; i++) {
             // Create a list of all files in order (formatting for backend)
             var files = [];
-            console.log(chartInformation.files)
+            
             for (var j = 0; j < chartInformation.files[i].columns.length; j++) {
                 files.push(chartInformation.files[i].columns[j].filename);
             }

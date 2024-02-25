@@ -1,3 +1,5 @@
+const MAX_CHARTS = 6;
+
 // This file specifies the styles for the various number of Graphs that can be displayed on the front-end.
 const chartStyles = {
     1: {
@@ -38,4 +40,4 @@ const chartStyles = {
     },
 };
 
-export default chartStyles;
+export { chartStyles, MAX_CHARTS };

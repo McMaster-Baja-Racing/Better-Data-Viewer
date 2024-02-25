@@ -4,6 +4,7 @@ import { CreateGraphModal } from "./modal/create/CreateGraphModal";
 import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
 import { DownloadModal } from './modal/download/downloadModal';
+import { MAX_CHARTS } from './chartsConfig';
 import React, { useEffect, useState } from 'react';
 import Charts from './Charts';
 import Topbar from './Topbar';
@@ -41,27 +42,13 @@ const App = () => {
   } 
   */
 
-  const [chartInformation, setChartInformation] = useState([
-    {
-      files: [],
-      live: false,
-      type: "line"
-    },
-    {
-      files: [],
-      live: false,
-      type: "line"
-    },
-    {
-      files: [],
-      live: false,
-      type: "line"
-    },
-    {
-      files: [],
-      live: false,
-      type: "line"
-    }]);
+  const [chartInformation, setChartInformation] = useState(
+    Array.from({ length: MAX_CHARTS }, () => ({
+        files: [],
+        live: false,
+        type: "line"
+    }))
+  );
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
   const [successMessage, setSuccessMessage] = useState({})

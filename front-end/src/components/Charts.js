@@ -1,7 +1,7 @@
 import Chart from './Chart';
 import '../styles/charts.css';
 import newGraphImg from '../assets/icons/newGraph2.svg';
-import chartStyles from './chartsConfig';
+import { chartStyles } from './chartsConfig';
 
 const Charts = ({ chartInformation, setModal, setButtonID, numGraphs }) => {
 
