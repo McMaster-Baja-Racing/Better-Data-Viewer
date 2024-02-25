@@ -10,7 +10,7 @@ const importAll = r => {
 }
 importAll(require.context('../assets/icons', false, /\.(png|jpe?g|svg)$/));
 
-const Topbar = ({ setModal }) => {
+const Topbar = ({ setModal, numGraphs, setNumGraphs }) => {
 
     const [liveStatus, setLiveStatus] = useState(false);
     //This function notifies the backend to begin listening on a certain port for live data
@@ -27,6 +27,16 @@ const Topbar = ({ setModal }) => {
         } else {
             setLiveStatus(false);
         }
+    }
+
+    const updateNumGraphs = (num) => {
+        if (num < 1) {
+            num = 1;
+        }
+        if (num > 6) {
+            num = 6;
+        }
+        setNumGraphs(num);
     }
 
     return (
@@ -48,6 +58,13 @@ const Topbar = ({ setModal }) => {
                 </button>
                 <button title="Download Files" className="downloadFiles" onClick={() => setModal('Download')}>
                 <img className="icon"src={icons['./download.svg']} alt="Download" />
+                </button>
+                <button title="PlusGraph" className="plusGraph" onClick={() => updateNumGraphs(numGraphs-1)}>
+                    -
+                </button>
+                <h1>{numGraphs}</h1>
+                <button title="MinusGraph" className="minusGraph" onClick={() => updateNumGraphs(numGraphs+1)}>
+                    +
                 </button>
                 <button title="Help" className="helpModal" onClick={() => setModal('Help')}>
                     <img className="icon"src={icons['./help.svg']} alt="Help" />

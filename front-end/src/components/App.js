@@ -13,6 +13,7 @@ const App = () => {
 
   // State for holding which modal should be open
   const [modal, setModal] = useState('')
+  const [numGraphs, setNumGraphs] = useState(1);
 
   // All for information transfer between children and parent
   /*
@@ -75,7 +76,7 @@ const App = () => {
   
   return (
     <div className="App">
-      <Topbar setModal={setModal}/>
+      <Topbar setModal={setModal} numGraphs={numGraphs} setNumGraphs={setNumGraphs}/>
       <div className="App-body">
         <div className="success">{successMessage.message}</div>
         {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} chartInformation={chartInformation} buttonID={buttonID}/>  : null}
@@ -83,7 +84,7 @@ const App = () => {
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <Charts chartInformation={chartInformation} setModal={setModal} setButtonID={setButtonID}/>
+        <Charts chartInformation={chartInformation} setModal={setModal} setButtonID={setButtonID} numGraphs={numGraphs}/>
 
       </div>
 
