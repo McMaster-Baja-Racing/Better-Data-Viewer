@@ -77,3 +77,24 @@ const getHeadersIndex = (headers, columns) => {
     }
     return h;
 }
+
+/**
+ * @param {Object} chartInformation - The chart information object.
+ * @returns {Boolean} True if the chart information is full, false otherwise.
+ */
+export const validateChartInformation = (chartInformation) => {
+    console.log(chartInformation)
+    if (!chartInformation) {
+        return false;
+    }
+    if (chartInformation.files.length === 0) {
+        return false;
+    }
+    if (chartInformation.files[0].columns.length === 0) {
+        return false;
+    }
+    if (chartInformation.files[0].columns[0].header === "" || chartInformation.files[0].columns[0].filename === "") {
+        return false;
+    }
+    return true;
+}
