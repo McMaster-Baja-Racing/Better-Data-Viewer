@@ -1,6 +1,6 @@
 import '../styles/chart.css'
 import React, { useState, useEffect, useRef } from 'react';
-import Highcharts from 'highcharts'
+import Highcharts, { chart } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
@@ -12,6 +12,8 @@ HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
 const Chart = ({ chartInformation }) => {
+
+    const chartRef = useRef(null);
 
     //File information is array of column names and associated file names
     const [chartOptions, setChartOptions] = useState({
@@ -278,14 +280,16 @@ const Chart = ({ chartInformation }) => {
 
         const handleWindowLoad = () => {
             setIsLoaded(true)
+            console.log("window loaded")
         }
 
         chartInformation.window.addEventListener('load', handleWindowLoad)
 
         return () => {
             chartInformation.window.removeEventListener('load', handleWindowLoad)
+            setIsLoaded(false)
         }
-    }, [chartInformation.window])
+    }, [chartInformation])
 
     useEffect(() => {
         if (!chartInformation.window || !isLoaded) return;
@@ -294,7 +298,7 @@ const Chart = ({ chartInformation }) => {
         if (!videoElement) return;
     
         const handleTimeUpdate = () => {
-            setVideoTimestamp(videoElement.currentTime);
+            setVideoTimestamp(videoElement.currentTime * 1000);
         };
         
         videoElement.addEventListener('timeupdate', handleTimeUpdate);
@@ -304,9 +308,40 @@ const Chart = ({ chartInformation }) => {
         };
     }, [isLoaded]);
 
-    useEffect(() => {
-        console.log(videoTimestamp)
-    }, [videoTimestamp])
+    // useEffect(() => {
+    //     // console.log("chartRef.current:", chartRef.current)
+    //     console.log(videoTimestamp)
+    //     // if (!chartRef.current) return
+    //     console.log(chartInformation)
+    //     chartRef.current.chart.series.forEach(series => {
+    //         console.log("series:", series)
+    //         const name = series.name.substring(4).replace('\\', '/')
+    //         console.log("name:", name)
+    //         const file = chartInformation.files.find(file => file.columns.some(column => column.filename === name))
+    //         console.log("file:", file)
+    //         const timespan = file.columns.find(column => column.header === 'Timestamp (ms)').timespan
+    //         console.log("timespan:", timespan)
+    //         const fileStart = new Date(timespan[0]).getTime()
+    //         console.log("fileStart:", fileStart)
+    //         const videoStart = new Date(chartInformation.video.fileHeaders[0]).getTime()
+    //         console.log("videoStart:", videoStart)
+    //         const fileTimestamp = videoTimestamp + videoStart - fileStart
+    //         console.log("fileTimestamp:", fileTimestamp)
+    //         const xRange = [series.xAxis.dataMin, series.xAxis.dataMax]
+    //         console.log("xRange:", xRange)
+    //         if (fileTimestamp < xRange[0] || fileTimestamp > xRange[1]) return
+    //         const seriesPoints = series.points
+    //         console.log("seriesPoints:", seriesPoints)
+    //         if (seriesPoints.length === 0) return
+    //         const point = series.points.reduce((prev, curr) => Math.abs(curr.x - fileTimestamp) < Math.abs(prev.x - fileTimestamp) ? curr : prev)
+    //         console.log("point:", point)
+    //         point.onMouseOver()
+    //     })
+    // }, [videoTimestamp])
+
+    // console.log(chartRef.current)
+
+    useEffect(() => {console.log(videoTimestamp)}, [videoTimestamp])
 
     // This function is used to throttle the resize observer
     function throttle(f, delay) {
@@ -356,6 +391,7 @@ const Chart = ({ chartInformation }) => {
                 <HighchartsReact
                     highcharts={Highcharts}
                     options={chartOptions}
+                    ref={chartRef}
                 />
             </div>
             {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..." />}
