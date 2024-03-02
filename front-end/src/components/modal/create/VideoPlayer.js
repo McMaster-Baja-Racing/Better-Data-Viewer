@@ -49,8 +49,14 @@ const VideoPlayer = () => {
   }
 
   return (
-    <div>
-      <video src={videoURL} ref={videoRef} onClick={togglePlay} />
+    <div className = "background">
+        <div className = "pageWrap">
+          <div className = "container">
+            <div className = "videoContainer">
+              <video src={videoURL} ref={videoRef} onClick={togglePlay} className = "center"/>
+            </div>
+          </div>
+        </div>
     </div>
   );
 };

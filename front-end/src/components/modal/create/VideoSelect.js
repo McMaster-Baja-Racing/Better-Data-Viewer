@@ -11,10 +11,10 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
         const videoEnd = new Date (videoTimespan.fileHeaders[1])
         files.forEach(file => {
             const fileTimespan = fileTimespans.find(timespan => timespan.key == file.key)
-            if (fileTimespan == undefined) return
+            // if (fileTimespan == undefined) return
             const fileStart = new Date(fileTimespan.fileHeaders[0])
             const fileEnd = new Date(fileTimespan.fileHeaders[1])
-            if (fileStart < videoEnd && videoStart < fileEnd) tempFilteredFiles.push(file)
+            /*if (fileStart < videoEnd && videoStart < fileEnd)*/ tempFilteredFiles.push(file)
         })
         setSelectedVideo(videoTimespan)
         setFilteredFiles(tempFilteredFiles)
