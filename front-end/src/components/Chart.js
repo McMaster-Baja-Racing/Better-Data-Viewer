@@ -276,6 +276,7 @@ const Chart = ({ chartInformation }) => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
+        console.log("chartInformation.window:", chartInformation.window)
         if (!chartInformation.window) return;
 
         const handleWindowLoad = () => {
@@ -288,6 +289,7 @@ const Chart = ({ chartInformation }) => {
         return () => {
             chartInformation.window.removeEventListener('load', handleWindowLoad)
             setIsLoaded(false)
+            console.log("window unloaded")
         }
     }, [chartInformation])
 
@@ -295,8 +297,9 @@ const Chart = ({ chartInformation }) => {
         if (!chartInformation.window || !isLoaded) return;
     
         const videoElement = chartInformation.window.document.getElementById('video');
+        console.log("videoElement:", videoElement)
         if (!videoElement) return;
-    
+
         const handleTimeUpdate = () => {
             setVideoTimestamp(videoElement.currentTime * 1000);
         };
@@ -308,40 +311,50 @@ const Chart = ({ chartInformation }) => {
         };
     }, [isLoaded]);
 
+    useEffect(() => {
+        // console.log("chartRef.current:", chartRef.current)
+        console.log(videoTimestamp)
+        if (chartRef.current.chart.series.length == 0) return
+        const pointIndexes = []
+        console.log(chartInformation)
+        chartRef.current.chart.series.forEach(series => {
+            console.log("series:", series)
+            const name = series.name.substring(4).replace('\\', '/')
+            console.log("name:", name)
+            const file = chartInformation.files.find(file => file.columns.some(column => column.filename === name))
+            console.log("file:", file)
+            const timespan = file.columns.find(column => column.header === 'Timestamp (ms)').timespan
+            console.log("timespan:", timespan)
+            const fileStart = new Date(timespan[0]).getTime()
+            console.log("fileStart:", fileStart)
+            const videoStart = new Date(chartInformation.video.fileHeaders[0]).getTime()
+            console.log("videoStart:", videoStart)
+            const fileTimestamp = videoTimestamp + videoStart - fileStart
+            console.log("fileTimestamp:", fileTimestamp)
+            const xRange = [series.xAxis.dataMin, series.xAxis.dataMax]
+            console.log("xRange:", xRange)
+            if (fileTimestamp < xRange[0] || fileTimestamp > xRange[1]) return
+            const seriesPoints = series.points
+            console.log("seriesPoints:", seriesPoints)
+            if (seriesPoints.length === 0) return
+            const point = series.points.reduce((prev, curr) => Math.abs(curr.x - fileTimestamp) < Math.abs(prev.x - fileTimestamp) ? curr : prev)
+            console.log("point:", point)
+            const pointIndex = seriesPoints.indexOf(point)
+            console.log("pointIndex:", pointIndex)
+            const seriesIndex = chartRef.current.chart.series.indexOf(series)
+            pointIndexes.push({series: seriesIndex, point: pointIndex})
+        })
+        console.log("pointIndexes:", pointIndexes)
+        chartRef.current.chart.series[pointIndexes[0].series].points[pointIndexes[0].point].onMouseOver()
+    }, [videoTimestamp])
+
     // useEffect(() => {
-    //     // console.log("chartRef.current:", chartRef.current)
-    //     console.log(videoTimestamp)
-    //     // if (!chartRef.current) return
-    //     console.log(chartInformation)
-    //     chartRef.current.chart.series.forEach(series => {
-    //         console.log("series:", series)
-    //         const name = series.name.substring(4).replace('\\', '/')
-    //         console.log("name:", name)
-    //         const file = chartInformation.files.find(file => file.columns.some(column => column.filename === name))
-    //         console.log("file:", file)
-    //         const timespan = file.columns.find(column => column.header === 'Timestamp (ms)').timespan
-    //         console.log("timespan:", timespan)
-    //         const fileStart = new Date(timespan[0]).getTime()
-    //         console.log("fileStart:", fileStart)
-    //         const videoStart = new Date(chartInformation.video.fileHeaders[0]).getTime()
-    //         console.log("videoStart:", videoStart)
-    //         const fileTimestamp = videoTimestamp + videoStart - fileStart
-    //         console.log("fileTimestamp:", fileTimestamp)
-    //         const xRange = [series.xAxis.dataMin, series.xAxis.dataMax]
-    //         console.log("xRange:", xRange)
-    //         if (fileTimestamp < xRange[0] || fileTimestamp > xRange[1]) return
-    //         const seriesPoints = series.points
-    //         console.log("seriesPoints:", seriesPoints)
-    //         if (seriesPoints.length === 0) return
-    //         const point = series.points.reduce((prev, curr) => Math.abs(curr.x - fileTimestamp) < Math.abs(prev.x - fileTimestamp) ? curr : prev)
-    //         console.log("point:", point)
-    //         point.onMouseOver()
-    //     })
+    //     console.log("chartRef.current.chart:", chartRef.current.chart)
+    //     if (chartRef.current.chart.series.length == 0) return
+    //     chartRef.current.chart.series[0].points[Math.round(videoTimestamp / 100)].onMouseOver()
+    //     console.log("videoTimestamp:", videoTimestamp)
+
     // }, [videoTimestamp])
-
-    // console.log(chartRef.current)
-
-    useEffect(() => {console.log(videoTimestamp)}, [videoTimestamp])
 
     // This function is used to throttle the resize observer
     function throttle(f, delay) {
