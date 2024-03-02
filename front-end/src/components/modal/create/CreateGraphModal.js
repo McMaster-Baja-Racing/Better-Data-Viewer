@@ -19,7 +19,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [seriesInfo, setSeriesInfo] = useState([]);
   const [files, setFiles] = useState([])
   const [filteredFiles, setFilteredFiles] = useState([])
-  const [selectedVideo, setSelectedVideo] = useState({ fileHearders: [], key: "", size: 0 })
+  const [selectedVideo, setSelectedVideo] = useState({ fileHeaders: [], key: "", size: 0 })
   const [videoTimespans, setvideoTimespans] = useState([])
   const [fileTimespans, setfileTimespans] = useState([])
 

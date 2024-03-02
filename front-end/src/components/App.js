@@ -33,7 +33,7 @@ const App = () => {
   //        analysis: "rollAvg"
   //      }
   //   ],
-  //   video: {fileHearders: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"], key: "video.mp4", size: 1234567890"},
+  //   video: {fileHeaders: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"], key: "video.mp4", size: 1234567890"},
   //   live: false,
   //   type: "line"
   //   window: Window | null
@@ -41,7 +41,7 @@ const App = () => {
 
   const [chartInformation, setChartInformation] = useState({
     files: [],
-    video: { fileHearders: [], key: "", size: 0 },
+    video: { fileHeaders: [], key: "", size: 0 },
     live: false,
     type: "line",
     window: null,
