@@ -67,7 +67,6 @@ const Chart = ({ chartInformation }) => {
         const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
         // split filename so we dont have the preceeding "csv/" so "csv/file/man.csv" becomes "file/man.csv"
         setSingleFilename(filename.split("\\").slice(1).join("\\"))
-        console.log("filename:", filename.split("\\").slice(1).join("\\"))
         setFileNames(prevState => {
             
             // return without duplicates
@@ -91,13 +90,10 @@ const Chart = ({ chartInformation }) => {
 
         // Find which header is the timestamp
         for (var i = 0; i < headers.length; i++) {
-            console.log("columnInfo[i].header", headers[i])
             if (headers[i] === "Timestamp (ms)") {
                 var temp = i;
             }
         }
-
-        console.log("temp", temp)
 
         setTimestamps(text.trim().split("\n").slice(1).map((line) => parseFloat(line.split(",")[temp])))
         
@@ -172,8 +168,6 @@ const Chart = ({ chartInformation }) => {
         if (chartInformation.files.length === 0) {
             return;
         }
-
-        console.log("chartInformation", chartInformation)
         
         setParsedData([]);
         setFileNames([]);
@@ -296,7 +290,7 @@ const Chart = ({ chartInformation }) => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        console.log("chartInformation.window:", chartInformation.window)
+        // console.log("chartInformation.window:", chartInformation.window)
         if (!chartInformation.window) return;
 
         const handleWindowLoad = () => {
@@ -337,9 +331,6 @@ const Chart = ({ chartInformation }) => {
 
     useEffect(() => {
         if (parsedData.length === 0 || chartInformation.video.fileHeaders.length == 0) return
-        console.log(parsedData)
-
-        console.log(chartInformation)
 
         setVideoStart(new Date(chartInformation.video.fileHeaders[0]).getTime()) // 
 
@@ -347,7 +338,6 @@ const Chart = ({ chartInformation }) => {
             const minMaxResponse = fetch(`http://${window.location.hostname}:8080/files/maxmin/${singleFilename}?headerName=${"Timestamp (ms)"}`, {
                 method: 'GET'
             }).then(response => response.text()).then(response => {
-                console.log("RESPONSE:", response)
                 setXRange(response.split(",").map(parseFloat))
             })
             //setXRange([series[0][0], series[series.length - 1][0]]) // Max and min timestamp of file
@@ -356,26 +346,18 @@ const Chart = ({ chartInformation }) => {
 
     }, [parsedData, chartInformation])
 
-    console.log("points:", chartRef.current?.chart?.series?.[0]?.points)
-
     useEffect(() => {
         if (chartRef.current.chart.series.length == 0) return
 
         const pointIndexs = []
-        chartRef.current.chart.series.forEach(series => {
-            
-            console.log("Video Timestamp", videoTimestamp, "Video Start", videoStart, "File Start", fileStart)
+        chartRef.current.chart.series.forEach((series, index) => {
             const fileTimestamp = videoTimestamp + videoStart - fileStart + xRange[0]
-            console.log("FileTimestamp" , fileTimestamp, "xRange[0]", xRange[0], "xRange[1]", xRange[1])
-
             if (fileTimestamp < xRange[0] || fileTimestamp > xRange[1]) return
             
-            const seriesIndex = chartRef.current.chart.series.indexOf(series)
-            const pointIndex = findClosestPoint(fileTimestamp)
-
-            pointIndexs.push({series: seriesIndex, point: pointIndex})
+            const timestampIndex = findClosestTimestamp(fileTimestamp)
+            const pointIndex = findPointIndex(timestampIndex, series)
+            if (pointIndex >= 0) pointIndexs.push({series: index, point: pointIndex})
         })
-        console.log("pointIndexs:", pointIndexs)
         if (pointIndexs.length === 0) return
         chartRef.current.chart.series[pointIndexs[0].series].points[pointIndexs[0].point].onMouseOver()
         if (pointIndexs.length > 1) pointIndexs.slice(1).forEach(pointIndex => {
@@ -385,24 +367,19 @@ const Chart = ({ chartInformation }) => {
     }, [videoTimestamp])
 
 
-    const findClosestPoint = (timestamp) => {
+    const findClosestTimestamp = (timestamp) => {
 
-        console.log("ZE TIME", timestamps)
+        const closestTimestamp = timestamps.reduce((prev, curr) => Math.abs(curr - timestamp) < Math.abs(prev - timestamp) ? curr : prev)
 
-        const point = timestamps.reduce((prev, curr) => Math.abs(curr - timestamp) < Math.abs(prev - timestamp) ? curr : prev)
-
-        return timestamps.indexOf(point);
+        return timestamps.indexOf(closestTimestamp);
     }
 
-
-
-    // useEffect(() => {
-    //     console.log("chartRef.current.chart:", chartRef.current.chart)
-    //     if (chartRef.current.chart.series.length == 0) return
-    //     chartRef.current.chart.series[0].points[Math.round(videoTimestamp / 100)].onMouseOver()
-    //     console.log("videoTimestamp:", videoTimestamp)
-
-    // }, [videoTimestamp])
+    const findPointIndex = (timestampIndex, series) => {
+        const timestampPoint = {x: series.xData[timestampIndex], y: series.yData[timestampIndex]}
+        const point = series.points.find(point => point.x === timestampPoint.x && point.y === timestampPoint.y)
+        const pointIndex = series.points.indexOf(point)
+        return pointIndex
+    }
 
     // This function is used to throttle the resize observer
     function throttle(f, delay) {
