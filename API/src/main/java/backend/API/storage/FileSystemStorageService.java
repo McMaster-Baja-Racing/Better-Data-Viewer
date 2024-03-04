@@ -7,9 +7,11 @@
 
 package backend.API.storage;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,8 +22,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.DoubleSummaryStatistics;
 import java.util.Locale;
-import java.util.stream.Stream; 
+import java.util.stream.Stream;
 
+import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -237,16 +240,25 @@ public class FileSystemStorageService implements StorageService {
 	}
 	
 	// Get timspan for csv file from a parsed bin file
-	@Override
+    @Override
 	public String getTimespan(String filename, LocalDateTime zeroTime) {
-		// Gets the first and last millisecond timestamps in the file
-		String[] timestampArray = getMaxMin(filename, "Timestamp (ms)").split(",");
+		String timestamp1 = null;
+		String timestamp2 = null;
+		try {
+			BufferedReader reader = new BufferedReader(Files.newBufferedReader(load(filename)));
+			timestamp1 = reader.lines().skip(1).findFirst().orElseThrow().split(",")[0];
+			reader.close();
+			ReversedLinesFileReader reverseReader = new ReversedLinesFileReader(load(filename), StandardCharsets.UTF_8);
+			timestamp2 = reverseReader.readLine().split(",")[0];
+			reverseReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 
-		// Adds the timestamps to the zero time to get the start and end times
-		LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[0]) * 1_000_000);
-		LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(timestampArray[1]) * 1_000_000);
+		LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(timestamp1) * 1_000_000);
+		LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(timestamp2) * 1_000_000);
 
-		// Returns the start and end times as strings
 		return startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+ "," + endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
 	}
 
