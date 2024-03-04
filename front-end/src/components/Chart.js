@@ -1,6 +1,6 @@
 import '../styles/chart.css'
 import React, { useState, useEffect, useRef } from 'react';
-import Highcharts, { chart } from 'highcharts'
+import Highcharts, { chart, time } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
@@ -325,34 +325,26 @@ const Chart = ({ chartInformation }) => {
         };
     }, [isLoaded]);
 
-    const [xRange, setXRange] = useState([0, 0])
-    const [fileStart, setFileStart] = useState(0)
-    const [videoStart, setVideoStart] = useState(0)
+    const [offsets, setOffsets] = useState([])
 
     useEffect(() => {
-        if (parsedData.length === 0 || chartInformation.video.fileHeaders.length == 0) return
-
-        setVideoStart(new Date(chartInformation.video.fileHeaders[0]).getTime()) // 
+        if (chartInformation.video.fileHeaders.length == 0) return
+        const videoStart = new Date(chartInformation.video.fileHeaders[0]).getTime()
 
         chartInformation.files.forEach(file => {
-            const minMaxResponse = fetch(`http://${window.location.hostname}:8080/files/maxmin/${singleFilename}?headerName=${"Timestamp (ms)"}`, {
-                method: 'GET'
-            }).then(response => response.text()).then(response => {
-                setXRange(response.split(",").map(parseFloat))
-            })
-            //setXRange([series[0][0], series[series.length - 1][0]]) // Max and min timestamp of file
-            setFileStart(new Date(file.columns[0].timespan[0]).getTime()) // Unix date of first timestamp in file
+            const fileStart = new Date(file.columns[0].timespan[0]).getTime() // Unix date of first timestamp in file
+            setOffsets([...offsets, videoStart - fileStart])
         })
 
-    }, [parsedData, chartInformation])
+    }, [chartInformation])
 
     useEffect(() => {
         if (chartRef.current.chart.series.length == 0) return
 
         const pointIndexs = []
         chartRef.current.chart.series.forEach((series, index) => {
-            const fileTimestamp = videoTimestamp + videoStart - fileStart + xRange[0]
-            if (fileTimestamp < xRange[0] || fileTimestamp > xRange[1]) return
+            const fileTimestamp = videoTimestamp + offsets[index] + timestamps[0]
+            if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return
             
             const timestampIndex = findClosestTimestamp(fileTimestamp)
             const pointIndex = findPointIndex(timestampIndex, series)
@@ -377,8 +369,7 @@ const Chart = ({ chartInformation }) => {
     const findPointIndex = (timestampIndex, series) => {
         const timestampPoint = {x: series.xData[timestampIndex], y: series.yData[timestampIndex]}
         const point = series.points.find(point => point.x === timestampPoint.x && point.y === timestampPoint.y)
-        const pointIndex = series.points.indexOf(point)
-        return pointIndex
+        return series.points.indexOf(point)
     }
 
     // This function is used to throttle the resize observer
