@@ -47,8 +47,6 @@ const Chart = ({ chartInformation }) => {
     const [fileNames, setFileNames] = useState([]);
     // useref for minMax
     let minMax = useRef([0, 0]);
-
-    const [singleFilename, setSingleFilename] = useState("")
     const [timestamps, setTimestamps] = useState([])
 
     // This function handles the fetching of the data from the backend
@@ -65,8 +63,6 @@ const Chart = ({ chartInformation }) => {
         }
 
         const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
-        // split filename so we dont have the preceeding "csv/" so "csv/file/man.csv" becomes "file/man.csv"
-        setSingleFilename(filename.split("\\").slice(1).join("\\"))
         setFileNames(prevState => {
             
             // return without duplicates
@@ -91,11 +87,11 @@ const Chart = ({ chartInformation }) => {
         // Find which header is the timestamp
         for (var i = 0; i < headers.length; i++) {
             if (headers[i] === "Timestamp (ms)") {
-                var temp = i;
+                var timestampColumn = i;
             }
         }
 
-        setTimestamps(text.trim().split("\n").slice(1).map((line) => parseFloat(line.split(",")[temp])))
+        setTimestamps(text.trim().split("\n").slice(1).map((line) => parseFloat(line.split(",")[timestampColumn])))
         
 
         // Get all the lines of the file, and split them into arrays
@@ -331,25 +327,32 @@ const Chart = ({ chartInformation }) => {
         if (chartInformation.video.fileHeaders.length == 0) return
         const videoStart = new Date(chartInformation.video.fileHeaders[0]).getTime()
 
+        console.log("chartInformation.files:", chartInformation.files)
+        const tempOffsets = []
         chartInformation.files.forEach(file => {
             const fileStart = new Date(file.columns[0].timespan[0]).getTime() // Unix date of first timestamp in file
-            setOffsets([...offsets, videoStart - fileStart])
+            tempOffsets.push(videoStart - fileStart)
         })
 
+        setOffsets(tempOffsets)
     }, [chartInformation])
 
     useEffect(() => {
         if (chartRef.current.chart.series.length == 0) return
 
+        console.log(offsets)
+
         const pointIndexs = []
-        chartRef.current.chart.series.forEach((series, index) => {
-            const fileTimestamp = videoTimestamp + offsets[index] + timestamps[0]
+        chartRef.current.chart.series.forEach(series => {
+            const seriesIndex = chartRef.current.chart.series.indexOf(series)
+            const fileTimestamp = videoTimestamp + offsets[seriesIndex] + timestamps[0]
             if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return
             
             const timestampIndex = findClosestTimestamp(fileTimestamp)
             const pointIndex = findPointIndex(timestampIndex, series)
-            if (pointIndex >= 0) pointIndexs.push({series: index, point: pointIndex})
+            if (pointIndex >= 0) pointIndexs.push({series: seriesIndex, point: pointIndex})
         })
+
         if (pointIndexs.length === 0) return
         chartRef.current.chart.series[pointIndexs[0].series].points[pointIndexs[0].point].onMouseOver()
         if (pointIndexs.length > 1) pointIndexs.slice(1).forEach(pointIndex => {
