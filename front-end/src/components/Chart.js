@@ -338,13 +338,32 @@ const Chart = ({ chartInformation }) => {
     }, [chartInformation])
 
     useEffect(() => {
-        if (chartRef.current.chart.series.length == 0) return
+        // wait 5 seconds
+        setTimeout(() => {
+            if (offsets.length === 0 || timestamps.length == 0) return
+            const videoStartTimsestamp = offsets[0] + timestamps[0]
+            const videoLength = new Date(chartInformation.video.fileHeaders[1]).getTime() - new Date(chartInformation.video.fileHeaders[0]).getTime()
+            const videoEndTimestamp = videoStartTimsestamp + videoLength
+    
+            const videoStartIndex = findClosestTimestamp(videoStartTimsestamp)
+            const videoEndIndex = findClosestTimestamp(videoEndTimestamp)
+            
+            const points = chartRef.current.chart.series[0].points
+    
+            const videoStartX= points[videoStartIndex].x
+            const videoEndX = points[videoEndIndex].x
+            
+            chartRef.current.chart.xAxis[0].setExtremes(videoStartX, videoEndX)
+        }, 1000);
+    }, [offsets, timestamps])
 
-        console.log(offsets)
+    useEffect(() => {
+        if (chartRef.current.chart.series.length == 0) return
 
         const pointIndexs = []
         chartRef.current.chart.series.forEach(series => {
             const seriesIndex = chartRef.current.chart.series.indexOf(series)
+
             const fileTimestamp = videoTimestamp + offsets[seriesIndex] + timestamps[0]
             if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return
             
