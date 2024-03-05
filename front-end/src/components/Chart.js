@@ -8,7 +8,6 @@ import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
 import { useResizeDetector } from 'react-resize-detector';
-// import loading from assets folder
 import loadingImg from '../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
@@ -26,8 +25,6 @@ const Chart = ({ chartInformation }) => {
 
     // Fetch the data from the server and format it for the chart
     const getFileFormat = async () => {
-        setLoading(true);
-
         // Runs through all the series and fetches the data, then updates the graph
         // This also prevents liveData from adding more data as a separate series
         var data = [];
@@ -44,17 +41,18 @@ const Chart = ({ chartInformation }) => {
             data.push(await getSeriesData(response, filename, inputColumns, minMax, chartInformation.type))
         }
         setParsedData(data)
-        setLoading(false);
     }
 
     // Whenever chartInformation is updated (which happens when submit button is pressed), fetch the neccesary data
     useEffect(() => {
         if(!validateChartInformation(chartInformation)) return;
         
+        setLoading(true);
         setParsedData([]);
         setFileNames([]);
 
         getFileFormat();
+        setLoading(false);
     }, [chartInformation]);
 
     // Once necessary data is fetched, format it for the chart
