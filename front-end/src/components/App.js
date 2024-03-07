@@ -4,6 +4,7 @@ import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
 import { DownloadModal } from './modal/download/downloadModal';
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Chart from './Chart';
 import Topbar from './Topbar';
 import $ from 'jquery';
@@ -56,24 +57,22 @@ const App = () => {
   }, [successMessage]);
 
   return (
-    <div className="App">
-      <Topbar setModal={setModal} />
-      <header className="App-header">
-        <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} /> : null}
-        {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
-        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
-        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
-
-        {window.location.pathname === '/map' ?
-          <MapChart />
-          : <Chart chartInformation={chartInformation} />
-        }
-
-
-      </header>
-
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Topbar setModal={setModal} />
+        <header className="App-header">
+          <div className="success">{successMessage.message}</div>
+          {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} /> : null}
+          {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
+          {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
+          {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
+          <Routes>
+            <Route path="*" element={<Chart chartInformation={chartInformation} />} />
+            <Route path="/map" element={<MapChart />} />
+          </Routes>
+        </header>
+      </div>
+    </BrowserRouter>
   );
 
 }
