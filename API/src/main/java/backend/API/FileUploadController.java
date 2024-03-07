@@ -284,12 +284,12 @@ public class FileUploadController {
 		} else {
 			// If no analyzer is selected, only one file is selected, copy it
 			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
-			outputFiles[outputFiles.length - 1] = storageService.getRootLocation().toString() + "/" + storageService.getFileExtension(inputFiles[0]) + "/" + inputFiles[0];
+			outputFiles[outputFiles.length - 1] = inputFiles[0];
 		}
 		// Then return the final file, removing the prefix for upload dir
 		String filePath = outputFiles[outputFiles.length - 1];
 		Path path = Paths.get(filePath);
-		Path newPath = path.subpath(4, path.getNameCount());
+		Path newPath = path.subpath(2, path.getNameCount());
 
 		Resource file = storageService.loadAsResource(newPath.toString());
 
@@ -375,8 +375,11 @@ public class FileUploadController {
 		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
-			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
-					storageService.load("").toAbsolutePath().toString() + "\\", false);
+			String csvFilename = storageService.load(filename).toAbsolutePath().toString();
+			String csvOutputDir = storageService.load("").toAbsolutePath().toString() + "\\";
+			System.out.println(csvFilename + " " + csvOutputDir);
+			System.out.println("COOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL");
+			BinaryTOCSV.toCSV(csvFilename, csvOutputDir, false);
 			storageService.delete(filename);
 		} else {
 			storageService.store(file);
