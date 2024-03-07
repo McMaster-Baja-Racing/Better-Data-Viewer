@@ -337,25 +337,35 @@ const Chart = ({ chartInformation }) => {
         setOffsets(tempOffsets)
     }, [chartInformation])
 
-    useEffect(() => {
-        // wait 5 seconds
+    /*useEffect(() => {
         setTimeout(() => {
             if (offsets.length === 0 || timestamps.length == 0) return
+            const startTime1 = new Date().getTime()
             const videoStartTimsestamp = offsets[0] + timestamps[0]
             const videoLength = new Date(chartInformation.video.fileHeaders[1]).getTime() - new Date(chartInformation.video.fileHeaders[0]).getTime()
             const videoEndTimestamp = videoStartTimsestamp + videoLength
-    
-            const videoStartIndex = findClosestTimestamp(videoStartTimsestamp)
-            const videoEndIndex = findClosestTimestamp(videoEndTimestamp)
+            console.log("time1:", new Date().getTime() - startTime1)
             
+            const startTime2 = new Date().getTime()
+            const videoStartIndex = findClosestTimestamp(videoStartTimsestamp)
+            console.log("time2:", new Date().getTime() - startTime2)
+            const startTime3 = new Date().getTime()
+            const videoEndIndex = findClosestTimestamp(videoEndTimestamp)
+            console.log("time3:", new Date().getTime() - startTime3)
+
+            const startTime4 = new Date().getTime()
             const points = chartRef.current.chart.series[0].points
     
             const videoStartX= points[videoStartIndex].x
             const videoEndX = points[videoEndIndex].x
-            
-            chartRef.current.chart.xAxis[0].setExtremes(videoStartX, videoEndX)
-        }, 1000);
-    }, [offsets, timestamps])
+            console.log("time4:", new Date().getTime() - startTime4)
+
+            const startTime5 = new Date().getTime()
+            chartRef.current.chart.xAxis[0].zoom(videoStartX, videoEndX)
+            console.log("time5:", new Date().getTime() - startTime5)
+
+        }, 10);
+    }, [offsets, timestamps])*/
 
     useEffect(() => {
         if (chartRef.current.chart.series.length == 0) return
