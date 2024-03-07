@@ -214,7 +214,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
     // GEOJSON USES LONG, LAT NOT LAT, LONG
 
-    const marker = L.icon({ iconUrl: "/topdown.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconSize: [50, 50], iconAnchor: [25, 25] })
+    const marker = L.icon({ iconUrl: "/topdown_outline.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconSize: [50, 50], iconAnchor: [25, 25] })
     return (
         <div id="mapBackground" style={{ height: "100%", width: "100%" }}>
             <select className="map_ui_select" defaultValue="none" onChange={loadFile}>
