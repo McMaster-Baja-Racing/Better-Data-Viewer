@@ -8,11 +8,11 @@ const MapChart = () => {
     const [laps, setLaps] = useState([]);
     const [gotoTime, setGotoTime] = useState(0);
     return (
-        <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap"}}>
-            <div style={{flex: "4 0 75%"}}>
+        <div className="map_container">
+            <div className="map_display_container">
                 <MapDisplay coords={coords} setLapsCallback={setLaps} gotoTime={gotoTime}/>
             </div>
-            <div style ={{flex: "0 0 25%", color: "black", height: "100%"}}>
+            <div className="map_laptime_container">
                 <LapTimes laps={laps} gotoTimeCallback={setGotoTime}/>
             </div>
         </div>
