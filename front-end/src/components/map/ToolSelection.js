@@ -1,11 +1,7 @@
-import { useState } from "react";
-
-const ToolSelection = ({ options, onChange }) => {
-    const [selected, setSelected] = useState(0);
+const ToolSelection = ({ options, selected, setSelected }) => {
 
     function handleClick(index) {
         setSelected(index);
-        onChange(index);
     }
     return (
         <span>

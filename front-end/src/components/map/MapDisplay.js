@@ -74,7 +74,9 @@ function findLapTimes(coords, rects) {
     }
     let laps = [];
     let currLap = { start: 0, end: 0, checkpoints: [] };
+    let visitedCheckpoints = [];
     for (let event of events) {
+        
         if (event.event === EXIT && rects[event.rect].type === "Start") {
             currLap.start = event.time;
             // console.log(event.time + ": Start lap");
@@ -84,10 +86,15 @@ function findLapTimes(coords, rects) {
             laps.push(currLap);
             // console.log(event.time + ": End lap time: " + (currLap.end - currLap.start) / 1000 + "s");
             currLap = { start: 0, end: 0, checkpoints: [] };
+            visitedCheckpoints = [];
         }
         else if (event.event === ENTER && rects[event.rect].type === "Checkpoint") {
-            currLap.checkpoints.push(event.time);
-            // console.log(event.time + ": Checkpoint");
+            if (!visitedCheckpoints.includes(event.rect)) {
+                currLap.checkpoints.push(event.time);
+                visitedCheckpoints.push(event.rect);
+                // console.log(event.time + ": Checkpoint");
+                console.log(visitedCheckpoints, event.rect);
+            }
         }
         // console.log(event.time, ": " +event.event + " " + rects[event.rect].type + " " + event.rect);
     }
@@ -126,8 +133,8 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
     // Go to selected lap in animation
     useEffect(() => {
-        for(let i = 0; i < coords.length; i++) {
-            if(coords[i][TIME_INDEX] >= gotoTime){
+        for (let i = 0; i < coords.length; i++) {
+            if (coords[i][TIME_INDEX] >= gotoTime) {
                 // console.log("Going to time", gotoTime, "at pos", i);
                 setCounter(i);
                 break;
@@ -165,22 +172,31 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
                 }
             },
             mousedown(e) {
-                // only right click
-                if (e.originalEvent.button !== 2) return;
+                // only right click or ctrl-click or touchpad users
+                if (e.originalEvent.button !== 2 && !e.originalEvent.ctrlKey) return;
                 e.originalEvent.preventDefault();
+                e.target.dragging.disable();
                 if (drawing) return;
                 setDrawing(true);
                 setBoundsStart([e.latlng.lat, e.latlng.lng]);
                 setBoundsEnd([e.latlng.lat, e.latlng.lng]);
             },
             mouseup(e) {
-                if (e.originalEvent.button !== 2) return;
+                // only right click or ctrl-click or touchpad users
+                // if (e.originalEvent.button !== 2 && !e.originalEvent.ctrlKey) return;
                 e.originalEvent.preventDefault();
+                e.target.dragging.enable();
                 if (!drawing) return;
                 setDrawing(false);
                 setBoundsEnd([e.latlng.lat, e.latlng.lng]);
                 // Update list of rects
-                setRects((old) => [...old, { bounds: [boundsStart, boundsEnd], type: tools[currTool] }])
+                setRects((old) => [...old, { bounds: [boundsStart, boundsEnd], type: tools[currTool] }]);
+                // When finished placing one tool, go to the next automatically
+                if (currTool === 0) {
+                    setCurrTool(1);
+                } else if (currTool === 1) {
+                    setCurrTool(2);
+                }
 
             },
             contextmenu(e) {
@@ -223,10 +239,10 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
                     return (<option key={f} value={f}>{f}</option>);
                 })}
             </select>
-            <ToolSelection options={tools} onChange={setCurrTool}> </ToolSelection>
+            <ToolSelection options={tools} setSelected={setCurrTool} selected={currTool}> </ToolSelection>
             {/* <button onClick={() => setLapsCallback(findLapTimes(coords, rects))} className="map_ui_button"> Analyze </button> */}
             <button onClick={() => setRects([])} className="map_ui_button">Clear</button>
-            
+
             {bounds.length > 0 && coords.length > 0 ?
                 <MapContainer key={bounds} bounds={bounds} style={{ height: "100%", width: "100%", zIndex: "0" }} dragging={true} scrollWheelZoom={true} >
                     <GeoJSON key={coords[0]} data={[{
