@@ -2,7 +2,6 @@ import { useState } from 'react';
 import '../../styles/mapChart.css';
 import MapDisplay from './MapDisplay';
 import LapTimes from './LapTimes';
-let coords = require('./testData.json')
 
 const MapChart = () => {
     const [laps, setLaps] = useState([]);
@@ -10,7 +9,7 @@ const MapChart = () => {
     return (
         <div className="map_container">
             <div className="map_display_container">
-                <MapDisplay coords={coords} setLapsCallback={setLaps} gotoTime={gotoTime}/>
+                <MapDisplay setLapsCallback={setLaps} gotoTime={gotoTime}/>
             </div>
             <div className="map_laptime_container">
                 <LapTimes laps={laps} gotoTimeCallback={setGotoTime}/>

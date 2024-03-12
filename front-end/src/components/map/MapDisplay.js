@@ -1,6 +1,7 @@
-import { MapContainer, TileLayer, Marker, Popup, Rectangle, GeoJSON, useMapEvents } from 'react-leaflet';
-import L, { point } from "leaflet";
+import { MapContainer, TileLayer, Marker, Rectangle, GeoJSON, useMapEvents } from 'react-leaflet';
+import L from "leaflet";
 import 'leaflet/dist/leaflet.css';
+import '../../styles/mapDisplay.css';
 import { useEffect, useState } from 'react';
 import ToolSelection from './ToolSelection';
 
@@ -232,7 +233,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
     const marker = L.icon({ iconUrl: "/topdown_outline.png", shadowUrl: "https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png", iconSize: [50, 50], iconAnchor: [25, 25] })
     return (
-        <div id="mapBackground" style={{ height: "100%", width: "100%" }}>
+        <div id="mapBackground">
             <select className="map_ui_select" defaultValue="none" onChange={loadFile}>
                 <option value="none" selected disabled hidden>Select a file to analyze</option>
                 {files.map((f) => {
@@ -244,6 +245,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
             <button onClick={() => setRects([])} className="map_ui_button">Clear</button>
 
             {bounds.length > 0 && coords.length > 0 ?
+            // Inline style here because these are Leaflet components
                 <MapContainer key={bounds} bounds={bounds} style={{ height: "100%", width: "100%", zIndex: "0" }} dragging={true} scrollWheelZoom={true} >
                     <GeoJSON key={coords[0]} data={[{
                         type: "LineString",

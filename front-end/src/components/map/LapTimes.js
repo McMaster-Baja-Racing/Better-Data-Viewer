@@ -6,7 +6,7 @@ const LapTimes = ({ laps, gotoTimeCallback }) => {
     if (laps.length === 0) {
         return (
             <>
-                <p style={{ color: "black", fontSize: "21px" }}>
+                <p className='laptimes_helptext'>
                     Right click and drag to draw gates<br />
                     Choose the gate type at the top <br />
                     Place a start and end to show lap times<br />
@@ -22,7 +22,7 @@ const LapTimes = ({ laps, gotoTimeCallback }) => {
                     <div key={[lap, index]} className="laptimes_lap">
                         <button className="laptimes_accordion" onClick={() => gotoTimeCallback(lap.start)}>Lap {index}: {((lap.end - lap.start) / 1000).toFixed(SIGFIGS)}s <span className="laptimes_drilldown">V</span></button>
                         <div className="laptimes_panel">
-                            <table style={{ width: "100%" }}>
+                            <table>
                                 <tbody>
                                     {lap.checkpoints.map((checkpoint, index) => {
                                         return (
