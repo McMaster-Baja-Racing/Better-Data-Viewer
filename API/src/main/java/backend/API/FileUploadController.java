@@ -377,8 +377,6 @@ public class FileUploadController {
 			storageService.store(file);
 			String csvFilename = storageService.load(filename).toAbsolutePath().toString();
 			String csvOutputDir = storageService.load("").toAbsolutePath().toString() + "\\";
-			System.out.println(csvFilename + " " + csvOutputDir);
-			System.out.println("COOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL");
 			BinaryTOCSV.toCSV(csvFilename, csvOutputDir, false);
 			storageService.delete(filename);
 		} else {

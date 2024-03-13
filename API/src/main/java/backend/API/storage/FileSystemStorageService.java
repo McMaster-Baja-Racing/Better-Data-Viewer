@@ -233,8 +233,6 @@ public class FileSystemStorageService implements StorageService {
 		// Each is converted to nanoseconds and then divided to preserve precision
 		long duration = (Long.parseLong(getTagValue(metadata, "Duration")) * 1_000_000_000) / (Long.parseLong(getTagValue(metadata, "Media Time Scale")) * 1_000_000_000);
 
-		// System.out.println(duration);
-
         // Returns the start and end times as strings in GMT with milliseconds
         return creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")) + "," + creationTime.plusSeconds(duration).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
 	}
