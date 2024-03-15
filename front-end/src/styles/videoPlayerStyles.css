@@ -1,0 +1,52 @@
+    .background{
+        background-color: #343434;
+        /*border: 5px solid black;  */
+    }
+
+    .pageWrap{
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pageContainer{ 
+        width: 80%;
+        max-width: 1000px;
+        min-width: 200px;
+    }
+
+    .videoContainerBox{
+        position: relative;  
+        width: 100%;
+        height: 0; 
+        padding-top: 56.25%; /*16:9 aspect ratio*/
+        overflow: hidden; /* content that exceeds dimensions are hidden (prevent scrollbars) */
+        border-radius: 12px;
+
+    }
+
+    .videoContainerBox video{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .timeDisplay {
+        padding-top: 7px;
+        color: white;
+    }
+
+    .seekbar {
+        width: 100%;
+        margin: 0 auto;
+        display: block;
+        height: 30px; /*padding from bottom of video*/
+        background: #ddd;
+        outline: none;
+        border-radius: 15x; /* rounded bar */
+    }
+  
+    
