@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../../../styles/videoPlayerStyles.css';
 import { useLocation } from 'react-router-dom';
 
 const VideoPlayer = () => {
