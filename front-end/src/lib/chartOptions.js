@@ -69,6 +69,7 @@ const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
             opacity: 1,
             colorAxis: false, 
             findNearestPointBy: 'x',
+            boostThreshold: 5,
         }
     });
 

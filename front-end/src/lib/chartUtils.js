@@ -3,7 +3,7 @@ import { ApiUtil } from "./apiUtils";
 // Constants for colour chart
 const HUE_MIN = 150;
 const HUE_MAX = 0;
-export const LIVE_DATA_INTERVAL = 2000;
+export const LIVE_DATA_INTERVAL = 33;
 
 /**
  * @description Fetches the data from the server and formats it for the chart.

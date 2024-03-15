@@ -48,12 +48,15 @@ public class Packet {
 
         //if the packettype is 37, the data is a float
         if (this.packetType == 37 || this.packetType == 36){
-
+            this.isFloat = true;
+            this.floatData = buffer.getFloat();
+        } else if (this.packetType >= 28 && this.packetType <= 33){
+            //strain from WFT
             this.isFloat = true;
             this.floatData = buffer.getFloat();
         }
         else {
-            this.intData = ((data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7]);
+         this.intData = buffer.getInt();
         }
         
     }
