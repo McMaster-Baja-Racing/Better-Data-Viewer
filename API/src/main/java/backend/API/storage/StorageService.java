@@ -28,4 +28,6 @@ public interface StorageService {
 
 	String getMaxMin(String filename, String headerName);
 
+	String getLast(String filename);
+
 }

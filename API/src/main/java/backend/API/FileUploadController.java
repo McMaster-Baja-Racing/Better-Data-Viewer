@@ -165,11 +165,6 @@ public class FileUploadController {
 			outputFiles = new String[10];
 		}
 
-		// Then check if live is true, and set the options + files accordingly
-		if (liveOptions[0].equals("true")) {
-			// Maybe do the serial stuff here, but definitely look in live folder for data
-		}
-
 		// Then run the selected analyzer
 		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
 			try {
@@ -183,9 +178,39 @@ public class FileUploadController {
 			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
 			outputFiles[outputFiles.length - 1] = "./upload-dir/" + inputFiles[0];
 		}
+
+		// TODO: THIS SHOULD HAPPEN BEFORE RUNNING THE ANALYZER IN THE COMMON CASE
+		// Then check if live is true, and set the options + files accordingly
+		String fileOutputString = outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length());
+		outputFiles = new String[10];
+
+		// print live options
+		System.out.println("Live options: " + liveOptions[0]);
+
+		if (liveOptions[0].equals("true")) {
+			// When live is true, we only want a certain amount of time from its timestamp
+			// Get the last timestamp, then subtract a certain amount of time, and use split analyzer between the two
+			int lastPoint = Integer.valueOf(storageService.getLast(fileOutputString));
+			int firstPoint = Math.max(0, lastPoint - 3000);
+
+			// print the two values
+			System.out.println("First point: " + firstPoint);
+			System.out.println("Last point: " + lastPoint);
+
+			Object[] extraValues = new Object[]{String.valueOf(firstPoint), String.valueOf(lastPoint)};
+			String[] lastFile = new String[]{fileOutputString};
+
+			try {
+				Analyzer.createAnalyzer("split", lastFile, inputColumns, 
+					outputFiles, extraValues).analyze();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			
+		}
+
 		// Then return the final file, removing the prefix for upload dir
-		Resource file = storageService.loadAsResource(
-				outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
+		Resource file = storageService.loadAsResource(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
 
 		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();

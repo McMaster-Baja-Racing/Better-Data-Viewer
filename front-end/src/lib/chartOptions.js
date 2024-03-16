@@ -32,7 +32,7 @@ const getStandardChartConfig = (chartInformation) => {
 
     chartConfig.chart = {
         type: chartInformation.type,
-        zoomType: 'x'
+        zoomType: 'y'
     };
 
     chartConfig.xAxis = {
@@ -52,6 +52,8 @@ const getStandardChartConfig = (chartInformation) => {
         lineColor: 'grey',
         tickColor: 'grey',
         lineWidth: 1,
+        min: 200,
+        max: 650,
     };
 
     return chartConfig;
@@ -69,7 +71,7 @@ const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
             opacity: 1,
             colorAxis: false, 
             findNearestPointBy: 'x',
-            boostThreshold: 5,
+            boostThreshold: 1,
         }
     });
 

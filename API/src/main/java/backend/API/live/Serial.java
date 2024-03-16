@@ -44,6 +44,7 @@ public class Serial {
         FileWriter fw42 = null;
         //define an array of file writers with 6 elements
         FileWriter[] strains = new FileWriter[6];
+        String [] strainNames = {"Force X", "Force Z", "Force Y", "Moment X", "Moment Z", "Moment Y"};
         try {
             //print the current path
             fw = new FileWriter("./upload-dir/live_F_RPM_PRIM.csv");
@@ -58,7 +59,7 @@ public class Serial {
                 //create a new file writer for each file
                 strains[i-1] = new FileWriter("./upload-dir/live_F_STRAIN_"+i+".csv");
                 //write the header to the file
-                strains[i-1].write("Timestamp (ms),F_STRAIN_"+i+"\n");
+                strains[i-1].write("Timestamp (ms)" + "," + strainNames[i-1] + "\n");
             }
 
         } catch (Exception e) { e.printStackTrace(); }
@@ -105,7 +106,7 @@ public class Serial {
                     fw42.flush();
                 } else if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
                     //System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " + readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", " + readBuffer[7] );
-                    System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
+                    //System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
                     //write the timestamp and the float data to the file
                     strains[p.getPacketType() - 28].write(p.getTimestamp() + "," + p.getFloatData()+"\n");
                     //flush the file writer

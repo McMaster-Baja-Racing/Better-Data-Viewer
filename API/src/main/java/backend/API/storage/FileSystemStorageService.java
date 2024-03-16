@@ -7,15 +7,19 @@
 
 package backend.API.storage;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.DoubleSummaryStatistics;
 import java.util.stream.Stream; 
+
+import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -181,5 +185,22 @@ public class FileSystemStorageService implements StorageService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public String getLast(String filename) {
+
+		String timestamp;
+
+		try {
+			ReversedLinesFileReader reverseReader = new ReversedLinesFileReader(load(filename), StandardCharsets.UTF_8);
+			timestamp = reverseReader.readLine().split(",")[0];
+			reverseReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return timestamp;
 	}
 }
