@@ -57,7 +57,7 @@ public class Serial {
             
             for (int i = 1; i <= 6; i++) {
                 //create a new file writer for each file
-                strains[i-1] = new FileWriter("./upload-dir/live_F_STRAIN_"+i+".csv");
+                strains[i-1] = new FileWriter("./upload-dir/Live "+ strainNames[i-1] + ".csv");
                 //write the header to the file
                 strains[i-1].write("Timestamp (ms)" + "," + strainNames[i-1] + "\n");
             }

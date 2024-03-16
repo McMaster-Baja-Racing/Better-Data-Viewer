@@ -52,8 +52,6 @@ const getStandardChartConfig = (chartInformation) => {
         lineColor: 'grey',
         tickColor: 'grey',
         lineWidth: 1,
-        min: 200,
-        max: 650,
     };
 
     return chartConfig;
@@ -72,6 +70,7 @@ const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
             colorAxis: false, 
             findNearestPointBy: 'x',
             boostThreshold: 1,
+            marker: { enabled: false }
         }
     });
 

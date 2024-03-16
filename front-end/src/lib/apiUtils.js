@@ -36,12 +36,16 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
     analyzeFiles: async (inputFiles, inputColumns, outputFiles, analyzerOptions, liveOptions) => {
-        const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&inputColumns=${inputColumns}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`);
-        if (!response.ok) {
-            alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
-            throw Error(response.statusText);
+        try {
+            const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&inputColumns=${inputColumns}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`);
+            if (!response.ok) {
+                alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
+                throw Error(response.statusText);
+            }
+            return response;
+        } catch (error) {
+            console.log("Analyzer Error:", error)
         }
-        return response;
     },
 
     /**
