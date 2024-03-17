@@ -55,7 +55,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
       "files": seriesInfo,
       "video": selectedVideo,
       "live": liveCheck,
-      "type": graphType === "video" ? "line" : graphType,
+      "type": graphType,
       "window": null
     };
   

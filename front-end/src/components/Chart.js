@@ -1,10 +1,9 @@
 import '../styles/chart.css'
 import React, { useState, useEffect, useRef } from 'react';
-import Highcharts, { chart, time } from 'highcharts'
+import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
-import { set } from 'react-hook-form';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
@@ -35,7 +34,7 @@ const Chart = ({ chartInformation }) => {
             enabled: false
         },
         boost: {
-            enabled: false
+            enabled: chartInformation.type !== "video"
         }
     });
 
@@ -220,7 +219,7 @@ const Chart = ({ chartInformation }) => {
                     text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
                 },
                 chart: {
-                    type: chartInformation.type === "colour" ? 'coloredline' : chartInformation.type,
+                    type: chartInformation.type === "colour" ? 'coloredline' : chartInformation.type === "video" ? 'line' : chartInformation.type,
                     zoomType: 'x'
                 },
                 xAxis: {
