@@ -18,7 +18,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const [liveCheck, setLiveCheck] = useState(false);
   const [seriesInfo, setSeriesInfo] = useState([]);
   const [files, setFiles] = useState([])
-  const [filteredFiles, setFilteredFiles] = useState([])
+  const [videoSyncFiles, setVideoSyncFiles] = useState([])
   const [selectedVideo, setSelectedVideo] = useState({ fileHeaders: [], key: "", size: 0 })
   const [videoTimespans, setvideoTimespans] = useState([])
   const [fileTimespans, setfileTimespans] = useState([])
@@ -97,11 +97,11 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   const pages = [
     <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck}/>,
-    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} filteredFiles={filteredFiles} setFilteredFiles={setFilteredFiles} fileTimespans={fileTimespans} videoTimespans={videoTimespans}/>,
+    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} videoSyncFiles={videoSyncFiles} setVideoSyncFiles={setVideoSyncFiles} fileTimespans={fileTimespans} videoTimespans={videoTimespans}/>,
     <div className='file-Storage-Container'>
       <div className="file-browser">
         <h3>Choose Files</h3>
-        <FileStorage files={graphType == 'video' ? filteredFiles : files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+        <FileStorage files={graphType == 'video' ? videoSyncFiles : files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
       </div>
       <div className="fileButtons">
         <button className="pageTwoBackButton" onClick={() => {movePage(graphType == "video" ? -1 : -2)}}>Back</button>

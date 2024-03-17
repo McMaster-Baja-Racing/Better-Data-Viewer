@@ -2,11 +2,11 @@ import '../../../styles/modalStyles.css';
 import '../../../styles/videoSelectStyles.css';
 import { AiFillFolder } from 'react-icons/ai';
 
-export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, filteredFiles, setFilteredFiles, fileTimespans, videoTimespans }) => {
+export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, videoSyncFiles, setVideoSyncFiles, fileTimespans, videoTimespans }) => {
     
     // Filter files to those that have a timestamp wihtin the range of the selected video
     const filterFiles = (videoTimespan) => {
-        let tempFilteredFiles = []
+        let tempVideoSyncFiles = []
         const videoStart = new Date (videoTimespan.fileHeaders[0])
         const videoEnd = new Date (videoTimespan.fileHeaders[1])
         files.forEach(file => {
@@ -14,10 +14,10 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
             if (fileTimespan == undefined) return
             const fileStart = new Date(fileTimespan.fileHeaders[0])
             const fileEnd = new Date(fileTimespan.fileHeaders[1])
-            if (fileStart < videoEnd && videoStart < fileEnd) tempFilteredFiles.push(file)
+            if (fileStart < videoEnd && videoStart < fileEnd) tempVideoSyncFiles.push(file)
         })
         setSelectedVideo(videoTimespan)
-        setFilteredFiles(tempFilteredFiles)
+        setVideoSyncFiles(tempVideoSyncFiles)
     }
 
     //render the modal JSX in the portal div.
@@ -47,8 +47,8 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
                 </div>
                 <div className="folderContainer">
                 <label className='folderContainerLabel'>Available Folders</label>
-                {filteredFiles.length == 0 && selectedVideo != '' ? <label>No files found</label> : null}
-                {[...new Set(filteredFiles.map(file => file.key.split('/')[0]))].map((folder, index) => (
+                {videoSyncFiles.length == 0 && selectedVideo != '' ? <label>No files found</label> : null}
+                {[...new Set(videoSyncFiles.map(file => file.key.split('/')[0]))].map((folder, index) => (
                     <label key={index} htmlFor={`folder-${index}`} className='folderLabel'>
                         <AiFillFolder size={20} style={{ marginBottom: '-2%', marginRight: '3px' }}/>
                         {folder}
