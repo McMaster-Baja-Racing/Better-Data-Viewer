@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../../styles/videoPlayerStyles.css';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const VideoPlayer = () => {
-  
-  const chartInformation = JSON.parse(decodeURIComponent(new URLSearchParams(useLocation().search).get('chartInformation')));
-    
+  const { key } = useParams();
+
   const [videoURL, setVideoURL] = useState('');
   const videoRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0); // added
@@ -13,7 +12,7 @@ const VideoPlayer = () => {
 
   useEffect(() => {
     // Fetch data when the component mounts
-    fetch(`http://${window.location.hostname}:8080/files/${chartInformation.video.key}`)
+    fetch(`http://${window.location.hostname}:8080/files/${key}`)
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob) 

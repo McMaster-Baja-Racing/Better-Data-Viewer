@@ -33,19 +33,26 @@ const App = () => {
   //        analysis: "rollAvg"
   //      }
   //   ],
-  //   video: {fileHeaders: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"], key: "video.mp4", size: 1234567890"},
   //   live: false,
   //   type: "line"
+  // }
+
+  // sample format for videoInformation:
+  // {
+  //   video: {fileHeaders: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"], key: "video.mp4", size: 1234567890"},
   //   window: Window | null
   // }
 
   const [chartInformation, setChartInformation] = useState({
     files: [],
-    video: { fileHeaders: [], key: "", size: 0 },
     live: false,
     type: "line",
-    window: null,
   });
+
+  const [videoInformation, setVideoInformation] = useState({
+    video: { fileHeaders: [], key: "", size: 0 },
+    window: null,
+  })
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
   const [successMessage, setSuccessMessage] = useState({})
@@ -62,12 +69,12 @@ const App = () => {
       <Topbar setModal={setModal}/>
       <header className="App-header">
         <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage}/> : null}
+        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setVideoInformation={setVideoInformation} setSuccessMessage={setSuccessMessage}/> : null}
         {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage}/> : null}
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <Chart chartInformation={chartInformation} />
+        <Chart chartInformation={chartInformation} videoInformation={videoInformation} />
 
       </header>
 

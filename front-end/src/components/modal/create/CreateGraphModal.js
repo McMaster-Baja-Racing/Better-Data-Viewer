@@ -8,7 +8,7 @@ import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 import { VideoSelect } from "./VideoSelect";
 
-export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage }) => {
+export const CreateGraphModal = ({ setModal, setChartInformation, setVideoInformation, setSuccessMessage }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -53,14 +53,16 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   const handleSubmit = () => {
     const chartInformation = {
       "files": seriesInfo,
-      "video": selectedVideo,
       "live": liveCheck,
       "type": graphType,
-      "window": null
     };
   
     if (graphType == "video") {
-      chartInformation.window = window.open(`http://localhost:3000/video?chartInformation=${encodeURIComponent(JSON.stringify(chartInformation))}`, 'Popup', 'width=1000,height=1000');
+      // const window = window.open(`http://localhost:3000/video?chartInformation=${encodeURIComponent(JSON.stringify(chartInformation))}`, 'Popup', 'width=1000,height=1000');
+      setVideoInformation({ 
+        video: selectedVideo, 
+        window: window.open(`http://localhost:3000/video/${selectedVideo.key}`, 'Popup', 'width=1000,height=1000') 
+      });
     }
   
     setChartInformation(chartInformation);

@@ -11,7 +11,7 @@ require('highcharts-multicolor-series')(Highcharts);
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
-const Chart = ({ chartInformation }) => {
+const Chart = ({ chartInformation, videoInformation }) => {
 
     const chartRef = useRef(null);
 
@@ -276,29 +276,31 @@ const Chart = ({ chartInformation }) => {
     const [offsets, setOffsets] = useState([])
 
     useEffect(() => {
-        if (!chartInformation.window) return;
+        if (!videoInformation.window) return;
 
         const handleWindowLoad = () => {
             setIsLoaded(true)
             console.log("window loaded")
         }
 
-        chartInformation.window.addEventListener('load', handleWindowLoad)
-
-        if (chartInformation.video.fileHeaders.length == 0) return
-        setOffsets(computeOffsets(chartInformation))
+        videoInformation.window.addEventListener('load', handleWindowLoad)
 
         return () => {
-            chartInformation.window.removeEventListener('load', handleWindowLoad)
+            videoInformation.window.removeEventListener('load', handleWindowLoad)
             setIsLoaded(false)
             console.log("window unloaded")
         }
-    }, [chartInformation])
+    }, [videoInformation])
 
     useEffect(() => {
-        if (!chartInformation.window || !isLoaded) return;
+        if (videoInformation.video.fileHeaders.length == 0 || chartInformation.files.length == 0) return
+        setOffsets(computeOffsets(videoInformation, chartInformation))
+    }, [videoInformation, chartInformation])
+
+    useEffect(() => {
+        if (!videoInformation.window || !isLoaded) return;
     
-        const videoElement = chartInformation.window.document.getElementById('video');
+        const videoElement = videoInformation.window.document.getElementById('video');
         console.log("videoElement:", videoElement)
         if (!videoElement) return;
 
