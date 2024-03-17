@@ -4,6 +4,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
+import { findClosestTimestamp, findPointIndex } from '../lib/videoUtils';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
@@ -323,9 +324,10 @@ const Chart = ({ chartInformation }) => {
         setOffsets(tempOffsets)
     }, [chartInformation])
 
+    // Handles updating the chart when the video timestamp changes
     useEffect(() => {
         if (chartRef.current.chart.series.length == 0) return
-
+        
         const pointIndexs = []
         chartRef.current.chart.series.forEach(series => {
             const seriesIndex = chartRef.current.chart.series.indexOf(series)
@@ -338,6 +340,7 @@ const Chart = ({ chartInformation }) => {
             if (pointIndex >= 0) pointIndexs.push({series: seriesIndex, point: pointIndex})
         })
 
+        // Updates the chart to show the point that is closest to the video timestamp
         if (pointIndexs.length === 0) return
         chartRef.current.chart.series[pointIndexs[0].series].points[pointIndexs[0].point].onMouseOver()
         if (pointIndexs.length > 1) pointIndexs.slice(1).forEach(pointIndex => {
@@ -345,20 +348,6 @@ const Chart = ({ chartInformation }) => {
         })
         
     }, [videoTimestamp])
-
-
-    const findClosestTimestamp = (timestamp) => {
-
-        const closestTimestamp = timestamps.reduce((prev, curr) => Math.abs(curr - timestamp) < Math.abs(prev - timestamp) ? curr : prev)
-
-        return timestamps.indexOf(closestTimestamp);
-    }
-
-    const findPointIndex = (timestampIndex, series) => {
-        const timestampPoint = {x: series.xData[timestampIndex], y: series.yData[timestampIndex]}
-        const point = series.points.find(point => point.x === timestampPoint.x && point.y === timestampPoint.y)
-        return series.points.indexOf(point)
-    }
 
     // This function is used to throttle the resize observer
     function throttle(f, delay) {
