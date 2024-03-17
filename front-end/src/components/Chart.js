@@ -4,7 +4,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
-import { findClosestTimestamp, findPointIndex } from '../lib/videoUtils';
+import { computeOffsets, findClosestTimestamp, findPointIndex } from '../lib/videoUtils';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
@@ -273,6 +273,7 @@ const Chart = ({ chartInformation }) => {
 
     const [videoTimestamp, setVideoTimestamp] = useState(0);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [offsets, setOffsets] = useState([])
 
     useEffect(() => {
         if (!chartInformation.window) return;
@@ -283,6 +284,9 @@ const Chart = ({ chartInformation }) => {
         }
 
         chartInformation.window.addEventListener('load', handleWindowLoad)
+
+        if (chartInformation.video.fileHeaders.length == 0) return
+        setOffsets(computeOffsets(chartInformation))
 
         return () => {
             chartInformation.window.removeEventListener('load', handleWindowLoad)
@@ -309,25 +313,11 @@ const Chart = ({ chartInformation }) => {
         };
     }, [isLoaded]);
 
-    const [offsets, setOffsets] = useState([])
-
-    useEffect(() => {
-        if (chartInformation.video.fileHeaders.length == 0) return
-        const videoStart = new Date(chartInformation.video.fileHeaders[0]).getTime()
-        
-        const tempOffsets = []
-        chartInformation.files.forEach(file => {
-            const fileStart = new Date(file.columns[0].timespan[0]).getTime() // Unix date of first timestamp in file
-            tempOffsets.push(videoStart - fileStart)
-        })
-
-        setOffsets(tempOffsets)
-    }, [chartInformation])
-
     // Handles updating the chart when the video timestamp changes
     useEffect(() => {
         if (chartRef.current.chart.series.length == 0) return
         
+        // Computes the point and series which overlap with the video timestamp
         const pointIndexs = []
         chartRef.current.chart.series.forEach(series => {
             const seriesIndex = chartRef.current.chart.series.indexOf(series)
@@ -335,7 +325,7 @@ const Chart = ({ chartInformation }) => {
             const fileTimestamp = videoTimestamp + offsets[seriesIndex] + timestamps[0]
             if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return
             
-            const timestampIndex = findClosestTimestamp(fileTimestamp)
+            const timestampIndex = findClosestTimestamp(fileTimestamp, timestamps)
             const pointIndex = findPointIndex(timestampIndex, series)
             if (pointIndex >= 0) pointIndexs.push({series: seriesIndex, point: pointIndex})
         })
