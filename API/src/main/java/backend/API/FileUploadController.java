@@ -182,12 +182,12 @@ public class FileUploadController {
 		// TODO: THIS SHOULD HAPPEN BEFORE RUNNING THE ANALYZER IN THE COMMON CASE
 		// Then check if live is true, and set the options + files accordingly
 		String fileOutputString = outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length());
-		outputFiles = new String[10];
 
 		// print live options
 		System.out.println("Live options: " + liveOptions[0]);
 
 		if (liveOptions[0].equals("true")) {
+			outputFiles = new String[10];
 			// When live is true, we only want a certain amount of time from its timestamp
 			// Get the last timestamp, then subtract a certain amount of time, and use split analyzer between the two
 			int lastPoint = Integer.valueOf(storageService.getLast(fileOutputString));
