@@ -23,31 +23,22 @@ const VideoPlayer = () => {
           URL.revokeObjectURL(url);
         };
       });
+
+      const handleTimeUpdate = () => {
+        setCurrentTime(videoRef.current.currentTime ); // (*1000) Convert to milliseconds 
+      };
+  
+      const handleDurationChange = () => {
+        setDuration(videoRef.current.duration);
+      }
+  
+      videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
+      videoRef.current.addEventListener('durationchange', handleDurationChange);
+      return () => {
+        videoRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+        videoRef.current.removeEventListener('durationchange', handleDurationChange);
+      };
   }, []); // Empty dependency array ensures that the fetch is only performed once
-
-  useEffect(() => {
-    const handleTimeUpdate = () => {
-      setCurrentTime(videoRef.current.currentTime ); // (*1000) Convert to milliseconds 
-    };
-
-    const handleDurationChange = () => {
-      setDuration(videoRef.current.duration);
-    }
-
-    videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
-    videoRef.current.addEventListener('durationchange', handleDurationChange);
-    return () => {
-      videoRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-      videoRef.current.removeEventListener('durationchange', handleDurationChange);
-    };
-  }, []);
-
-  // useEffect(() => {
-  //   const newTimestamp = chartTimestamp - offset;
-  //   if (videoTimespan != newTimestamp) setvideoTimespan(newTimestamp);
-  //   if (newTimestamp) videoRef.current.currentTime = newTimestamp / 1000
-  // }, [chartTimestamp, offset]);
-
 
   const togglePlay = () => {
     if (videoRef.current.paused) {
