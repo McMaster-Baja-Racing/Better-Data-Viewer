@@ -20,8 +20,6 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
         setVideoSyncFiles(tempVideoSyncFiles)
     }
 
-    console.log(videoTimespans)
-
     //render the modal JSX in the portal div.
     return (
         <div className="videoSelectContainer">

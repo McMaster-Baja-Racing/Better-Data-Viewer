@@ -2,7 +2,6 @@
 export const replaceViewAtIndex = (viewInformation, index, newView) => {
     return viewInformation.map((view, i) => {
         if (i === index) {
-            console.log(newView)
             return newView;
         }
         return view;

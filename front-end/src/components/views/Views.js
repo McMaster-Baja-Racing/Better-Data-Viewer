@@ -3,7 +3,6 @@ import newGraphImg from '../../assets/icons/newGraph2.svg';
 import { viewStyles } from './viewsConfig';
 
 const Views = ({ viewInformation, setModal, setButtonID, numViews }) => {
-
     return (
         <div className="views" style={viewStyles[numViews]}>
             {Array.from({ length: numViews }).map((_, index) => {

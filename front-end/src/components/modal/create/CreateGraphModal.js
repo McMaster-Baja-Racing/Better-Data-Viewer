@@ -23,7 +23,7 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
   const [seriesInfo, setSeriesInfo] = useState([]);
   const [files, setFiles] = useState([])
   const [videoSyncFiles, setVideoSyncFiles] = useState([])
-  const [selectedVideo, setSelectedVideo] = useState({ fileHeaders: [], key: "", size: 0 })
+  const [selectedVideo, setSelectedVideo] = useState({ key: "", start: "", end: "" })
   const [videoTimespans, setvideoTimespans] = useState([])
   const [fileTimespans, setfileTimespans] = useState([])
   const [videoTimestamp, setVideoTimestamp] = useState(0)
@@ -64,16 +64,14 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
 
     const videoInformation = {
       video: selectedVideo,
-      videoTimestamp: videoTimestamp,
-      setVideoTimestamp: setVideoTimestamp
     }
 
-    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation, videoInformation } });
+    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation } });
 
     if (buttonID < MAX_VIEWS && graphType === "video") {
-      updatedViewInformation = insertViewAtIndex(updatedViewInformation, { component: VideoPlayer, props: { videoInformation } });
+      updatedViewInformation = insertViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: { videoInformation } });
     }
-    
+
     setViewInformation(updatedViewInformation);
   }
   

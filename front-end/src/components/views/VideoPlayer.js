@@ -2,15 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../../styles/videoPlayerStyles.css';
 import { getDuration } from '../../lib/videoUtils';
 
-const VideoPlayer = (videoInformation) => {
+const VideoPlayer = ( videoInformation ) => {
 
   const [videoURL, setVideoURL] = useState('');
   const videoRef = useRef(null);
-  const duration = getDuration(videoInformation);
+  const [key, setKey] = useState(undefined);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     // Fetch data when the component mounts
-    fetch(`http://${window.location.hostname}:8080/files/${videoInformation.video.key}`)
+    if (key === undefined) return;
+    fetch(`http://${window.location.hostname}:8080/files/${key}`)
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob) 
@@ -20,7 +23,12 @@ const VideoPlayer = (videoInformation) => {
           URL.revokeObjectURL(url);
         };
       });
-  }, []); // Empty dependency array ensures that the fetch is only performed once
+  }, [key]); // Empty dependency array ensures that the fetch is only performed once
+
+  useEffect(() => {
+    setKey(videoInformation.video.key);
+    setDuration(getDuration(videoInformation));
+  }, [videoInformation]);
 
   const togglePlay = () => {
     if (videoRef.current.paused) {
@@ -43,7 +51,9 @@ const VideoPlayer = (videoInformation) => {
   };
 
   const updateTimestamp = () => {
-    videoInformation.setVideoTimestamp(videoRef.current.currentTime);
+    const time = videoRef.current.currentTime;
+    setCurrentTime(time);
+    // videoInformation.setVideoTimestamp(time * 1000);
   }
 
   return (
@@ -51,12 +61,12 @@ const VideoPlayer = (videoInformation) => {
         <div className = "pageWrap">
           <div className = "pageContainer">
             <div className = "videoContainerBox">
-              <video src={videoURL} videRef={videoRef} onTimeUpdate={updateTimestamp} onClick={togglePlay} className = "center" id="video"/>
+              <video src={videoURL} ref={videoRef} onTimeUpdate={updateTimestamp} onClick={togglePlay} className = "center" id="video"/>
             </div>
             <div className="timeDisplay">
               {formatTime(videoInformation.videoTimestamp)} / {formatTime(videoRef.current ? videoRef.current.duration : 0)}
             </div>
-            <input type="range" min="0" max={duration} value={videoInformation.videoTimestamp} onChange={seek} className="seekbar" />
+            <input type="range" min="0" max={duration} value={currentTime} onChange={seek} className="seekbar" />
           </div>
         </div>
     </div>

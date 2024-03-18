@@ -17,7 +17,7 @@ export const defaultChartOptions = {
         enabled: false
     },
     boost: {
-        enabled: true
+        enabled: false
     },
     colorAxis: {
         showInLegend: false
@@ -31,7 +31,7 @@ const getStandardChartConfig = (chartInformation) => {
     chartConfig.title.text = chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header;
 
     chartConfig.chart = {
-        type: chartInformation.type,
+        type: chartInformation.type === 'video' ? 'line' : chartInformation.type,
         zoomType: 'y'
     };
 
@@ -53,6 +53,8 @@ const getStandardChartConfig = (chartInformation) => {
         tickColor: 'grey',
         lineWidth: 1,
     };
+
+    chartConfig.boost = { enabled: chartInformation.type === 'video' ? false : true }
 
     return chartConfig;
 }

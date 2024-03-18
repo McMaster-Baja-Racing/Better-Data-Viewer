@@ -24,5 +24,5 @@ export const computeOffsets = (videoInformation, chartInformation) => {
 }
 
 export const getDuration = (videoInformation) => {
-    return new Date(videoInformation.video.end) - new Date (videoInformation.video.start)
+    return new Date(videoInformation.video.end).getTime() - new Date (videoInformation.video.start).getTime()
 }
