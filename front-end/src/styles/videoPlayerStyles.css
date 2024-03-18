@@ -4,7 +4,7 @@
     }
 
     .pageWrap{
-        min-height: 100vh;
+        max-height: 25vh;
         display: flex;
         justify-content: center;
         align-items: center;
