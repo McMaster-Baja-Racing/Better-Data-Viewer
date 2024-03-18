@@ -7,9 +7,12 @@ import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 import { VideoSelect } from "./VideoSelect";
-import { MAX_CHARTS } from '../../chartsConfig';
+import { MAX_VIEWS } from '../../views/viewsConfig';
+import Chart from "../../views/Chart";
+import VideoPlayer from "../../views/VideoPlayer";
+import { insertViewAtIndex, replaceViewAtIndex } from "../../../lib/viewUtils";
 
-export const CreateGraphModal = ({ setModal, setChartInformation, setVideoInformation, setSuccessMessage, chartInformation, buttonID }) => {
+export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessage, viewInformation, buttonID }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -23,6 +26,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setVideoInform
   const [selectedVideo, setSelectedVideo] = useState({ fileHeaders: [], key: "", size: 0 })
   const [videoTimespans, setvideoTimespans] = useState([])
   const [fileTimespans, setfileTimespans] = useState([])
+  const [videoTimestamp, setVideoTimestamp] = useState(0)
 
   useEffect(() => {
       // Fetch data when the component mounts
@@ -52,19 +56,25 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setVideoInform
 
   //Stuff for handling final submit
   const handleSubmit = () => {
-    const updatedChartInformation = chartInformation.map((chart, index) => {
-      if (index === buttonID) {
-        return {
-          files: (index === MAX_CHARTS) ? selectedFiles : seriesInfo,
-          live: liveCheck,
-          type: graphType,
-        };
-      } else {
-        return chart;
-      }
-    });
-  
-    setChartInformation(updatedChartInformation);
+    const chartInformation = {
+      files: (buttonID === MAX_VIEWS) ? selectedFiles : seriesInfo,
+      live: liveCheck,
+      type: graphType,
+    }
+
+    const videoInformation = {
+      video: selectedVideo,
+      videoTimestamp: videoTimestamp,
+      setVideoTimestamp: setVideoTimestamp
+    }
+
+    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation, videoInformation } });
+
+    if (buttonID < MAX_VIEWS && graphType === "video") {
+      updatedViewInformation = insertViewAtIndex(updatedViewInformation, { component: VideoPlayer, props: { videoInformation } });
+    }
+    
+    setViewInformation(updatedViewInformation);
   }
   
 

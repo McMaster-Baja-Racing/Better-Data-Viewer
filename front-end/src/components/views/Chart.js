@@ -1,22 +1,22 @@
-import '../styles/chart.css'
-import { defaultChartOptions, getChartConfig } from '../lib/chartOptions.js'
-import { getSeriesData, LIVE_DATA_INTERVAL, validateChartInformation } from '../lib/chartUtils.js';
-import { ApiUtil } from '../lib/apiUtils.js';
+import '../../styles/chart.css'
+import { defaultChartOptions, getChartConfig } from '../../lib/chartOptions.js'
+import { getSeriesData, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
+import { ApiUtil } from '../../lib/apiUtils.js';
 import React, { useState, useEffect, useRef } from 'react';
 import Highcharts, { chart } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
-import { computeOffsets, findClosestTimestamp, findPointIndex } from '../lib/videoUtils';
+import { computeOffsets, findClosestTimestamp, findPointIndex } from '../../lib/videoUtils.js';
 import { useResizeDetector } from 'react-resize-detector';
-import loadingImg from '../assets/loading.gif';
+import loadingImg from '../../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
-const Chart = ({ chartInformation }) => {
+const Chart = ({ chartInformation, videoInformation }) => {
 
     const [chartOptions, setChartOptions] = useState(defaultChartOptions);
     const [loading, setLoading] = useState(false);

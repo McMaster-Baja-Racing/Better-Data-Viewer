@@ -1,18 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../../../styles/videoPlayerStyles.css';
-import { useParams } from 'react-router-dom';
+import '../../styles/videoPlayerStyles.css';
+import { getDuration } from '../../lib/videoUtils';
 
-const VideoPlayer = () => {
-  const { key } = useParams();
+const VideoPlayer = (videoInformation) => {
 
   const [videoURL, setVideoURL] = useState('');
   const videoRef = useRef(null);
-  const [currentTime, setCurrentTime] = useState(0); // added
-  const [duration, setDuration] = useState(0); // scrolly
+  const duration = getDuration(videoInformation);
 
   useEffect(() => {
     // Fetch data when the component mounts
-    fetch(`http://${window.location.hostname}:8080/files/${key}`)
+    fetch(`http://${window.location.hostname}:8080/files/${videoInformation.video.key}`)
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob) 
@@ -22,21 +20,6 @@ const VideoPlayer = () => {
           URL.revokeObjectURL(url);
         };
       });
-
-      const handleTimeUpdate = () => {
-        setCurrentTime(videoRef.current.currentTime ); // (*1000) Convert to milliseconds 
-      };
-  
-      const handleDurationChange = () => {
-        setDuration(videoRef.current.duration);
-      }
-  
-      videoRef.current.addEventListener('timeupdate', handleTimeUpdate);
-      videoRef.current.addEventListener('durationchange', handleDurationChange);
-      return () => {
-        videoRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-        videoRef.current.removeEventListener('durationchange', handleDurationChange);
-      };
   }, []); // Empty dependency array ensures that the fetch is only performed once
 
   const togglePlay = () => {
@@ -59,18 +42,21 @@ const VideoPlayer = () => {
     videoRef.current.currentTime = seekTime;
   };
 
+  const updateTimestamp = () => {
+    videoInformation.setVideoTimestamp(videoRef.current.currentTime);
+  }
 
   return (
     <div className = "background">
         <div className = "pageWrap">
           <div className = "pageContainer">
             <div className = "videoContainerBox">
-              <video src={videoURL} ref={videoRef} onClick={togglePlay} className = "center" id="video"/>
+              <video src={videoURL} videRef={videoRef} onTimeUpdate={updateTimestamp} onClick={togglePlay} className = "center" id="video"/>
             </div>
             <div className="timeDisplay">
-              {formatTime(currentTime)} / {formatTime(videoRef.current ? videoRef.current.duration : 0)}
+              {formatTime(videoInformation.videoTimestamp)} / {formatTime(videoRef.current ? videoRef.current.duration : 0)}
             </div>
-            <input type="range" min="0" max={duration} value={currentTime} onChange={seek} className="seekbar" />
+            <input type="range" min="0" max={duration} value={videoInformation.videoTimestamp} onChange={seek} className="seekbar" />
           </div>
         </div>
     </div>

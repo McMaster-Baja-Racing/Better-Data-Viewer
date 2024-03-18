@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ApiUtil } from '../lib/apiUtils.js';
 import bajalogo from '../assets/bajalogo.png';
 import loadingImg from '../assets/loading.gif';
-import { MAX_CHARTS } from './chartsConfig';
+import { MAX_VIEWS } from './views/viewsConfig.js';
 
 const icons = {};
 const importAll = r => {
@@ -11,7 +11,7 @@ const importAll = r => {
 }
 importAll(require.context('../assets/icons', false, /\.(png|jpe?g|svg)$/));
 
-const Topbar = ({ setModal, numGraphs, setNumGraphs }) => {
+const Topbar = ({ setModal, numViews, setNumViews }) => {
 
     const [liveStatus, setLiveStatus] = useState(false);
     //This function notifies the backend to begin listening on a certain port for live data
@@ -30,14 +30,14 @@ const Topbar = ({ setModal, numGraphs, setNumGraphs }) => {
         }
     }
 
-    const updateNumGraphs = (num) => {
+    const updateNumViews = (num) => {
         if (num < 1) {
             num = 1;
         }
-        if (num > MAX_CHARTS) {
-            num = MAX_CHARTS;
+        if (num > MAX_VIEWS) {
+            num = MAX_VIEWS;
         }
-        setNumGraphs(num);
+        setNumViews(num);
     }
 
     return (
@@ -60,11 +60,11 @@ const Topbar = ({ setModal, numGraphs, setNumGraphs }) => {
                 <button title="Download Files" className="downloadFiles" onClick={() => setModal('Download')}>
                 <img className="icon"src={icons['./download.svg']} alt="Download" />
                 </button>
-                <button title="PlusGraph" className="plusGraph" onClick={() => updateNumGraphs(numGraphs-1)}>
+                <button title="PlusView" className="plusView" onClick={() => updateNumViews(numViews-1)}>
                     -
                 </button>
-                <h1>{numGraphs}</h1>
-                <button title="MinusGraph" className="minusGraph" onClick={() => updateNumGraphs(numGraphs+1)}>
+                <h1>{numViews}</h1>
+                <button title="MinusView" className="minusView" onClick={() => updateNumViews(numViews+1)}>
                     +
                 </button>
                 <button title="Help" className="helpModal" onClick={() => setModal('Help')}>

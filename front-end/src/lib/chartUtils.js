@@ -83,7 +83,6 @@ const getHeadersIndex = (headers, columns) => {
  * @returns {Boolean} True if the chart information is full, false otherwise.
  */
 export const validateChartInformation = (chartInformation) => {
-    console.log(chartInformation)
     if (!chartInformation) {
         return false;
     }
