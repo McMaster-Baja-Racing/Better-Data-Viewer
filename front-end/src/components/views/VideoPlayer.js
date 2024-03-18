@@ -65,7 +65,7 @@ const VideoPlayer = ({ videoInformation }) => {
               <video src={videoURL} ref={videoRef} onTimeUpdate={updateTimestamp} onClick={togglePlay} className = "center" id="video"/>
             </div>
             <div className="timeDisplay">
-              {formatTime(videoInformation.videoTimestamp)} / {formatTime(duration)}
+              {formatTime(currentTime)} / {formatTime(duration)}
             </div>
             <input type="range" min="0" max={duration} value={currentTime} onChange={seek} className="seekbar" />
           </div>
