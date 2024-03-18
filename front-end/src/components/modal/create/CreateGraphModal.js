@@ -7,8 +7,9 @@ import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 import { VideoSelect } from "./VideoSelect";
+import { MAX_CHARTS } from '../../chartsConfig';
 
-export const CreateGraphModal = ({ setModal, setChartInformation, setVideoInformation, setSuccessMessage }) => {
+export const CreateGraphModal = ({ setModal, setChartInformation, setVideoInformation, setSuccessMessage, chartInformation, buttonID }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -51,22 +52,20 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setVideoInform
 
   //Stuff for handling final submit
   const handleSubmit = () => {
-    const chartInformation = {
-      "files": seriesInfo,
-      "live": liveCheck,
-      "type": graphType,
-    };
+    const updatedChartInformation = chartInformation.map((chart, index) => {
+      if (index === buttonID) {
+        return {
+          files: (index === MAX_CHARTS) ? selectedFiles : seriesInfo,
+          live: liveCheck,
+          type: graphType,
+        };
+      } else {
+        return chart;
+      }
+    });
   
-    if (graphType == "video") {
-      // const window = window.open(`http://localhost:3000/video?chartInformation=${encodeURIComponent(JSON.stringify(chartInformation))}`, 'Popup', 'width=1000,height=1000');
-      setVideoInformation({ 
-        video: selectedVideo, 
-        window: window.open(`http://localhost:3000/video/${selectedVideo.key}`, 'Popup', 'width=1000,height=1000') 
-      });
-    }
-  
-    setChartInformation(chartInformation);
-  };
+    setChartInformation(updatedChartInformation);
+  }
   
 
   // This method will return headers when supplied with a list of files. Added support for folders is neccesary

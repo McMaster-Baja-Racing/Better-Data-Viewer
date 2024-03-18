@@ -238,11 +238,6 @@ public class FileUploadController {
 			// Set output files to empty string
 			outputFiles = new String[10];
 		}
-
-		// Then check if live is true, and set the options + files accordingly
-		if (liveOptions[0].equals("true")) {
-			// Maybe do the serial stuff here, but definitely look in live folder for data
-		}
 		
 		// For all of the input and output files, add the root location to the front
 		for (int i = 0; i < inputFiles.length; i++) {
@@ -265,6 +260,37 @@ public class FileUploadController {
 			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
 			outputFiles[outputFiles.length - 1] = inputFiles[0];
 		}
+
+		// TODO: THIS SHOULD HAPPEN BEFORE RUNNING THE ANALYZER IN THE COMMON CASE
+		// Then check if live is true, and set the options + files accordingly
+		String fileOutputString = outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length());
+
+		// print live options
+		System.out.println("Live options: " + liveOptions[0]);
+
+		if (liveOptions[0].equals("true")) {
+			outputFiles = new String[10];
+			// When live is true, we only want a certain amount of time from its timestamp
+			// Get the last timestamp, then subtract a certain amount of time, and use split analyzer between the two
+			int lastPoint = Integer.valueOf(storageService.getLast(fileOutputString));
+			int firstPoint = Math.max(0, lastPoint - 3000);
+
+			// print the two values
+			System.out.println("First point: " + firstPoint);
+			System.out.println("Last point: " + lastPoint);
+
+			Object[] extraValues = new Object[]{String.valueOf(firstPoint), String.valueOf(lastPoint)};
+			String[] lastFile = new String[]{fileOutputString};
+
+			try {
+				Analyzer.createAnalyzer("split", lastFile, inputColumns, 
+					outputFiles, extraValues).analyze();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			
+		}
+
 		// Then return the final file, removing the prefix for upload dir
 		String filePath = outputFiles[outputFiles.length - 1];
 		Path path = Paths.get(filePath);

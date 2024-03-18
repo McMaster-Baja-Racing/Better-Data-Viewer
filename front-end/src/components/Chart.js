@@ -1,397 +1,112 @@
 import '../styles/chart.css'
+import { defaultChartOptions, getChartConfig } from '../lib/chartOptions.js'
+import { getSeriesData, LIVE_DATA_INTERVAL, validateChartInformation } from '../lib/chartUtils.js';
+import { ApiUtil } from '../lib/apiUtils.js';
 import React, { useState, useEffect, useRef } from 'react';
-import Highcharts from 'highcharts'
+import Highcharts, { chart } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
 import { computeOffsets, findClosestTimestamp, findPointIndex } from '../lib/videoUtils';
+import { useResizeDetector } from 'react-resize-detector';
+import loadingImg from '../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
 require('highcharts-multicolor-series')(Highcharts);
 
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
-const Chart = ({ chartInformation, videoInformation }) => {
+const Chart = ({ chartInformation }) => {
 
-    const chartRef = useRef(null);
-
-    //File information is array of column names and associated file names
-    const [chartOptions, setChartOptions] = useState({
-        chart: {
-            type: 'scatter',
-            zoomType: 'x'
-        },
-        title: {
-            text: 'Template'
-        },
-        subtitle: {
-            text: document.ontouchstart === undefined ?
-                'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-        },
-        legend: {
-            enabled: false
-        },
-        accessibility: {
-            enabled: false
-        },
-        boost: {
-            enabled: chartInformation.type !== "video"
-        }
-    });
-
-    //loading
+    const [chartOptions, setChartOptions] = useState(defaultChartOptions);
     const [loading, setLoading] = useState(false);
-
-    //Only call this after fileInformation has been updated
     const [parsedData, setParsedData] = useState([]);
     const [fileNames, setFileNames] = useState([]);
-    // useref for minMax
     let minMax = useRef([0, 0]);
-    const [timestamps, setTimestamps] = useState([])
 
-    // This function handles the fetching of the data from the backend
-    const getFile = async (inputFiles, outputFiles, analyzerOptions, liveOptions, columnInfo) => {
-        let inputColumns = columnInfo.map(col => col.header);
-        // Using async / await rather than .then() allows me to return the data from the function easily
-        const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&inputColumns=${inputColumns}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`, {
-            method: 'GET'
-        })
-
-        if (!response.ok) {
-            alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
-            return
-        }
-
-        const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
-        setFileNames(prevState => {
-            
-            // return without duplicates
-            return [...prevState, filename]
-        })
-
-        const text = await response.text()
-
-        var headers = text.trim().split("\n")[0].split(",");
-        headers[headers.length - 1] = headers[headers.length - 1].replace("\r", "")
-        var h = [];
-
-        // This will find the index of the headers in the file (works for any number of headers)
-        for (var i = 0; i < columnInfo.length; i++) {
-            for (var j = 0; j < headers.length; j++) {
-                if (columnInfo[i].header === headers[j].trim()) {
-                    h.push(j);
-                }
-            }
-        }
-
-        // Find which header is the timestamp
-        for (var i = 0; i < headers.length; i++) {
-            if (headers[i] === "Timestamp (ms)") {
-                var timestampColumn = i;
-            }
-        }
-
-        setTimestamps(text.trim().split("\n").slice(1).map((line) => parseFloat(line.split(",")[timestampColumn])))
-        
-
-        // Get all the lines of the file, and split them into arrays
-        const lines = text.trim().split("\n").slice(1).map((line) => line.split(","))
-
-        // If not colour, just return the data as is in array format
-        if (chartInformation.type !== "colour") {
-            return lines.map((line) => {
-                return [parseFloat(line[h[0]]), parseFloat(line[h[1]])];
-            })
-        }
-
-        // If colour, return the data in object format
-        let minhue = 150;
-        let maxhue = 0;
-        
-        // Make a request to get the maximum and minimum values of the colour value
-        // Use method @GetMapping("/files/maxmin/{filename:.+}")
-        
-        const minMaxResponse = await fetch(`http://${window.location.hostname}:8080/files/maxmin/${filename}?headerName=${columnInfo[2].header}`, {
-            method: 'GET'
-        })
-
-        if (!minMaxResponse.ok) {
-            alert(`An error has occured!\nCode: ${minMaxResponse.status}\n${await minMaxResponse.text()}`);
-            return
-        }
-
-        let [minval, maxval] = (await minMaxResponse.text()).split(",").map(parseFloat);
-        minMax.current = [minval, maxval];
-
-        return lines.map((line) => {
-
-            let val = parseFloat(line[h[2]])
-            let hue = minhue + (maxhue - minhue) * (val - minval) / (maxval - minval);
-
-            return { 
-                x: parseFloat(line[h[0]]), 
-                y: parseFloat(line[h[1]]), 
-                colorValue: val, 
-                segmentColor: `hsl(${hue}, 100%, 50%)`
-            };
-        })
-    }
-
-    // This function handles the higher level calling of getFile to handle it for all files as well as live data
+    // Fetch the data from the server and format it for the chart
     const getFileFormat = async () => {
-        // In here the data is all added up, which prevents the chart from updating until all data is fetched
-        // This also prevents liveData from adding more data as new series, and will update the graph instead
-        setLoading(true);
-
+        // Runs through all the series and fetches the data, then updates the graph
+        // This also prevents liveData from adding more data as a separate series
         var data = [];
         for (var i = 0; i < chartInformation.files.length; i++) {
             // Create a list of all files in order (formatting for backend)
-            var files = [];
-            for (var j = 0; j < chartInformation.files[i].columns.length; j++) {
-                //if (!files.includes(chartInformation.files[i].columns[j].filename)) {
-                    files.push(chartInformation.files[i].columns[j].filename);
-                //}
-            }
-            // Fixed this little if statement with .filter(e => e)
-            data.push(await getFile(files, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), ["false"], chartInformation.files[i].columns))
+            let files = chartInformation.files[i].columns.map(column => column.filename);
+            let inputColumns = chartInformation.files[i].columns.map(col => col.header);
+
+            const response = await ApiUtil.analyzeFiles(files, inputColumns, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), [chartInformation.live])
+
+            const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
+            setFileNames(prevState =>  [...prevState, filename])
+
+            data.push(await getSeriesData(response, filename, inputColumns, minMax, chartInformation.type))
         }
         setParsedData(data)
-        setLoading(false);
     }
 
-    // Whenever fileInformation is updated (which happens when submit button is pressed), fetch the neccesary data
+    // Whenever chartInformation is updated (which happens when submit button is pressed), fetch the neccesary data
     useEffect(() => {
-        if (chartInformation.files.length === 0) {
-            return;
-        }
+        if(!validateChartInformation(chartInformation)) return;
         
+        setLoading(true);
         setParsedData([]);
         setFileNames([]);
 
-        // Now complete a request for each series
-        
         getFileFormat();
-
-        // Set files to be all filenames in fileInformation, without duplicates
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        setLoading(false);
     }, [chartInformation]);
 
     // Once necessary data is fetched, format it for the chart
     useEffect(() => {
-        if (chartInformation.files.length === 0) {
-            return;
-        }
+        if(!validateChartInformation(chartInformation)) return;
 
         // Update the chart options with the new data
         setChartOptions((prevState) => {
-
             return {
-                series: (() => {
-                    var series = [];
-                    if (chartInformation.type !== "colour") {
-                        // Normal type of graph
-                        var colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey']
-                        for (var j = 0; j < parsedData.length; j++) {
-                            series.push({
-                                name: fileNames[j],
-                                data: parsedData[j],
-                                colour: colours[j],
-                                opacity: 1,
-                                colorAxis: false, 
-                                findNearestPointBy: 'x',
-                            })
-                        }
-                    } else {
-                        // XYColour graph
-                        for (j = 0; j < parsedData.length; j++) {
-                            series.push({
-                                name: fileNames[j],
-                                data: parsedData[j],
-                                colorKey: 'colorValue',
-                                turboThreshold: 0,
-                                opacity: 1,
-                                findNearestPointBy: 'xy',
-                            })
-                        }
-                    }
-                    return series;
-                })(),
-                title: {
-                    text: chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header
-                },
-                chart: {
-                    type: chartInformation.type === "colour" ? 'coloredline' : chartInformation.type === "video" ? 'line' : chartInformation.type,
-                    zoomType: 'x'
-                },
-                xAxis: {
-                    title: {
-                        //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-                        type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
-                        text: chartInformation.files[0].columns[0].header
-                    },
-                    lineColor: 'grey',
-                    tickColor: 'grey',
-                },
-                yAxis: {
-                    title: {
-                        text: chartInformation.files[0].columns[1].header
-                    },
-                    lineColor: 'grey',
-                    tickColor: 'grey',
-                    lineWidth: 1,
-                },
-                legend: {
-                    enabled: true
-                },
-                colorAxis: (() => {
-                    if (chartInformation.type === "colour") {
-                        console.log(`minMax[0]: ${minMax.current[0]}, minMax[1]: ${minMax.current[1]}`)
-                        return {
-                            min: minMax.current[0],
-                            max: minMax.current[1],
-                            stops: [
-                                [0.1, '#20ff60'], // green
-                                [0.5, '#DDDF0D'], // yellow
-                                [0.9, '#ff0000'] // red
-                            ]
-                            
-                        }
-                    } else {
-                        return {
-                            showInLegend: false
-                        }
-                    }
-                })(),
-                boost: {
-                    enabled: chartInformation.type === "colour" ? false : false
-                }
-
+                ...prevState,
+                ...getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
             }
-        })
+        });
         
-    }, [parsedData, chartInformation, fileNames])
-
-    const [videoTimestamp, setVideoTimestamp] = useState(0);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [offsets, setOffsets] = useState([])
-
-    useEffect(() => {
-        if (!videoInformation.window) return;
-
-        const handleWindowLoad = () => {
-            setIsLoaded(true)
-            console.log("window loaded")
-        }
-
-        videoInformation.window.addEventListener('load', handleWindowLoad)
-
-        return () => {
-            videoInformation.window.removeEventListener('load', handleWindowLoad)
-            setIsLoaded(false)
-            console.log("window unloaded")
-        }
-    }, [videoInformation])
-
-    useEffect(() => {
-        setOffsets(computeOffsets(videoInformation, chartInformation))
-    }, [videoInformation, chartInformation])
-
-    useEffect(() => {
-        if (!videoInformation.window || !isLoaded) return;
-    
-        const videoElement = videoInformation.window.document.getElementById('video');
-        console.log("videoElement:", videoElement)
-        if (!videoElement) return;
-
-        const handleTimeUpdate = () => {
-            setVideoTimestamp(videoElement.currentTime * 1000);
-        };
-        
-        videoElement.addEventListener('timeupdate', handleTimeUpdate);
-        
-        return () => {
-            videoElement.removeEventListener('timeupdate', handleTimeUpdate);
-        };
-    }, [isLoaded]);
-
-    // Handles updating the chart when the video timestamp changes
-    useEffect(() => {
-        if (chartRef.current.chart.series.length == 0) return
-        
-        // Computes the point and series which overlap with the video timestamp
-        const pointIndexs = []
-        chartRef.current.chart.series.forEach(series => {
-            const seriesIndex = chartRef.current.chart.series.indexOf(series)
-
-            const fileTimestamp = videoTimestamp + offsets[seriesIndex] + timestamps[0]
-            if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return
-            
-            const timestampIndex = findClosestTimestamp(fileTimestamp, timestamps)
-            const pointIndex = findPointIndex(timestampIndex, series)
-            if (pointIndex >= 0) pointIndexs.push({series: seriesIndex, point: pointIndex})
-        })
-
-        // Updates the chart to show the point that is closest to the video timestamp
-        if (pointIndexs.length === 0) return
-        chartRef.current.chart.series[pointIndexs[0].series].points[pointIndexs[0].point].onMouseOver()
-        if (pointIndexs.length > 1) pointIndexs.slice(1).forEach(pointIndex => {
-            chartRef.current.chart.series[pointIndex.series].points[pointIndex.point].setState('hover')
-        })
-        
-    }, [videoTimestamp])
-
-    // This function is used to throttle the resize observer
-    function throttle(f, delay) {
-        let timer = 0;
-        return function (...args) {
-            clearTimeout(timer);
-            timer = setTimeout(() => f.apply(this, args), delay);
-        }
-    }
-
-    // Observe the chartContainer div and resize the chart when it changes size
-    // Keep in mind this will need to change when we have multiple charts
-    useEffect(() => {
-        const chartContainer = document.querySelector('.chartContainer');
-        const resizeObserver = new ResizeObserver(throttle(entries => {
-            for (let entry of entries) {
-                const cr = entry.contentRect;
-                for (var i = 0; i < Highcharts.charts.length; i++) {
-                    if (Highcharts.charts[i] !== undefined) {
-                        Highcharts.charts[i].setSize(cr.width, cr.height);
-                    }
-                }
-            }
-        }, 100));
-        //run observer with a delay
-        resizeObserver.observe(chartContainer);
-    }, [])
+    }, [parsedData, fileNames])
 
     // This function loops when live is true, and updates the chart every 500ms
     useEffect(() => {
+        if(!validateChartInformation(chartInformation)) return;
+
         let intervalId;
 
         if (chartInformation.live) {
             intervalId = setInterval(() => {
-                getFileFormat();
-            }, 2000);
+                getFileFormat(); // TODO: Prevent loading animation or alter it
+            }, LIVE_DATA_INTERVAL);
         }
 
         return () => clearInterval(intervalId);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chartInformation.live]);
+    }, [chartInformation]);
+
+    const chartRef = useRef(null);
+    const { width, height, ref } = useResizeDetector({
+        onResize: () => {
+            if (chartRef.current) {
+                chartRef.current.setSize(width, height);
+            }
+        },
+        refreshMode: 'debounce',
+        refreshRate: 100,
+    });
 
     return (
 
-        <div className="chartContainer">
+        <div className="chartContainer" ref={ref}>
             <div className='chart'>
                 <HighchartsReact
                     highcharts={Highcharts}
                     options={chartOptions}
-                    ref={chartRef}
+                    callback={chart => { chartRef.current = chart; }}
                 />
             </div>
-            {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..." />}
+            {loading && <img className="loading" src={loadingImg} alt="Loading..." />}
         </div>
 
     )

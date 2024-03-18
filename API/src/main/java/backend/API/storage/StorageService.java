@@ -33,6 +33,8 @@ public interface StorageService {
 
 	String getMaxMin(String filename, String headerName);
 
+	String getLast(String filename);
+
 	LocalDateTime[] getTimespan(String filename);
 
 	LocalDateTime[] getTimespan(String filename, LocalDateTime zeroTime);

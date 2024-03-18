@@ -25,6 +25,8 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.input.ReversedLinesFileReader;
+
+import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -216,6 +218,23 @@ public class FileSystemStorageService implements StorageService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public String getLast(String filename) {
+
+		String timestamp;
+
+		try {
+			ReversedLinesFileReader reverseReader = new ReversedLinesFileReader(load(filename), StandardCharsets.UTF_8);
+			timestamp = reverseReader.readLine().split(",")[0];
+			reverseReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return timestamp;
 	}
 
 	// Get timspan for mp4 file from metadata
