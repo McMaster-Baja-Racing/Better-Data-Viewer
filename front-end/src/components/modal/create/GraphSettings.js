@@ -1,14 +1,21 @@
 import '../../../styles/GraphSettingsStyles.css';
 
-const GraphSettings = ({ movePage, graphType, setGraphType, liveCheck, setLiveCheck }) => {
+const GraphSettings = ({ movePage, setGraphType, setLiveCheck }) => {
 
-  const getGraphType = () => {
-    setGraphType(document.getElementById("graphTypeSelect").value);
-    if (document.getElementById("graphTypeSelect").value == "video") setLiveCheck(false);
+  const handleTypeSelect = (e) => {
+    if (e.target.value == "video") {
+      document.getElementById("liveDataCheckbox").checked = false;
+      document.getElementById("liveDataCheckbox").disabled = true;
+    } else {
+      document.getElementById("liveDataCheckbox").disabled = false;
+    }
   }
 
-  const getLiveCheck = () => {
+  const handleNextPage = () => {
+    setGraphType(document.getElementById("graphTypeSelect").value);
     setLiveCheck(document.getElementById("liveDataCheckbox").checked);
+    
+    movePage(document.getElementById("graphTypeSelect").value == "video" ? 1 : 2);
   }
 
   return (
@@ -27,7 +34,7 @@ const GraphSettings = ({ movePage, graphType, setGraphType, liveCheck, setLiveCh
         <div className="graphTypesBox">
           <div className="graphOptionsText">Graph Types</div>
           <div className="GraphTypeSelect">
-            <select id="graphTypeSelect" value={graphType} onChange={getGraphType}>
+            <select id="graphTypeSelect" onChange={(e) => { handleTypeSelect(e) }}>
               <option value="line">Line</option>
               <option value="spline">Spline</option>
               <option value="scatter">Scatter</option>
@@ -38,10 +45,10 @@ const GraphSettings = ({ movePage, graphType, setGraphType, liveCheck, setLiveCh
         </div>
         <div className='liveDataBox'>
           <div className="graphOptionsText">Live Data</div>
-          <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true" disabled={graphType == "video"} checked={liveCheck} onChange={getLiveCheck}></input>
+          <input type="checkbox" id="liveDataCheckbox" name="liveData"></input>
         </div> 
       </div>
-      <button className="PageButton" onClick={() => { movePage(graphType == "video" ? 1 : 2) }}>Next</button>
+      <button className="PageButton" onClick={() => { handleNextPage() }}>Next</button>
     </div>
   )
 

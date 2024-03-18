@@ -1,5 +1,5 @@
 #If the script does not run add your java home locations to the array below
-$javaHomeLocations = @('C:\Program Files\Java\jdk-17.03\','C:\Program Files\Java\jdk-19\','C:\Program Files\Java\jdk-17.0.5\','C:\Program Files\Java\jdk-17.0.2\', 'C:\Program Files\Java\jdk-19', 'C:\Program Files\Java\jdk-20\','C:\Program Files\Java\jdk-17.03\')
+$javaHomeLocations = @('C:\Program Files\Java\jdk-17.03\','C:\Program Files\Java\jdk-19\','C:\Program Files\Java\jdk-17.0.5\','C:\Program Files\Java\jdk-17.0.2\', 'C:\Program Files\Java\jdk-19', 'C:\Program Files\Java\jdk-20\','C:\Program Files\Java\jdk-17.03\', 'C:\Program Files\Java\jdk-21\')
 $counter = 0
 $env:JAVA_HOME = $javaHomeLocations[0]
 try{
