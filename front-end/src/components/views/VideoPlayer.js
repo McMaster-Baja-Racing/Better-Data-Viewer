@@ -28,7 +28,7 @@ const VideoPlayer = ({ videoInformation }) => {
   useEffect(() => {
     if (videoInformation.video === undefined) return;
     setKey(videoInformation.video.key);
-    setDuration(getDuration(videoInformation));
+    setDuration(getDuration(videoInformation) / 1000);
   }, [videoInformation]);
 
   const togglePlay = () => {
@@ -57,6 +57,7 @@ const VideoPlayer = ({ videoInformation }) => {
     videoInformation.setVideoTimestamp(time * 1000);
   }
 
+  console.log(currentTime)
   return (
     <div className = "background">
         <div className = "pageWrap">
@@ -65,7 +66,7 @@ const VideoPlayer = ({ videoInformation }) => {
               <video src={videoURL} ref={videoRef} onTimeUpdate={updateTimestamp} onClick={togglePlay} className = "center" id="video"/>
             </div>
             <div className="timeDisplay">
-              {formatTime(videoInformation.videoTimestamp)} / {formatTime(videoRef.current ? videoRef.current.duration : 0)}
+              {formatTime(videoInformation.videoTimestamp)} / {formatTime(duration)}
             </div>
             <input type="range" min="0" max={duration} value={currentTime} onChange={seek} className="seekbar" />
           </div>
