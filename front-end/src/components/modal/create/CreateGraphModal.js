@@ -64,9 +64,11 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
 
     const videoInformation = {
       video: selectedVideo,
+      videoTimestamp: videoTimestamp,
+      setVideoTimestamp: setVideoTimestamp
     }
 
-    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation } });
+    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation, videoInformation } });
 
     if (buttonID < MAX_VIEWS && graphType === "video") {
       updatedViewInformation = insertViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: { videoInformation } });

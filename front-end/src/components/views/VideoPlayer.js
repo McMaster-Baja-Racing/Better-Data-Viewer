@@ -54,7 +54,7 @@ const VideoPlayer = ( videoInformation ) => {
   const updateTimestamp = () => {
     const time = videoRef.current.currentTime;
     setCurrentTime(time);
-    // videoInformation.setVideoTimestamp(time * 1000);
+    videoInformation.setVideoTimestamp(time * 1000);
   }
 
   return (
