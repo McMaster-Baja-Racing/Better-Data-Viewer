@@ -26,6 +26,7 @@ const VideoPlayer = ( videoInformation ) => {
   }, [key]); // Empty dependency array ensures that the fetch is only performed once
 
   useEffect(() => {
+    if (videoInformation.video === undefined) return;
     setKey(videoInformation.video.key);
     setDuration(getDuration(videoInformation));
   }, [videoInformation]);
