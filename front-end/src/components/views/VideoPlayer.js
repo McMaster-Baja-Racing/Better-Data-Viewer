@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../../styles/videoPlayerStyles.css';
 import { getDuration } from '../../lib/videoUtils';
 
-const VideoPlayer = ( videoInformation ) => {
+const VideoPlayer = ({ videoInformation }) => {
 
   const [videoURL, setVideoURL] = useState('');
   const videoRef = useRef(null);
