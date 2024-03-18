@@ -57,7 +57,6 @@ const VideoPlayer = ({ videoInformation }) => {
     videoInformation.setVideoTimestamp(time * 1000);
   }
 
-  console.log(currentTime)
   return (
     <div className = "background">
         <div className = "pageWrap">

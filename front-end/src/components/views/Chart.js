@@ -7,7 +7,7 @@ import Highcharts, { chart } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
-import { computeOffsets, findClosestTimestamp, findPointIndex } from '../../lib/videoUtils.js';
+import { computeOffsets, getPointIndex } from '../../lib/videoUtils.js';
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '../../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
@@ -22,6 +22,8 @@ const Chart = ({ chartInformation, videoInformation }) => {
     const [loading, setLoading] = useState(false);
     const [parsedData, setParsedData] = useState([]);
     const [fileNames, setFileNames] = useState([]);
+    const [offsets, setOffsets] = useState([]);
+    const [timestamps, setTimestamps] = useState([]);
     let minMax = useRef([0, 0]);
 
     // Fetch the data from the server and format it for the chart
@@ -95,6 +97,34 @@ const Chart = ({ chartInformation, videoInformation }) => {
         refreshMode: 'debounce',
         refreshRate: 100,
     });
+
+    useEffect(() => {
+        if (videoInformation === undefined) return
+        setOffsets(computeOffsets(videoInformation, chartInformation))
+    }, [videoInformation, chartInformation])
+
+    // Handles updating the chart when the video timestamp changes
+    useEffect(() => {
+        try {
+            console.log(videoInformation.videoTimestamp)
+            // Computes the point and series which overlap with the video timestamp
+            const seriesPointIndeces = []
+            chartRef.current.chart.series.forEach(series => {
+                const seriesIndex = chartRef.current.chart.series.indexOf(series)
+                const pointIndex = getPointIndex(series, videoInformation.videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex])
+                if (pointIndex >= 0) seriesPointIndeces.push({series: seriesIndex, point: pointIndex})
+            })
+            // Updates the chart to show the point that is closest to the video timestamp
+            if (seriesPointIndeces.length === 0) return
+            chartRef.current.chart.series[seriesPointIndeces[0].series].points[seriesPointIndeces[0].point].onMouseOver()
+            if (seriesPointIndeces.length > 1) seriesPointIndeces.slice(1).forEach(seriesPointIndex => {
+                chartRef.current.chart.series[seriesPointIndex.series].points[seriesPointIndex.point].setState('hover')
+            })
+        } catch (e) {
+            console.log(e)
+        }
+        
+    }, [videoInformation])
 
     return (
 
