@@ -293,7 +293,6 @@ const Chart = ({ chartInformation, videoInformation }) => {
     }, [videoInformation])
 
     useEffect(() => {
-        if (videoInformation.video.fileHeaders.length == 0 || chartInformation.files.length == 0) return
         setOffsets(computeOffsets(videoInformation, chartInformation))
     }, [videoInformation, chartInformation])
 

@@ -7,18 +7,20 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
     // Filter files to those that have a timestamp wihtin the range of the selected video
     const filterFiles = (videoTimespan) => {
         let tempVideoSyncFiles = []
-        const videoStart = new Date (videoTimespan.fileHeaders[0])
-        const videoEnd = new Date (videoTimespan.fileHeaders[1])
+        const videoStart = new Date (videoTimespan.start)
+        const videoEnd = new Date (videoTimespan.end)
         files.forEach(file => {
             const fileTimespan = fileTimespans.find(timespan => timespan.key == file.key)
             if (fileTimespan == undefined) return
-            const fileStart = new Date(fileTimespan.fileHeaders[0])
-            const fileEnd = new Date(fileTimespan.fileHeaders[1])
+            const fileStart = new Date(fileTimespan.start)
+            const fileEnd = new Date(fileTimespan.end)
             if (fileStart < videoEnd && videoStart < fileEnd) tempVideoSyncFiles.push(file)
         })
         setSelectedVideo(videoTimespan)
         setVideoSyncFiles(tempVideoSyncFiles)
     }
+
+    console.log(videoTimespans)
 
     //render the modal JSX in the portal div.
     return (

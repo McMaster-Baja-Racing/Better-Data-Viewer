@@ -28,17 +28,17 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setVideoInform
       fetch(`http://${window.location.hostname}:8080/files/folder/csv`)
         .then((response) => response.json())
         .then((data) => {
-          setFiles(data.files);
+          setFiles(data);
         });
       fetch(`http://${window.location.hostname}:8080/timespan/folder/mp4`)
         .then((response) => response.json())
         .then((data) => {
-            setvideoTimespans(data.files);
+          setvideoTimespans(data);
         });
     fetch(`http://${window.location.hostname}:8080/timespan/folder/csv`)
         .then((response) => response.json())
         .then((data) => {
-            setfileTimespans(data.files);
+          setfileTimespans(data);
         });
     }, []); // Empty dependency array ensures that the fetch is only performed once
 

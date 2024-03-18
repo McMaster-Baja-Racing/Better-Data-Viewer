@@ -20,15 +20,15 @@ const App = () => {
   //    [
   //      {
   //        columns: [
-  //          {header:"Timestampt", filename:"PRIM_RPM.csv", timespan: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"]},
-  //          {header:"RPM", filename:"PRIM_RPM.csv", timespan: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"]},
+  //          {header:"Timestampt", filename:"PRIM_RPM.csv", timespan: {start: "YYYY-MM-DD HH:MM:SS.SSS", end: "YYYY-MM-DD HH:MM:SS.SSS"}},
+  //          {header:"RPM", filename:"PRIM_RPM.csv", timespan: {start: "YYYY-MM-DD HH:MM:SS.SSS", end: "YYYY-MM-DD HH:MM:SS.SSS"}},
   //        ],
   //        analysis: "none"
   //      },
   //      {
   //        columns: [
-  //          {header:"RPM", filename:"SEC_RPM.csv", timespan: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"]},
-  //          {header:"Timestampt", filename:"SEC_RPM.csv", timespan: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"]}
+  //          {header:"RPM", filename:"SEC_RPM.csv", timespan: {start: "YYYY-MM-DD HH:MM:SS.SSS", end: "YYYY-MM-DD HH:MM:SS.SSS"}},
+  //          {header:"Timestampt", filename:"SEC_RPM.csv", timespan: {start: "YYYY-MM-DD HH:MM:SS.SSS", end: "YYYY-MM-DD HH:MM:SS.SSS"}}
   //        ],
   //        analysis: "rollAvg"
   //      }
@@ -39,7 +39,7 @@ const App = () => {
 
   // sample format for videoInformation:
   // {
-  //   video: {fileHeaders: ["YYYY-MM-DD HH:MM:SS.SSS", "YYYY-MM-DD HH:MM:SS.SSS"], key: "video.mp4", size: 1234567890"},
+  //   video: {key: "video.mp4", start: "YYYY-MM-DD HH:MM:SS.SSS", end: "YYYY-MM-DD HH:MM:SS.SSS"},
   //   window: Window | null
   // }
 

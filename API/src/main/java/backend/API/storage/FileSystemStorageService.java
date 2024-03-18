@@ -220,26 +220,28 @@ public class FileSystemStorageService implements StorageService {
 
 	// Get timspan for mp4 file from metadata
 	@Override
-	public String getTimespan(String filename) {
+	public LocalDateTime[] getTimespan(String filename) {
 		// Gets the metadata of the file to find the creation time and duration
 		String metadata = extractMetadata(load(filename));
+
+		System.out.println(getTagValue(metadata, "Creation Time"));
 		
-		// Converts the creation time to a ZonedDateTime with GMT timezone
-		ZonedDateTime creationTime = ZonedDateTime.parse(getTagValue(metadata, "Creation Time"),
+		// Parses with timezeone, converts to GMT, and then to LocalDateTime
+		LocalDateTime creationTime = ZonedDateTime.parse(getTagValue(metadata, "Creation Time"),
 		DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH))
-		.withZoneSameInstant(ZoneId.of("GMT"));
+		.withZoneSameInstant(ZoneId.of("GMT")).toLocalDateTime();
 		
 		// Below calculation gives a better estimate than Duration in Seconds tag
 		// Each is converted to nanoseconds and then divided to preserve precision
 		long duration = (Long.parseLong(getTagValue(metadata, "Duration")) * 1_000_000_000) / (Long.parseLong(getTagValue(metadata, "Media Time Scale")) * 1_000_000_000);
 
         // Returns the start and end times as strings in GMT with milliseconds
-        return creationTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")) + "," + creationTime.plusSeconds(duration).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+		return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
 	}
 	
 	// Get timspan for csv file from a parsed bin file
     @Override
-	public String getTimespan(String filename, LocalDateTime zeroTime) {
+	public LocalDateTime[] getTimespan(String filename, LocalDateTime zeroTime) {
 		String timestamp1 = null;
 		String timestamp2 = null;
 		try {
@@ -257,7 +259,7 @@ public class FileSystemStorageService implements StorageService {
 		LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(timestamp1) * 1_000_000);
 		LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(timestamp2) * 1_000_000);
 
-		return startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))+ "," + endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+		return new LocalDateTime[] {startTime, endTime};
 	}
 
 	// Returns the DateTime of the folder at 0 timestamp

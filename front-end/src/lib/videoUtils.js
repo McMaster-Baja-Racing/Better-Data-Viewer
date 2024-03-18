@@ -13,11 +13,11 @@ export const findPointIndex = (timestampIndex, series) => {
 
 // Computs the offsets between the videoStart and the fileStart for all series
 export const computeOffsets = (videoInformation, chartInformation) => {
-    const videoStart = new Date(videoInformation.video.fileHeaders[0]).getTime()
+    const videoStart = new Date(videoInformation.video.start).getTime()
         
         const tempOffsets = []
         chartInformation.files.forEach(file => {
-            const fileStart = new Date(file.columns[0].timespan[0]).getTime() // Unix date of first timestamp in file
+            const fileStart = new Date(file.columns[0].timespan.start).getTime() // Unix date of first timestamp in file
             tempOffsets.push(videoStart - fileStart)
         })
         return tempOffsets

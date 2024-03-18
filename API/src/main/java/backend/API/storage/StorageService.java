@@ -33,9 +33,9 @@ public interface StorageService {
 
 	String getMaxMin(String filename, String headerName);
 
-	String getTimespan(String filename);
+	LocalDateTime[] getTimespan(String filename);
 
-	String getTimespan(String filename, LocalDateTime zeroTime);
+	LocalDateTime[] getTimespan(String filename, LocalDateTime zeroTime);
 
 	LocalDateTime getZeroTime(Path folder);
 
