@@ -15,10 +15,10 @@ export const findPointIndex = (timestampIndex, series) => {
 export const computeOffsets = (videoInformation, chartInformation) => {
     const videoStart = new Date(videoInformation.video.start).getTime()
         
-        const tempOffsets = []
-        chartInformation.files.forEach(file => {
-            const fileStart = new Date(file.columns[0].timespan.start).getTime() // Unix date of first timestamp in file
-            tempOffsets.push(videoStart - fileStart)
-        })
-        return tempOffsets
+    const tempOffsets = []
+    chartInformation.files.forEach(file => {
+        const fileStart = new Date(file.columns[0].timespan.start).getTime() // Unix date of first timestamp in file
+        tempOffsets.push(videoStart - fileStart)
+    })
+    return tempOffsets
 }
