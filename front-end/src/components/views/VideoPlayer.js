@@ -6,14 +6,13 @@ const VideoPlayer = ({ videoInformation }) => {
 
   const [videoURL, setVideoURL] = useState('');
   const videoRef = useRef(null);
-  const [key, setKey] = useState(undefined);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const duration = getDuration(videoInformation) / 1000;
+  const [prevState, setPrevState] = useState();
 
   useEffect(() => {
     // Fetch data when the component mounts
-    if (key === undefined) return;
-    fetch(`http://${window.location.hostname}:8080/files/${key}`)
+    fetch(`http://${window.location.hostname}:8080/files/${videoInformation.video.key}`)
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob) 
@@ -23,13 +22,7 @@ const VideoPlayer = ({ videoInformation }) => {
           URL.revokeObjectURL(url);
         };
       });
-  }, [key]); // Empty dependency array ensures that the fetch is only performed once
-
-  useEffect(() => {
-    if (videoInformation.video === undefined) return;
-    setKey(videoInformation.video.key);
-    setDuration(getDuration(videoInformation) / 1000);
-  }, [videoInformation]);
+  }, []); // Empty dependency array ensures that the fetch is only performed once
 
   const togglePlay = () => {
     if (videoRef.current.paused) {
@@ -45,18 +38,29 @@ const VideoPlayer = ({ videoInformation }) => {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
-
-  const seek = (event) => {
-    const seekTime = event.target.value;
-    videoRef.current.currentTime = seekTime;
-  };
-
   const updateTimestamp = () => {
     const time = videoRef.current.currentTime;
     setCurrentTime(time);
     videoInformation.setVideoTimestamp(time * 1000);
   }
+  
+  const seek = (event) => {
+    const seekTime = event.target.value;
+    videoRef.current.currentTime = seekTime;
+  };
 
+  const seekDown = () => {
+    setPrevState(videoRef.current.paused);
+    videoRef.current.pause();
+  }
+
+  const seekUp = () => {
+    if (!prevState) {
+      videoRef.current.play();
+    }
+  }
+
+  console.log(currentTime)
   return (
     <div className = "background">
         <div className = "pageWrap">
@@ -67,7 +71,7 @@ const VideoPlayer = ({ videoInformation }) => {
             <div className="timeDisplay">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
-            <input type="range" min="0" max={duration} value={currentTime} onChange={seek} className="seekbar" />
+            <input type="range" step={"0.1"} min="0" max={duration} value={currentTime} onChange={seek} onMouseDown={seekDown} onMouseUp={seekUp} className="seekbar" />
           </div>
         </div>
     </div>
