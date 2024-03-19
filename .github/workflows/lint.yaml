@@ -1,5 +1,4 @@
 # This is a basic workflow to help you get started with Actions
-#
 name: Lint
 
 run-name: {{ github.workflow }}, {{ github.run_number }}, {{ github.run_id }}, {{ github.actor }}, {{ github }}, {{ job }}, {{ steps }}
