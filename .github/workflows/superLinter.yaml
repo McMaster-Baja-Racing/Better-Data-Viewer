@@ -26,5 +26,5 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_JAVASCRIPT_ES: true
-          VALIDATE_JAVA_MAVEN: true
+          VALIDATE_JAVASCRIPT: true
+          VALIDATE_JAVA: true
