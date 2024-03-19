@@ -14,5 +14,5 @@ jobs:
 
     - run: echo ${GITHUB_REF##*/}
 
-    - run: echo "${{ toJson(GITHUB_REF) }}"
+    - run: echo ${ toJson(GITHUB_REF) }
     
