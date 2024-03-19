@@ -26,4 +26,5 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ./API/src
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_JAVA_MAVEN: true
