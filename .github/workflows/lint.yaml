@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 name: Lint Demo
-run-name: Testing-${{ github.head_ref}}-${{ github.event_name }}-${{ github.event.pull_request.head.ref }}-${{ github.event.pull_request.base.ref }}
+run-name: Testing-${{ github.head_ref}}--${{ github.event.head_commit.message }}
 
 on: [pull_request]
 
