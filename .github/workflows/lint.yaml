@@ -5,7 +5,7 @@ run-name: Testing ${{ github.head_ref}} ${{ github.event.pull_request.title }}
 on: [pull_request]
 
 jobs:
-  build:
+  Build_Java_With_Maven:
     runs-on: ubuntu-latest
     name: "Build with Maven"
 
