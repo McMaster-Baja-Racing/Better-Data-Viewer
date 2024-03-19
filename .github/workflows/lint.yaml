@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 name: Lint Demo
-run-name: Testing-${{ github.ref == 'refs/heads/main' && 'main' || github.ref_name }}
+run-name: "Testing-${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" 
 
 on: [pull_request]
 
