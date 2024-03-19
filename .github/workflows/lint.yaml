@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 name: Linting, Building and Testing
-run-name: Testing ${{ github.head_ref}} ${{ github.event.pull_request.title }}
+run-name: Testing | ${{ github.head_ref}} | ${{ github.event.pull_request.title }}
 
 on: [pull_request]
 
