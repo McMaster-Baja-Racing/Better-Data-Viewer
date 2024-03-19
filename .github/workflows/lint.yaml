@@ -10,18 +10,10 @@ jobs:
     name: "Build with Maven"
 
     steps:
-    - run: echo "${{ github }}, ${job}, ${steps}"
+    - run: echo "${{ toJson(github) }}"
 
-    - name: Check out repository code
-      uses: actions/checkout@v4
+    - run: echo "${{ toJson(job) }}"
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-
-    - name: Build with Maven
-      run: mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn package --file pom.xml
-      working-directory: ./API
+    - run: echo "${{ toJson(steps) }}"
+    
+    
