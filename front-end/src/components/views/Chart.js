@@ -3,7 +3,7 @@ import { defaultChartOptions, getChartConfig } from '../../lib/chartOptions.js'
 import { getSeriesData, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
 import { ApiUtil } from '../../lib/apiUtils.js';
 import React, { useState, useEffect, useRef } from 'react';
-import Highcharts, { chart } from 'highcharts'
+import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
@@ -16,7 +16,9 @@ require('highcharts-multicolor-series')(Highcharts);
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
-const Chart = ({ chartInformation, videoInformation }) => {
+const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) => {
+
+    console.log(chartInformation)
 
     const [chartOptions, setChartOptions] = useState(defaultChartOptions);
     const [loading, setLoading] = useState(false);
@@ -44,6 +46,7 @@ const Chart = ({ chartInformation, videoInformation }) => {
             data.push(await getSeriesData(response, filename, inputColumns, minMax, chartInformation.type))
         }
         setParsedData(data)
+        setTimestamps(data[0].map(item => item[0]))
     }
 
     // Whenever chartInformation is updated (which happens when submit button is pressed), fetch the neccesary data
@@ -62,6 +65,9 @@ const Chart = ({ chartInformation, videoInformation }) => {
     useEffect(() => {
         if(!validateChartInformation(chartInformation)) return;
 
+
+        const chartConfig = getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
+        console.log(chartConfig)
         // Update the chart options with the new data
         setChartOptions((prevState) => {
             return {
@@ -99,32 +105,31 @@ const Chart = ({ chartInformation, videoInformation }) => {
     });
 
     useEffect(() => {
-        if (videoInformation === undefined) return
-        setOffsets(computeOffsets(videoInformation, chartInformation))
-    }, [videoInformation, chartInformation])
+        if (video === undefined) return
+        setOffsets(computeOffsets(chartInformation, video))
+    }, [chartInformation, video])
 
     // Handles updating the chart when the video timestamp changes
     useEffect(() => {
         try {
-            console.log(videoInformation.videoTimestamp)
             // Computes the point and series which overlap with the video timestamp
             const seriesPointIndeces = []
-            chartRef.current.chart.series.forEach(series => {
-                const seriesIndex = chartRef.current.chart.series.indexOf(series)
-                const pointIndex = getPointIndex(series, videoInformation.videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex])
+            chartRef.current.series.forEach(series => {
+                const seriesIndex = chartRef.current.series.indexOf(series)
+                const pointIndex = getPointIndex(series, videoTimestamp, offsets[seriesIndex], timestamps)
                 if (pointIndex >= 0) seriesPointIndeces.push({series: seriesIndex, point: pointIndex})
             })
             // Updates the chart to show the point that is closest to the video timestamp
             if (seriesPointIndeces.length === 0) return
-            chartRef.current.chart.series[seriesPointIndeces[0].series].points[seriesPointIndeces[0].point].onMouseOver()
+            chartRef.current.series[seriesPointIndeces[0].series].points[seriesPointIndeces[0].point].onMouseOver()
             if (seriesPointIndeces.length > 1) seriesPointIndeces.slice(1).forEach(seriesPointIndex => {
-                chartRef.current.chart.series[seriesPointIndex.series].points[seriesPointIndex.point].setState('hover')
+                chartRef.current.series[seriesPointIndex.series].points[seriesPointIndex.point].setState('hover')
             })
         } catch (e) {
             console.log(e)
         }
         
-    }, [videoInformation])
+    }, [videoTimestamp])
 
     return (
 

@@ -12,7 +12,7 @@ import Chart from "../../views/Chart";
 import VideoPlayer from "../../views/VideoPlayer";
 import { insertViewAtIndex, replaceViewAtIndex } from "../../../lib/viewUtils";
 
-export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessage, viewInformation, buttonID }) => {
+export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessage, viewInformation, buttonID, setNumViews, numViews }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -62,16 +62,11 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
       type: graphType,
     }
 
-    const videoInformation = {
-      video: selectedVideo,
-      videoTimestamp: videoTimestamp,
-      setVideoTimestamp: setVideoTimestamp
-    }
+    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation, video: selectedVideo } });
 
-    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation, videoInformation } });
-
-    if (buttonID < MAX_VIEWS && graphType === "video") {
-      updatedViewInformation = insertViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: { videoInformation } });
+    if (buttonID + 1 < MAX_VIEWS && graphType === "video") {
+      updatedViewInformation = replaceViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: { video: selectedVideo } });
+      if (buttonID + 1 === numViews) setNumViews(numViews + 1);
     }
 
     setViewInformation(updatedViewInformation);

@@ -32,7 +32,7 @@ const getStandardChartConfig = (chartInformation) => {
 
     chartConfig.chart = {
         type: chartInformation.type === 'video' ? 'line' : chartInformation.type,
-        zoomType: 'y'
+        zoomType: 'x'
     };
 
     chartConfig.xAxis = {
@@ -53,8 +53,6 @@ const getStandardChartConfig = (chartInformation) => {
         tickColor: 'grey',
         lineWidth: 1,
     };
-
-    chartConfig.boost = { enabled: chartInformation.type === 'video' ? false : true }
 
     return chartConfig;
 }
@@ -78,7 +76,7 @@ const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
 
     chartConfig.colorAxis.showInLegend = false;
 
-    chartConfig.boost.enabled = true;
+    chartConfig.boost.enabled = chartInformation.type !== 'video';
 
     return chartConfig;
 }
@@ -106,8 +104,6 @@ const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) =
             [0.9, '#ff0000'] // red
         ]
     };
-
-    chartConfig.boost.enabled = false;
 
     return chartConfig;
 }

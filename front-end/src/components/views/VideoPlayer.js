@@ -2,17 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../../styles/videoPlayerStyles.css';
 import { getDuration } from '../../lib/videoUtils';
 
-const VideoPlayer = ({ videoInformation }) => {
+const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
 
   const [videoURL, setVideoURL] = useState('');
   const videoRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
-  const duration = getDuration(videoInformation) / 1000;
+  const duration = getDuration(video) / 1000;
   const [prevState, setPrevState] = useState();
 
   useEffect(() => {
     // Fetch data when the component mounts
-    fetch(`http://${window.location.hostname}:8080/files/${videoInformation.video.key}`)
+    fetch(`http://${window.location.hostname}:8080/files/${video.key}`)
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob) 
@@ -41,7 +41,7 @@ const VideoPlayer = ({ videoInformation }) => {
   const updateTimestamp = () => {
     const time = videoRef.current.currentTime;
     setCurrentTime(time);
-    videoInformation.setVideoTimestamp(time * 1000);
+    setVideoTimestamp(time*1000)
   }
   
   const seek = (event) => {
@@ -60,7 +60,6 @@ const VideoPlayer = ({ videoInformation }) => {
     }
   }
 
-  console.log(currentTime)
   return (
     <div className = "background">
         <div className = "pageWrap">
