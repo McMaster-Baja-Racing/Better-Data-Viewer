@@ -105,7 +105,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
     });
 
     useEffect(() => {
-        if (video === undefined) return
+        if (video.key === '' || chartInformation == undefined) return
         setOffsets(computeOffsets(chartInformation, video))
     }, [chartInformation, video])
 

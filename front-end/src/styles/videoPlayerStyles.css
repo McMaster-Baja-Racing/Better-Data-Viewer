@@ -1,19 +1,17 @@
     .background{
         background-color: #343434;
+        height: 100%;
         /*border: 5px solid black;  */
     }
 
     .pageWrap{
-        max-height: 25vh;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
     .pageContainer{ 
-        width: 80%;
-        max-width: 1000px;
-        min-width: 200px;
+        width: 66%;
     }
 
     .videoContainerBox{

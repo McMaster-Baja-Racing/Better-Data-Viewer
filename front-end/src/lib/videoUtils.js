@@ -24,6 +24,20 @@ export const getPointIndex = (series, videoTimestamp, offset, timestamps) => {
     return pointIndex
 }
 
+export const filterFiles = (videoTimespan, files, fileTimespans) => {
+    const videoSyncFiles = []
+    const videoStart = new Date (videoTimespan.start)
+    const videoEnd = new Date (videoTimespan.end)
+    files.forEach(file => {
+        const fileTimespan = fileTimespans.find(timespan => timespan.key === file.key)
+        if (fileTimespan === undefined) return
+        const fileStart = new Date(fileTimespan.start)
+        const fileEnd = new Date(fileTimespan.end)
+        if (fileStart < videoEnd && videoStart < fileEnd) videoSyncFiles.push(file)
+    })
+    return videoSyncFiles
+}
+
 // Finds the index of the timestamp in array that is closest to the timestamp provided
 const findClosestTimestamp = (targetTimestamp, timestampArray) => {
     const closestTimestamp = timestampArray.reduce((prev, curr) => Math.abs(curr - targetTimestamp) < Math.abs(prev - targetTimestamp) ? curr : prev)

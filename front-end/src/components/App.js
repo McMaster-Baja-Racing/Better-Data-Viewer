@@ -17,6 +17,7 @@ const App = () => {
   const [modal, setModal] = useState('')
   const [numViews, setNumViews] = useState(1);
   const [videoTimestamp, setVideoTimestamp] = useState(0)
+  const [selectedVideo, setSelectedVideo] = useState({ key: "", start: "", end: "" })
 
   // State for holding the information for each view
   const [viewInformation, setViewInformation] = useState(
@@ -42,12 +43,12 @@ const App = () => {
       <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       <div className="App-body">
         <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setViewInformation={setViewInformation} setSuccessMessage={setSuccessMessage} viewInformation={viewInformation} buttonID={buttonID} setNumViews={setNumViews} numViews={numViews}/> : null}
+        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setViewInformation={setViewInformation} setSuccessMessage={setSuccessMessage} viewInformation={viewInformation} buttonID={buttonID} setNumViews={setNumViews} numViews={numViews} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}/> : null}
         {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <Views viewInformation={viewInformation} setModal={setModal} setButtonID={setButtonID} numViews={numViews} videoTimestamp={videoTimestamp} setVideoTimestamp={setVideoTimestamp} />
+        <Views viewInformation={viewInformation} setModal={setModal} setButtonID={setButtonID} numViews={numViews} videoTimestamp={videoTimestamp} setVideoTimestamp={setVideoTimestamp} video={selectedVideo} />
 
       </div>
 
