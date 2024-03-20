@@ -160,7 +160,6 @@ const Chart = ({ chartInformation, bg='#ffffff' }) => {
         getFileFormat();
 
         // Set files to be all filenames in fileInformation, without duplicates
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chartInformation]);
 
     // Once necessary data is fetched, format it for the chart
@@ -296,7 +295,6 @@ const Chart = ({ chartInformation, bg='#ffffff' }) => {
         }
 
         return () => clearInterval(intervalId);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chartInformation.live]);
 
     return (
