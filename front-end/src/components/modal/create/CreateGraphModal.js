@@ -12,6 +12,7 @@ import Chart from "../../views/Chart";
 import VideoPlayer from "../../views/VideoPlayer";
 import { insertViewAtIndex, replaceViewAtIndex } from "../../../lib/viewUtils";
 import { filterFiles } from "../../../lib/videoUtils";
+import { ApiUtil } from "../../../lib/apiUtils";
 
 export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessage, viewInformation, buttonID, setNumViews, numViews, selectedVideo, setSelectedVideo }) => {
 
@@ -29,17 +30,17 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
 
   useEffect(() => {
       // Fetch data when the component mounts
-      fetch(`http://${window.location.hostname}:8080/files/folder/csv`)
+      ApiUtil.getFolder('csv')
         .then((response) => response.json())
         .then((data) => {
           setFiles(data);
         });
-      fetch(`http://${window.location.hostname}:8080/timespan/folder/mp4`)
+      ApiUtil.getTimespans('mp4')
         .then((response) => response.json())
         .then((data) => {
           setvideoTimespans(data);
         });
-    fetch(`http://${window.location.hostname}:8080/timespan/folder/csv`)
+    ApiUtil.getTimespans('csv')
         .then((response) => response.json())
         .then((data) => {
           setfileTimespans(data);

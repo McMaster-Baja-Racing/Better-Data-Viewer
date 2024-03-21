@@ -3,7 +3,7 @@ import { defaultChartOptions, getChartConfig } from '../../lib/chartOptions.js'
 import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
 import { ApiUtil } from '../../lib/apiUtils.js';
 import React, { useState, useEffect, useRef } from 'react';
-import Highcharts from 'highcharts'
+import Highcharts, { time } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
@@ -67,8 +67,6 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
     useEffect(() => {
         if(!validateChartInformation(chartInformation)) return;
 
-
-        const chartConfig = getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
         // Update the chart options with the new data
         setChartOptions((prevState) => {
             return {
@@ -112,6 +110,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
 
     // Handles updating the chart when the video timestamp changes
     useEffect(() => {
+        if (timestamps.length === 0) return
         try {
             // Computes the point and series which overlap with the video timestamp
             const seriesPointIndeces = []
