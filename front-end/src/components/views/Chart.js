@@ -131,8 +131,6 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
         
     }, [videoTimestamp])
 
-    console.log(chartRef.current.series)
-
     return (
 
         <div className="chartContainer" ref={ref}>
