@@ -114,9 +114,9 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
         try {
             // Computes the point and series which overlap with the video timestamp
             const seriesPointIndeces = []
-            chartRef.current.series.forEach(series => {
-                const seriesIndex = chartRef.current.series.indexOf(series)
-                const pointIndex = getPointIndex(series, videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex])
+            chartRef.current.series.filter(series => series.visible).forEach(activeSeries => {
+                const seriesIndex = chartRef.current.series.indexOf(activeSeries)
+                const pointIndex = getPointIndex(activeSeries, videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex])
                 if (pointIndex >= 0) seriesPointIndeces.push({series: seriesIndex, point: pointIndex})
             })
             // Updates the chart to show the point that is closest to the video timestamp
@@ -130,6 +130,8 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
         }
         
     }, [videoTimestamp])
+
+    console.log(chartRef.current.series)
 
     return (
 
