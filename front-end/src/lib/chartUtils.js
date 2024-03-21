@@ -14,9 +14,7 @@ export const LIVE_DATA_INTERVAL = 300;
  * @param {string} chartType - The type of chart.
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of data objects.
  */
-export const getSeriesData = async (response, filename, columns, minMax, chartType) => {
-
-    const text = await response.text()
+export const getSeriesData = async (text, filename, columns, minMax, chartType) => {
 
     let headers = text.trim().split("\n")[0].split(",");
     headers[headers.length - 1] = headers[headers.length - 1].replace("\r", "")
@@ -52,6 +50,11 @@ export const getSeriesData = async (response, filename, columns, minMax, chartTy
             segmentColor: `hsl(${hue}, 100%, 50%)`
         };
     })
+}
+
+export const getTimestamps = async (text) => {
+    const timestampHeaderIndex = text.trim().split("\n")[0].split(",").indexOf("Timestamp (ms)")
+    return text.trim().split("\n").slice(1).map((line) => parseFloat(line.split(",")[timestampHeaderIndex]))
 }
 
 /**

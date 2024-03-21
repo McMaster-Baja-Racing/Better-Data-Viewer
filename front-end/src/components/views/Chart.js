@@ -1,6 +1,6 @@
 import '../../styles/chart.css'
 import { defaultChartOptions, getChartConfig } from '../../lib/chartOptions.js'
-import { getSeriesData, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
+import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
 import { ApiUtil } from '../../lib/apiUtils.js';
 import React, { useState, useEffect, useRef } from 'react';
 import Highcharts from 'highcharts'
@@ -18,8 +18,6 @@ Boost(Highcharts);
 
 const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) => {
 
-    console.log(chartInformation)
-
     const [chartOptions, setChartOptions] = useState(defaultChartOptions);
     const [loading, setLoading] = useState(false);
     const [parsedData, setParsedData] = useState([]);
@@ -33,6 +31,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
         // Runs through all the series and fetches the data, then updates the graph
         // This also prevents liveData from adding more data as a separate series
         var data = [];
+        const tempTimestamps = []
         for (var i = 0; i < chartInformation.files.length; i++) {
             // Create a list of all files in order (formatting for backend)
             let files = chartInformation.files[i].columns.map(column => column.filename);
@@ -43,10 +42,13 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
             const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
             setFileNames(prevState =>  [...prevState, filename])
 
-            data.push(await getSeriesData(response, filename, inputColumns, minMax, chartInformation.type))
+            const text = await response.text()
+
+            data.push(await getSeriesData(text, filename, inputColumns, minMax, chartInformation.type))
+            tempTimestamps.push(await getTimestamps(text))
         }
         setParsedData(data)
-        setTimestamps(data[0].map(item => item[0]))
+        setTimestamps(tempTimestamps)
     }
 
     // Whenever chartInformation is updated (which happens when submit button is pressed), fetch the neccesary data
@@ -67,7 +69,6 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
 
 
         const chartConfig = getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
-        console.log(chartConfig)
         // Update the chart options with the new data
         setChartOptions((prevState) => {
             return {
@@ -116,7 +117,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
             const seriesPointIndeces = []
             chartRef.current.series.forEach(series => {
                 const seriesIndex = chartRef.current.series.indexOf(series)
-                const pointIndex = getPointIndex(series, videoTimestamp, offsets[seriesIndex], timestamps)
+                const pointIndex = getPointIndex(series, videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex])
                 if (pointIndex >= 0) seriesPointIndeces.push({series: seriesIndex, point: pointIndex})
             })
             // Updates the chart to show the point that is closest to the video timestamp
