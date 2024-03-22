@@ -13,10 +13,10 @@ export const DownloadModal = ({ setModal }) => {
 
   useEffect(() => {
       // Fetch data when the component mounts
-      fetch(`http://${window.location.hostname}:8080/files/folder/csv`)
+      ApiUtil.getFolder('csv')
         .then((response) => response.json())
         .then((data) => {
-          setFiles(data.files);
+          setFiles(data);
         });
     }, []); // Empty dependency array ensures that the fetch is only performed once
   
@@ -46,17 +46,13 @@ export const DownloadModal = ({ setModal }) => {
         zip.file(file.key, blob);
       }
   
-      // Generate a zip file with a timestamped name
-      const timestamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0];
-      const zipFileName = `Data_Viewer_${timestamp}.zip`;
-  
       // Create a download link for the zip file
       const downloadLink = document.createElement('a');
       
       // Use the JSZip Blob method to create a Blob from the zip archive
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       downloadLink.href = URL.createObjectURL(zipBlob);
-      downloadLink.download = zipFileName;
+      downloadLink.download = `Data_Viewer_Files.zip`;
   
       // Append the link to the document and trigger the download
       document.body.appendChild(downloadLink);
