@@ -10,7 +10,7 @@ import { VideoSelect } from "./VideoSelect";
 import { MAX_VIEWS } from '../../views/viewsConfig';
 import Chart from "../../views/Chart";
 import VideoPlayer from "../../views/VideoPlayer";
-import { insertViewAtIndex, replaceViewAtIndex } from "../../../lib/viewUtils";
+import { replaceViewAtIndex } from "../../../lib/viewUtils";
 import { filterFiles } from "../../../lib/videoUtils";
 import { ApiUtil } from "../../../lib/apiUtils";
 
@@ -64,7 +64,7 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
 
     let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation } });
 
-    if (buttonID + 1 < MAX_VIEWS && graphType === "video" && viewInformation.find(view => view.component.name == "VideoPlayer") == undefined) {
+    if (buttonID + 1 < MAX_VIEWS && graphType === "video" && viewInformation.find(view => view.component.name === "VideoPlayer") === undefined) {
       updatedViewInformation = replaceViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: {} });
       if (buttonID + 1 === numViews) setNumViews(numViews + 1);
     }
@@ -107,10 +107,10 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
     <div className='file-Storage-Container'>
       <div className="file-browser">
         <h3>Choose Files</h3>
-        <FileStorage files={graphType == 'video' ? filterFiles(selectedVideo, files, fileTimespans) : files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+        <FileStorage files={graphType === 'video' ? filterFiles(selectedVideo, files, fileTimespans) : files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
       </div>
       <div className="fileButtons">
-        <button className="pageTwoBackButton" onClick={() => {movePage(graphType == "video" ? -1 : -2)}}>Back</button>
+        <button className="pageTwoBackButton" onClick={() => {movePage(graphType === "video" ? -1 : -2)}}>Back</button>
         <button className="pageTwoNextButton" onClick={() => {
         // OnClick, it should get the selected files from the file storage component
         if (selectedFiles.length === 0) {

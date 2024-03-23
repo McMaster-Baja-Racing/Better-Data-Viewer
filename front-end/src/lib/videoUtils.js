@@ -1,5 +1,3 @@
-import { time } from "highcharts"
-
 // Computs the offsets between the videoStart and the fileStart for all series
 export const computeOffsets = (chartInformation, video) => {
     const videoStart = new Date(video.start).getTime()
@@ -10,10 +8,6 @@ export const computeOffsets = (chartInformation, video) => {
         tempOffsets.push(videoStart - fileStart)
     })
     return tempOffsets
-}
-
-export const getDuration = (video) => {
-    return new Date(video.end).getTime() - new Date (video.start).getTime()
 }
 
 export const getPointIndex = (series, videoTimestamp, offset, timestamps) => {

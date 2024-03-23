@@ -3,7 +3,7 @@ import '../../../styles/GraphSettingsStyles.css';
 const GraphSettings = ({ movePage, setGraphType, setLiveCheck, selectedVideo }) => {
 
   const handleTypeSelect = (e) => {
-    if (e.target.value == "video") {
+    if (e.target.value === "video") {
       document.getElementById("liveDataCheckbox").checked = false;
       document.getElementById("liveDataCheckbox").disabled = true;
     } else {
@@ -14,7 +14,7 @@ const GraphSettings = ({ movePage, setGraphType, setLiveCheck, selectedVideo }) 
   const handleNextPage = () => {
     setGraphType(document.getElementById("graphTypeSelect").value);
     setLiveCheck(document.getElementById("liveDataCheckbox").checked);
-    const moveToVideoSelect = document.getElementById("graphTypeSelect").value == "video" && selectedVideo.key == "";
+    const moveToVideoSelect = document.getElementById("graphTypeSelect").value === "video" && selectedVideo.key === "";
     movePage(moveToVideoSelect ? 1 : 2);
   }
 

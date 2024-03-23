@@ -3,7 +3,7 @@ import { defaultChartOptions, getChartConfig } from '../../lib/chartOptions.js'
 import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
 import { ApiUtil } from '../../lib/apiUtils.js';
 import React, { useState, useEffect, useRef } from 'react';
-import Highcharts, { time } from 'highcharts'
+import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from "highcharts/modules/coloraxis";
@@ -104,7 +104,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
     });
 
     useEffect(() => {
-        if (video.key === '' || chartInformation == undefined) return
+        if (video.key === '' || chartInformation === undefined) return
         setOffsets(computeOffsets(chartInformation, video))
     }, [chartInformation, video])
 

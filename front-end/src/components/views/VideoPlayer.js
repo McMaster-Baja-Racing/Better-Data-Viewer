@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../styles/videoPlayerStyles.css';
-import { getDuration } from '../../lib/videoUtils';
 import ReactPlayer from 'react-player';
+import { ApiUtil } from '../../lib/apiUtils';
 
 const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
 
@@ -9,7 +9,7 @@ const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
 
   useEffect(() => {
     // Fetch data when the component mounts
-    fetch(`http://${window.location.hostname}:8080/files/${video.key}`)
+    ApiUtil.getFile(video.key)
       .then((response) => response.blob())
       .then((blob) => {
         const url = URL.createObjectURL(blob) 
