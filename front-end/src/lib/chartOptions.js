@@ -17,7 +17,7 @@ export const defaultChartOptions = {
         enabled: false
     },
     boost: {
-        enabled: false
+        enabled: true
     },
     colorAxis: {
         showInLegend: false

@@ -12,7 +12,6 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
         setFilteredFiles(filterFiles(selectedVideo, files, fileTimespans))
     }, [selectedVideo]);
 
-    //render the modal JSX in the portal div.
     return (
         <div className="videoSelectContainer">
             <h3>Select Video</h3>
