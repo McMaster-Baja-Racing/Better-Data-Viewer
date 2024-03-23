@@ -58,7 +58,7 @@ public class FileSystemStorageService implements StorageService {
 			if (file.isEmpty()) {
 				throw new StorageException("Failed to store empty file.");
 			}
-			Path destinationFile = this.rootLocation.resolve(Paths.get(getFileExtension(file.getOriginalFilename()), file.getOriginalFilename()))
+			Path destinationFile = this.rootLocation.resolve(Paths.get(getTypeFolder(file.getOriginalFilename()), file.getOriginalFilename()))
 					.normalize().toAbsolutePath();
 			if (!destinationFile.startsWith(this.rootLocation.toAbsolutePath())) {
 				// This is a security check
@@ -101,7 +101,7 @@ public class FileSystemStorageService implements StorageService {
 
 	@Override
 	public Path load(String filename) {
-		return rootLocation.resolve(getFileExtension(filename) + "/" + filename);
+		return rootLocation.resolve(getTypeFolder(filename) + "/" + filename);
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class FileSystemStorageService implements StorageService {
 		try {
 			Path file = load(filename);
 			String headers;
-			if (getFileExtension(filename).equals("mp4")) {
+			if (getTypeFolder(filename).equals("mp4")) {
 				headers = extractMetadata(file);
 			} else {
 				headers = Files.lines(file).findFirst().get();
@@ -309,7 +309,7 @@ public class FileSystemStorageService implements StorageService {
 
 	// Returns the extension of the file for folder organization
 	@Override
-	public String getFileExtension(String filename) {
+	public String getTypeFolder(String filename) {
 		if (filename == null) return ""; // No file
 		int dotIndex = filename.lastIndexOf(".");
 		if (dotIndex == -1) return ""; // No extension

@@ -241,10 +241,10 @@ public class FileUploadController {
 		
 		// For all of the input and output files, add the root location to the front
 		for (int i = 0; i < inputFiles.length; i++) {
-			inputFiles[i] = storageService.getRootLocation().toString() + "/" + storageService.getFileExtension(inputFiles[i]) + "/" + inputFiles[i];
+			inputFiles[i] = storageService.getRootLocation().toString() + "/" + storageService.getTypeFolder(inputFiles[i]) + "/" + inputFiles[i];
 		}
 		for (int i = 0; i < outputFiles.length; i++) {
-			outputFiles[i] = storageService.getRootLocation().toString() + "/" + storageService.getFileExtension(outputFiles[i]) + "/" + outputFiles[i];
+			outputFiles[i] = storageService.getRootLocation().toString() + "/" + storageService.getTypeFolder(outputFiles[i]) + "/" + outputFiles[i];
 		}
 
 		// Then run the selected analyzer
