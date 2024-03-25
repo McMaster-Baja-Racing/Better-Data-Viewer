@@ -133,6 +133,22 @@ const analyzerData = [
       }
     ]
   },
+  {
+    title: "Cubic Multiply.",
+    code: "cubic",
+    parameters: [{ name: "A", default: "1" }, { name: "B", default: "1" }, { name: "C", default: "1" }, { name: "D", default: "1" }],
+    description: "Given the coefficients of a cubic function, this will pass the data into the cubic function.",
+    image: {
+      link: "cubic.png",
+      alt: "Cubic Image"
+    },
+    links: [
+      {
+        title: "Cubic Function",
+        link: "https://en.wikipedia.org/wiki/Cubic_function",
+      },
+    ]
+  }
 ];
 
 export default analyzerData;

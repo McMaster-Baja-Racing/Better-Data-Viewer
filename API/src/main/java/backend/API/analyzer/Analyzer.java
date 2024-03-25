@@ -170,6 +170,16 @@ public abstract class Analyzer {
                     outputFiles[9] = outputFiles[0];
                 }
                 return new InterpolaterProAnalyzer(inputFiles, inputColumns, outputFiles);
+            case "cubic":
+                if (outputFiles.length == 10) {
+                    outputFiles[0] = inputFiles[0].substring(0, inputFiles[0].length() - 4) + "_cubic.csv";
+                    outputFiles[9] = outputFiles[0];
+                }
+                double a = Double.parseDouble((String) params[0]);
+                double b1 = Double.parseDouble((String) params[1]);
+                double c = Double.parseDouble((String) params[2]);
+                double d = Double.parseDouble((String) params[3]);
+                return new CubicAnalyzer(inputFiles, inputColumns, outputFiles, a, b1, c, d);
             default:
                 return null;
         }
