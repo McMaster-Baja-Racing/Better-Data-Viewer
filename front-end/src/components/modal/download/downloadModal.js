@@ -52,7 +52,7 @@ export const DownloadModal = ({ setModal }) => {
       // Use the JSZip Blob method to create a Blob from the zip archive
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       downloadLink.href = URL.createObjectURL(zipBlob);
-      downloadLink.download = `Data_Viewer_Files.zip`;
+      downloadLink.download = "DataViewerFiles.zip"
   
       // Append the link to the document and trigger the download
       document.body.appendChild(downloadLink);

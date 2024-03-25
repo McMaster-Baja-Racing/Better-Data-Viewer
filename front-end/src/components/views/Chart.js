@@ -35,9 +35,9 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
         for (var i = 0; i < chartInformation.files.length; i++) {
             // Create a list of all files in order (formatting for backend)
             let files = chartInformation.files[i].columns.map(column => column.filename);
-            let inputColumns = chartInformation.files[i].columns.map(col => col.header);
+            let inputColumns = chartInformation.files[i].columns;
 
-            const response = await ApiUtil.analyzeFiles(files, inputColumns, [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), [chartInformation.live])
+            const response = await ApiUtil.analyzeFiles(files, inputColumns.map(col => col.header), [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), [chartInformation.live])
 
             const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
             setFileNames(prevState =>  [...prevState, filename])

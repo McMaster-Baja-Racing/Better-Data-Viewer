@@ -9,7 +9,7 @@ export const LIVE_DATA_INTERVAL = 300;
  * @description Fetches the data from the server and formats it for the chart.
  * @param {Object} response - The file response from the server.
  * @param {string} filename - The name of the file.
- * @param {string[]} columns - The columns to be fetched.
+ * @param {Object[]} columns - The columns to be fetched.
  * @param {useRef<string[]>} minMax - The minimum and maximum values of the colour value.
  * @param {string} chartType - The type of chart.
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of data objects.
@@ -26,8 +26,9 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType) 
 
     // If not colour, return values in array to allow for boost
     if (chartType !== "colour") {
+        const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() : 0
         return lines.map((line) => {
-            return [parseFloat(line[headerIndices.x]), parseFloat(line[headerIndices.y])];
+            return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
         })
     }
 
@@ -67,7 +68,7 @@ const getHeadersIndex = (headers, columns) => {
     let h = {};
     for (let i = 0; i < columns.length; i++) {
         for (let j = 0; j < headers.length; j++) {
-            if (columns[i] === headers[j].trim()) {
+            if (columns[i].header === headers[j].trim()) {
                 if (i === 0) {
                     h.x = j;
                 } else if (i === 1) {

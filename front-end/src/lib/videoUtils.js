@@ -12,10 +12,6 @@ export const computeOffsets = (chartInformation, video) => {
     return tempOffsets
 }
 
-export const getDuration = (video) => {
-    return new Date(video.end).getTime() - new Date (video.start).getTime()
-}
-
 export const getPointIndex = (series, videoTimestamp, offset, timestamps) => {
     const fileTimestamp = videoTimestamp + offset + timestamps[0]
     if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return
@@ -24,10 +20,11 @@ export const getPointIndex = (series, videoTimestamp, offset, timestamps) => {
     return pointIndex
 }
 
-export const filterFiles = (videoTimespan, files, fileTimespans) => {
+// Filters the given list of files to only include those that have timespans that overlap with the video
+export const filterFiles = (video, files, fileTimespans) => {
     const videoSyncFiles = []
-    const videoStart = new Date (videoTimespan.start)
-    const videoEnd = new Date (videoTimespan.end)
+    const videoStart = new Date (video.start)
+    const videoEnd = new Date (video.end)
     files.forEach(file => {
         const fileTimespan = fileTimespans.find(timespan => timespan.key === file.key)
         if (fileTimespan === undefined) return

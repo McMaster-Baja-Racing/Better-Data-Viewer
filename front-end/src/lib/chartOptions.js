@@ -37,10 +37,11 @@ const getStandardChartConfig = (chartInformation) => {
 
     chartConfig.xAxis = {
         title: {
-            //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-            type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
             text: chartInformation.files[0].columns[0].header
         },
+        //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
+        type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+
         lineColor: 'grey',
         tickColor: 'grey',
     };
