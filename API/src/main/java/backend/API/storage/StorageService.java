@@ -41,6 +41,6 @@ public interface StorageService {
 
 	LocalDateTime getZeroTime(Path folder);
 
-	String getFileExtension(String filename);
+	String getTypeFolder(String filename);
 
 }

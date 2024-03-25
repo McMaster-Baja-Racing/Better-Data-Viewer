@@ -12,7 +12,6 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
         setFilteredFiles(filterFiles(selectedVideo, files, fileTimespans))
     }, [selectedVideo]);
 
-    //render the modal JSX in the portal div.
     return (
         <div className="videoSelectContainer">
             <h3>Select Video</h3>
@@ -39,7 +38,7 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
                 </div>
                 <div className="folderContainer">
                 <label className='folderContainerLabel'>Available Folders</label>
-                {filteredFiles.length == 0 && selectedVideo != '' ? <label>No files found</label> : null}
+                {filteredFiles.length === 0 && selectedVideo !== '' ? <label>No files found</label> : null}
                 {[...new Set(filteredFiles.map(file => file.key.split('/')[0]))].map((folder, index) => (
                     <label key={index} htmlFor={`folder-${index}`} className='folderLabel'>
                         <AiFillFolder size={20} style={{ marginBottom: '-2%', marginRight: '3px' }}/>
