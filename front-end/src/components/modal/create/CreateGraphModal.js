@@ -123,7 +123,6 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
         }}>Next</button>
       </div>
     </div>,
-
     <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType} fileTimespans={fileTimespans}/>
   ]
 

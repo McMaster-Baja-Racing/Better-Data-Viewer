@@ -242,8 +242,6 @@ public class FileSystemStorageService implements StorageService {
 	public LocalDateTime[] getTimespan(String filename) {
 		// Gets the metadata of the file to find the creation time and duration
 		String metadata = extractMetadata(load(filename));
-
-		System.out.println(getTagValue(metadata, "Creation Time"));
 		
 		// Parses with timezeone, converts to GMT, and then to LocalDateTime
 		LocalDateTime creationTime = ZonedDateTime.parse(getTagValue(metadata, "Creation Time"),

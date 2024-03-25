@@ -21,7 +21,7 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
                         <label
                             key={index}
                             className={`videoLabel ${selectedVideo === videoTimespan ? 'selected' : ''}`}
-                            htmlFor={`video-${index}`}
+                            htmlFor={`video-${index}`} 
                         >
                             <input 
                                 type="radio"
