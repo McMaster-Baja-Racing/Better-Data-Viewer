@@ -64,6 +64,12 @@ public abstract class Analyzer {
     // When a new analyzer is created, add it to this factory method
     public static Analyzer createAnalyzer(String type, String[] inputFiles, String[] inputColumns, String[] outputFiles, Object... params) {
         // Before every input and output file location, add the storage directory before it
+        for (int i = 0; i < inputFiles.length; i++) {
+            inputFiles[i] = "./upload-dir/" + inputFiles[i];
+        }
+        for (int i = 0; i < outputFiles.length; i++) {
+            outputFiles[i] = "./upload-dir/" + outputFiles[i];
+        }
         switch (type) {
             case "accelCurve":
                 if (outputFiles.length == 10) {

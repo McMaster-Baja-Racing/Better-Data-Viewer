@@ -1,24 +1,13 @@
 import ReactDom from "react-dom";
 import '../../../styles/modalStyles.css';
 import '../../../styles/downloadModalStyles.css';
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import React, { useState } from 'react';
 import FileStorage from "../FileStorage";
 import JSZip from 'jszip'
-import { ApiUtil } from '../../../lib/apiUtils.js';
 
 export const DownloadModal = ({ setModal }) => {
   const [selectedFiles, setSelectedFiles] = useState([]); // holds the files that the user has selected from the file menu
-  const [files, setFiles] = useState([]) // holds all the files which have been uploaded
-
-  useEffect(() => {
-      // Fetch data when the component mounts
-      ApiUtil.getFolder('csv')
-        .then((response) => response.json())
-        .then((data) => {
-          setFiles(data);
-        });
-    }, []); // Empty dependency array ensures that the fetch is only performed once
   
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -39,12 +28,16 @@ export const DownloadModal = ({ setModal }) => {
       
       // Add each selected file to the zip archive
       for (const file of selectedFiles) {
-        const response = await ApiUtil.getFile(file.key);
+        const response = await fetch(`http://${window.location.hostname}:8080/files/${file.key}`);
         const blob = await response.blob();
         
         // Add the file to the zip archive with the file name as the key
         zip.file(file.key, blob);
       }
+  
+      // Generate a zip file with a timestamped name
+      const timestamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0];
+      const zipFileName = `Data_Viewer_${timestamp}.zip`;
   
       // Create a download link for the zip file
       const downloadLink = document.createElement('a');
@@ -52,7 +45,7 @@ export const DownloadModal = ({ setModal }) => {
       // Use the JSZip Blob method to create a Blob from the zip archive
       const zipBlob = await zip.generateAsync({ type: 'blob' });
       downloadLink.href = URL.createObjectURL(zipBlob);
-      downloadLink.download = "DataViewerFiles.zip"
+      downloadLink.download = zipFileName;
   
       // Append the link to the document and trigger the download
       document.body.appendChild(downloadLink);
@@ -73,7 +66,7 @@ export const DownloadModal = ({ setModal }) => {
       <div className='file-Storage-Container'>
           <div className="download-browser">
             <h1 className="download-title"> Download Files </h1>
-            <FileStorage files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+            <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
           </div>
           <div className="downloadContainer">
             <button className="downloadButton" onClick={() => {

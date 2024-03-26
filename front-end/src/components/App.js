@@ -1,41 +1,37 @@
 import '../styles/App.css';
-import '../styles/views.css';
 import { CreateGraphModal } from "./modal/create/CreateGraphModal";
 import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
 import { DownloadModal } from './modal/download/downloadModal';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Chart from './Chart';
 import Topbar from './Topbar';
-import Views from './views/Views';
 import $ from 'jquery';
-import { MAX_VIEWS } from './views/viewsConfig';
-import Chart from './views/Chart';
+import MapDisplay from './map/MapDisplay';
 import MapChart from './map/MapChart';
 
 const App = () => {
 
   // State for holding which modal should be open
   const [modal, setModal] = useState('')
-  const [numViews, setNumViews] = useState(1);
-  const [videoTimestamp, setVideoTimestamp] = useState(0)
-  const [selectedVideo, setSelectedVideo] = useState({ key: "", start: "", end: "" })
 
+  // All for information transfer between children and parent
   // sample format for chartInformation: 
   // {
   //    files:
   //    [
   //      {
   //        columns: [
-  //          {header:"Timestampt", filename:"PRIM_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
-  //          {header:"RPM", filename:"PRIM_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"},
+  //          {header:"Timestampt", filename:"PRIM_RPM.csv"},
+  //          {header:"RPM", filename:"PRIM_RPM.csv"},
   //        ],
   //        analysis: "none"
   //      },
   //      {
   //        columns: [
-  //          {header:"RPM", filename:"SEC_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
-  //          {header:"Timestampt", filename:"SEC_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}}
+  //          {header:"RPM", filename:"SEC_RPM.csv"},
+  //          {header:"Timestampt", filename:"SEC_RPM.csv"}
   //        ],
   //        analysis: "rollAvg"
   //      }
@@ -44,17 +40,14 @@ const App = () => {
   //   type: "line"
   // }
 
-  // State for holding the information for each view
-  const [viewInformation, setViewInformation] = useState(
-    Array.from({ length: MAX_VIEWS }, () => ({
-      component: Chart,
-      props: {}
-    }))
-  )
+  const [chartInformation, setChartInformation] = useState({
+    files: [],
+    live: false,
+    type: "line"
+  });
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
   const [successMessage, setSuccessMessage] = useState({})
-  const [buttonID, setButtonID] = useState(null);
 
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
@@ -66,15 +59,15 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="App">
-      <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
-        <header className="App-body">
+        <Topbar setModal={setModal} />
+        <header className="App-header">
           <div className="success">{successMessage.message}</div>
-          {modal === 'Create' ? <CreateGraphModal setModal={setModal} setViewInformation={setViewInformation} setSuccessMessage={setSuccessMessage} viewInformation={viewInformation} buttonID={buttonID} setNumViews={setNumViews} numViews={numViews} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}/> : null}
+          {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} /> : null}
           {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
           {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
           {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
           <Routes>
-            <Route path="*" element={<Views viewInformation={viewInformation} setModal={setModal} setButtonID={setButtonID} numViews={numViews} videoTimestamp={videoTimestamp} setVideoTimestamp={setVideoTimestamp} video={selectedVideo} />} />
+            <Route path="*" element={<Chart chartInformation={chartInformation} />} />
             <Route path="/map" element={<MapChart />} />
           </Routes>
         </header>

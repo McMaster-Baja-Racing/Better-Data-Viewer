@@ -1,9 +1,9 @@
 import '../../../styles/modalStyles.css';
 import Help from './Help';
-import analyzerData from '../../analyzerData'
+import analyzerData from '../../analyzerData.js'
 import '../../../styles/analyzersAndSeriesStyles.css';
-import { useState, useEffect } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType, fileTimespans }) => {
+import { useState, useRef, useEffect } from 'react';
+const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType }) => {
 
     // Determines if a series already exists with the same columns and analyzer
     const isDuplicateSeries = (newSeries) => {
@@ -49,10 +49,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
 
         var selectColumns = [];
         for (let i = 0; i < dimensions; i++) {
-            const columnJSON = JSON.parse(document.getElementsByClassName(i)[0].value)
-            const fileTimespan = fileTimespans.find(timespan => timespan.key === columnJSON.filename)
-            columnJSON["timespan"] = {start: fileTimespan.start, end: fileTimespan.end}
-            selectColumns.push(columnJSON);
+            selectColumns.push(JSON.parse(document.getElementsByClassName(i)[0].value));
         }
 
         var checkedAnalyzer = analyzerData.filter(analyzer => document.getElementById(analyzer.title).checked)[0]
@@ -84,7 +81,7 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
     // TODO: Very hardcoded in, should be based off of a list of graph types and their respetive dimensions
     // TODO: Gauge should have 1 dimension, line should have 2, etc.
     useEffect(() => {
-        if (graphType === "coloredline") {
+        if (graphType === "colour") {
             setDimensions(3);
         } else {
             setDimensions(2);

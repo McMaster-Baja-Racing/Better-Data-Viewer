@@ -18,11 +18,8 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -51,7 +48,7 @@ import backend.API.live.Serial;
 import backend.API.analyzer.Analyzer;
 
 import backend.API.model.fileInformation;
-import backend.API.model.fileTimespan;
+import backend.API.model.fileList;
 
 @Controller
 public class FileUploadController {
@@ -101,17 +98,17 @@ public class FileUploadController {
 
 	// This is the method that returns information about all the files, to be used
 	// by fetch
-	// It returns an object of type fileInformation from the model folder
+	// It returns an object of type fileList from the model folder
 	@GetMapping("/files")
 	@ResponseBody
-	public ResponseEntity<ArrayList<fileInformation>> listUploadedFiles() throws IOException {
+	public ResponseEntity<fileList> listUploadedFiles() throws IOException {
 
 		// Set these headers so that you can access from LocalHost
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		ArrayList<fileInformation> files = new ArrayList<fileInformation>();
+		fileList files = new fileList();
 
 		// Get name, headers and size of each file
 		storageService.loadAll().forEach(path -> {
@@ -119,34 +116,7 @@ public class FileUploadController {
 				// Get the path and filename of each file and print it
 				long size = storageService.loadAsResource(path.toString()).contentLength();
 				String[] headers = storageService.readHeaders(path.toString()).split(",");
-				files.add(new fileInformation(path.toString().replace("\\", "/"), headers, size));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
-
-		return ResponseEntity.ok().headers(responseHeaders).body(files);
-	}
-
-	// Returns the file information for all the files in a folder
-	@GetMapping("/files/folder/{foldername:.+}")
-	@ResponseBody
-	public ResponseEntity<ArrayList<fileInformation>> listFolderFiles(@PathVariable String foldername) throws IOException {
-
-		// Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-		ArrayList<fileInformation> files = new ArrayList<fileInformation>();
-
-		// Get name, headers and size of each file
-		storageService.loadFolder(foldername).forEach(path -> {
-			try {
-				// Get the path and filename of each file and print it
-				long size = storageService.loadAsResource(path.toString()).contentLength();
-				String[] headers = storageService.readHeaders(path.toString()).split(",");
-				files.add(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+				files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -173,50 +143,6 @@ public class FileUploadController {
 		return ResponseEntity.ok().headers(responseHeaders).body(fileinfo);
 	}
 
-	// Returns the timespan of all the files in a type folder
-	@GetMapping("/timespan/folder/{foldername:.+}")
-	@ResponseBody
-	public ResponseEntity<ArrayList<fileTimespan>> listFolderTimespans(@PathVariable String foldername) throws IOException {
-
-		// Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-		ArrayList<fileTimespan> timespans = new ArrayList<fileTimespan>();
-
-		Stream<Path> paths = storageService.loadFolder(foldername);
-
-		switch (foldername) {
-			case "csv":
-				// Holds the parent folder and the zero time
-				Object[] container = {null, null};
-				paths.forEach(path -> {
-					if (path.getParent() != null) {
-						// Updates the parent folder and zero time if the parent folder changes to avoid recalculating the zero time
-						if (container[0] != path.getParent()) {
-							container[0] = path.getParent();
-							container[1] = storageService.getZeroTime((Path) container[0]);
-						}
-						// Get the path and filename of each file and print it
-						LocalDateTime[] timespan = storageService.getTimespan(path.toString(), (LocalDateTime) container[1]);
-						timespans.add(new fileTimespan(path.toString().replace("\\", "/"), timespan[0], timespan[1]));
-					}
-				});
-				break;
-			case "mp4":
-				paths.forEach(path -> {
-					// Get the path and filename of each file and print it
-					LocalDateTime[] timespan = storageService.getTimespan(path.toString());
-					timespans.add(new fileTimespan(path.toString().replace("\\", "/"), timespan[0], timespan[1]));
-				});
-				break;
-			default: throw new IllegalArgumentException("Invalid folder name");
-		}
-
-		return ResponseEntity.ok().headers(responseHeaders).body(timespans);
-	}
-
 	// This is the be all end all method that should take in any number of file
 	// names and analyzers, plus live option and return a file
 	@GetMapping("/analyze")
@@ -238,70 +164,34 @@ public class FileUploadController {
 			// Set output files to empty string
 			outputFiles = new String[10];
 		}
-		
-		// For all of the input and output files, add the root location to the front
-		for (int i = 0; i < inputFiles.length; i++) {
-			inputFiles[i] = storageService.getRootLocation().toString() + "/" + storageService.getTypeFolder(inputFiles[i]) + "/" + inputFiles[i];
-		}
-		for (int i = 0; i < outputFiles.length; i++) {
-			outputFiles[i] = storageService.getRootLocation().toString() + "/" + storageService.getTypeFolder(outputFiles[i]) + "/" + outputFiles[i];
+
+		// Then check if live is true, and set the options + files accordingly
+		if (liveOptions[0].equals("true")) {
+			// Maybe do the serial stuff here, but definitely look in live folder for data
 		}
 
 		// Then run the selected analyzer
 		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
 			try {
-				Analyzer.createAnalyzer(analyzer[0], inputFiles, inputColumns, outputFiles,
-						(Object[]) Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
+			Analyzer.createAnalyzer(analyzer[0], inputFiles, inputColumns, outputFiles,
+					Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
 			} catch (Exception e) {
 				System.out.println(e);
 			}
 		} else {
 			// If no analyzer is selected, only one file is selected, copy it
 			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
-			outputFiles[outputFiles.length - 1] = inputFiles[0];
+			outputFiles[outputFiles.length - 1] = "./upload-dir/" + inputFiles[0];
 		}
-
-		// TODO: THIS SHOULD HAPPEN BEFORE RUNNING THE ANALYZER IN THE COMMON CASE
-		// Then check if live is true, and set the options + files accordingly
-		String fileOutputString = outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length());
-
-		// print live options
-		System.out.println("Live options: " + liveOptions[0]);
-
-		if (liveOptions[0].equals("true")) {
-			outputFiles = new String[10];
-			// When live is true, we only want a certain amount of time from its timestamp
-			// Get the last timestamp, then subtract a certain amount of time, and use split analyzer between the two
-			int lastPoint = Integer.valueOf(storageService.getLast(fileOutputString));
-			int firstPoint = Math.max(0, lastPoint - 3000);
-
-			// print the two values
-			System.out.println("First point: " + firstPoint);
-			System.out.println("Last point: " + lastPoint);
-
-			Object[] extraValues = new Object[]{String.valueOf(firstPoint), String.valueOf(lastPoint)};
-			String[] lastFile = new String[]{fileOutputString};
-
-			try {
-				Analyzer.createAnalyzer("split", lastFile, inputColumns, 
-					outputFiles, extraValues).analyze();
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-			
-		}
-
 		// Then return the final file, removing the prefix for upload dir
-		String filePath = outputFiles[outputFiles.length - 1];
-		Path path = Paths.get(filePath);
-		Path newPath = path.subpath(2, path.getNameCount());
-
-		Resource file = storageService.loadAsResource(newPath.toString());
+		Resource file = storageService.loadAsResource(
+				outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
 
 		// Set these headers so that you can access from LocalHost and download the file
 		HttpHeaders responseHeaders = new HttpHeaders();
-		Path absoluteFilePath = storageService.load(newPath.toString());
-		String relativePath = storageService.getRootLocation().relativize(absoluteFilePath).toString();
+		Path absoluteFilePath = storageService
+				.load(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
+		String relativePath = Paths.get("upload-dir").relativize(absoluteFilePath).toString();
 		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
 				"attachment; filename=\"" + relativePath + "\"");
 		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
@@ -380,9 +270,8 @@ public class FileUploadController {
 		}
 		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
 			storageService.store(file);
-			String csvFilename = storageService.load(filename).toAbsolutePath().toString();
-			String csvOutputDir = storageService.load("").toAbsolutePath().toString() + "\\";
-			BinaryTOCSV.toCSV(csvFilename, csvOutputDir, false);
+			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
+					storageService.load("").toAbsolutePath().toString() + "\\", false);
 			storageService.delete(filename);
 		} else {
 			storageService.store(file);
@@ -407,10 +296,6 @@ public class FileUploadController {
 			storageService.store(file);
 			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
 					storageService.load("").toAbsolutePath().toString() + "\\", true);
-			storageService.delete(filename);
-		} else if (filename.substring(filename.lastIndexOf(".") + 1).toLowerCase().equals("mov")) {
-			storageService.store(file);
-			storageService.copyFile(filename, filename.substring(0, filename.lastIndexOf(".")) + ".mp4");
 			storageService.delete(filename);
 		} else {
 			storageService.store(file);
