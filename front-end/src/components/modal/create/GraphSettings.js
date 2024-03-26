@@ -37,9 +37,9 @@ const GraphSettings = ({ movePage, setGraphType, setLiveCheck, selectedVideo }) 
             <select id="graphTypeSelect" onChange={(e) => { handleTypeSelect(e) }}>
               <option value="line">Line</option>
               <option value="video">Video</option>
+              <option value="coloredline">XYColour</option>
               <option value="spline">Spline</option>
               <option value="scatter">Scatter</option>
-              <option value="coloredline">XYColour</option>
             </select>
           </div>
         </div>

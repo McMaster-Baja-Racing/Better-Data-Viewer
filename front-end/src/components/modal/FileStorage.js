@@ -101,7 +101,7 @@ const CustomHeaderRenderer = (props) => {
 }
 
 
-const FileStorage = ({ files, selectedFiles, setSelectedFiles}) => {
+const FileStorage = ({ files, selectedFiles, setSelectedFiles }) => {
     // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
     // Here is the implementation of the file browser with props passed in
 

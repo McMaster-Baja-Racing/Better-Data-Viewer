@@ -11,7 +11,6 @@ import Views from './views/Views';
 import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart';
-import MapDisplay from './map/MapDisplay';
 import MapChart from './map/MapChart';
 
 const App = () => {

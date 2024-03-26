@@ -50,7 +50,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
     }
     //start loading
     setLoading(true);
-    //console.log(loading);
+
     await new Promise((resolve, reject) => {
       for (let i = 0; i < fileLists.length; i++) {
         ApiUtil.uploadFile(fileLists[i]).then((res) => {
