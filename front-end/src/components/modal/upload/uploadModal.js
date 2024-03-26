@@ -5,6 +5,9 @@ import '../../../styles/uploadModalStyles.css';
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import React, { useState } from 'react';
+import { ApiUtil } from '../../../lib/apiUtils.js';
+import loadingImg from '../../../assets/loading.gif';
+
 export const UploadModal = ({ setModal, setSuccessMessage}) => {
 
   const [dragActive, setDragActive] = React.useState(false);
@@ -40,7 +43,6 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
   //This stuff is for backend API
   const onSubmit = async () => {
     //upload multiple files
-    const formData = new FormData();
     // THIS SHOULD BE A POPUP THAT DECAYS AWAY, NOT AN ALERT
     if (fileLists.length === 0) { 
       alert("Please select a file")
@@ -48,14 +50,10 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
     }
     //start loading
     setLoading(true);
-    //console.log(loading);
+
     await new Promise((resolve, reject) => {
       for (let i = 0; i < fileLists.length; i++) {
-        formData.set("file", fileLists[i]);
-        fetch(`http://${window.location.hostname}:8080/upload`, {
-          method: "POST",
-          body: formData,
-        }).then((res) => {
+        ApiUtil.uploadFile(fileLists[i]).then((res) => {
           res.text().then(text => {
             if(res.status !== 200) {
               alert(JSON.stringify(`${text}, status: ${res.status}`))
@@ -84,7 +82,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
         <div className="uploadContainer">
           <h1>Upload Files</h1>
             <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
+            <input type="file" accept=".csv, .bin, .mp4, .mov" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
               setfileLists([...e.target.files, ...fileLists])
             }}/>
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : ""}>
@@ -102,13 +100,13 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
             </label>
             {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
             <button id = "delete" type="button" onClick={(() => {
-            fetch(`http://${window.location.hostname}:8080/deleteAll`).then((res) => {
+            ApiUtil.deleteAllFiles().then((res) => {
               alert(res)
             }).catch((err) => {
               console.log(err)
             })
           })}>Delete All</button>
-          {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..."/>}
+          {loading && <img className="loading" src={loadingImg} alt="Loading..."/>}
           <input id = "submitButton" className="uploadSubmit" type="submit" />
           </form>
         </div>

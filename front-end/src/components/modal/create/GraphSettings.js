@@ -1,14 +1,21 @@
 import '../../../styles/GraphSettingsStyles.css';
 
-const GraphSettings = ({ movePage, setGraphType, setLiveCheck }) => {
+const GraphSettings = ({ movePage, setGraphType, setLiveCheck, selectedVideo }) => {
 
-  const graphType = () => {
-    setGraphType(document.getElementById("graphTypeSelect").value);
-
+  const handleTypeSelect = (e) => {
+    if (e.target.value === "video") {
+      document.getElementById("liveDataCheckbox").checked = false;
+      document.getElementById("liveDataCheckbox").disabled = true;
+    } else {
+      document.getElementById("liveDataCheckbox").disabled = false;
+    }
   }
 
-  const liveData = () => {
+  const handleNextPage = () => {
+    setGraphType(document.getElementById("graphTypeSelect").value);
     setLiveCheck(document.getElementById("liveDataCheckbox").checked);
+    const moveToVideoSelect = document.getElementById("graphTypeSelect").value === "video" && selectedVideo.key === "";
+    movePage(moveToVideoSelect ? 1 : 2);
   }
 
   return (
@@ -27,20 +34,21 @@ const GraphSettings = ({ movePage, setGraphType, setLiveCheck }) => {
         <div className="graphTypesBox">
           <div className="graphOptionsText">Graph Types</div>
           <div className="GraphTypeSelect">
-            <select id="graphTypeSelect" >
+            <select id="graphTypeSelect" onChange={(e) => { handleTypeSelect(e) }}>
               <option value="line">Line</option>
+              <option value="video">Video</option>
+              <option value="coloredline">XYColour</option>
               <option value="spline">Spline</option>
               <option value="scatter">Scatter</option>
-              <option value="colour">XYColour</option>
             </select>
           </div>
         </div>
         <div className='liveDataBox'>
           <div className="graphOptionsText">Live Data</div>
-          <input type="checkbox" id="liveDataCheckbox" name="liveData" value="true"></input>
+          <input type="checkbox" id="liveDataCheckbox" name="liveData"></input>
         </div> 
       </div>
-      <button className="PageButton" onClick={() => { liveData(); graphType(); movePage(1); }}>Next</button>
+      <button className="PageButton" onClick={() => { handleNextPage() }}>Next</button>
     </div>
   )
 

@@ -1,11 +1,12 @@
 .App {
   text-align: center;
   font-family: "HelveticaNeueW01-77BdCnObl";
+  height: calc(100vh);
 }
 
-.App-header {
-  /* background-color: #3d0202; */
-  height: 100vh;
+.App-body {
+  height: calc(100vh - 5rem);
+  background-color: #3d0202;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,7 +15,7 @@
   color: white;
 }
 
-.App-header > * {
+.App-body > * {
   padding: 0rem;
 }
 

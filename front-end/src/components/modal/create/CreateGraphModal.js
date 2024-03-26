@@ -6,16 +6,46 @@ import { useRef } from 'react';
 import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
+import { VideoSelect } from "./VideoSelect";
+import { MAX_VIEWS } from '../../views/viewsConfig';
+import Chart from "../../views/Chart";
+import VideoPlayer from "../../views/VideoPlayer";
+import { replaceViewAtIndex } from "../../../lib/viewUtils";
+import { filterFiles } from "../../../lib/videoUtils";
+import { ApiUtil } from "../../../lib/apiUtils";
 
-export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMessage }) => {
+export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessage, viewInformation, buttonID, setNumViews, numViews, selectedVideo, setSelectedVideo }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [displayPage, setDisplayPage] = useState(0);
-  const [graphType, setGraphType] = useState("");
+  const [graphType, setGraphType] = useState("line");
   const [liveCheck, setLiveCheck] = useState(false);
   const [seriesInfo, setSeriesInfo] = useState([]);
+  const [files, setFiles] = useState([])
+  const [videoTimespans, setvideoTimespans] = useState([])
+  const [fileTimespans, setfileTimespans] = useState([])
+
+
+  useEffect(() => {
+      // Fetch data when the component mounts
+      ApiUtil.getFolder('csv')
+        .then((response) => response.json())
+        .then((data) => {
+          setFiles(data);
+        });
+      ApiUtil.getTimespans('mp4')
+        .then((response) => response.json())
+        .then((data) => {
+          setvideoTimespans(data);
+        });
+    ApiUtil.getTimespans('csv')
+        .then((response) => response.json())
+        .then((data) => {
+          setfileTimespans(data);
+        });
+    }, []); // Empty dependency array ensures that the fetch is only performed once
 
   const modalRef = useRef();
   const closeModal = (e) => {
@@ -26,12 +56,22 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
 
   //Stuff for handling final submit
   const handleSubmit = () => {
-    setChartInformation({
-      "files": seriesInfo,
-      "live": liveCheck,
-      "type": graphType
-    })
+    const chartInformation = {
+      files: (buttonID === MAX_VIEWS) ? selectedFiles : seriesInfo,
+      live: liveCheck,
+      type: graphType,
+    }
+
+    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation } });
+
+    if (buttonID + 1 < MAX_VIEWS && graphType === "video" && viewInformation.find(view => view.component.name === "VideoPlayer") === undefined) {
+      updatedViewInformation = replaceViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: {} });
+      if (buttonID + 1 === numViews) setNumViews(numViews + 1);
+    }
+
+    setViewInformation(updatedViewInformation);
   }
+  
 
   // This method will return headers when supplied with a list of files. Added support for folders is neccesary
   const getHeaders = async (files) => {
@@ -62,14 +102,15 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
   }, [displayPage])
 
   const pages = [
-    <GraphSettings movePage={movePage} setGraphType={setGraphType} setLiveCheck={setLiveCheck}/>,
+    <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck} selectedVideo={selectedVideo}/>,
+    <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} fileTimespans={fileTimespans} videoTimespans={videoTimespans}/>,
     <div className='file-Storage-Container'>
       <div className="file-browser">
         <h3>Choose Files</h3>
-        <FileStorage selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+        <FileStorage files={graphType === 'video' ? filterFiles(selectedVideo, files, fileTimespans) : files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
       </div>
       <div className="fileButtons">
-        <button className="pageTwoBackButton" onClick={() => {movePage(-1)}}>Back</button>
+        <button className="pageTwoBackButton" onClick={() => {movePage(graphType === "video" ? -1 : -2)}}>Back</button>
         <button className="pageTwoNextButton" onClick={() => {
         // OnClick, it should get the selected files from the file storage component
         if (selectedFiles.length === 0) {
@@ -82,7 +123,7 @@ export const CreateGraphModal = ({ setModal, setChartInformation, setSuccessMess
         }}>Next</button>
       </div>
     </div>,
-    <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType}/>
+    <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType} fileTimespans={fileTimespans}/>
   ]
 
   //render the modal JSX in the portal div.
