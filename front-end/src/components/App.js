@@ -44,10 +44,10 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className="App">
-        <Topbar setModal={setModal} />
-        <header className="App-header">
+      <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
+        <header className="App-body">
           <div className="success">{successMessage.message}</div>
-          {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} /> : null}
+          {modal === 'Create' ? <CreateGraphModal setModal={setModal} setViewInformation={setViewInformation} setSuccessMessage={setSuccessMessage} viewInformation={viewInformation} buttonID={buttonID} setNumViews={setNumViews} numViews={numViews} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}/> : null}
           {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
           {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
           {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}

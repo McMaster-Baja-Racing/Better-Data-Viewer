@@ -55,7 +55,7 @@ const Topbar = ({ setModal, numViews, setNumViews }) => {
                 </button>
 
                 <button title="Go to map" className="map" onClick={() => window.location.href='/map'}>
-                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/map.svg'} alt="Go to map" />
+                    <img className="icon" src={icons['./map.svg']} alt="Go to map" />
                 </button>
                 
                 <button title="Upload Files" className="uploadFiles" onClick={() => setModal('Upload')}>

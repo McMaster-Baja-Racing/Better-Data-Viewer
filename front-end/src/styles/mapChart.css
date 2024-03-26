@@ -23,7 +23,7 @@
 }
 
 .map_ui_rect {
-    cursor: url('../../public/icons/delete.svg') 10 10, crosshair;
+    cursor: url('../assets/icons/delete.svg') 10 10, crosshair;
 }
 
 .map_ui_select {
