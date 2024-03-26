@@ -25,8 +25,6 @@ import java.util.Locale;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.input.ReversedLinesFileReader;
-
-import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

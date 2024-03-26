@@ -59,7 +59,13 @@ export const ApiUtil = {
      */
     analyzeFiles: async (inputFiles, inputColumns, outputFiles, analyzerOptions, liveOptions) => {
         try {
-            const response = await fetch(`http://${window.location.hostname}:8080/analyze?inputFiles=${inputFiles}&inputColumns=${inputColumns}&outputFiles=${outputFiles}&analyzer=${analyzerOptions}&liveOptions=${liveOptions}`);
+            const response =  await fetch(`http://${window.location.hostname}:8080/analyze?` + new URLSearchParams({
+                inputFiles: inputFiles,
+                inputColumns: inputColumns,
+                outputFiles: outputFiles,
+                analyzer: analyzerOptions,
+                liveOptions: liveOptions
+            }));
             if (!response.ok) {
                 alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
                 throw Error(response.statusText);
