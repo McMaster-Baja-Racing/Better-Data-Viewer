@@ -2,8 +2,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import '../../styles/fileStorage.css'
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
-import { useState, useEffect } from 'react';
-import { ApiUtil } from '../../lib/apiUtils.js';
 
 const formatSize = (size) => {
     // Finds the order of magnitude of the size in base 1024 (e.g. how many digits it would have)
@@ -103,20 +101,9 @@ const CustomHeaderRenderer = (props) => {
 }
 
 
-const FileStorage = ({ selectedFiles, setSelectedFiles }) => {
+const FileStorage = ({ files, selectedFiles, setSelectedFiles}) => {
     // Files is of format [{key: "name", fileHeaders: [header1, header2], size: 1234}, ...}]
     // Here is the implementation of the file browser with props passed in
-    
-    // holds all the files which have been uploaded
-    const [files, setFiles] = useState([])
-
-    useEffect(() => {
-        ApiUtil.getFiles()
-          .then((response) => response.json())
-          .then((data) => {
-            setFiles(data.files);
-          });
-      }, []); // Empty dependency array ensures that the call is only performed once
 
     return (
         <RawFileBrowser

@@ -1,36 +1,31 @@
 import '../styles/App.css';
-import '../styles/charts.css';
+import '../styles/views.css';
 import { CreateGraphModal } from "./modal/create/CreateGraphModal";
 import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
 import { DownloadModal } from './modal/download/downloadModal';
-import { MAX_CHARTS } from './chartsConfig';
 import React, { useEffect, useState } from 'react';
-import Charts from './Charts';
 import Topbar from './Topbar';
+import Views from './views/Views';
 import $ from 'jquery';
+import { MAX_VIEWS } from './views/viewsConfig';
+import Chart from './views/Chart';
 
 const App = () => {
 
   // State for holding which modal should be open
   const [modal, setModal] = useState('')
-  const [numGraphs, setNumGraphs] = useState(1);
+  const [numViews, setNumViews] = useState(1);
+  const [videoTimestamp, setVideoTimestamp] = useState(0)
+  const [selectedVideo, setSelectedVideo] = useState({ key: "", start: "", end: "" })
 
-  // State for holding the information for each chart
-  const [chartInformation, setChartInformation] = useState(
-    Array.from({ length: MAX_CHARTS }, () => ({
-      files: [
-        {
-          columns: [
-            { header: "", filename: "" },
-          ],
-          analysis: ""
-        }
-      ],
-      live: false,
-      type: "line"
+  // State for holding the information for each view
+  const [viewInformation, setViewInformation] = useState(
+    Array.from({ length: MAX_VIEWS }, () => ({
+      component: Chart,
+      props: {}
     }))
-  );
+  )
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
   const [successMessage, setSuccessMessage] = useState({})
@@ -45,15 +40,15 @@ const App = () => {
 
   return (
     <div className="App">
-      <Topbar setModal={setModal} numGraphs={numGraphs} setNumGraphs={setNumGraphs} />
+      <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       <div className="App-body">
         <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} chartInformation={chartInformation} buttonID={buttonID} /> : null}
+        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setViewInformation={setViewInformation} setSuccessMessage={setSuccessMessage} viewInformation={viewInformation} buttonID={buttonID} setNumViews={setNumViews} numViews={numViews} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}/> : null}
         {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
 
-        <Charts chartInformation={chartInformation} setModal={setModal} setButtonID={setButtonID} numGraphs={numGraphs} />
+        <Views viewInformation={viewInformation} setModal={setModal} setButtonID={setButtonID} numViews={numViews} videoTimestamp={videoTimestamp} setVideoTimestamp={setVideoTimestamp} video={selectedVideo} />
 
       </div>
 

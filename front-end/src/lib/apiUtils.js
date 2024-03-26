@@ -27,6 +27,28 @@ export const ApiUtil = {
     },
 
     /**
+     * @description Sends a GET request to the server to fetch a specific folder.
+     * @param {string} folderKey - The unique identifier of the folder.
+     * @returns {Promise<Response>} A promise that resolves to the server's response.
+     */
+        getFolder: async (folderKey) => {
+            const response = await fetch(`http://${window.location.hostname}:8080/files/folder/${folderKey}`);
+            if (!response.ok) throw Error(response.statusText);
+            return response;
+        },
+
+    /**
+     * @description Sends a GET request to the server to fetch the timespans of a folder.
+     * @param {string} folderKey - The unique identifier of the folder.
+     * @returns {Promise<Response>} A promise that resolves to the server's response.
+     */
+        getTimespans: async (folderKey) => {
+            const response = await fetch(`http://${window.location.hostname}:8080/timespan/folder/${folderKey}`);
+            if (!response.ok) throw Error(response.statusText);
+            return response;
+        },
+
+    /**
      * @description Sends a GET request to the server to analyze and return files.
      * @param {string} inputFiles - The input files.
      * @param {string} inputColumns - The input columns.

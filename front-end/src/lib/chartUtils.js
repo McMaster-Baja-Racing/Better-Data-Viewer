@@ -9,14 +9,12 @@ export const LIVE_DATA_INTERVAL = 300;
  * @description Fetches the data from the server and formats it for the chart.
  * @param {Object} response - The file response from the server.
  * @param {string} filename - The name of the file.
- * @param {string[]} columns - The columns to be fetched.
+ * @param {Object[]} columns - The columns to be fetched.
  * @param {useRef<string[]>} minMax - The minimum and maximum values of the colour value.
  * @param {string} chartType - The type of chart.
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of data objects.
  */
-export const getSeriesData = async (response, filename, columns, minMax, chartType) => {
-
-    const text = await response.text()
+export const getSeriesData = async (text, filename, columns, minMax, chartType) => {
 
     let headers = text.trim().split("\n")[0].split(",");
     headers[headers.length - 1] = headers[headers.length - 1].replace("\r", "")
@@ -28,8 +26,9 @@ export const getSeriesData = async (response, filename, columns, minMax, chartTy
 
     // If not colour, return values in array to allow for boost
     if (chartType !== "colour") {
+        const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]): 0
         return lines.map((line) => {
-            return [parseFloat(line[headerIndices.x]), parseFloat(line[headerIndices.y])];
+            return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
         })
     }
 
@@ -54,6 +53,11 @@ export const getSeriesData = async (response, filename, columns, minMax, chartTy
     })
 }
 
+export const getTimestamps = async (text) => {
+    const timestampHeaderIndex = text.trim().split("\n")[0].split(",").indexOf("Timestamp (ms)")
+    return text.trim().split("\n").slice(1).map((line) => parseFloat(line.split(",")[timestampHeaderIndex]))
+}
+
 /**
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @param {string[]} headers - An array of headers.
@@ -64,7 +68,7 @@ const getHeadersIndex = (headers, columns) => {
     let h = {};
     for (let i = 0; i < columns.length; i++) {
         for (let j = 0; j < headers.length; j++) {
-            if (columns[i] === headers[j].trim()) {
+            if (columns[i].header === headers[j].trim()) {
                 if (i === 0) {
                     h.x = j;
                 } else if (i === 1) {
@@ -83,7 +87,6 @@ const getHeadersIndex = (headers, columns) => {
  * @returns {Boolean} True if the chart information is full, false otherwise.
  */
 export const validateChartInformation = (chartInformation) => {
-    console.log(chartInformation)
     if (!chartInformation) {
         return false;
     }

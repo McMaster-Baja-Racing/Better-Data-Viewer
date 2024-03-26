@@ -31,16 +31,17 @@ const getStandardChartConfig = (chartInformation) => {
     chartConfig.title.text = chartInformation.files[0].columns[1].header + " vs " + chartInformation.files[0].columns[0].header;
 
     chartConfig.chart = {
-        type: chartInformation.type,
-        zoomType: 'y'
+        type: chartInformation.type === 'video' ? 'line' : chartInformation.type,
+        zoomType: 'x'
     };
 
     chartConfig.xAxis = {
         title: {
-            //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-            type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
             text: chartInformation.files[0].columns[0].header
         },
+        //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
+        type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+
         lineColor: 'grey',
         tickColor: 'grey',
     };
@@ -76,7 +77,7 @@ const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
 
     chartConfig.colorAxis.showInLegend = false;
 
-    chartConfig.boost.enabled = true;
+    chartConfig.boost.enabled = chartInformation.type !== 'video';
 
     return chartConfig;
 }
@@ -104,8 +105,6 @@ const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) =
             [0.9, '#ff0000'] // red
         ]
     };
-
-    chartConfig.boost.enabled = false;
 
     return chartConfig;
 }

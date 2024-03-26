@@ -1,7 +1,7 @@
-const MAX_CHARTS = 6;
+const MAX_VIEWS = 6;
 
 // This file specifies the styles for the various number of Graphs that can be displayed on the front-end.
-const chartStyles = {
+const viewStyles = {
     1: {
         display: 'grid',
         gridTemplateRows: '1fr',
@@ -40,4 +40,4 @@ const chartStyles = {
     },
 };
 
-export { chartStyles, MAX_CHARTS };
+export { viewStyles, MAX_VIEWS };
