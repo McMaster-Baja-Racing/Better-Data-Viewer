@@ -42,7 +42,7 @@ const Topbar = ({ setModal, numViews, setNumViews }) => {
 
     return (
         <div className="topbar">
-            <div className="title">
+            <div className="title" onClick={() => window.location.href='/'}>
                 <img src={bajalogo} alt="baja_logo"/>
                 Data Visualizer
                 <img src={loadingImg} alt="loading"/>
@@ -53,13 +53,19 @@ const Topbar = ({ setModal, numViews, setNumViews }) => {
                         ? <img className="icon" src={icons['./liveOn.svg']} alt="Live Mode On" />
                         : <img className="icon" src={icons['./liveOff.svg']} alt="Live Mode Off" />}
                 </button>
+
+                <button title="Go to map" className="map" onClick={() => window.location.href='/map'}>
+                    <img className="icon" src={process.env.PUBLIC_URL + 'icons/map.svg'} alt="Go to map" />
+                </button>
                 
                 <button title="Upload Files" className="uploadFiles" onClick={() => setModal('Upload')}>
-                <img className="icon"src={icons['./upload.svg']} alt="Upload" />
+                    <img className="icon"src={icons['./upload.svg']} alt="Upload" />
                 </button>
+
                 <button title="Download Files" className="downloadFiles" onClick={() => setModal('Download')}>
-                <img className="icon"src={icons['./download.svg']} alt="Download" />
+                    <img className="icon"src={icons['./download.svg']} alt="Download" />
                 </button>
+
                 <button title="PlusView" className="plusView" onClick={() => updateNumViews(numViews-1)}>
                     -
                 </button>
@@ -67,6 +73,7 @@ const Topbar = ({ setModal, numViews, setNumViews }) => {
                 <button title="MinusView" className="minusView" onClick={() => updateNumViews(numViews+1)}>
                     +
                 </button>
+
                 <button title="Help" className="helpModal" onClick={() => setModal('Help')}>
                     <img className="icon"src={icons['./help.svg']} alt="Help" />
                 </button>

@@ -2,6 +2,7 @@ export const defaultChartOptions = {
     chart: {
         type: 'scatter',
         zoomType: 'x',
+        backgroundColor: '#ffffff'
     },
     title: {
         text: 'Template'

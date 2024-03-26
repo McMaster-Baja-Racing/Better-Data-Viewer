@@ -5,11 +5,14 @@ import { UploadModal } from "./modal/upload/uploadModal";
 import { HelpModal } from "./modal/help/helpModal";
 import { DownloadModal } from './modal/download/downloadModal';
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Topbar from './Topbar';
 import Views from './views/Views';
 import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart';
+import MapDisplay from './map/MapDisplay';
+import MapChart from './map/MapChart';
 
 const App = () => {
 
@@ -39,21 +42,24 @@ const App = () => {
   }, [successMessage]);
 
   return (
-    <div className="App">
-      <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
-      <div className="App-body">
-        <div className="success">{successMessage.message}</div>
-        {modal === 'Create' ? <CreateGraphModal setModal={setModal} setViewInformation={setViewInformation} setSuccessMessage={setSuccessMessage} viewInformation={viewInformation} buttonID={buttonID} setNumViews={setNumViews} numViews={numViews} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}/> : null}
-        {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
-        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
-        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
-
-        <Views viewInformation={viewInformation} setModal={setModal} setButtonID={setButtonID} numViews={numViews} videoTimestamp={videoTimestamp} setVideoTimestamp={setVideoTimestamp} video={selectedVideo} />
-
+    <BrowserRouter>
+      <div className="App">
+        <Topbar setModal={setModal} />
+        <header className="App-header">
+          <div className="success">{successMessage.message}</div>
+          {modal === 'Create' ? <CreateGraphModal setModal={setModal} setChartInformation={setChartInformation} setSuccessMessage={setSuccessMessage} /> : null}
+          {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
+          {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
+          {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
+          <Routes>
+            <Route path="*" element={<Views viewInformation={viewInformation} setModal={setModal} setButtonID={setButtonID} numViews={numViews} videoTimestamp={videoTimestamp} setVideoTimestamp={setVideoTimestamp} video={selectedVideo} />} />
+            <Route path="/map" element={<MapChart />} />
+          </Routes>
+        </header>
       </div>
-
-    </div>
+    </BrowserRouter>
   );
+
 }
 
 export default App;
