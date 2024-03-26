@@ -22,6 +22,29 @@ const App = () => {
   const [videoTimestamp, setVideoTimestamp] = useState(0)
   const [selectedVideo, setSelectedVideo] = useState({ key: "", start: "", end: "" })
 
+  // sample format for chartInformation: 
+  // {
+  //    files:
+  //    [
+  //      {
+  //        columns: [
+  //          {header:"Timestampt", filename:"PRIM_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
+  //          {header:"RPM", filename:"PRIM_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"},
+  //        ],
+  //        analysis: "none"
+  //      },
+  //      {
+  //        columns: [
+  //          {header:"RPM", filename:"SEC_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
+  //          {header:"Timestampt", filename:"SEC_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}}
+  //        ],
+  //        analysis: "rollAvg"
+  //      }
+  //   ],
+  //   live: false,
+  //   type: "line"
+  // }
+
   // State for holding the information for each view
   const [viewInformation, setViewInformation] = useState(
     Array.from({ length: MAX_VIEWS }, () => ({

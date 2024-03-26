@@ -10,8 +10,6 @@ const HelpButton = ({ onClick }) => {
 const HelpPopup = ({ data }) => {
   const { title, description, image, links } = data;
 
-  console.log(image)
-
   return (
     <div className="popuptext">
       <h1>{title}</h1>
