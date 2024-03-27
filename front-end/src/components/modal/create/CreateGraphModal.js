@@ -14,7 +14,7 @@ import { replaceViewAtIndex } from "../../../lib/viewUtils";
 import { filterFiles } from "../../../lib/videoUtils";
 import { ApiUtil } from "../../../lib/apiUtils";
 
-export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessage, viewInformation, buttonID, setNumViews, numViews, selectedVideo, setSelectedVideo }) => {
+export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessage, viewInformation, buttonID, setNumViews, numViews, video, setVideo }) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -25,6 +25,7 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
   const [seriesInfo, setSeriesInfo] = useState([]);
   const [files, setFiles] = useState([])
   const [videoTimespans, setvideoTimespans] = useState([])
+  const [selectedVideo, setSelectedVideo] = useState({ key: "", start: "", end: "" })
   const [fileTimespans, setfileTimespans] = useState([])
 
 
@@ -64,6 +65,8 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
 
     let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation } });
 
+    if (selectedVideo.key !== "") setVideo(selectedVideo);
+
     if (buttonID + 1 < MAX_VIEWS && graphType === "video" && viewInformation.find(view => view.component.name === "VideoPlayer") === undefined) {
       updatedViewInformation = replaceViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: {} });
       if (buttonID + 1 === numViews) setNumViews(numViews + 1);
@@ -102,15 +105,15 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
   }, [displayPage])
 
   const pages = [
-    <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck} selectedVideo={selectedVideo}/>,
+    <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck} video={video}/>,
     <VideoSelect movePage={movePage} selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} files={files} fileTimespans={fileTimespans} videoTimespans={videoTimespans}/>,
     <div className='file-Storage-Container'>
       <div className="file-browser">
         <h3>Choose Files</h3>
-        <FileStorage files={graphType === 'video' ? filterFiles(selectedVideo, files, fileTimespans) : files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+        <FileStorage files={graphType === 'video' ? filterFiles(selectedVideo.key === "" ? video : selectedVideo, files, fileTimespans) : files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
       </div>
       <div className="fileButtons">
-        <button className="pageTwoBackButton" onClick={() => {movePage(graphType === "video" ? -1 : -2)}}>Back</button>
+        <button className="pageTwoBackButton" onClick={() => {movePage(graphType === "video" && selectedVideo.key !== "" ? -1 : -2)}}>Back</button>
         <button className="pageTwoNextButton" onClick={() => {
         // OnClick, it should get the selected files from the file storage component
         if (selectedFiles.length === 0) {

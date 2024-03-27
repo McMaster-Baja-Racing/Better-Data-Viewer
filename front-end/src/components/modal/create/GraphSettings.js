@@ -1,6 +1,6 @@
 import '../../../styles/GraphSettingsStyles.css';
 
-const GraphSettings = ({ movePage, setGraphType, setLiveCheck, selectedVideo }) => {
+const GraphSettings = ({ movePage, setGraphType, setLiveCheck, video }) => {
 
   const handleTypeSelect = (e) => {
     if (e.target.value === "video") {
@@ -14,7 +14,7 @@ const GraphSettings = ({ movePage, setGraphType, setLiveCheck, selectedVideo }) 
   const handleNextPage = () => {
     setGraphType(document.getElementById("graphTypeSelect").value);
     setLiveCheck(document.getElementById("liveDataCheckbox").checked);
-    const moveToVideoSelect = document.getElementById("graphTypeSelect").value === "video" && selectedVideo.key === "";
+    const moveToVideoSelect = document.getElementById("graphTypeSelect").value === "video" && video.key === "";
     movePage(moveToVideoSelect ? 1 : 2);
   }
 
