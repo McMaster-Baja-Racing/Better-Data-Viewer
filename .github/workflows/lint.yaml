@@ -2,7 +2,7 @@
 name: Linting, Building and Testing
 run-name: Testing | ${{ github.head_ref}} | ${{ github.event.pull_request.title }}
 
-on: [pull_request]
+on: [pull_request, push]
 
 jobs:
   Build_Java_With_Maven:
