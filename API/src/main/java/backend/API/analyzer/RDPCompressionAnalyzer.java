@@ -23,7 +23,7 @@ public class RDPCompressionAnalyzer extends Analyzer {
     @Override
     public void analyze() {
 
-        System.out.println("Compressing " + inputFiles[0]);
+        System.out.println("Compressing " + inputFiles[0] + " with epsilon " + epsilon + " to " + outputFiles[0]);
 
         Reader r = new CSVReader(inputFiles[0]);
         Writer w = new CSVWriter(outputFiles[0]);
