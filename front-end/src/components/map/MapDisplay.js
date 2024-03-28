@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ToolSelection from './ToolSelection';
 import { getBounds, findLapTimes, pointInRect } from '../../lib/mapUtils';
 import { LNG_INDEX, LAT_INDEX, TIME_INDEX, tools, LNG_COLUMNNAME, LAT_COLUMNNAME } from '../../lib/mapOptions';
+import { ApiUtil } from '../../lib/apiUtils';
 
 const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
@@ -50,18 +51,17 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
     }, [gotoTime, coords]);
 
     useEffect(() => {
-        fetch(`http://${window.location.hostname}:8080/files`)
+        ApiUtil.getFolder("csv")
             .then((response) => response.json())
             .then((json) => {
                 let prefixes = [];
-                for (let file of json.files) {
+                for (let file of json) {
                     let prefix = file.key.split("/")[0];
                     if (!prefixes.includes(prefix)) {
                         prefixes.push(prefix);
                     }
                 }
                 setFiles(prefixes);
-                // console.log(prefixes)
             });
     }, [])
 
@@ -118,20 +118,12 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
         setBounds([]);
         let chosen = e.target.value;
         // console.log(chosen);
-        fetch(`http://${window.location.hostname}:8080/analyze?` + new URLSearchParams({
-            inputFiles: `${chosen}/${LAT_COLUMNNAME}.csv,${chosen}/${LNG_COLUMNNAME}.csv`,
-            inputColumns: `${LAT_COLUMNNAME}, ${LNG_COLUMNNAME}`,
-            outputFiles: '',
-            analyzer: 'interpolaterPro',
-            liveOptions: 'false'
-        }), {
-            method: 'GET'
-        }).then((response) => response.text())
-            .then(text => {
-                const lines = text.trim().split("\n").map((line) => line.split(","));
-                setCoords(lines.slice(1).map(c => c.map(p => parseFloat(p))));
-                // console.log(lines)
-            });
+        ApiUtil.analyzeFiles([`${chosen}/${LAT_COLUMNNAME}.csv`, `${chosen}/${LNG_COLUMNNAME}.csv`], [LAT_COLUMNNAME, LNG_COLUMNNAME], [], ["interpolaterPro"], false)
+        .then((response) => response.text())
+        .then(text => {
+            const lines = text.trim().split("\n").map((line) => line.split(","));
+            setCoords(lines.slice(1).map(c => c.map(p => parseFloat(p))));
+        });
     }
 
     // GEOJSON USES LONG, LAT NOT LAT, LONG

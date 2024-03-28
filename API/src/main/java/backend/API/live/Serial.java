@@ -19,7 +19,8 @@ public class Serial {
             SerialPort portList[] = SerialPort.getCommPorts();
             for (int i = 0; i < portList.length; i++) {
                 //check if the comport desciption contains the word arduino
-                if (portList[i].getDescriptivePortName().contains("Arduino")) {
+                System.out.println(portList[i].getDescriptivePortName());
+                if (portList[i].getDescriptivePortName().contains("Arduino") || portList[i].getDescriptivePortName().contains("Serial")) {
                     //if it does, set the comport to the current port
                     comPort = portList[i];
                     //break out of the loop
@@ -41,6 +42,9 @@ public class Serial {
         FileWriter fw = null;
         FileWriter fw2 = null;
         FileWriter fw42 = null;
+        //define an array of file writers with 6 elements
+        FileWriter[] strains = new FileWriter[6];
+        String [] strainNames = {"Force X", "Force Z", "Force Y", "Moment X", "Moment Z", "Moment Y"};
         try {
             //print the current path
             fw = new FileWriter("./upload-dir/live_F_RPM_PRIM.csv");
@@ -50,6 +54,14 @@ public class Serial {
             fw2.write("Timestamp (ms),F_RPM_SEC\n");
             fw42.write("Timestamp (ms),F_BELT_SPEED\n");
 
+            
+            for (int i = 1; i <= 6; i++) {
+                //create a new file writer for each file
+                strains[i-1] = new FileWriter("./upload-dir/Live "+ strainNames[i-1] + ".csv");
+                //write the header to the file
+                strains[i-1].write("Timestamp (ms)" + "," + strainNames[i-1] + "\n");
+            }
+
         } catch (Exception e) { e.printStackTrace(); }
 
         //flush the file writer
@@ -57,6 +69,10 @@ public class Serial {
             fw.flush();
             fw2.flush();
             fw42.flush();
+
+            for(FileWriter f : strains) {
+                f.flush();
+            }
 
         } catch (Exception e) { e.printStackTrace(); }
         try {
@@ -66,12 +82,12 @@ public class Serial {
 
                 int numRead = comPort.readBytes(readBuffer, readBuffer.length);
 
-                System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " + readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", " + readBuffer[7] );
+                //System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " + readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", " + readBuffer[7] );
                 //make a packet object from the byte array
 
                 //make a new byte array that is a flipped version of readBuffer
                 Packet p = new Packet(readBuffer);
-                System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
+                //System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
                 if (p.getPacketType() == 37) {
                     //write the timestamp and the float data to the file
                     fw.write(p.getTimestamp() + "," + p.getFloatData()+"\n");
@@ -88,6 +104,13 @@ public class Serial {
                     fw42.write(p.getTimestamp() + "," + p.getFloatData()+"\n");
                     //flush the file writer
                     fw42.flush();
+                } else if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
+                    //System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " + readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", " + readBuffer[7] );
+                    //System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
+                    //write the timestamp and the float data to the file
+                    strains[p.getPacketType() - 28].write(p.getTimestamp() + "," + p.getFloatData()+"\n");
+                    //flush the file writer
+                    strains[p.getPacketType() - 28].flush();
                 }
         }
         } catch (Exception e) { e.printStackTrace(); }
@@ -98,6 +121,9 @@ public class Serial {
             fw.close();
             fw2.close();
             fw42.close();
+            for(FileWriter f : strains) {
+                f.close();
+            }
         } catch (Exception e) { e.printStackTrace(); }
         
         //exit = false;
@@ -132,6 +158,7 @@ public class Serial {
                     System.out.println(bytesToHex(readBuffer));
                     Packet p = new Packet(readBuffer);
                     System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
+                    
                 }
             }
     } catch (Exception e) { e.printStackTrace(); };
