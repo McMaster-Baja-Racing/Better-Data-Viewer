@@ -10,7 +10,7 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
 
     useEffect(() => {
         setFilteredFiles(filterFiles(selectedVideo, files, fileTimespans))
-    }, [selectedVideo]);
+    }, [selectedVideo, files, fileTimespans]);
 
     return (
         <div className="videoSelectContainer">

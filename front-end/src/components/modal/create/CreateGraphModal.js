@@ -102,7 +102,7 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
       handleSubmit()
       setModal('')
     }
-  }, [displayPage])
+  }, [displayPage, pages.length, setModal])
 
   const pages = [
     <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck} video={video}/>,

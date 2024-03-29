@@ -2,7 +2,7 @@ import '../../styles/chart.css'
 import { defaultChartOptions, getChartConfig } from '../../lib/chartOptions.js'
 import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
 import { ApiUtil } from '../../lib/apiUtils.js';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Boost from 'highcharts/modules/boost';
@@ -27,7 +27,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
     let minMax = useRef([0, 0]);
 
     // Fetch the data from the server and format it for the chart
-    const getFileFormat = async () => {
+    const getFileFormat = useCallback(async () => {
         // Runs through all the series and fetches the data, then updates the graph
         // This also prevents liveData from adding more data as a separate series
         var data = [];
@@ -36,20 +36,22 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
             // Create a list of all files in order (formatting for backend)
             let files = chartInformation.files[i].columns.map(column => column.filename);
             let inputColumns = chartInformation.files[i].columns;
-
+    
             const response = await ApiUtil.analyzeFiles(files, inputColumns.map(col => col.header), [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), [chartInformation.live])
-
+    
             const filename = response.headers.get("content-disposition").split("filename=")[1].slice(1, -1)
             setFileNames(prevState =>  [...prevState, filename])
-
+    
             const text = await response.text()
-
+    
             data.push(await getSeriesData(text, filename, inputColumns, minMax, chartInformation.type))
             tempTimestamps.push(await getTimestamps(text))
         }
         setParsedData(data)
         setTimestamps(tempTimestamps)
-    }
+
+
+    }, [chartInformation, setFileNames, setParsedData, setTimestamps]);
 
     // Whenever chartInformation is updated (which happens when submit button is pressed), fetch the neccesary data
     useEffect(() => {
@@ -61,7 +63,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
 
         getFileFormat();
         setLoading(false);
-    }, [chartInformation]);
+    }, [chartInformation, getFileFormat]);
 
     // Once necessary data is fetched, format it for the chart
     useEffect(() => {
@@ -75,7 +77,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
             }
         });
         
-    }, [parsedData, fileNames])
+    }, [parsedData, fileNames, chartInformation])
 
     // This function loops when live is true, and updates the chart every 500ms
     useEffect(() => {
@@ -90,7 +92,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
         }
 
         return () => clearInterval(intervalId);
-    }, [chartInformation]);
+    }, [chartInformation, getFileFormat]);
 
     const chartRef = useRef(null);
     const { width, height, ref } = useResizeDetector({
@@ -129,7 +131,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
             console.log(e)
         }
         
-    }, [videoTimestamp])
+    }, [videoTimestamp, offsets, timestamps])
 
     return (
 

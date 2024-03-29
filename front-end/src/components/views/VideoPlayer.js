@@ -19,7 +19,7 @@ const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
           URL.revokeObjectURL(url);
         };
       });
-  }, []); // Empty dependency array ensures that the fetch is only performed once
+  }, [video.key]); // Empty dependency array ensures that the fetch is only performed once
 
   return (
     <div className = "videoBackground">
