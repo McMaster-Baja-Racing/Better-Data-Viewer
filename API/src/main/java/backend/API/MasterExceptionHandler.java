@@ -10,10 +10,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * This class extends ResponseEntityExceptionHandler to 
- * provide custom handling for specific exceptions.
- * It is annotated with @ControllerAdvice to make it 
- * applicable to all controllers in the application.
+ * This class extends ResponseEntityExceptionHandler to provide custom handling for specific
+ * exceptions. It is annotated with @ControllerAdvice to make it applicable to all controllers in
+ * the application.
  */
 @ControllerAdvice
 public class MasterExceptionHandler extends ResponseEntityExceptionHandler {

@@ -55,9 +55,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-/**
- * Controller class for handling file uploads.
- */
+/** Controller class for handling file uploads. */
 @Controller
 public class FileUploadController {
 
@@ -97,8 +95,8 @@ public class FileUploadController {
   }
 
   /**
-   * Handles GET requests to the "/files" URL.
-   * Returns a list of information about all uploaded files.
+   * Handles GET requests to the "/files" URL. Returns a list of information about all uploaded
+   * files.
    *
    * @return a ResponseEntity with a list of fileInformation objects as the body and CORS headers
    * @throws IOException if an I/O error occurs when opening the file
@@ -163,8 +161,8 @@ public class FileUploadController {
   }
 
   /**
-   * Handles GET requests to the "/files/folder/{foldername:.+}" URL. 
-   * Returns a list of information about all files in the specified folder.
+   * Handles GET requests to the "/files/folder/{foldername:.+}" URL. Returns a list of information
+   * about all files in the specified folder.
    *
    * @param foldername the name of the folder to list files from
    * @return a ResponseEntity with a list of fileInformation objects as the body and CORS headers
@@ -201,8 +199,8 @@ public class FileUploadController {
   }
 
   /**
-   * Handles GET requests to the "/timespan/folder/{foldername:.+}" URL. 
-   * Returns a list of time spans for all files in the specified folder.
+   * Handles GET requests to the "/timespan/folder/{foldername:.+}" URL. Returns a list of time
+   * spans for all files in the specified folder.
    *
    * @param foldername the name of the folder to list files from
    * @return a ResponseEntity with a list of fileTimespan objects as the body and CORS headers
@@ -260,8 +258,8 @@ public class FileUploadController {
   }
 
   /**
-   * Handles GET requests to the "/analyze" URL. 
-   * Performs analysis on the specified input files and returns the result as a resource.
+   * Handles GET requests to the "/analyze" URL. Performs analysis on the specified input files and
+   * returns the result as a resource.
    *
    * @param inputFiles the input files to analyze
    * @param inputColumns the input columns to analyze
@@ -380,8 +378,8 @@ public class FileUploadController {
   }
 
   /**
-   * Handles GET requests to the "/deleteAll" URL. 
-   * Deletes all files from the storage and then re-initializes it.
+   * Handles GET requests to the "/deleteAll" URL. Deletes all files from the storage and then
+   * re-initializes it.
    *
    * @return a ResponseEntity with a confirmation message as the body and CORS headers
    */
@@ -400,8 +398,8 @@ public class FileUploadController {
   }
 
   /**
-   * Handles GET requests to the "/files/maxmin/**" URL. 
-   * Returns the maximum and minimum values of a specified header in the requested file.
+   * Handles GET requests to the "/files/maxmin/**" URL. Returns the maximum and minimum values of a
+   * specified header in the requested file.
    *
    * @param request the HttpServletRequest object that contains the request made by the client
    * @param headerName the name of the header to get the maximum and minimum values of
@@ -434,9 +432,9 @@ public class FileUploadController {
   }
 
   /**
-   * Handles POST requests to the "/" URL.
-   * Uploads a file to the server and, if the file is a binary file, converts it to CSV format.
-   * This can probably be deleted, only for the 8080 endpoint rather than frontend.
+   * Handles POST requests to the "/" URL. Uploads a file to the server and, if the file is a binary
+   * file, converts it to CSV format. This can probably be deleted, only for the 8080 endpoint
+   * rather than frontend.
    *
    * @param file the file to upload
    * @param redirectAttributes the attributes to add to the redirect
@@ -468,9 +466,8 @@ public class FileUploadController {
   }
 
   /**
-   * Handles POST requests to the "/upload" URL. 
-   * Uploads a file to the server, and if the file is a binary file, converts it to CSV format. 
-   * If the file is a MOV file, copies it to an MP4 file.
+   * Handles POST requests to the "/upload" URL. Uploads a file to the server, and if the file is a
+   * binary file, converts it to CSV format. If the file is a MOV file, copies it to an MP4 file.
    *
    * @param file the file to upload
    * @return a ResponseEntity with a success message as the body and appropriate headers
@@ -510,8 +507,8 @@ public class FileUploadController {
   }
 
   /**
-   * Handles POST requests to the "/live" URL. 
-   * Starts the live data collection from a specified port.
+   * Handles POST requests to the "/live" URL. Starts the live data collection from a specified
+   * port.
    *
    * @param port the port to start the live data collection from
    * @return a ResponseEntity with a message indicating that the live data collection has started
