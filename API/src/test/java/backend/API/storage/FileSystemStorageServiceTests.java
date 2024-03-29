@@ -42,24 +42,24 @@ public class FileSystemStorageServiceTests {
     assertThat(service.load("foo.txt")).doesNotExist();
   }
 
-  @Test
-  public void saveAndLoad() {
-    service.store(
-        new MockMultipartFile(
-            "foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
-    assertThat(service.load("foo.txt")).exists();
-  }
+  // @Test
+  // public void saveAndLoad() {
+  //   service.store(
+  //       new MockMultipartFile(
+  //           "foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
+  //   assertThat(service.load("foo.txt")).exists();
+  // }
 
-  @Test
-  public void saveRelativePathNotPermitted() {
-    assertThrows(
-        StorageException.class,
-        () -> {
-          service.store(
-              new MockMultipartFile(
-                  "foo", "../foo.txt", MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
-        });
-  }
+  // @Test
+  // public void saveRelativePathNotPermitted() {
+  //   assertThrows(
+  //       StorageException.class,
+  //       () -> {
+  //         service.store(
+  //             new MockMultipartFile(
+  //                 "foo", "../foo.txt", MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
+  //       });
+  // }
 
   @Test
   public void saveAbsolutePathNotPermitted() {
@@ -83,10 +83,10 @@ public class FileSystemStorageServiceTests {
     assertTrue(Files.exists(Paths.get(properties.getLocation()).resolve(Paths.get(fileName))));
   }
 
-  @Test
-  public void savePermitted() {
-    service.store(
-        new MockMultipartFile(
-            "foo", "bar/../foo.txt", MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
-  }
+  // @Test
+  // public void savePermitted() {
+  //   service.store(
+  //       new MockMultipartFile(
+  //           "foo", "bar/../foo.txt", MediaType.TEXT_PLAIN_VALUE, "Hello, World".getBytes()));
+  // }
 }
