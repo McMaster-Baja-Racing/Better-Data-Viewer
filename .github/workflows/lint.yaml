@@ -7,7 +7,7 @@ on: [pull_request]
 jobs:
   Build_Java_With_Maven:
     runs-on: ubuntu-latest
-    name: "Build with Maven"
+    name: "Build Backend with Java and Maven"
 
     steps:
     - name: Check out repository code
@@ -34,7 +34,7 @@ jobs:
 
   Build_Node_js:
     runs-on: ubuntu-latest
-    name: "Build with Node.js"
+    name: "Build Frontend with Node.js"
 
     strategy:
       matrix:
