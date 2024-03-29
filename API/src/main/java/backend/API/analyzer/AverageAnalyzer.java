@@ -15,7 +15,7 @@ public class AverageAnalyzer extends Analyzer {
     super(inputFiles, outputFiles);
     this.range =
         range; // This range is the value, not the index. BinarySearch will be used to find the
-               // index
+    // index
   }
 
   public void analyze() {

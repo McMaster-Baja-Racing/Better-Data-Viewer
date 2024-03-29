@@ -98,7 +98,7 @@ public class Packet {
 
     for (int i = 0; i < data.length; i += 8) {
       byte[] packetData = new byte[8];
-        System.arraycopy(data, i + 0, packetData, 0, 8);
+      System.arraycopy(data, i + 0, packetData, 0, 8);
       packets[i / 8] = new Packet(packetData);
     }
     return packets;
