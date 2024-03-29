@@ -55,6 +55,9 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Controller class for handling file uploads.
+ */
 @Controller
 public class FileUploadController {
 
@@ -66,6 +69,14 @@ public class FileUploadController {
   }
 
   // This is the method that shows the upload form page, used for debugging
+
+  /**
+   * Handles GET requests to the root ("/") URL. Lists all uploaded files.
+   *
+   * @param model the Model object to pass attributes to the view
+   * @return the name of the view that will be used to render the response
+   * @throws IOException if an I/O error occurs when opening the file
+   */
   @GetMapping("/")
   public String listUploadedFiles(Model model) throws IOException {
 
@@ -85,9 +96,13 @@ public class FileUploadController {
     return "uploadForm";
   }
 
-  // This is the method that returns information about all the files, to be used
-  // by fetch
-  // It returns an object of type fileInformation from the model folder
+  /**
+   * Handles GET requests to the "/files" URL.
+   * Returns a list of information about all uploaded files.
+   *
+   * @return a ResponseEntity with a list of fileInformation objects as the body and CORS headers
+   * @throws IOException if an I/O error occurs when opening the file
+   */
   @GetMapping("/files")
   @ResponseBody
   public ResponseEntity<ArrayList<fileInformation>> listUploadedFiles() throws IOException {
@@ -117,7 +132,12 @@ public class FileUploadController {
     return ResponseEntity.ok().headers(responseHeaders).body(files);
   }
 
-  // This is the default method that returns a single file
+  /**
+   * Handles GET requests to the "/files/**" URL. Serves the requested file as a resource.
+   *
+   * @param request the HttpServletRequest object that contains the request made by the client
+   * @return a ResponseEntity with the requested file as the body and appropriate headers
+   */
   @GetMapping("/files/**")
   @ResponseBody
   public ResponseEntity<Resource> serveFile(HttpServletRequest request) {
@@ -142,7 +162,14 @@ public class FileUploadController {
     return ResponseEntity.ok().headers(responseHeaders).body(file);
   }
 
-  // Returns the file information for all the files in a folder
+  /**
+   * Handles GET requests to the "/files/folder/{foldername:.+}" URL. 
+   * Returns a list of information about all files in the specified folder.
+   *
+   * @param foldername the name of the folder to list files from
+   * @return a ResponseEntity with a list of fileInformation objects as the body and CORS headers
+   * @throws IOException if an I/O error occurs when opening the file
+   */
   @GetMapping("/files/folder/{foldername:.+}")
   @ResponseBody
   public ResponseEntity<ArrayList<fileInformation>> listFolderFiles(@PathVariable String foldername)
@@ -173,27 +200,14 @@ public class FileUploadController {
     return ResponseEntity.ok().headers(responseHeaders).body(files);
   }
 
-  // This method returns information about a specific file, given the filename.
-  // It should return the first row of the file (the header row) + [datetime, and the number of rows
-  // eventually]
-  // Can be deleted?
-  @GetMapping("/files/{filename:.+}/info")
-  @ResponseBody
-  public ResponseEntity<String> listFileInformation(@PathVariable String filename)
-      throws IOException {
-
-    // Set these headers so that you can access from LocalHost
-    HttpHeaders responseHeaders = new HttpHeaders();
-    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-    // Get size, headers, datetime, etc.
-    String fileinfo = storageService.readHeaders(filename);
-
-    return ResponseEntity.ok().headers(responseHeaders).body(fileinfo);
-  }
-
-  // Returns the timespan of all the files in a type folder
+  /**
+   * Handles GET requests to the "/timespan/folder/{foldername:.+}" URL. 
+   * Returns a list of time spans for all files in the specified folder.
+   *
+   * @param foldername the name of the folder to list files from
+   * @return a ResponseEntity with a list of fileTimespan objects as the body and CORS headers
+   * @throws IOException if an I/O error occurs when opening the file
+   */
   @GetMapping("/timespan/folder/{foldername:.+}")
   @ResponseBody
   public ResponseEntity<ArrayList<fileTimespan>> listFolderTimespans(
@@ -245,8 +259,18 @@ public class FileUploadController {
     return ResponseEntity.ok().headers(responseHeaders).body(timespans);
   }
 
-  // This is the be all end all method that should take in any number of file
-  // names and analyzers, plus live option and return a file
+  /**
+   * Handles GET requests to the "/analyze" URL. 
+   * Performs analysis on the specified input files and returns the result as a resource.
+   *
+   * @param inputFiles the input files to analyze
+   * @param inputColumns the input columns to analyze
+   * @param outputFiles the output files to write the results to
+   * @param analyzer the analyzer to use
+   * @param liveOptions options for live analysis
+   * @return a ResponseEntity with the result file as the body and appropriate headers
+   * @throws InterruptedException if the analysis is interrupted
+   */
   @GetMapping("/analyze")
   @ResponseBody
   public ResponseEntity<Resource> handleFileRequest(
@@ -355,28 +379,12 @@ public class FileUploadController {
     return ResponseEntity.ok().headers(responseHeaders).body(file);
   }
 
-  // This next method is for live data! Ideally you can feed it any of the basic
-  // filenames that the car might output
-  // And this will send the csv right back! Neat, huh?
-  @GetMapping("/live/{filename:.+}")
-  @ResponseBody
-  public ResponseEntity<Resource> serveLiveFile(@PathVariable String filename) {
-
-    filename = "live_" + filename;
-
-    Resource file = storageService.loadAsResource(filename);
-
-    HttpHeaders responseHeaders = new HttpHeaders();
-
-    responseHeaders.add(
-        HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"");
-    // Set these headers so that you can access from LocalHost
-    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-    return ResponseEntity.ok().headers(responseHeaders).body(file);
-  }
-
+  /**
+   * Handles GET requests to the "/deleteAll" URL. 
+   * Deletes all files from the storage and then re-initializes it.
+   *
+   * @return a ResponseEntity with a confirmation message as the body and CORS headers
+   */
   @GetMapping("/deleteAll")
   @ResponseBody
   public ResponseEntity<String> deleteAll() {
@@ -391,7 +399,15 @@ public class FileUploadController {
     return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
   }
 
-  // Method to get the maximum and minimum values of a column in a file
+  /**
+   * Handles GET requests to the "/files/maxmin/**" URL. 
+   * Returns the maximum and minimum values of a specified header in the requested file.
+   *
+   * @param request the HttpServletRequest object that contains the request made by the client
+   * @param headerName the name of the header to get the maximum and minimum values of
+   * @return ResponseEntity with the maximum and minimum values as the body and appropriate headers
+   * @throws IOException if an I/O error occurs when opening the file
+   */
   @GetMapping("/files/maxmin/**")
   @ResponseBody
   public ResponseEntity<String> getMaxMin(
@@ -417,7 +433,16 @@ public class FileUploadController {
     return ResponseEntity.ok().headers(responseHeaders).body(maxmin);
   }
 
-  // This is the method that uploads the file
+  /**
+   * Handles POST requests to the "/" URL.
+   * Uploads a file to the server and, if the file is a binary file, converts it to CSV format.
+   * This can probably be deleted, only for the 8080 endpoint rather than frontend.
+   *
+   * @param file the file to upload
+   * @param redirectAttributes the attributes to add to the redirect
+   * @return a redirect instruction to the "/" URL
+   * @throws IllegalArgumentException if no file was uploaded
+   */
   @PostMapping("/")
   public String handleFileUpload(
       @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
@@ -442,7 +467,15 @@ public class FileUploadController {
     return "redirect:/";
   }
 
-  // Upload file without redirect
+  /**
+   * Handles POST requests to the "/upload" URL. 
+   * Uploads a file to the server, and if the file is a binary file, converts it to CSV format. 
+   * If the file is a MOV file, copies it to an MP4 file.
+   *
+   * @param file the file to upload
+   * @return a ResponseEntity with a success message as the body and appropriate headers
+   * @throws IllegalArgumentException if no file was uploaded
+   */
   @PostMapping("/upload")
   public ResponseEntity<String> handleFileUploadApi(@RequestParam("file") MultipartFile file) {
 
@@ -476,7 +509,13 @@ public class FileUploadController {
         .body(String.format("%s uploaded", file.getOriginalFilename()));
   }
 
-  // This method lets the backend know to collect live data and from which port
+  /**
+   * Handles POST requests to the "/live" URL. 
+   * Starts the live data collection from a specified port.
+   *
+   * @param port the port to start the live data collection from
+   * @return a ResponseEntity with a message indicating that the live data collection has started
+   */
   @PostMapping("/live")
   public ResponseEntity<String> handleLive(
       @RequestParam(name = "port", required = false) String port) {

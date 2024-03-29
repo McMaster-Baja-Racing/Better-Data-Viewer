@@ -9,12 +9,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-// This class is used to handle exceptions thrown by the API.
-// @ControllerAdvice tells the controller how to handle exceptions.
+/**
+ * This class extends ResponseEntityExceptionHandler to 
+ * provide custom handling for specific exceptions.
+ * It is annotated with @ControllerAdvice to make it 
+ * applicable to all controllers in the application.
+ */
 @ControllerAdvice
 public class MasterExceptionHandler extends ResponseEntityExceptionHandler {
 
-  // Method to handle frequent errors on CSV files.
+  /**
+   * Handles ArrayIndexOutOfBoundsExceptions, which are frequently caused by faulty CSV files.
+   *
+   * @param ex the exception that was thrown
+   * @param request the current web request
+   * @return a ResponseEntity with an error message as the body and a CONFLICT status code
+   */
   @ExceptionHandler(value = {ArrayIndexOutOfBoundsException.class})
   protected ResponseEntity<Object> handleBadCsv(RuntimeException ex, WebRequest request) {
     String bodyOfResponse =
@@ -31,7 +41,14 @@ public class MasterExceptionHandler extends ResponseEntityExceptionHandler {
         ex, bodyOfResponse, responseHeaders, HttpStatus.CONFLICT, request);
   }
 
-  // Method to handle issues with analyzer options.
+  /**
+   * Handles NumberFormatExceptions, NotStrictlyPositiveExceptions, and IndexOutOfBoundsExceptions,
+   * which are often caused by issues with analyzer options.
+   *
+   * @param ex the exception that was thrown
+   * @param request the current web request
+   * @return a ResponseEntity with an error message and a CONFLICT status code
+   */
   @ExceptionHandler(
       value = {
         NumberFormatException.class,
