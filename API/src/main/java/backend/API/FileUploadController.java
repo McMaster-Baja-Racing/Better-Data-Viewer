@@ -529,8 +529,8 @@ public class FileUploadController {
           .start();
     }
 
-    // Set these headers so that you can access from LocalHost
-    HttpHeaders responseHeaders = new HttpHeaders();
+    // Set these headers so that you can access from LocalHost HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIii
+  HttpHeaders responseHeaders = new HttpHeaders();
     responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
