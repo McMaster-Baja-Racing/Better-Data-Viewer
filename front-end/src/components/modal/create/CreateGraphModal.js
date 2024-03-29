@@ -1,7 +1,7 @@
 //CreateGraphModal.js
 import ReactDom from "react-dom";
 import '../../../styles/modalStyles.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRef } from 'react';
 import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
@@ -56,24 +56,24 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
   };
 
   //Stuff for handling final submit
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const chartInformation = {
       files: (buttonID === MAX_VIEWS) ? selectedFiles : seriesInfo,
       live: liveCheck,
       type: graphType,
     }
-
+  
     let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation } });
-
+  
     if (selectedVideo.key !== "") setVideo(selectedVideo);
-
+  
     if (buttonID + 1 < MAX_VIEWS && graphType === "video" && viewInformation.find(view => view.component.name === "VideoPlayer") === undefined) {
       updatedViewInformation = replaceViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: {} });
       if (buttonID + 1 === numViews) setNumViews(numViews + 1);
     }
-
+  
     setViewInformation(updatedViewInformation);
-  }
+  }, [buttonID, selectedFiles, seriesInfo, liveCheck, graphType, viewInformation, selectedVideo, numViews, setVideo, setNumViews, setViewInformation]);
   
 
   // This method will return headers when supplied with a list of files. Added support for folders is neccesary
@@ -96,13 +96,6 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
   const movePage = (amount) => { 
     setDisplayPage(displayPage + amount);
   }
-
-  useEffect(() => {
-    if (displayPage === pages.length) {
-      handleSubmit()
-      setModal('')
-    }
-  }, [displayPage, pages.length, setModal])
 
   const pages = [
     <GraphSettings movePage={movePage} graphType={graphType} setGraphType={setGraphType} liveCheck={liveCheck} setLiveCheck={setLiveCheck} video={video}/>,
@@ -128,6 +121,13 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
     </div>,
     <AnalyzersAndSeries dimensions={dimensions} columns={columns} movePage={movePage} seriesInfo={seriesInfo} setSeriesInfo={setSeriesInfo} setSuccessMessage={setSuccessMessage} setDimensions={setDimensions} graphType={graphType} fileTimespans={fileTimespans}/>
   ]
+
+  useEffect(() => {
+    if (displayPage === pages.length) {
+      handleSubmit()
+      setModal('')
+    }
+  }, [displayPage, pages.length, setModal, handleSubmit])
 
   //render the modal JSX in the portal div.
   return ReactDom.createPortal(
