@@ -33,11 +33,11 @@ public class InterpolaterProAnalyzer extends Analyzer {
   public void analyze() throws IOException, CsvValidationException {
 
     // Construct string to print message for all input files
-    String inputFilesString = "";
+    StringBuilder inputFilesString = new StringBuilder();
     for (int i = 0; i < inputFiles.length; i++) {
-      inputFilesString += "\"" + inputFiles[i] + "\"";
+      inputFilesString.append("\"").append(inputFiles[i]).append("\"");
       if (i != inputFiles.length - 1) {
-        inputFilesString += ", ";
+        inputFilesString.append(", ");
       }
     }
     System.out.println("Interpolating " + inputFilesString + " to \"" + outputFiles[0] + "\"");
@@ -79,7 +79,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
     List<String> headers = new ArrayList<String>();
     headers.add("Timestamp (ms)");
     Collections.addAll(headers, inputColumns);
-    writer.writeNext(headers.toArray(new String[headers.size()]));
+    writer.writeNext(headers.toArray(new String[0]));
     writer.flush();
 
     // Now we need to start reading the files and writing them to the output file
@@ -87,8 +87,8 @@ public class InterpolaterProAnalyzer extends Analyzer {
     // timestamps in the input files
     // For each corresponding data point, if we can take the two closest points and interpolate
     // between them, we can get the data point for that timestamp
-    // First, get the first two timestamps from each file and populate a priortyQueue with them
-    // At the same time, we need to store the curent and previous data points for each file
+    // First, get the first two timestamps from each file and populate a priority Queue with them
+    // At the same time, we need to store the current and previous data points for each file
 
     // Priority queue here tells us the next smallest timestamp
     PriorityQueue<TimestampData> queue =
@@ -174,7 +174,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
       // If its not a duplicate timestamp, add the data point
       if (queueData.timestamp != queuePreviousTimestamp) {
-        // Now we loop throu8gh the files and create a datapoint for each one
+        // Now we loop through the files and create a datapoint for each one
         List<String> dataPoint = new ArrayList<String>();
         dataPoint.add(Double.toString(queueData.timestamp)); // Add timestamp
         // Loop through files and add data
@@ -195,7 +195,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
           }
         }
         // Now we can write the data point
-        writer.writeNext(dataPoint.toArray(new String[dataPoint.size()]));
+        writer.writeNext(dataPoint.toArray(new String[0]));
         writer.flush();
       }
 

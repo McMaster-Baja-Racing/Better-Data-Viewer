@@ -9,7 +9,7 @@ import java.util.List;
 
 public class BullshitAnalyzer extends Analyzer {
 
-  // The point of this analyuzer is to add a bunch of fake points based on an input, between
+  // The point of this analyzer is to add a bunch of fake points based on an input, between
   // different pre-existing points (input file) to make it seem like there is some fake noise
 
   private final double numPoints;
@@ -53,8 +53,8 @@ public class BullshitAnalyzer extends Analyzer {
   }
 
   // Add fake points should add the number points between each point in the input file
-  // It should be a random +- 10% of the difference between the two points, linearly intwerpolated
-  // with even spacing on the x axis
+  // It should be a random +- 10% of the difference between the two points, linearly interpolated
+  // with even spacing on the x-axis
   // Idea is to loop through, basically using the equation for linear interpolation (find slope),
   // then find value at that slope
   // and then add a random +- 10% of that value to the point
@@ -83,10 +83,10 @@ public class BullshitAnalyzer extends Analyzer {
       List<String> currPoint = dataPoints.get(i);
       List<String> nextPoint = dataPoints.get(i + 1);
 
-      Double currX = Double.parseDouble(currPoint.get(independentColumn));
-      Double currY = Double.parseDouble(currPoint.get(dependentColumn));
-      Double nextX = Double.parseDouble(nextPoint.get(independentColumn));
-      Double nextY = Double.parseDouble(nextPoint.get(dependentColumn));
+      double currX = Double.parseDouble(currPoint.get(independentColumn));
+      double currY = Double.parseDouble(currPoint.get(dependentColumn));
+      double nextX = Double.parseDouble(nextPoint.get(independentColumn));
+      double nextY = Double.parseDouble(nextPoint.get(dependentColumn));
 
       // print all pf them
       System.out.println(
@@ -103,15 +103,15 @@ public class BullshitAnalyzer extends Analyzer {
         dataPoint = new ArrayList<String>(2);
 
         // add x value (c1 + diff * interval)
-        Double xValue = currX + ((nextX - currX) * (1.0 / realNumPoints) * j);
+        double xValue = currX + ((nextX - currX) * (1.0 / realNumPoints) * j);
 
         System.out.println(
             "xValue: " + xValue + "   with diff of : " + (nextX - currX) * (1.0 / realNumPoints));
         dataPoint.add(Double.toString(xValue));
 
         // add y value
-        Double slope = (nextY - currY) / (nextX - currX);
-        Double yValue = currY + (xValue - currX) * slope;
+        double slope = (nextY - currY) / (nextX - currX);
+        double yValue = currY + (xValue - currX) * slope;
         dataPoint.add(Double.toString(yValue * (0.75 + Math.random() * 0.5)));
 
         // print it
@@ -126,7 +126,7 @@ public class BullshitAnalyzer extends Analyzer {
 
   // Create a main to test it
   public static void main(String[] args) {
-    // // Test the factory method
+    // Test the factory method
     // System.out.println("Hello");
     // String[] inputFiles = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/test.csv"};
     // String[] outputFiles = {"output.csv"};

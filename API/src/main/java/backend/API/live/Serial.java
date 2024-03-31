@@ -16,13 +16,13 @@ public class Serial {
 
     while (!setPort) {
       SerialPort[] portList = SerialPort.getCommPorts();
-      for (int i = 0; i < portList.length; i++) {
+      for (SerialPort serialPort : portList) {
         // check if the comport desciption contains the word arduino
-        System.out.println(portList[i].getDescriptivePortName());
-        if (portList[i].getDescriptivePortName().contains("Arduino")
-            || portList[i].getDescriptivePortName().contains("Serial")) {
+        System.out.println(serialPort.getDescriptivePortName());
+        if (serialPort.getDescriptivePortName().contains("Arduino")
+            || serialPort.getDescriptivePortName().contains("Serial")) {
           // if it does, set the comport to the current port
-          comPort = portList[i];
+          comPort = serialPort;
           // break out of the loop
           setPort = true;
           break;

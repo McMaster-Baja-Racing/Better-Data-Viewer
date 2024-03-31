@@ -172,12 +172,9 @@ public abstract class Analyzer {
       case "interpolaterPro":
         if (outputFiles.length == 10) {
           // For each file, add to the output string
-          String outputString = inputFiles[0].substring(0, inputFiles[0].lastIndexOf("/") + 1);
-          for (int i = 0; i < inputFiles.length; i++) {
-            outputString +=
-                inputFiles[i].substring(
-                        inputFiles[i].lastIndexOf("/") + 1, inputFiles[i].length() - 4)
-                    + "_";
+          StringBuilder outputString = new StringBuilder(inputFiles[0].substring(0, inputFiles[0].lastIndexOf("/") + 1));
+          for (String inputFile : inputFiles) {
+            outputString.append(inputFile, inputFile.lastIndexOf("/") + 1, inputFile.length() - 4).append("_");
           }
           outputFiles[0] = outputString + "inter.csv";
           outputFiles[9] = outputFiles[0];
@@ -189,7 +186,7 @@ public abstract class Analyzer {
   }
 
   // From this list of headers, which one are we actually doing analysis on
-  // fileIndex is basically the axis, 0=X, 1=Y, I made it a int to futureproof adding new columns
+  // fileIndex is basically the axis, 0=X, 1=Y, I made it a int to future-proof adding new columns
   public int getAnalysisColumnIndex(int fileIndex, List<String> fileHeaders)
       throws RuntimeException {
     for (int i = 0; i < fileHeaders.size(); i++) {

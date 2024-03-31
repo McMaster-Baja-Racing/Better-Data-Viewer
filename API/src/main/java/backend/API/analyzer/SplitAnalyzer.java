@@ -56,7 +56,7 @@ public class SplitAnalyzer extends Analyzer {
 
     dataPoint = new ArrayList<String>(2);
     // loop through the data and add the date from once the start time is reached to the end time is
-    // reached, the first coloumn is the timestamp
+    // reached, the first colomn is the timestamp
     for (int i = 1; i < data.size(); i++) {
       if (Integer.parseInt(data.get(i).get(independentColumn)) >= start
           && Integer.parseInt(data.get(i).get(independentColumn)) <= end) {

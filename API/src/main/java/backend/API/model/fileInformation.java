@@ -16,9 +16,9 @@ public class fileInformation {
   }
 
   public String toString() {
-    String headers = "";
-    for (int i = 0; i < fileHeaders.length; i++) {
-      headers += fileHeaders[i] + ", ";
+    StringBuilder headers = new StringBuilder();
+    for (String fileHeader : fileHeaders) {
+      headers.append(fileHeader).append(", ");
     }
     return "File Name: " + key + "\nFile Headers: " + headers + "\nFile Size: " + size;
   }

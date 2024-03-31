@@ -50,7 +50,7 @@ public class FileSystemStorageService implements StorageService {
   @Autowired
   public FileSystemStorageService(StorageProperties properties) {
 
-    if (properties.getLocation().trim().length() == 0) {
+    if (properties.getLocation().trim().isEmpty()) {
       throw new StorageException("File upload location can not be Empty.");
     }
 
@@ -250,6 +250,7 @@ public class FileSystemStorageService implements StorageService {
     String metadata = extractMetadata(load(filename));
 
     // Parses with timezeone, converts to GMT, and then to LocalDateTime
+    assert metadata != null;
     LocalDateTime creationTime =
         ZonedDateTime.parse(
                 getTagValue(metadata, "Creation Time"),
@@ -267,7 +268,7 @@ public class FileSystemStorageService implements StorageService {
     return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
   }
 
-  // Get timspan for csv file from a parsed bin file
+  // Get time span for csv file from a parsed bin file
   @Override
   public LocalDateTime[] getTimespan(String filename, LocalDateTime zeroTime) {
     String timestamp1 = null;
@@ -332,22 +333,23 @@ public class FileSystemStorageService implements StorageService {
   // Returns the extension of the file for folder organization
   @Override
   public String getTypeFolder(String filename) {
-    if (filename == null) return ""; // No file
+    if (filename == null) {
+      return ""; // No file
+    }
     int dotIndex = filename.lastIndexOf(".");
-    if (dotIndex == -1) return ""; // No extension
+    if (dotIndex == -1) {
+      return ""; // No extension
+    }
     String extension = filename.substring(dotIndex + 1).toLowerCase();
     // Returns csv for bin and mp4 for mov for file conversion
-    switch (extension) {
-      case "bin":
-        return "csv";
-      case "mov":
-        return "mp4";
-      default:
-        return extension;
-    }
+    return switch (extension) {
+      case "bin" -> "csv";
+      case "mov" -> "mp4";
+      default -> extension;
+    };
   }
 
-  // Returns all of the metadata in the file as string with commas between each value
+  // Returns all the metadata in the file as string with commas between each value
   // Each value will be in the format "key - value"
   private String extractMetadata(Path file) {
     try {

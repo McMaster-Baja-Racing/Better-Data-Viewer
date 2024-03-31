@@ -54,9 +54,7 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
 
     // Add header
     // We're appending data 2 to ALL columns of data1, not just the one we selected
-    for (int col = 0; col < data1.get(0).size(); col++) {
-      dataPoint.add(data1.get(0).get(col));
-    }
+    dataPoint.addAll(data1.get(0));
     dataPoint.add(data2.get(0).get(dependentColumn2));
     dataPoints.add(dataPoint);
 
@@ -74,8 +72,8 @@ public class LinearInterpolaterAnalyzer extends Analyzer {
       }
 
       // Find the closest data point in data1
-      Double targetTime = Double.parseDouble(data1.get(i).get(independentColumn));
-      Double secondaryTime = Double.parseDouble(data2.get(j).get(independentColumn));
+      double targetTime = Double.parseDouble(data1.get(i).get(independentColumn));
+      double secondaryTime = Double.parseDouble(data2.get(j).get(independentColumn));
 
       // Find the closest data point in data2
       while (targetTime > secondaryTime && j < data2.size() - 1) {
