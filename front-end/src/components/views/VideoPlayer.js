@@ -12,7 +12,7 @@ const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
     ApiUtil.getFile(video.key)
       .then((response) => response.blob())
       .then((blob) => {
-        const url = URL.createObjectURL(blob) 
+        const url = URL.createObjectURL(blob); 
         setVideoURL(url);
 
         return () => {
@@ -23,9 +23,9 @@ const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
 
   return (
     <div className = "videoBackground">
-            <div className = "videoContainerBox">
-              <ReactPlayer url={videoURL} onProgress={(e) => {setVideoTimestamp(e.playedSeconds*1000)}} progressInterval={1} className="center" id="video" controls/>
-        </div>
+      <div className = "videoContainerBox">
+        <ReactPlayer url={videoURL} onProgress={(e) => {setVideoTimestamp(e.playedSeconds*1000);}} progressInterval={1} className="center" id="video" controls/>
+      </div>
     </div>
   );
 };
