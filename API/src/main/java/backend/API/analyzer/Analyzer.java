@@ -172,9 +172,12 @@ public abstract class Analyzer {
       case "interpolaterPro":
         if (outputFiles.length == 10) {
           // For each file, add to the output string
-          StringBuilder outputString = new StringBuilder(inputFiles[0].substring(0, inputFiles[0].lastIndexOf("/") + 1));
+          StringBuilder outputString =
+              new StringBuilder(inputFiles[0].substring(0, inputFiles[0].lastIndexOf("/") + 1));
           for (String inputFile : inputFiles) {
-            outputString.append(inputFile, inputFile.lastIndexOf("/") + 1, inputFile.length() - 4).append("_");
+            outputString
+                .append(inputFile, inputFile.lastIndexOf("/") + 1, inputFile.length() - 4)
+                .append("_");
           }
           outputFiles[0] = outputString + "inter.csv";
           outputFiles[9] = outputFiles[0];
