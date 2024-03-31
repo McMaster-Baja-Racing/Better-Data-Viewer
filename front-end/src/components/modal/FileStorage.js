@@ -26,7 +26,7 @@ const CustomFileRenderer = (props) => {
   };
 
   // Either add or remove the file from the selectedFiles array
-  const handleSelectFile = (e) => {
+  const handleSelectFile = () => {
     const fileIndex = selectedFiles.findIndex((selectedFile) => selectedFile.key === file.key);
 
     if (fileIndex === -1) {
@@ -73,7 +73,7 @@ const CustomFolderRenderer = (props) => {
   // Calculates folder size by going through all the files and adding those in the folder to a total
   const folderSize = children.reduce((total, file) => total + file.size, 0);
 
-  const handleFolderClick = (e) => {
+  const handleFolderClick = () => {
     browserProps.toggleFolder(props.fileKey);
   };
 
@@ -91,7 +91,7 @@ const CustomFolderRenderer = (props) => {
 
 };
 
-const CustomHeaderRenderer = (props) => {
+const CustomHeaderRenderer = () => {
   return(
     <tr>
       <th>File</th>

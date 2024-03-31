@@ -3,7 +3,7 @@ import '../../styles/videoPlayerStyles.css';
 import ReactPlayer from 'react-player';
 import { ApiUtil } from '../../lib/apiUtils';
 
-const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
+const VideoPlayer = ({ video, setVideoTimestamp }) => {
 
   const [videoURL, setVideoURL] = useState('');
 

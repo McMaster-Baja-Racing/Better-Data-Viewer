@@ -32,7 +32,7 @@ export const HelpModal = ({ setModal }) => {
             ></iframe>
           </div>
           <h2 style={{ marginBottom: '-4px' }}>Baja Wiki:<a href=" http://130.113.72.191:6969/" > http://130.113.72.191:6969/</a></h2>
-          <p>(Make sure you're connected to the VPN or on the school wifi!)</p>
+          <p>(Make sure you&quot;re connected to the VPN or on the school wifi!)</p>
         </div>
       </div>
     </div>,

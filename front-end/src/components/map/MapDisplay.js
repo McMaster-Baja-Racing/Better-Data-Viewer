@@ -105,7 +105,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
         }
 
       },
-      contextmenu(e) {
+      contextmenu() {
         // Disable right click menu on the map
         return false;
       }
@@ -174,7 +174,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
               break;
             }
             return <Rectangle className="map_ui_rect" bounds={rect.bounds} key={[rect.bounds, inside]} color={inside ? '#00ff00' : '#000000'} fillColor={fillColor} eventHandlers={{
-              click: (e) => {
+              click: () => {
                 setRects(rects.toSpliced(index, 1));
               }
             }} />;

@@ -63,7 +63,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
           });
         }).catch(e => { 
           alert(e);
-          resolve();
+          reject(e);
         });
         
       }

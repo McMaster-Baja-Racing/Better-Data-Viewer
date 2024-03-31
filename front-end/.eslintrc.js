@@ -43,6 +43,7 @@ module.exports = {
     'semi': [
       'error',
       'always'
-    ]
+    ],
+    'react/prop-types': 'off' // disable react/prop-types rule temporarily, until we figure this out
   }
 };

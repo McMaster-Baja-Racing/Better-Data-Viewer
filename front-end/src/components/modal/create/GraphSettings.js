@@ -28,7 +28,7 @@ const GraphSettings = ({ movePage, setGraphType, setLiveCheck, video }) => {
         <li>Select the files you want to graph.</li>
         <li>Select the columns of your graph you want.</li>
         <li>Select the analyzer you want to use on your data.</li>
-        <li>For more, repeat steps 3 & 4, clicking "Add Series" in between.</li>
+        <li>For more, repeat steps 3 & 4, clicking &quot;Add Series&quot; in between.</li>
       </ol>
       <h3>Graph Options</h3>
       <div className='graphOptions'>

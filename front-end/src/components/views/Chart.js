@@ -17,7 +17,7 @@ import 'highcharts-multicolor-series';
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
-const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) => {
+const Chart = ({ chartInformation, video, videoTimestamp }) => {
 
   const [chartOptions, setChartOptions] = useState(defaultChartOptions);
   const [loading, setLoading] = useState(false);
