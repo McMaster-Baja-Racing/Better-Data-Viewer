@@ -1,11 +1,11 @@
 import React from 'react';
-import "../../../styles/help.css";
+import '../../../styles/help.css';
 
 const HelpButton = ({ onClick }) => {
   return (
     <span className="popup-button" onClick={onClick}>Help..?</span>
   );
-}
+};
 
 const HelpPopup = ({ data }) => {
   const { title, description, image, links } = data;
@@ -28,7 +28,7 @@ const HelpPopup = ({ data }) => {
       )}
     </div>
   );
-}
+};
 
 const Help = ({ data, openPopup, setOpenPopup }) => {
 
