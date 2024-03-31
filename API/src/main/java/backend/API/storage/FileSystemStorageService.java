@@ -342,11 +342,14 @@ public class FileSystemStorageService implements StorageService {
     }
     String extension = filename.substring(dotIndex + 1).toLowerCase();
     // Returns csv for bin and mp4 for mov for file conversion
-    return switch (extension) {
-      case "bin" -> "csv";
-      case "mov" -> "mp4";
-      default -> extension;
-    };
+    switch (extension) {
+      case "bin":
+        return "csv";
+      case "mov":
+        return "mp4";
+      default:
+        return extension;
+    }
   }
 
   // Returns all the metadata in the file as string with commas between each value
