@@ -26,9 +26,9 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType) 
 
   // If not colour, return values in array to allow for boost
   if (chartType !== 'colour') {
-    const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' 
-      ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]) 
-      : 0;
+    // If required, offsets the x values to be the correct unix timestamp (timestampOffset is 0 if not required)
+    const isDateTime = !columns.some((column) => column.header !== 'Timestamp (ms)' || column.timespan.start === '');
+    const timestampOffset = isDateTime ? getTimestampOffset(columns, lines, headerIndices) : 0;
     return lines.map((line) => {
       return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
     });
@@ -53,6 +53,13 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType) 
       segmentColor: `hsl(${hue}, 100%, 50%)`
     };
   });
+};
+
+// Calculates the offset required to convert the x values to unix timestamps
+// Adding the timestampOffset results in the x value being a the start time unix millis + millis since first timestamp
+const getTimestampOffset = (columns, lines, headerIndices) => {
+  // Offset is the start time in unix millis minus the first timestamp in the file
+  return new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]);
 };
 
 export const getTimestamps = async (text) => {

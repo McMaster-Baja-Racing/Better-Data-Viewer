@@ -139,7 +139,6 @@ export const CreateGraphModal = ({
   }, [displayPage, 4, setModal, handleSubmit]);
 
   const pageSelect = (page) => {
-    console.log(page);
     switch (page) {
     case 0:
       return <GraphSettings 

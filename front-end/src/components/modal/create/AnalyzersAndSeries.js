@@ -74,7 +74,7 @@ const AnalyzersAndSeries = ({
     for (let i = 0; i < dimensions; i++) {
       const columnJSON = JSON.parse(document.getElementsByClassName(i)[0].value);
       const fileTimespan = fileTimespans.find(timespan => timespan.key === columnJSON.filename);
-      columnJSON['timespan'] = {start: fileTimespan.start, end: fileTimespan.end};
+      columnJSON['timespan'] = {start: fileTimespan?.start ?? '', end: fileTimespan?.end ?? ''};
       selectColumns.push(columnJSON);
     }
 
