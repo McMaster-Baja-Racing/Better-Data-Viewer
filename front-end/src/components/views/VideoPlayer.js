@@ -3,7 +3,7 @@ import '../../styles/videoPlayerStyles.css';
 import ReactPlayer from 'react-player';
 import { ApiUtil } from '../../lib/apiUtils';
 
-const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
+const VideoPlayer = ({ video, setVideoTimestamp }) => {
 
   const [videoURL, setVideoURL] = useState('');
 
@@ -12,20 +12,27 @@ const VideoPlayer = ({ video, videoTimestamp, setVideoTimestamp }) => {
     ApiUtil.getFile(video.key)
       .then((response) => response.blob())
       .then((blob) => {
-        const url = URL.createObjectURL(blob) 
+        const url = URL.createObjectURL(blob); 
         setVideoURL(url);
 
         return () => {
           URL.revokeObjectURL(url);
         };
       });
-  }, []); // Empty dependency array ensures that the fetch is only performed once
+  }, [video.key]); // Empty dependency array ensures that the fetch is only performed once
 
   return (
-    <div className = "videoBackground">
-            <div className = "videoContainerBox">
-              <ReactPlayer url={videoURL} onProgress={(e) => {setVideoTimestamp(e.playedSeconds*1000)}} progressInterval={1} className="center" id="video" controls/>
-        </div>
+    <div className="videoBackground">
+      <div className="videoContainerBox">
+        <ReactPlayer
+          url={videoURL}
+          onProgress={(e) => { setVideoTimestamp(e.playedSeconds * 1000); }}
+          progressInterval={1}
+          className="center"
+          id="video"
+          controls
+        />
+      </div>
     </div>
   );
 };

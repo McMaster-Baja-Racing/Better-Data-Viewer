@@ -1,4 +1,4 @@
-import { ApiUtil } from "./apiUtils";
+import { ApiUtil } from './apiUtils';
 
 // Constants for colour chart
 const HUE_MIN = 150;
@@ -16,88 +16,90 @@ export const LIVE_DATA_INTERVAL = 300;
  */
 export const getSeriesData = async (text, filename, columns, minMax, chartType) => {
 
-    let headers = text.trim().split("\n")[0].split(",");
-    headers[headers.length - 1] = headers[headers.length - 1].replace("\r", "")
+  let headers = text.trim().split('\n')[0].split(',');
+  headers[headers.length - 1] = headers[headers.length - 1].replace('\r', '');
 
-    let headerIndices = getHeadersIndex(headers, columns)
+  let headerIndices = getHeadersIndex(headers, columns);
 
-    // Get all the lines of the file, and split them into arrays
-    const lines = text.trim().split("\n").slice(1).map((line) => line.split(","))
+  // Get all the lines of the file, and split them into arrays
+  const lines = text.trim().split('\n').slice(1).map((line) => line.split(','));
 
-    // If not colour, return values in array to allow for boost
-    if (chartType !== "colour") {
-        const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]): 0
-        return lines.map((line) => {
-            return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
-        })
-    }
-
-    // If colour, return the data in object format to allow for colouring
-    // Make a request to get the maximum and minimum values of the colour value
-    const minMaxResponse = await ApiUtil.getMinMax(filename, columns[headerIndices.colour]);
-
-    let [minval, maxval] = (await minMaxResponse.text()).split(",").map(parseFloat);
-    minMax.current = [minval, maxval];
-
+  // If not colour, return values in array to allow for boost
+  if (chartType !== 'colour') {
+    const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' 
+      ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]) 
+      : 0;
     return lines.map((line) => {
+      return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
+    });
+  }
 
-        let val = parseFloat(line[headerIndices.colour])
-        let hue = HUE_MIN + (HUE_MAX - HUE_MIN) * (val - minval) / (maxval - minval);
+  // If colour, return the data in object format to allow for colouring
+  // Make a request to get the maximum and minimum values of the colour value
+  const minMaxResponse = await ApiUtil.getMinMax(filename, columns[headerIndices.colour]);
 
-        return { 
-            x: parseFloat(line[headerIndices.x]), 
-            y: parseFloat(line[headerIndices.y]), 
-            colorValue: val, 
-            segmentColor: `hsl(${hue}, 100%, 50%)`
-        };
-    })
-}
+  let [minval, maxval] = (await minMaxResponse.text()).split(',').map(parseFloat);
+  minMax.current = [minval, maxval];
+
+  return lines.map((line) => {
+
+    let val = parseFloat(line[headerIndices.colour]);
+    let hue = HUE_MIN + (HUE_MAX - HUE_MIN) * (val - minval) / (maxval - minval);
+
+    return { 
+      x: parseFloat(line[headerIndices.x]), 
+      y: parseFloat(line[headerIndices.y]), 
+      colorValue: val, 
+      segmentColor: `hsl(${hue}, 100%, 50%)`
+    };
+  });
+};
 
 export const getTimestamps = async (text) => {
-    const timestampHeaderIndex = text.trim().split("\n")[0].split(",").indexOf("Timestamp (ms)")
-    return text.trim().split("\n").slice(1).map((line) => parseFloat(line.split(",")[timestampHeaderIndex]))
-}
+  const timestampHeaderIndex = text.trim().split('\n')[0].split(',').indexOf('Timestamp (ms)');
+  return text.trim().split('\n').slice(1).map((line) => parseFloat(line.split(',')[timestampHeaderIndex]));
+};
 
 /**
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @param {string[]} headers - An array of headers.
  * @param {string[]} columns - An array of columns.
- * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'.
+ * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
 const getHeadersIndex = (headers, columns) => {
-    let h = {};
-    for (let i = 0; i < columns.length; i++) {
-        for (let j = 0; j < headers.length; j++) {
-            if (columns[i].header === headers[j].trim()) {
-                if (i === 0) {
-                    h.x = j;
-                } else if (i === 1) {
-                    h.y = j;
-                } else if (i === 2) {
-                    h.colour = j;
-                }
-            }
+  let h = {};
+  for (let i = 0; i < columns.length; i++) {
+    for (let j = 0; j < headers.length; j++) {
+      if (columns[i].header === headers[j].trim()) {
+        if (i === 0) {
+          h.x = j;
+        } else if (i === 1) {
+          h.y = j;
+        } else if (i === 2) {
+          h.colour = j;
         }
+      }
     }
-    return h;
-}
+  }
+  return h;
+};
 
 /**
  * @param {Object} chartInformation - The chart information object.
  * @returns {Boolean} True if the chart information is full, false otherwise.
  */
 export const validateChartInformation = (chartInformation) => {
-    if (!chartInformation) {
-        return false;
-    }
-    if (chartInformation.files.length === 0) {
-        return false;
-    }
-    if (chartInformation.files[0].columns.length === 0) {
-        return false;
-    }
-    if (chartInformation.files[0].columns[0].header === "" || chartInformation.files[0].columns[0].filename === "") {
-        return false;
-    }
-    return true;
-}
+  if (!chartInformation) {
+    return false;
+  }
+  if (chartInformation.files.length === 0) {
+    return false;
+  }
+  if (chartInformation.files[0].columns.length === 0) {
+    return false;
+  }
+  if (chartInformation.files[0].columns[0].header === '' || chartInformation.files[0].columns[0].filename === '') {
+    return false;
+  }
+  return true;
+};
