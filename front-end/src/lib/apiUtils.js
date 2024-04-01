@@ -13,7 +13,8 @@ export const ApiUtil = {
   },
 
   /**
-     * @description Fetches a list of files from the server. Each file in the list is represented as an object with the following properties:
+     * @description Fetches a list of files from the server. 
+     * Each file in the list is represented as an object with the following properties:
      * - key: A  that represents the unique identifier of the file.
      * - fileHeaders: An array of strings that represents the headers of the file.
      * - size: A long that represents the size of the file.
@@ -77,7 +78,7 @@ export const ApiUtil = {
   },
 
   /**
-     * @description Sends a GET request to the server to fetch the minimum and maximum values of a specific column in a file.
+     * @description Fetches the min and max values of a specific column in a file.
      * @param {string} filename - The name of the file.
      * @param {string} header - The name of the column.
      * @returns {Promise<Response>} A promise that resolves to the server's response.

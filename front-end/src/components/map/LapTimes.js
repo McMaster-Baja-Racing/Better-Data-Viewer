@@ -17,11 +17,15 @@ const LapTimes = ({ laps, gotoTimeCallback }) => {
   }
   return (
     <div className="laptimes_container">
-      <a className="laptimes_download" download="laps.json" href={URL.createObjectURL(new Blob([JSON.stringify(laps.toSorted((a, b) => a.start - b.start), null, 4)], { type: 'application/json' }))}>Download lap data</a>
+      <a className="laptimes_download" download="laps.json" href={URL.createObjectURL(new Blob([
+        JSON.stringify(laps.toSorted((a, b) => a.start - b.start), null, 4)
+      ], { type: 'application/json' }))}>Download lap data</a>
       {laps.toSorted((a, b) => a.start - b.start).map((lap, index) => {
         return (
           <div key={[lap, index]} className="laptimes_lap">
-            <button className="laptimes_accordion" onClick={() => gotoTimeCallback(lap.start)}>Lap {index}: {((lap.end - lap.start) / 1000).toFixed(SIGFIGS)}s <span className="laptimes_drilldown">V</span></button>
+            <button className="laptimes_accordion" onClick={() => gotoTimeCallback(lap.start)}>
+              Lap {index}: {((lap.end - lap.start) / 1000).toFixed(SIGFIGS)}s <span className="laptimes_drilldown">V</span>
+            </button>
             <div className="laptimes_panel">
               <table>
                 <tbody>

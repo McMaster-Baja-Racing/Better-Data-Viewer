@@ -37,14 +37,20 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
       // Create a list of all files in order (formatting for backend)
       let files = chartInformation.files[i].columns.map(column => column.filename);
       let inputColumns = chartInformation.files[i].columns;
-    
-      const response = await ApiUtil.analyzeFiles(files, inputColumns.map(col => col.header), [], [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e), [chartInformation.live]);
-    
+
+      const response = await ApiUtil.analyzeFiles(
+        files,
+        inputColumns.map(col => col.header),
+        [],
+        [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e),
+        [chartInformation.live]
+      );
+
       const filename = response.headers.get('content-disposition').split('filename=')[1].slice(1, -1);
-      setFileNames(prevState =>  [...prevState, filename]);
-    
+      setFileNames(prevState => [...prevState, filename]);
+
       const text = await response.text();
-    
+
       data.push(await getSeriesData(text, filename, inputColumns, minMax, chartInformation.type));
       tempTimestamps.push(await getTimestamps(text));
     }

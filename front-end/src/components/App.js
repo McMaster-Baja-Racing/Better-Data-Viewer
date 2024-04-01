@@ -27,15 +27,19 @@ const App = () => {
   //    [
   //      {
   //        columns: [
-  //          {header:"Timestampt", filename:"PRIM_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
-  //          {header:"RPM", filename:"PRIM_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"},
+  //          {header:"Timestampt", filename:"PRIM_RPM.csv", 
+  //              timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
+  //          {header:"RPM", filename:"PRIM_RPM.csv",
+  //              timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"},
   //        ],
   //        analysis: "none"
   //      },
   //      {
   //        columns: [
-  //          {header:"RPM", filename:"SEC_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
-  //          {header:"Timestampt", filename:"SEC_RPM.csv", timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}}
+  //          {header:"RPM", filename:"SEC_RPM.csv", 
+  //            timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
+  //          {header:"Timestampt", filename:"SEC_RPM.csv", 
+  //            timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}}
   //        ],
   //        analysis: "rollAvg"
   //      }
@@ -59,7 +63,8 @@ const App = () => {
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
     if (successMessage === '' || Object.keys(successMessage).length === 0) return;
-    $('div.success').hide().stop(true, false); // This could use some work to show that they are different messages more clearly
+    // This could use some work to show that they are different messages more clearly
+    $('div.success').hide().stop(true, false); 
     $('div.success').slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
 
@@ -69,12 +74,33 @@ const App = () => {
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
         <header className="App-body">
           <div className="success">{successMessage.message}</div>
-          {modal === 'Create' ? <CreateGraphModal setModal={setModal} setViewInformation={setViewInformation} setSuccessMessage={setSuccessMessage} viewInformation={viewInformation} buttonID={buttonID} setNumViews={setNumViews} numViews={numViews} video={video} setVideo={setVideo}/> : null}
-          {modal === 'Upload' ? <UploadModal setModal={setModal} setSuccessMessage={setSuccessMessage} /> : null}
+          {modal === 'Create' ? <CreateGraphModal 
+            setModal={setModal} 
+            setViewInformation={setViewInformation} 
+            setSuccessMessage={setSuccessMessage} 
+            viewInformation={viewInformation} 
+            buttonID={buttonID} 
+            setNumViews={setNumViews} 
+            numViews={numViews} 
+            video={video} 
+            setVideo={setVideo}
+          /> : null}
+          {modal === 'Upload' ? <UploadModal 
+            setModal={setModal} 
+            setSuccessMessage={setSuccessMessage} 
+          /> : null}
           {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
           {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
           <Routes>
-            <Route path="*" element={<Views viewInformation={viewInformation} setModal={setModal} setButtonID={setButtonID} numViews={numViews} videoTimestamp={videoTimestamp} setVideoTimestamp={setVideoTimestamp} video={video} />} />
+            <Route path="*" element={<Views 
+              viewInformation={viewInformation} 
+              setModal={setModal} 
+              setButtonID={setButtonID} 
+              numViews={numViews} 
+              videoTimestamp={videoTimestamp} 
+              setVideoTimestamp={setVideoTimestamp} 
+              video={video} 
+            />} />
             <Route path="/map" element={<MapChart />} />
           </Routes>
         </header>

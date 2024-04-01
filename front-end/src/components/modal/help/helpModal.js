@@ -18,7 +18,8 @@ export const HelpModal = ({ setModal }) => {
         <div style={{textAlign: 'center'}}>
           <h1>Help!</h1>
           <p>
-          Welcome to the help page! In the future, there will be a small user guide here, but for now, you can access the wiki below!
+          Welcome to the help page! In the future, 
+          there will be a small user guide here, but for now, you can access the wiki below!
           If there is any information that is not there, feel free to reach out to a dataviewer team member.
           </p>
           <div className="video-container">
@@ -31,7 +32,9 @@ export const HelpModal = ({ setModal }) => {
               allowFullScreen
             ></iframe>
           </div>
-          <h2 style={{ marginBottom: '-4px' }}>Baja Wiki:<a href=" http://130.113.72.191:6969/" > http://130.113.72.191:6969/</a></h2>
+          <h2 style={{ marginBottom: '-4px' }}>
+            Baja Wiki: <a href=" http://130.113.72.191:6969/" > http://130.113.72.191:6969/</a>
+          </h2>
           <p>(Make sure you&quot;re connected to the VPN or on the school wifi!)</p>
         </div>
       </div>

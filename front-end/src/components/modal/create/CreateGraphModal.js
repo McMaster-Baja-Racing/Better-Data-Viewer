@@ -14,7 +14,17 @@ import { replaceViewAtIndex } from '../../../lib/viewUtils';
 import { filterFiles } from '../../../lib/videoUtils';
 import { ApiUtil } from '../../../lib/apiUtils';
 
-export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessage, viewInformation, buttonID, setNumViews, numViews, video, setVideo }) => {
+export const CreateGraphModal = ({
+  setModal,
+  setViewInformation,
+  setSuccessMessage,
+  viewInformation,
+  buttonID,
+  setNumViews,
+  numViews,
+  video,
+  setVideo
+}) => {
 
   const [dimensions, setDimensions] = useState(2);
   const [columns, setColumns] = useState([]);
@@ -63,17 +73,41 @@ export const CreateGraphModal = ({ setModal, setViewInformation, setSuccessMessa
       type: graphType,
     };
   
-    let updatedViewInformation = replaceViewAtIndex(viewInformation, buttonID, { component: Chart, props: { chartInformation } });
-  
+    let updatedViewInformation = replaceViewAtIndex(
+      viewInformation,
+      buttonID,
+      { component: Chart, props: { chartInformation } }
+    );
+
     if (selectedVideo.key !== '') setVideo(selectedVideo);
-  
-    if (buttonID + 1 < MAX_VIEWS && graphType === 'video' && viewInformation.find(view => view.component.name === 'VideoPlayer') === undefined) {
-      updatedViewInformation = replaceViewAtIndex(updatedViewInformation, buttonID + 1, { component: VideoPlayer, props: {} });
+
+    if (
+      buttonID + 1 < MAX_VIEWS &&
+      graphType === 'video' &&
+      viewInformation.find((view) => view.component.name === 'VideoPlayer') === undefined
+    ) {
+      updatedViewInformation = replaceViewAtIndex(
+        updatedViewInformation,
+        buttonID + 1,
+        { component: VideoPlayer, props: {} }
+      );
       if (buttonID + 1 === numViews) setNumViews(numViews + 1);
     }
-  
+
     setViewInformation(updatedViewInformation);
-  }, [buttonID, selectedFiles, seriesInfo, liveCheck, graphType, viewInformation, selectedVideo, numViews, setVideo, setNumViews, setViewInformation]);
+  }, [
+    buttonID,
+    selectedFiles,
+    seriesInfo,
+    liveCheck,
+    graphType,
+    viewInformation,
+    selectedVideo,
+    numViews,
+    setVideo,
+    setNumViews,
+    setViewInformation
+  ]);
   
 
   // This method will return headers when supplied with a list of files. Added support for folders is neccesary

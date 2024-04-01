@@ -3,7 +3,17 @@ import Help from './Help';
 import analyzerData from '../../analyzerData';
 import '../../../styles/analyzersAndSeriesStyles.css';
 import React, { useState, useEffect } from 'react';
-const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeriesInfo, setSuccessMessage, setDimensions, graphType, fileTimespans }) => {
+const AnalyzersAndSeries = ({
+  dimensions,
+  columns,
+  movePage,
+  seriesInfo,
+  setSeriesInfo,
+  setSuccessMessage,
+  setDimensions,
+  graphType,
+  fileTimespans
+}) => {
 
   // Determines if a series already exists with the same columns and analyzer
   const isDuplicateSeries = (newSeries) => {
@@ -16,7 +26,8 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
 
   const columnGenerator = (n) => {
     // TODO: Refactor this so that it doesn't use variables such as "arr" and "arr2"
-    // TODO: Further should be more dynamic, so that it can handle any number of dimensions in a "smart" way (probably using some css)
+    // TODO: Further should be more dynamic, so that it can handle 
+    // any number of dimensions in a "smart" way (probably using some css)
     let arr = [];
     for (let i = 0; i < 2; i++) {
       arr.push(
@@ -24,10 +35,16 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
           <div className="boldText">{i === 0 ? 'X-Axis' : 'Y Axis'} </div>
           <select className={i} defaultValue={JSON.stringify(columns[i])}>
             {columns.map(column => (
-              <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
+              <option
+                value={JSON.stringify(column)}
+                key={column.header + column.filename}
+              >
+                {column.filename} - {column.header}
+              </option>
             ))}
           </select>
-        </div>);
+        </div>
+      );
     }
     let arr2 = [];
     if (n === 3) {
@@ -37,10 +54,16 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
           <div className="boldText">Z Axis</div>
           <select className={2} key={2} defaultValue={JSON.stringify(columns[2])}>
             {columns.map(column => (
-              <option value={JSON.stringify(column)} key={column.header + column.filename}>{column.filename} - {column.header}</option>
+              <option
+                value={JSON.stringify(column)}
+                key={column.header + column.filename}
+              >
+                {column.filename} - {column.header}
+              </option>
             ))}
           </select>
-        </div>);
+        </div>
+      );
     }
     return <div><div className='columnHeaders'>{arr}</div> <div className='columnHeaders2'>{arr2}</div></div>;
   };
@@ -73,10 +96,13 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
 
     // Add the new series to the seriesInfo state only if it is not a duplicate
     setSeriesInfo(duplicateSeries ? seriesInfo : [...seriesInfo, newSeries]);
-        
+
     // Display a success message if the series is not a duplicate or if the user is moving to the next page
     // Moving to the next page does not fail on a duplicate series so the message is still displayed in that case
-    (!nextPage && duplicateSeries) ? setSuccessMessage({ message: 'Duplicate Series'}) : setSuccessMessage({ message: nextPage ? 'Graph Created' : 'Series Added' });
+    const successMessage = (!nextPage && duplicateSeries)
+      ? { message: 'Duplicate Series' }
+      : { message: nextPage ? 'Graph Created' : 'Series Added' };
+    setSuccessMessage(successMessage);
   };
 
   const [openPopup, setOpenPopup] = useState(null);
@@ -100,7 +126,13 @@ const AnalyzersAndSeries = ({ dimensions, columns, movePage, seriesInfo, setSeri
         {analyzerData.map((analyzer) => {
           return (
             <div className="analyzerBox" key={analyzer.title}>
-              <input type="radio" id={analyzer.title} name="analyzerChoice" value="true" defaultChecked={analyzer.checked}/>
+              <input
+                type="radio"
+                id={analyzer.title}
+                name="analyzerChoice"
+                value="true"
+                defaultChecked={analyzer.checked}
+              />
                             
               {analyzer.parameters.length > 0 ? (
                 <details>

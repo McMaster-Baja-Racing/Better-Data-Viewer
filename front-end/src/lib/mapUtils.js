@@ -52,7 +52,9 @@ export function findLapTimes(coords, rects) {
         inside = true;
         events.push(boundaryEvent(ENTER, index, coords[i][TIME_INDEX]));
       }
-      else if (inside && events[events.length - 1].rect === index && !pointInRect([coords[i][LAT_INDEX], coords[i][LNG_INDEX]], elem.bounds)) {
+      else if (inside && events[events.length - 1].rect === index 
+        && !pointInRect([coords[i][LAT_INDEX], coords[i][LNG_INDEX]], elem.bounds)) 
+      {
         inside = false;
         events.push(boundaryEvent(EXIT, index, coords[i][TIME_INDEX]));
       }

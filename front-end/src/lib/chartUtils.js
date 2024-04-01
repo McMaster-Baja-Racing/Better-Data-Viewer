@@ -26,7 +26,9 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType) 
 
   // If not colour, return values in array to allow for boost
   if (chartType !== 'colour') {
-    const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]): 0;
+    const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' 
+      ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]) 
+      : 0;
     return lines.map((line) => {
       return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
     });
@@ -62,7 +64,7 @@ export const getTimestamps = async (text) => {
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @param {string[]} headers - An array of headers.
  * @param {string[]} columns - An array of columns.
- * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'.
+ * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
 const getHeadersIndex = (headers, columns) => {
   let h = {};

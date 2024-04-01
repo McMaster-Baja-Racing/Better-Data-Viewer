@@ -48,7 +48,9 @@ export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, 
         </div>
       </div>
       <div className="fileButtons">
-        <button className="backButton" onClick={() => {setSelectedVideo({ key: '', start: '', end: '' }); movePage(-1);}}>Back</button>
+        <button className="backButton" onClick={() => {
+          setSelectedVideo({ key: '', start: '', end: '' }); movePage(-1);
+        }}>Back</button>
         <button className="nextButton" onClick={() => {movePage(1);}}>Next</button>
       </div>
     </div>

@@ -22,9 +22,16 @@ const VideoPlayer = ({ video, setVideoTimestamp }) => {
   }, [video.key]); // Empty dependency array ensures that the fetch is only performed once
 
   return (
-    <div className = "videoBackground">
-      <div className = "videoContainerBox">
-        <ReactPlayer url={videoURL} onProgress={(e) => {setVideoTimestamp(e.playedSeconds*1000);}} progressInterval={1} className="center" id="video" controls/>
+    <div className="videoBackground">
+      <div className="videoContainerBox">
+        <ReactPlayer
+          url={videoURL}
+          onProgress={(e) => { setVideoTimestamp(e.playedSeconds * 1000); }}
+          progressInterval={1}
+          className="center"
+          id="video"
+          controls
+        />
       </div>
     </div>
   );

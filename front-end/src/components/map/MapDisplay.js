@@ -118,11 +118,17 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
     setBounds([]);
     let chosen = e.target.value;
     // console.log(chosen);
-    ApiUtil.analyzeFiles([`${chosen}/${LAT_COLUMNNAME}.csv`, `${chosen}/${LNG_COLUMNNAME}.csv`], [LAT_COLUMNNAME, LNG_COLUMNNAME], [], ['interpolaterPro'], false)
+    ApiUtil.analyzeFiles(
+      [`${chosen}/${LAT_COLUMNNAME}.csv`, `${chosen}/${LNG_COLUMNNAME}.csv`],
+      [LAT_COLUMNNAME, LNG_COLUMNNAME],
+      [],
+      ['interpolaterPro'],
+      false
+    )
       .then((response) => response.text())
-      .then(text => {
+      .then((text) => {
         const lines = text.trim().split('\n').map((line) => line.split(','));
-        setCoords(lines.slice(1).map(c => c.map(p => parseFloat(p))));
+        setCoords(lines.slice(1).map((c) => c.map((p) => parseFloat(p))));
       });
   }
 

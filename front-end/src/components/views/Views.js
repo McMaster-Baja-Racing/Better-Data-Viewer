@@ -11,7 +11,11 @@ const Views = ({ viewInformation, setModal, setButtonID, numViews, videoTimestam
         return (
           <div key={index} className="singleView" style={{ gridColumn: viewStyles[numViews].gridColumn[index] }}>
             <Component {...props} video={video} videoTimestamp={videoTimestamp} setVideoTimestamp={setVideoTimestamp} />
-            <button title="Create Graph" className="createGraph" onClick={() => { setButtonID(index); setModal('Create'); }}>
+            <button 
+              title="Create Graph" 
+              className="createGraph" 
+              onClick={() => { setButtonID(index); setModal('Create'); }}
+            >
               <img className="icon" src={newGraphImg} alt="Create Graph" />
             </button>
           </div>

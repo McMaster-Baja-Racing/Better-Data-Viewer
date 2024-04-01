@@ -13,7 +13,8 @@ const formatSize = (size) => {
 };
 
 // Here is a custom file renderer to be used in place of the default react-keyed-file-browser file renderer.
-// This was done to give the "checked" property to the file element, which is used to allow the selection of multiple files at once.
+// This was done to give the "checked" property to the file element, 
+// which is used to allow the selection of multiple files at once.
 const CustomFileRenderer = (props) => {
   const { files, selectedFiles, setSelectedFiles, browserProps } = props;
   // Get all information from props about the file
@@ -56,7 +57,12 @@ const CustomFileRenderer = (props) => {
 
   return (
   // Add in table row and then table data for each file, default styling will space it properly
-    <tr {...connectDragSource} {...connectDropTarget} className={`file ${isSelected ? 'selected' : ''}`} onClick={handleSelectFile} >
+    <tr 
+      {...connectDragSource} 
+      {...connectDropTarget} 
+      className={`file ${isSelected ? 'selected' : ''}`} 
+      onClick={handleSelectFile} 
+    >
       <td className="name" style={{ paddingLeft: depthPadding }}>{file.name}</td>
       <td className="size">{formatSize(file.size)}</td>
       {/* Classname  "modified" is hardcoded from file browser lib for styling, we're showing date created though */}
@@ -81,8 +87,16 @@ const CustomFolderRenderer = (props) => {
   const depthPadding = paddingLeft * props.depth + 12;
 
   return (
-    <tr {...connectDragSource} {...connectDropTarget} className={`folder ${isOpen ? 'open' : ''}`} onClick={handleFolderClick}>
-      <td className="name" style={{ paddingLeft: depthPadding }}><i className={`${isOpen ? 'fa fa-folder-open-o' : 'fa fa-folder-o'}`} aria-hidden="true"/>{props.name}</td>
+    <tr
+      {...connectDragSource}
+      {...connectDropTarget}
+      className={`folder ${isOpen ? 'open' : ''}`}
+      onClick={handleFolderClick}
+    >
+      <td className="name" style={{ paddingLeft: depthPadding }}>
+        <i className={`${isOpen ? 'fa fa-folder-open-o' : 'fa fa-folder-o'}`} aria-hidden="true" />
+        {props.name}
+      </td>
       <td className="size">{formatSize(folderSize)}</td>
       {/* Classname  "modified" is hardcoded from file browser lib for styling, we're showing date created though */}
       <td className="modified">-</td>

@@ -81,23 +81,45 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
         <div className="uploadContainer">
           <h1>Upload Files</h1>
           <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" accept=".csv, .bin, .mp4, .mov" id="input-file-upload" multiple={true} {...register('file')} onChange={(e) => {
-              setfileLists([...e.target.files, ...fileLists]);
-            }}/>
+            <input 
+              type="file" 
+              accept=".csv, .bin, .mp4, .mov" 
+              id="input-file-upload" 
+              multiple={true} 
+              {...register('file')} 
+              onChange={(e) => { setfileLists([...e.target.files, ...fileLists]); }}
+            />
             <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? 'drag-active' : ''}>
               <div>
-                {fileLists.length === 0 ? <p>Drag and drop your file here or click to browse your files</p> : fileLists.map((file, index) => {
-                  return (
+                {fileLists.length === 0 ? (
+                  <p>Drag and drop your file here or click to browse your files</p>
+                ) : (
+                  fileLists.map((file, index) => (
                     <div key={`file-${index}`}>
-                      <button className="fileButton" type="button"   onClick={() => {
-                        setfileLists(fileLists.filter((f) => f.name !== file.name));
-                      }}>X</button>
+                      <button
+                        className="fileButton"
+                        type="button"
+                        onClick={() => {
+                          setfileLists(fileLists.filter((f) => f.name !== file.name));
+                        }}
+                      >
+                        X
+                      </button>
                       {file.name}
-                    </div>);
-                })}
+                    </div>
+                  ))
+                )}
               </div>
             </label>
-            {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
+            {dragActive && (
+              <div
+                id="drag-file-element"
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              ></div>
+            )}
             <button id = "delete" type="button" onClick={(() => {
               ApiUtil.deleteAllFiles().then((res) => {
                 alert(res);

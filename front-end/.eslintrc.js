@@ -34,12 +34,16 @@ module.exports = {
     ],
     'linebreak-style': 'off',
     'quotes': [
-      'error',
+      'warn',
       'single'
     ],
     'semi': [
-      'error',
+      'warn',
       'always'
+    ],
+    'max-len': [
+      'warn', 
+      {'code': 120}
     ],
     'react/prop-types': 'off' // disable react/prop-types rule temporarily, until we figure this out
   }

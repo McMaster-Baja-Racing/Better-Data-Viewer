@@ -10,6 +10,7 @@ export const replaceViewAtIndex = (viewInformation, index, newView) => {
 
 // Adds a new view at the given index shifting all other views to the right and then trimming the last view
 export const insertViewAtIndex = (viewInformation, index, newView) => {
-  const tempViewInformation = viewInformation.slice(0, index).concat(newView).concat(viewInformation.slice(index, viewInformation.length - 1));
+  const tempViewInformation = viewInformation.slice(0, index).concat(newView)
+    .concat(viewInformation.slice(index, viewInformation.length - 1));
   return tempViewInformation.slice(0, viewInformation.length);
 };
