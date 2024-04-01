@@ -162,10 +162,18 @@ export const CreateGraphModal = ({
       return <div className='file-Storage-Container'>
         <div className="file-browser">
           <h3>Choose Files</h3>
-          <FileStorage files={graphType === 'video' ? filterFiles(selectedVideo.key === '' ? video : selectedVideo, files, fileTimespans) : files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
+          <FileStorage 
+            files={graphType === 'video' 
+              ? filterFiles(selectedVideo.key === '' ? video : selectedVideo, files, fileTimespans) 
+              : files} 
+            selectedFiles={selectedFiles} 
+            setSelectedFiles={setSelectedFiles}
+          />
         </div>
         <div className="fileButtons">
-          <button className="pageTwoBackButton" onClick={() => {movePage(graphType === 'video' && selectedVideo.key !== '' ? -1 : -2);}}>Back</button>
+          <button className="pageTwoBackButton" onClick={() => {
+            movePage(graphType === 'video' && selectedVideo.key !== '' ? -1 : -2);
+          }}>Back</button>
           <button className="pageTwoNextButton" onClick={() => {
           // OnClick, it should get the selected files from the file storage component
             if (selectedFiles.length === 0) {

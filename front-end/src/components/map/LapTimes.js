@@ -24,7 +24,8 @@ const LapTimes = ({ laps, gotoTimeCallback }) => {
         return (
           <div key={[lap, index]} className="laptimes_lap">
             <button className="laptimes_accordion" onClick={() => gotoTimeCallback(lap.start)}>
-              Lap {index}: {((lap.end - lap.start) / 1000).toFixed(SIGFIGS)}s <span className="laptimes_drilldown">V</span>
+              Lap {index}: {((lap.end - lap.start) / 1000).toFixed(SIGFIGS)}s 
+              <span className="laptimes_drilldown">V</span>
             </button>
             <div className="laptimes_panel">
               <table>

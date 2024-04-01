@@ -84,7 +84,8 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getMinMax: async (filename, header) => {
-    const response = await fetch(`http://${window.location.hostname}:8080/files/maxmin/${filename}?headerName=${header}`);
+    const url = `http://${window.location.hostname}:8080/files/maxmin/${filename}?headerName=${header}`;
+    const response = await fetch(url);
         
     if (!response.ok) {
       alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);

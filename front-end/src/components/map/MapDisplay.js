@@ -134,7 +134,12 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
   // GEOJSON USES LONG, LAT NOT LAT, LONG
 
-  const marker = L.icon({ iconUrl: '/topdown_outline.png', shadowUrl: 'https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png', iconSize: [50, 50], iconAnchor: [25, 25] });
+  const marker = L.icon({
+    iconUrl: '/topdown_outline.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png',
+    iconSize: [50, 50],
+    iconAnchor: [25, 25]
+  });
   return (
     <div id="mapBackground">
       <select className="map_ui_select" defaultValue="none" onChange={loadFile}>
@@ -144,12 +149,19 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
         })}
       </select>
       <ToolSelection options={tools} setSelected={setCurrTool} selected={currTool}> </ToolSelection>
-      {/* <button onClick={() => setLapsCallback(findLapTimes(coords, rects))} className="map_ui_button"> Analyze </button> */}
+      {/* <button onClick={() => setLapsCallback(findLapTimes(coords, rects))}
+       className="map_ui_button"> Analyze </button> */}
       <button onClick={() => setRects([])} className="map_ui_button">Clear</button>
 
       {bounds.length > 0 && coords.length > 0 ?
       // Inline style here because these are Leaflet components
-        <MapContainer key={bounds} bounds={bounds} style={{ height: '100%', width: '100%', zIndex: '0' }} dragging={true} scrollWheelZoom={true} >
+        <MapContainer
+          key={bounds}
+          bounds={bounds}
+          style={{ height: '100%', width: '100%', zIndex: '0' }}
+          dragging={true}
+          scrollWheelZoom={true}
+        >
           <GeoJSON key={coords[0]} data={[{
             type: 'LineString',
             coordinates: coords.map(c => [c[LNG_INDEX], c[LAT_INDEX]])
@@ -179,11 +191,14 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
             default:
               break;
             }
-            return <Rectangle className="map_ui_rect" bounds={rect.bounds} key={[rect.bounds, inside]} color={inside ? '#00ff00' : '#000000'} fillColor={fillColor} eventHandlers={{
-              click: () => {
-                setRects(rects.toSpliced(index, 1));
-              }
-            }} />;
+            return <Rectangle 
+              className="map_ui_rect" 
+              bounds={rect.bounds} 
+              key={[rect.bounds, inside]} 
+              color={inside ? '#00ff00' : '#000000'} 
+              fillColor={fillColor} 
+              eventHandlers={{click: () => {setRects(rects.toSpliced(index, 1));}}} 
+            />;
           })}
           {/* <Marker position={[coords[0][1], coords[0][0]]} icon={marker} /> */}
           <Marker position={[coords[counter][LAT_INDEX], coords[counter][LNG_INDEX]]} icon={marker} />
