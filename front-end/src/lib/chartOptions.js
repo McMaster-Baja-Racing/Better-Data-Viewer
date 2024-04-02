@@ -25,13 +25,6 @@ export const defaultChartOptions = {
   }
 };
 
-// For a graph to be use datetime x-axis, all series must be timestamp and have a defined timespan
-const isDateTime = (chartInformation) => {
-  return !chartInformation.files.some(
-    (file) => file.columns[0].header !== 'Timestamp (ms)' || file.columns[0].timespan.start === ''
-  );
-};
-
 const getStandardChartConfig = (chartInformation) => {
 
   var chartConfig = defaultChartOptions;
@@ -50,7 +43,7 @@ const getStandardChartConfig = (chartInformation) => {
       text: chartInformation.files[0].columns[0].header
     },
     //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-    type: isDateTime(chartInformation) ? 'datetime' : 'linear',
+    type: chartInformation.isDateTime ? 'datetime' : 'linear',
 
     lineColor: 'grey',
     tickColor: 'grey',
