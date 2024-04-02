@@ -68,9 +68,13 @@ export const CreateGraphModal = ({
   //Stuff for handling final submit
   const handleSubmit = useCallback(() => {
 
-    const chartInformationFiles = (buttonID === MAX_VIEWS) ? selectedFiles : seriesInfo
+    const chartInformationFiles = (buttonID === MAX_VIEWS) ? selectedFiles : seriesInfo;
 
-    const isDateTime = !chartInformationFiles.some((file) => file.columns[0].header !== 'Timestamp (ms)' || file.columns[0].timespan.start === '');
+    const isDateTime = !chartInformationFiles.some(
+      (file) =>
+        file.columns[0].header !== 'Timestamp (ms)' ||
+        file.columns[0].timespan.start === ''
+    );
 
     const chartInformation = {
       files: chartInformationFiles,
