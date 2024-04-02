@@ -25,6 +25,16 @@ export const defaultChartOptions = {
   }
 };
 
+export const movePlotLine = (chartOptions, x) => {
+  return {
+    ...chartOptions,
+    xAxis: {
+      ...chartOptions.xAxis,
+      plotLines: [{ ...chartOptions.xAxis.plotLines[0], value: x }],
+    },
+  };
+};
+
 const getStandardChartConfig = (chartInformation) => {
 
   var chartConfig = defaultChartOptions;
@@ -44,6 +54,11 @@ const getStandardChartConfig = (chartInformation) => {
     },
     //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
     type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+
+    plotLines: chartInformation.type === 'video' ? [{
+      color: 'black',
+      width: 1.5,
+    }] : [],
 
     lineColor: 'grey',
     tickColor: 'grey',

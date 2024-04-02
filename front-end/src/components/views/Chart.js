@@ -1,5 +1,5 @@
 import '../../styles/chart.css';
-import { defaultChartOptions, getChartConfig } from '../../lib/chartOptions.js';
+import { defaultChartOptions, getChartConfig, movePlotLine } from '../../lib/chartOptions.js';
 import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
 import { ApiUtil } from '../../lib/apiUtils.js';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -130,7 +130,12 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
       });
       // Updates the chart to show the point that is closest to the video timestamp
       if (seriesPointIndeces.length === 0) return;
-      chartRef.current.series[seriesPointIndeces[0].series].points[seriesPointIndeces[0].point].onMouseOver();
+      const point = chartRef.current.series[seriesPointIndeces[0].series].points[seriesPointIndeces[0].point];
+      // Update chart options so that point.x is the value of the first plotline
+      const newChartOptions = {...chartOptions};
+      newChartOptions.xAxis.plotLines[0].value = point.x;
+      setChartOptions(movePlotLine(newChartOptions, point.x));
+      point.onMouseOver();
       if (seriesPointIndeces.length > 1) seriesPointIndeces.slice(1).forEach(seriesPointIndex => {
         chartRef.current.series[seriesPointIndex.series].points[seriesPointIndex.point].setState('hover');
       });
@@ -139,6 +144,8 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
     }
         
   }, [videoTimestamp, offsets, timestamps]);
+
+  console.log(chartOptions);
 
   return (
 
