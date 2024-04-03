@@ -65,7 +65,7 @@ public class CubicAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
-    //int independentColumn = this.getColumnIndex(inputColumns[0], headers);
+    // int independentColumn = this.getColumnIndex(inputColumns[0], headers);
     int dependentColumn = this.getColumnIndex(inputColumns[1], headers);
 
     // Write the headers to the output file
