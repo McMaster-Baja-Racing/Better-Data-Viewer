@@ -1,31 +1,44 @@
 package backend.API.storage;
 
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.stream.Stream;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
-import java.util.stream.Stream;
-
 public interface StorageService {
 
-	void init();
+  void init();
 
-	void store(MultipartFile file);
+  Path getRootLocation();
 
-	Stream<Path> loadAll();
+  void store(MultipartFile file);
 
-	Path load(String filename);
+  Stream<Path> loadAll();
 
-	Resource loadAsResource(String filename);
+  Stream<Path> loadFolder(String foldername);
 
-	void deleteAll();
+  Path load(String filename);
 
-	void delete(String filename);
+  Resource loadAsResource(String filename);
 
-	void copyFile(String filename, String newFilename);
+  void deleteAll();
 
-	String readHeaders(String filename);
+  void delete(String filename);
 
-	String getMaxMin(String filename, String headerName);
+  void copyFile(String filename, String newFilename);
 
+  String readHeaders(String filename);
+
+  String getMaxMin(String filename, String headerName);
+
+  String getLast(String filename);
+
+  LocalDateTime[] getTimespan(String filename);
+
+  LocalDateTime[] getTimespan(String filename, LocalDateTime zeroTime);
+
+  LocalDateTime getZeroTime(Path folder);
+
+  String getTypeFolder(String filename);
 }

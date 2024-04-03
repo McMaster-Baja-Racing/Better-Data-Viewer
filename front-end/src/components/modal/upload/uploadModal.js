@@ -1,10 +1,12 @@
 //UploadModal.js
-import ReactDom from "react-dom";
+import ReactDom from 'react-dom';
 import '../../../styles/modalStyles.css';
 import '../../../styles/uploadModalStyles.css';
-import { useForm } from "react-hook-form";
-import { useRef } from "react";
-import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import React, { useState, useRef } from 'react';
+import { ApiUtil } from '../../../lib/apiUtils.js';
+import loadingImg from '../../../assets/loading.gif';
+
 export const UploadModal = ({ setModal, setSuccessMessage}) => {
 
   const [dragActive, setDragActive] = React.useState(false);
@@ -13,9 +15,9 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
   const handleDrag = function (e) {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
+    if (e.type === 'dragenter' || e.type === 'dragover') {
       setDragActive(true);
-    } else if (e.type === "dragleave") {
+    } else if (e.type === 'dragleave') {
       setDragActive(false);
     }
   };
@@ -26,7 +28,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    setfileLists([...e.dataTransfer.files, ...fileLists])
+    setfileLists([...e.dataTransfer.files, ...fileLists]);
   };
 
   const modalRef = useRef();
@@ -40,41 +42,36 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
   //This stuff is for backend API
   const onSubmit = async () => {
     //upload multiple files
-    const formData = new FormData();
     // THIS SHOULD BE A POPUP THAT DECAYS AWAY, NOT AN ALERT
     if (fileLists.length === 0) { 
-      alert("Please select a file")
-      return
+      alert('Please select a file');
+      return;
     }
     //start loading
     setLoading(true);
-    //console.log(loading);
+
     await new Promise((resolve, reject) => {
       for (let i = 0; i < fileLists.length; i++) {
-        formData.set("file", fileLists[i]);
-        fetch(`http://${window.location.hostname}:8080/upload`, {
-          method: "POST",
-          body: formData,
-        }).then((res) => {
+        ApiUtil.uploadFile(fileLists[i]).then((res) => {
           res.text().then(text => {
             if(res.status !== 200) {
-              alert(JSON.stringify(`${text}, status: ${res.status}`))
+              alert(JSON.stringify(`${text}, status: ${res.status}`));
             }
             if (i===fileLists.length-1) {
               resolve();
             }
-          })
+          });
         }).catch(e => { 
-          alert(e)
-          resolve();
-        })
+          alert(e);
+          reject(e);
+        });
         
       }
     });
 
     setLoading(false);
     setModal('');
-    setSuccessMessage({ message: "Files Uploaded" });// + fileLists.map((file) => file.name).join(", ")
+    setSuccessMessage({ message: 'Files Uploaded' });// + fileLists.map((file) => file.name).join(", ")
   };
 
   return ReactDom.createPortal(
@@ -83,39 +80,61 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
       <div className="modal">
         <div className="uploadContainer">
           <h1>Upload Files</h1>
-            <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
-            <input type="file" accept=".csv, .bin" id="input-file-upload" multiple={true} {...register("file")} onChange={(e) => {
-              setfileLists([...e.target.files, ...fileLists])
-            }}/>
-            <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? "drag-active" : ""}>
+          <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
+            <input 
+              type="file" 
+              accept=".csv, .bin, .mp4, .mov" 
+              id="input-file-upload" 
+              multiple={true} 
+              {...register('file')} 
+              onChange={(e) => { setfileLists([...e.target.files, ...fileLists]); }}
+            />
+            <label id="label-file-upload" htmlFor="input-file-upload" className={dragActive ? 'drag-active' : ''}>
               <div>
-                {fileLists.length === 0 ? <p>Drag and drop your file here or click to browse your files</p> : fileLists.map((file, index) => {
-                  return (
-                  <div key={`file-${index}`}>
-                    <button className="fileButton" type="button"   onClick={() => {
-                      setfileLists(fileLists.filter((f) => f.name !== file.name))
-                    }}>X</button>
-                    {file.name}
-                  </div>)
-                })}
+                {fileLists.length === 0 ? (
+                  <p>Drag and drop your file here or click to browse your files</p>
+                ) : (
+                  fileLists.map((file, index) => (
+                    <div key={`file-${index}`}>
+                      <button
+                        className="fileButton"
+                        type="button"
+                        onClick={() => {
+                          setfileLists(fileLists.filter((f) => f.name !== file.name));
+                        }}
+                      >
+                        X
+                      </button>
+                      {file.name}
+                    </div>
+                  ))
+                )}
               </div>
             </label>
-            {dragActive && <div id="drag-file-element" onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></div>}
+            {dragActive && (
+              <div
+                id="drag-file-element"
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              ></div>
+            )}
             <button id = "delete" type="button" onClick={(() => {
-            fetch(`http://${window.location.hostname}:8080/deleteAll`).then((res) => {
-              alert(res)
-            }).catch((err) => {
-              console.log(err)
-            })
-          })}>Delete All</button>
-          {loading && <img className="loading" src={process.env.PUBLIC_URL + 'eeee.gif'} alt="Loading..."/>}
-          <input id = "submitButton" className="uploadSubmit" type="submit" />
+              ApiUtil.deleteAllFiles().then((res) => {
+                alert(res);
+              }).catch((err) => {
+                console.log(err);
+              });
+            })}>Delete All</button>
+            {loading && <img className="loading" src={loadingImg} alt="Loading..."/>}
+            <input id = "submitButton" className="uploadSubmit" type="submit" />
           </form>
         </div>
         <button className="closeButton" onClick={() => setModal('')}>X</button>
       </div>
     </div>,
-    document.getElementById("portal")
+    document.getElementById('portal')
   );
 
 };

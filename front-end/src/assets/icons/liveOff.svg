@@ -6,32 +6,9 @@
    fill="none"
    version="1.1"
    id="svg5"
-   sodipodi:docname="liveOff.svg"
-   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns="http://www.w3.org/2000/svg">
   <defs
      id="defs5" />
-  <sodipodi:namedview
-     id="namedview5"
-     pagecolor="#505050"
-     bordercolor="#eeeeee"
-     borderopacity="1"
-     inkscape:showpageshadow="0"
-     inkscape:pageopacity="0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#505050"
-     inkscape:zoom="22.627417"
-     inkscape:cx="9.1923881"
-     inkscape:cy="17.346213"
-     inkscape:window-width="2400"
-     inkscape:window-height="1494"
-     inkscape:window-x="-11"
-     inkscape:window-y="-11"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg5" />
   <path
      d="m 6.3750745,7.9901244 v 1.219228 H 2.0014731 V 2 h 1.3388605 v 5.9901244 z"
      fill="#ffffff"
@@ -56,8 +33,7 @@
      d="M 16.544392,11.1299 H 7.4541311 C 4.4452739,11.1299 2,13.566603 2,16.564952 2,19.563299 4.4452739,22 7.4541311,22 h 9.0902609 c 3.00885,0 5.454135,-2.436701 5.454135,-5.435048 0,-2.998349 -2.445285,-5.435052 -5.454135,-5.435052 z m 0,9.058428 H 7.4541311 c -2.0089236,0 -3.6360826,-1.621478 -3.6360826,-3.623376 0,-2.0019 1.627159,-3.623379 3.6360826,-3.623379 h 9.0902609 c 2.008924,0 3.63609,1.621479 3.63609,3.623379 0,2.001898 -1.627166,3.623376 -3.63609,3.623376 z"
      fill="#49d633"
      id="path5"
-     style="fill:#ffffff;stroke-width:0.348294"
-     sodipodi:nodetypes="ssssssssssssss" />
+     style="fill:#ffffff;stroke-width:0.348294" />
   <path
      d="m 7.6563541,13.847426 c -1.5089963,0 -2.7270841,1.213816 -2.7270841,2.717525 0,1.503707 1.218087,2.717524 2.7270841,2.717524 1.5089606,0 2.7270489,-1.213817 2.7270489,-2.717524 0,-1.503709 -1.2180883,-2.717525 -2.7270489,-2.717525 z"
      style="fill:#ffffff;stroke-width:0.348294"

@@ -1,11 +1,11 @@
 import React from 'react';
-import "../../../styles/help.css";
+import '../../../styles/help.css';
 
 const HelpButton = ({ onClick }) => {
   return (
     <span className="popup-button" onClick={onClick}>Help..?</span>
   );
-}
+};
 
 const HelpPopup = ({ data }) => {
   const { title, description, image, links } = data;
@@ -14,7 +14,7 @@ const HelpPopup = ({ data }) => {
     <div className="popuptext">
       <h1>{title}</h1>
       <p>{description}</p>
-      {image && <img src={image.link} alt={image.alt} style={{ width: 250, height: 200 }} />}
+      {image && <img src={image.src} alt={image.alt} style={{ width: 250, height: 200 }} />}
       <div></div>
       {links && (
         <div>
@@ -28,7 +28,7 @@ const HelpPopup = ({ data }) => {
       )}
     </div>
   );
-}
+};
 
 const Help = ({ data, openPopup, setOpenPopup }) => {
 

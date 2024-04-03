@@ -1,26 +1,43 @@
 package backend.API;
 
 /*
- * This is the main controller for the entire backend. It handles all of the requests that come in from the front end
- * and then sends the appropriate response back. This is the only class that the front end should be interacting with.
+ * This is the main controller for the entire backend.
+ * It handles all the requests that come in from the front end
+ * and then sends the appropriate response back.
+ * This is the only class that the front end should be interacting with.
  * There are quite a few moving parts, but each request should have
- * 		1. A unique mapping to the URL that the request is coming in on. This may include a variale such as {filename}
- * 		2. A method signature that includes the appropriate parameters (important ones are return type and input variables) for the request.
- * 			- The return type should generally be a ResponseEntity, which may contain any object that can be converted to JSON
- * 			- The input variables may be Path variables (such as ex/{filename}), Request Parameters (such as ?filename=), or Request Body (such as the file itself)
- * 		3. A method body that handles the request and returns the appropriate response.
- * 			- This may include calling other methods, but it should be self contained.
- * That's all I got for explanation, the internet and specifically the spring boot guides through their website daeldung.com are your friend.
-*/
+ *      1. A unique mapping to the URL that the request is coming in on.
+ *         This may include a variale such as {filename}
+ *      2. A method signature that includes the appropriate parameters
+ *         (important ones are return type and input variables) for the request.
+ *          - The return type should generally be a ResponseEntity,
+ *            which may contain any object that can be converted to JSON
+ *          - The input variables may be Path variables (such as ex/{filename}),
+ *            Request Parameters (such as ?filename=), or Request Body (such as the file itself)
+ *      3. A method body that handles the request and returns the appropriate response.
+ *          - This may include calling other methods, but it should be self-contained.
+ * That's all I got for explanation, the internet and
+ * specifically the spring boot guides through their website daeldung.com are your friend.
+ */
 
+import backend.API.analyzer.Analyzer;
+import backend.API.binary_csv.BinaryTOCSV;
+import backend.API.live.Serial;
+import backend.API.model.fileInformation;
+import backend.API.model.fileTimespan;
+import backend.API.storage.StorageFileNotFoundException;
+import backend.API.storage.StorageService;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -38,304 +55,492 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
-
-import backend.API.storage.StorageFileNotFoundException;
-import backend.API.storage.StorageService;
-import backend.API.binary_csv.BinaryTOCSV;
-import backend.API.live.Serial;
-
-import backend.API.analyzer.Analyzer;
-
-import backend.API.model.fileInformation;
-import backend.API.model.fileList;
-
+/** Controller class for handling file uploads. */
 @Controller
 public class FileUploadController {
 
-	private final StorageService storageService;
+  private final StorageService storageService;
 
-	@Autowired
-	public FileUploadController(StorageService storageService) {
-		this.storageService = storageService;
-	}
+  @Autowired
+  public FileUploadController(StorageService storageService) {
+    this.storageService = storageService;
+  }
 
-	// This is the method that shows the upload form page, used for debugging
-	@GetMapping("/")
-	public String listUploadedFiles(Model model) throws IOException {
+  // This is the method that shows the upload form page, used for debugging
 
-		model.addAttribute("files", storageService.loadAll().map(
-				path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-						"serveFile", path.getFileName().toString()).build().toUri().toString())
-				.collect(Collectors.toList()));
+  /**
+   * Handles GET requests to the root ("/") URL. Lists all uploaded files.
+   *
+   * @param model the Model object to pass attributes to the view
+   * @return the name of the view that will be used to render the response
+   * @throws IOException if an I/O error occurs when opening the file
+   */
+  @GetMapping("/")
+  public String listUploadedFiles(Model model) throws IOException {
 
-		return "uploadForm";
-	}
+    model.addAttribute(
+        "files",
+        storageService
+            .loadAll()
+            .map(
+                path ->
+                    MvcUriComponentsBuilder.fromMethodName(
+                            FileUploadController.class, "serveFile", path.getFileName().toString())
+                        .build()
+                        .toUri()
+                        .toString())
+            .collect(Collectors.toList()));
 
-	//This is the default method that returns a single file
-	@GetMapping("/files/**")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(HttpServletRequest request) {
-		// Catch the exception if the file is not found
-		String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-		path = path.substring("/files/".length());
-		path = URLDecoder.decode(path, StandardCharsets.UTF_8);
+    return "uploadForm";
+  }
 
-		System.out.println("Serving file " + path);
+  /**
+   * Handles GET requests to the "/files" URL. Returns a list of information about all uploaded
+   * files.
+   *
+   * @return a ResponseEntity with a list of fileInformation objects as the body and CORS headers
+   * @throws IOException if an I/O error occurs when opening the file
+   */
+  @GetMapping("/files")
+  @ResponseBody
+  public ResponseEntity<ArrayList<fileInformation>> listUploadedFiles() throws IOException {
 
-		Resource file = storageService.loadAsResource(path);
+    // Set these headers so that you can access from LocalHost
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		HttpHeaders responseHeaders = new HttpHeaders();
+    ArrayList<fileInformation> files = new ArrayList<fileInformation>();
 
-		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-		"attachment; filename=\"" + file.getFilename() + "\"");
-		//Set these headers so that you can access from LocalHost
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+    // Get name, headers and size of each file
+    storageService
+        .loadAll()
+        .forEach(
+            path -> {
+              try {
+                // Get the path and filename of each file and print it
+                long size = storageService.loadAsResource(path.toString()).contentLength();
+                String[] headers = storageService.readHeaders(path.toString()).split(",");
+                files.add(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+            });
 
-		return ResponseEntity.ok().headers(responseHeaders).body(file);
-	}
+    return ResponseEntity.ok().headers(responseHeaders).body(files);
+  }
 
-	// This is the method that returns information about all the files, to be used
-	// by fetch
-	// It returns an object of type fileList from the model folder
-	@GetMapping("/files")
-	@ResponseBody
-	public ResponseEntity<fileList> listUploadedFiles() throws IOException {
+  /**
+   * Handles GET requests to the "/files/**" URL. Serves the requested file as a resource.
+   *
+   * @param request the HttpServletRequest object that contains the request made by the client
+   * @return a ResponseEntity with the requested file as the body and appropriate headers
+   */
+  @GetMapping("/files/**")
+  @ResponseBody
+  public ResponseEntity<Resource> serveFile(HttpServletRequest request) {
+    // Catch the exception if the file is not found
+    String path =
+        (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+    path = path.substring("/files/".length());
+    path = URLDecoder.decode(path, StandardCharsets.UTF_8);
 
-		// Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+    System.out.println("Serving file " + path);
 
-		fileList files = new fileList();
+    Resource file = storageService.loadAsResource(path);
 
-		// Get name, headers and size of each file
-		storageService.loadAll().forEach(path -> {
-			try {
-				// Get the path and filename of each file and print it
-				long size = storageService.loadAsResource(path.toString()).contentLength();
-				String[] headers = storageService.readHeaders(path.toString()).split(",");
-				files.addFile(new fileInformation(path.toString().replace("\\", "/"), headers, size));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+    HttpHeaders responseHeaders = new HttpHeaders();
 
-		return ResponseEntity.ok().headers(responseHeaders).body(files);
-	}
+    responseHeaders.add(
+        HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"");
+    // Set these headers so that you can access from LocalHost
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-	//This method returns information about a specific file, given the filename.
-	//It should return the first row of the file (the header row) + [datetime, and the number of rows eventually]
-	// Can be deleted?
-	@GetMapping("/files/{filename:.+}/info")
-	@ResponseBody
-	public ResponseEntity<String> listFileInformation(@PathVariable String filename) throws IOException {
+    return ResponseEntity.ok().headers(responseHeaders).body(file);
+  }
 
-		// Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+  /**
+   * Handles GET requests to the "/files/folder/{foldername:.+}" URL. Returns a list of information
+   * about all files in the specified folder.
+   *
+   * @param foldername the name of the folder to list files from
+   * @return a ResponseEntity with a list of fileInformation objects as the body and CORS headers
+   * @throws IOException if an I/O error occurs when opening the file
+   */
+  @GetMapping("/files/folder/{foldername:.+}")
+  @ResponseBody
+  public ResponseEntity<ArrayList<fileInformation>> listFolderFiles(@PathVariable String foldername)
+      throws IOException {
 
-		// Get size, headers, datetime, etc.
-		String fileinfo = storageService.readHeaders(filename);
+    // Set these headers so that you can access from LocalHost
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		return ResponseEntity.ok().headers(responseHeaders).body(fileinfo);
-	}
+    ArrayList<fileInformation> files = new ArrayList<fileInformation>();
 
-	// This is the be all end all method that should take in any number of file
-	// names and analyzers, plus live option and return a file
-	@GetMapping("/analyze")
-	@ResponseBody
-	public ResponseEntity<Resource> handleFileRequest(
-			@RequestParam(value = "inputFiles", required = true) String[] inputFiles,
-			@RequestParam(value = "inputColumns", required = true) String[] inputColumns,
-			@RequestParam(value = "outputFiles", required = false) String[] outputFiles,
-			@RequestParam(value = "analyzer", required = false) String[] analyzer,
-			@RequestParam(value = "liveOptions", required = false) String[] liveOptions) throws InterruptedException {
+    // Get name, headers and size of each file
+    storageService
+        .loadFolder(foldername)
+        .forEach(
+            path -> {
+              try {
+                // Get the path and filename of each file and print it
+                long size = storageService.loadAsResource(path.toString()).contentLength();
+                String[] headers = storageService.readHeaders(path.toString()).split(",");
+                files.add(new fileInformation(path.toString().replace("\\", "/"), headers, size));
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+            });
 
-		// Catch exceptions first
-		if (inputFiles == null || inputFiles.length == 0) {
-			throw new IllegalArgumentException("No input files selected");
-		}
+    return ResponseEntity.ok().headers(responseHeaders).body(files);
+  }
 
-		// If no output files are selected, give it a single
-		if (outputFiles == null || outputFiles.length == 0) {
-			// Set output files to empty string
-			outputFiles = new String[10];
-		}
+  /**
+   * Handles GET requests to the "/timespan/folder/{foldername:.+}" URL. Returns a list of time
+   * spans for all files in the specified folder.
+   *
+   * @param foldername the name of the folder to list files from
+   * @return a ResponseEntity with a list of fileTimespan objects as the body and CORS headers
+   * @throws IOException if an I/O error occurs when opening the file
+   */
+  @GetMapping("/timespan/folder/{foldername:.+}")
+  @ResponseBody
+  public ResponseEntity<ArrayList<fileTimespan>> listFolderTimespans(
+      @PathVariable String foldername) throws IOException {
 
-		// Then check if live is true, and set the options + files accordingly
-		if (liveOptions[0].equals("true")) {
-			// Maybe do the serial stuff here, but definitely look in live folder for data
-		}
+    // Set these headers so that you can access from LocalHost
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		// Then run the selected analyzer
-		if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
-			try {
-			Analyzer.createAnalyzer(analyzer[0], inputFiles, inputColumns, outputFiles,
-					Arrays.copyOfRange(analyzer, 1, analyzer.length)).analyze();
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-		} else {
-			// If no analyzer is selected, only one file is selected, copy it
-			// storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
-			outputFiles[outputFiles.length - 1] = "./upload-dir/" + inputFiles[0];
-		}
-		// Then return the final file, removing the prefix for upload dir
-		Resource file = storageService.loadAsResource(
-				outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
+    ArrayList<fileTimespan> timespans = new ArrayList<fileTimespan>();
 
-		// Set these headers so that you can access from LocalHost and download the file
-		HttpHeaders responseHeaders = new HttpHeaders();
-		Path absoluteFilePath = storageService
-				.load(outputFiles[outputFiles.length - 1].substring(13, outputFiles[outputFiles.length - 1].length()));
-		String relativePath = Paths.get("upload-dir").relativize(absoluteFilePath).toString();
-		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-				"attachment; filename=\"" + relativePath + "\"");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
+    Stream<Path> paths = storageService.loadFolder(foldername);
 
-		return ResponseEntity.ok().headers(responseHeaders).body(file);
-	}
+    switch (foldername) {
+      case "csv":
+        // Holds the parent folder and the zero time
+        Object[] container = {null, null};
+        paths.forEach(
+            path -> {
+              if (path.getParent() != null) {
+                // Updates the parent folder and zero time if the parent folder changes to avoid
+                // recalculating the zero time
+                if (container[0] != path.getParent()) {
+                  container[0] = path.getParent();
+                  container[1] = storageService.getZeroTime((Path) container[0]);
+                }
+                // Get the path and filename of each file and print it
+                LocalDateTime[] timespan =
+                    storageService.getTimespan(path.toString(), (LocalDateTime) container[1]);
+                timespans.add(
+                    new fileTimespan(path.toString().replace("\\", "/"), timespan[0], timespan[1]));
+              }
+            });
+        break;
+      case "mp4":
+        paths.forEach(
+            path -> {
+              // Get the path and filename of each file and print it
+              LocalDateTime[] timespan = storageService.getTimespan(path.toString());
+              timespans.add(
+                  new fileTimespan(path.toString().replace("\\", "/"), timespan[0], timespan[1]));
+            });
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid folder name");
+    }
 
-	// This next method is for live data! Ideally you can feed it any of the basic
-	// filenames that the car might output
-	// And this will send the csv right back! Neat, huh?
-	@GetMapping("/live/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveLiveFile(@PathVariable String filename) {
+    return ResponseEntity.ok().headers(responseHeaders).body(timespans);
+  }
 
-		filename = "live_" + filename;
+  /**
+   * Handles GET requests to the "/analyze" URL. Performs analysis on the specified input files and
+   * returns the result as a resource.
+   *
+   * @param inputFiles the input files to analyze
+   * @param inputColumns the input columns to analyze
+   * @param outputFiles the output files to write the results to
+   * @param analyzer the analyzer to use
+   * @param liveOptions options for live analysis
+   * @return a ResponseEntity with the result file as the body and appropriate headers
+   * @throws InterruptedException if the analysis is interrupted
+   */
+  @GetMapping("/analyze")
+  @ResponseBody
+  public ResponseEntity<Resource> handleFileRequest(
+      @RequestParam(value = "inputFiles", required = true) String[] inputFiles,
+      @RequestParam(value = "inputColumns", required = true) String[] inputColumns,
+      @RequestParam(value = "outputFiles", required = false) String[] outputFiles,
+      @RequestParam(value = "analyzer", required = false) String[] analyzer,
+      @RequestParam(value = "liveOptions", required = false) String[] liveOptions)
+      throws InterruptedException {
 
-		Resource file = storageService.loadAsResource(filename);
+    // Catch exceptions first
+    if (inputFiles == null || inputFiles.length == 0) {
+      throw new IllegalArgumentException("No input files selected");
+    }
 
-		HttpHeaders responseHeaders = new HttpHeaders();
+    // If no output files are selected, give it a single
+    if (outputFiles == null || outputFiles.length == 0) {
+      // Set output files to empty string
+      outputFiles = new String[10];
+    }
 
-		responseHeaders.add(HttpHeaders.CONTENT_DISPOSITION,
-				"attachment; filename=\"" + file.getFilename() + "\"");
-		// Set these headers so that you can access from LocalHost
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+    // For all of the input and output files, add the root location to the front
+    for (int i = 0; i < inputFiles.length; i++) {
+      inputFiles[i] =
+          storageService.getRootLocation().toString()
+              + "/"
+              + storageService.getTypeFolder(inputFiles[i])
+              + "/"
+              + inputFiles[i];
+    }
+    for (int i = 0; i < outputFiles.length; i++) {
+      outputFiles[i] =
+          storageService.getRootLocation().toString()
+              + "/"
+              + storageService.getTypeFolder(outputFiles[i])
+              + "/"
+              + outputFiles[i];
+    }
 
-		return ResponseEntity.ok().headers(responseHeaders).body(file);
-	}
+    // Then run the selected analyzer
+    if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
+      try {
+        Analyzer.createAnalyzer(
+                analyzer[0],
+                inputFiles,
+                inputColumns,
+                outputFiles,
+                (Object[]) Arrays.copyOfRange(analyzer, 1, analyzer.length))
+            .analyze();
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+    } else {
+      // If no analyzer is selected, only one file is selected, copy it
+      // storageService.copyFile(inputFiles[0], outputFiles[outputFiles.length - 1]);
+      outputFiles[outputFiles.length - 1] = inputFiles[0];
+    }
 
-	@GetMapping("/deleteAll")
-	@ResponseBody
-	public ResponseEntity<String> deleteAll() {
-		storageService.deleteAll();
-		storageService.init();
+    // TODO: THIS SHOULD HAPPEN BEFORE RUNNING THE ANALYZER IN THE COMMON CASE
+    // Then check if live is true, and set the options + files accordingly
+    String fileOutputString = outputFiles[outputFiles.length - 1].substring(13);
 
-		HttpHeaders responseHeaders = new HttpHeaders();
-		// Set these headers so that you can access from LocalHost
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+    // print live options
+    System.out.println("Live options: " + liveOptions[0]);
 
-		return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
-	}
+    if (liveOptions[0].equals("true")) {
+      outputFiles = new String[10];
+      // When live is true, we only want a certain amount of time from its timestamp
+      // Get the last timestamp, then subtract a certain amount of time, and use split analyzer
+      // between the two
+      int lastPoint = Integer.valueOf(storageService.getLast(fileOutputString));
+      int firstPoint = Math.max(0, lastPoint - 3000);
 
-	// Method to get the maximum and minimum values of a column in a file
-	@GetMapping("/files/maxmin/**")
-	@ResponseBody
-	public ResponseEntity<String> getMaxMin(HttpServletRequest request, @RequestParam(value = "headerName", required = true) String headerName) throws IOException{
+      // print the two values
+      System.out.println("First point: " + firstPoint);
+      System.out.println("Last point: " + lastPoint);
 
-		String filename = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-    	filename = filename.substring("/files/maxmin/".length());
-		// Decode to add spaces back in and special characters
-		filename = URLDecoder.decode(filename, StandardCharsets.UTF_8);
-		
-		System.out.println("Getting max and min for " + headerName + " in " + filename);
-		//Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+      Object[] extraValues = new Object[] {String.valueOf(firstPoint), String.valueOf(lastPoint)};
+      String[] lastFile = new String[] {fileOutputString};
 
-		// Get size, headers, datetime, etc.
-		String maxmin = storageService.getMaxMin(filename, headerName);
+      try {
+        Analyzer.createAnalyzer("split", lastFile, inputColumns, outputFiles, extraValues)
+            .analyze();
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+    }
 
-		return ResponseEntity.ok().headers(responseHeaders).body(maxmin);
-	}
+    // Then return the final file, removing the prefix for upload dir
+    String filePath = outputFiles[outputFiles.length - 1];
+    Path path = Paths.get(filePath);
+    Path newPath = path.subpath(2, path.getNameCount());
 
-	//This is the method that uploads the file
-	@PostMapping("/")
-	public String handleFileUpload(@RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAttributes) {
+    // Set these headers so that you can access from LocalHost and download the file
+    HttpHeaders responseHeaders = new HttpHeaders();
+    Path absoluteFilePath = storageService.load(newPath.toString());
+    String relativePath = storageService.getRootLocation().relativize(absoluteFilePath).toString();
+    responseHeaders.add(
+        HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + relativePath + "\"");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Content-Disposition");
 
-		String filename = file.getOriginalFilename();
-		if (filename == null) {
-			throw new IllegalArgumentException("No file selected");
-		}
-		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
-			storageService.store(file);
-			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
-					storageService.load("").toAbsolutePath().toString() + "\\", false);
-			storageService.delete(filename);
-		} else {
-			storageService.store(file);
-		}
+    Resource file = storageService.loadAsResource(newPath.toString());
 
-		redirectAttributes.addFlashAttribute("message",
-				"You successfully uploaded " + file.getOriginalFilename() + "!");
+    return ResponseEntity.ok().headers(responseHeaders).body(file);
+  }
 
-		return "redirect:/";
-	}
+  /**
+   * Handles GET requests to the "/deleteAll" URL. Deletes all files from the storage and then
+   * re-initializes it.
+   *
+   * @return a ResponseEntity with a confirmation message as the body and CORS headers
+   */
+  @GetMapping("/deleteAll")
+  @ResponseBody
+  public ResponseEntity<String> deleteAll() {
+    storageService.deleteAll();
+    storageService.init();
 
-	// Upload file without redirect
-	@PostMapping("/upload")
-	public ResponseEntity<String> handleFileUploadAPI(@RequestParam("file") MultipartFile file) {
+    HttpHeaders responseHeaders = new HttpHeaders();
+    // Set these headers so that you can access from LocalHost
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		// Check type of file, either CSV or bin
-		String filename = file.getOriginalFilename();
-		if (filename == null) {
-			throw new IllegalArgumentException("No file selected");
-		}
-		if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
-			storageService.store(file);
-			BinaryTOCSV.toCSV(storageService.load(filename).toAbsolutePath().toString(),
-					storageService.load("").toAbsolutePath().toString() + "\\", true);
-			storageService.delete(filename);
-		} else {
-			storageService.store(file);
-		}
+    return ResponseEntity.ok().headers(responseHeaders).body("All files deleted");
+  }
 
-		// Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+  /**
+   * Handles GET requests to the "/files/maxmin/**" URL. Returns the maximum and minimum values of a
+   * specified header in the requested file.
+   *
+   * @param request the HttpServletRequest object that contains the request made by the client
+   * @param headerName the name of the header to get the maximum and minimum values of
+   * @return ResponseEntity with the maximum and minimum values as the body and appropriate headers
+   * @throws IOException if an I/O error occurs when opening the file
+   */
+  @GetMapping("/files/maxmin/**")
+  @ResponseBody
+  public ResponseEntity<String> getMaxMin(
+      HttpServletRequest request,
+      @RequestParam(value = "headerName", required = true) String headerName)
+      throws IOException {
 
-		return ResponseEntity.ok().headers(responseHeaders)
-				.body(String.format("%s uploaded", file.getOriginalFilename()));
-	}
+    String filename =
+        (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+    filename = filename.substring("/files/maxmin/".length());
+    // Decode to add spaces back in and special characters
+    filename = URLDecoder.decode(filename, StandardCharsets.UTF_8);
 
-	// This method lets the backend know to collect live data and from which port
-	@PostMapping("/live")
-	public ResponseEntity<String> handleLive(@RequestParam(name = "port", required = false) String port) {
-		// Start the live data collection
+    System.out.println("Getting max and min for " + headerName + " in " + filename);
+    // Set these headers so that you can access from LocalHost
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
 
-		// call the readLive function in Serial.java
-		if (Serial.exit == false) {
-			Serial.exit = true;
-		} else {
-			new Thread(() -> {
-				Serial.readLive();
-			}).start();
-		}
+    // Get size, headers, datetime, etc.
+    String maxmin = storageService.getMaxMin(filename, headerName);
 
-		// Set these headers so that you can access from LocalHost
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-		responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+    return ResponseEntity.ok().headers(responseHeaders).body(maxmin);
+  }
 
-		return ResponseEntity.ok().headers(responseHeaders)
-				.body(String.format("Live data collection started on port %s", port));
-	}
+  /**
+   * Handles POST requests to the "/" URL. Uploads a file to the server and, if the file is a binary
+   * file, converts it to CSV format. This can probably be deleted, only for the 8080 endpoint
+   * rather than frontend.
+   *
+   * @param file the file to upload
+   * @param redirectAttributes the attributes to add to the redirect
+   * @return a redirect instruction to the "/" URL
+   * @throws IllegalArgumentException if no file was uploaded
+   */
+  @PostMapping("/")
+  public String handleFileUpload(
+      @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
-	@ExceptionHandler(StorageFileNotFoundException.class)
-	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
-		return ResponseEntity.notFound().build();
-	}
+    String filename = file.getOriginalFilename();
+    if (filename == null) {
+      throw new IllegalArgumentException("No file selected");
+    }
+    if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
+      storageService.store(file);
+      String csvFilename = storageService.load(filename).toAbsolutePath().toString();
+      String csvOutputDir = storageService.load("").toAbsolutePath() + "\\";
+      BinaryTOCSV.toCSV(csvFilename, csvOutputDir, false);
+      storageService.delete(filename);
+    } else {
+      storageService.store(file);
+    }
 
+    redirectAttributes.addFlashAttribute(
+        "message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+
+    return "redirect:/";
+  }
+
+  /**
+   * Handles POST requests to the "/upload" URL. Uploads a file to the server, and if the file is a
+   * binary file, converts it to CSV format. If the file is a MOV file, copies it to an MP4 file.
+   *
+   * @param file the file to upload
+   * @return a ResponseEntity with a success message as the body and appropriate headers
+   * @throws IllegalArgumentException if no file was uploaded
+   */
+  @PostMapping("/upload")
+  public ResponseEntity<String> handleFileUploadApi(@RequestParam("file") MultipartFile file) {
+
+    // Check type of file, either CSV or bin
+    String filename = file.getOriginalFilename();
+    if (filename == null) {
+      throw new IllegalArgumentException("No file selected");
+    }
+    if (filename.substring(filename.lastIndexOf(".") + 1).equals("bin")) {
+      storageService.store(file);
+      BinaryTOCSV.toCSV(
+          storageService.load(filename).toAbsolutePath().toString(),
+          storageService.load("").toAbsolutePath() + "\\",
+          true);
+      storageService.delete(filename);
+    } else if (filename.substring(filename.lastIndexOf(".") + 1).equalsIgnoreCase("mov")) {
+      storageService.store(file);
+      storageService.copyFile(filename, filename.substring(0, filename.lastIndexOf(".")) + ".mp4");
+      storageService.delete(filename);
+    } else {
+      storageService.store(file);
+    }
+
+    // Set these headers so that you can access from LocalHost
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+    return ResponseEntity.ok()
+        .headers(responseHeaders)
+        .body(String.format("%s uploaded", file.getOriginalFilename()));
+  }
+
+  /**
+   * Handles POST requests to the "/live" URL. Starts the live data collection from a specified
+   * port.
+   *
+   * @param port the port to start the live data collection from
+   * @return a ResponseEntity with a message indicating that the live data collection has started
+   */
+  @PostMapping("/live")
+  public ResponseEntity<String> handleLive(
+      @RequestParam(name = "port", required = false) String port) {
+    // Start the live data collection
+
+    // call the readLive function in Serial.java
+    if (!Serial.exit) {
+      Serial.exit = true;
+    } else {
+      new Thread(
+              () -> {
+                Serial.readLive();
+              })
+          .start();
+    }
+
+    // Set these headers so that you can access from LocalHost
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+
+    return ResponseEntity.ok()
+        .headers(responseHeaders)
+        .body(String.format("Live data collection started on port %s", port));
+  }
+
+  @ExceptionHandler(StorageFileNotFoundException.class)
+  public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+    return ResponseEntity.notFound().build();
+  }
 }
