@@ -67,6 +67,8 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
     useEffect(() => {
         if(!validateChartInformation(chartInformation)) return;
 
+        console.log(minMax.current)
+
         // Update the chart options with the new data
         setChartOptions((prevState) => {
             return {
@@ -75,7 +77,7 @@ const Chart = ({ chartInformation, video, videoTimestamp, setVideoTimestamp }) =
             }
         });
         
-    }, [parsedData, fileNames])
+    }, [parsedData])
 
     // This function loops when live is true, and updates the chart every 500ms
     useEffect(() => {

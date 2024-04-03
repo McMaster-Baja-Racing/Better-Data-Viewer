@@ -25,7 +25,7 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType) 
     const lines = text.trim().split("\n").slice(1).map((line) => line.split(","))
 
     // If not colour, return values in array to allow for boost
-    if (chartType !== "colour") {
+    if (chartType !== "coloredline") {
         const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]): 0
         return lines.map((line) => {
             return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
@@ -34,7 +34,11 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType) 
 
     // If colour, return the data in object format to allow for colouring
     // Make a request to get the maximum and minimum values of the colour value
-    const minMaxResponse = await ApiUtil.getMinMax(filename, columns[headerIndices.colour]);
+    console.log("headerIndices", headerIndices)
+    console.log("columns", columns)
+    const minMaxResponse = await ApiUtil.getMinMax(filename, columns[headerIndices.colour].header);
+
+    console.log("minMaxResponse", minMaxResponse)
 
     let [minval, maxval] = (await minMaxResponse.text()).split(",").map(parseFloat);
     minMax.current = [minval, maxval];
