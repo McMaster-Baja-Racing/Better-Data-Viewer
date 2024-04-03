@@ -11,8 +11,10 @@ import { computeOffsets, getPointIndex } from '../../lib/videoUtils.js';
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '../../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
-import 'highcharts-multicolor-series';
-// require('highcharts-multicolor-series')(Highcharts); Keeping this old import until we test the new one
+// import 'highcharts-multicolor-series';
+
+// eslint-disable-next-line no-undef
+require('highcharts-multicolor-series')(Highcharts); // Keeping this old import until we test the new one
 
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
