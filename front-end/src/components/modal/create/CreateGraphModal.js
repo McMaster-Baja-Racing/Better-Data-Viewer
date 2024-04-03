@@ -139,67 +139,66 @@ export const CreateGraphModal = ({
   }, [displayPage, 4, setModal, handleSubmit]);
 
   const pageSelect = (page) => {
-    console.log(page);
     switch (page) {
-    case 0:
-      return <GraphSettings 
-        movePage={movePage} 
-        graphType={graphType} 
-        setGraphType={setGraphType} 
-        liveCheck={liveCheck} 
-        setLiveCheck={setLiveCheck} 
-        video={video}
-      />;
-    case 1:
-      return <VideoSelect 
-        movePage={movePage} 
-        selectedVideo={selectedVideo} 
-        setSelectedVideo={setSelectedVideo} 
-        files={files} fileTimespans={fileTimespans} 
-        videoTimespans={videoTimespans}
-      />;
-    case 2:
-      return <div className='file-Storage-Container'>
-        <div className="file-browser">
-          <h3>Choose Files</h3>
-          <FileStorage 
-            files={graphType === 'video' 
-              ? filterFiles(selectedVideo.key === '' ? video : selectedVideo, files, fileTimespans) 
-              : files} 
-            selectedFiles={selectedFiles} 
-            setSelectedFiles={setSelectedFiles}
-          />
-        </div>
-        <div className="fileButtons">
-          <button className="pageTwoBackButton" onClick={() => {
-            movePage(graphType === 'video' && selectedVideo.key !== '' ? -1 : -2);
-          }}>Back</button>
-          <button className="pageTwoNextButton" onClick={() => {
-          // OnClick, it should get the selected files from the file storage component
-            if (selectedFiles.length === 0) {
-              alert('Please select at least one file.');
-            } else {
-              getHeaders(selectedFiles);
-              setDimensions(2);
-              movePage(1);
-            }
-          }}>Next</button>
-        </div>
-      </div>;
-    case 3: 
-      return <AnalyzersAndSeries 
-        dimensions={dimensions} 
-        columns={columns} 
-        movePage={movePage} 
-        seriesInfo={seriesInfo} 
-        setSeriesInfo={setSeriesInfo} 
-        setSuccessMessage={setSuccessMessage} 
-        setDimensions={setDimensions} 
-        graphType={graphType} 
-        fileTimespans={fileTimespans}
-      />;
-    default:
-      break;
+      case 0:
+        return <GraphSettings 
+          movePage={movePage} 
+          graphType={graphType} 
+          setGraphType={setGraphType} 
+          liveCheck={liveCheck} 
+          setLiveCheck={setLiveCheck} 
+          video={video}
+        />;
+      case 1:
+        return <VideoSelect 
+          movePage={movePage} 
+          selectedVideo={selectedVideo} 
+          setSelectedVideo={setSelectedVideo} 
+          files={files} fileTimespans={fileTimespans} 
+          videoTimespans={videoTimespans}
+        />;
+      case 2:
+        return <div className='file-Storage-Container'>
+          <div className="file-browser">
+            <h3>Choose Files</h3>
+            <FileStorage 
+              files={graphType === 'video' 
+                ? filterFiles(selectedVideo.key === '' ? video : selectedVideo, files, fileTimespans) 
+                : files} 
+              selectedFiles={selectedFiles} 
+              setSelectedFiles={setSelectedFiles}
+            />
+          </div>
+          <div className="fileButtons">
+            <button className="pageTwoBackButton" onClick={() => {
+              movePage(graphType === 'video' && selectedVideo.key !== '' ? -1 : -2);
+            }}>Back</button>
+            <button className="pageTwoNextButton" onClick={() => {
+              // OnClick, it should get the selected files from the file storage component
+              if (selectedFiles.length === 0) {
+                alert('Please select at least one file.');
+              } else {
+                getHeaders(selectedFiles);
+                setDimensions(2);
+                movePage(1);
+              }
+            }}>Next</button>
+          </div>
+        </div>;
+      case 3: 
+        return <AnalyzersAndSeries 
+          dimensions={dimensions} 
+          columns={columns} 
+          movePage={movePage} 
+          seriesInfo={seriesInfo} 
+          setSeriesInfo={setSeriesInfo} 
+          setSuccessMessage={setSuccessMessage} 
+          setDimensions={setDimensions} 
+          graphType={graphType} 
+          fileTimespans={fileTimespans}
+        />;
+      default:
+        break;
     }
   };
 

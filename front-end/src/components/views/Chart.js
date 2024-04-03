@@ -132,9 +132,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
       if (seriesPointIndeces.length === 0) return;
       const point = chartRef.current.series[seriesPointIndeces[0].series].points[seriesPointIndeces[0].point];
       // Update chart options so that point.x is the value of the first plotline
-      const newChartOptions = {...chartOptions};
-      newChartOptions.xAxis.plotLines[0].value = point.x;
-      setChartOptions(movePlotLine(newChartOptions, point.x));
+      setChartOptions(movePlotLine(chartOptions, point.x));
       point.onMouseOver();
       if (seriesPointIndeces.length > 1) seriesPointIndeces.slice(1).forEach(seriesPointIndex => {
         chartRef.current.series[seriesPointIndex.series].points[seriesPointIndex.point].setState('hover');
@@ -144,8 +142,6 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
     }
         
   }, [videoTimestamp, offsets, timestamps]);
-
-  console.log(chartOptions);
 
   return (
 

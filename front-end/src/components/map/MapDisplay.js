@@ -179,17 +179,17 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
             let inside = pointInRect([coords[counter][LAT_INDEX], coords[counter][LNG_INDEX]], rect.bounds);
             let fillColor;
             switch (rect.type) {
-            case 'Start':
-              fillColor = '#00ff00';
-              break;
-            case 'End':
-              fillColor = '#ff0000';
-              break;
-            case 'Checkpoint':
-              fillColor = '#0000ff';
-              break;
-            default:
-              break;
+              case 'Start':
+                fillColor = '#00ff00';
+                break;
+              case 'End':
+                fillColor = '#ff0000';
+                break;
+              case 'Checkpoint':
+                fillColor = '#0000ff';
+                break;
+              default:
+                break;
             }
             return <Rectangle 
               className="map_ui_rect" 

@@ -44,7 +44,7 @@ const getStandardChartConfig = (chartInformation) => {
     chartInformation.files[0].columns[0].header;
 
   chartConfig.chart = {
-    type: chartInformation.type === 'video' ? 'line' : chartInformation.type,
+    type: chartInformation.type,
     zoomType: 'x'
   };
 
@@ -54,11 +54,6 @@ const getStandardChartConfig = (chartInformation) => {
     },
     //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
     type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
-
-    plotLines: chartInformation.type === 'video' ? [{
-      color: 'black',
-      width: 1.5,
-    }] : [],
 
     lineColor: 'grey',
     tickColor: 'grey',
@@ -76,7 +71,7 @@ const getStandardChartConfig = (chartInformation) => {
   return chartConfig;
 };
 
-const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
+const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
   var chartConfig = getStandardChartConfig(chartInformation);
   const colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey'];
 
@@ -95,7 +90,20 @@ const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
 
   chartConfig.colorAxis.showInLegend = false;
 
-  chartConfig.boost.enabled = chartInformation.type !== 'video';
+  return chartConfig;
+};
+
+const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
+  var chartConfig = getDefaultChartConfig(chartInformation, parsedData, fileNames);
+
+  chartConfig.chart.type = 'line';
+
+  chartConfig.boost.enabled = false;
+
+  chartConfig.xAxis.plotLines = [{
+    color: 'black',
+    width: 1.5,
+  }];
 
   return chartConfig;
 };
@@ -128,9 +136,9 @@ const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) =
 };
 
 export const getChartConfig = (chartInformation, parsedData, fileNames, minMax) => {
-  if (chartInformation.type === 'coloredline') {
-    return getColourChartConfig(chartInformation, parsedData, fileNames, minMax);
-  } else {
-    return getNoColourChartConfig(chartInformation, parsedData, fileNames);
+  switch(chartInformation.type) {
+    case 'coloredline': return getColourChartConfig(chartInformation, parsedData, fileNames, minMax);
+    case 'video': return getVideoChartConfig(chartInformation, parsedData, fileNames);
+    default: return getDefaultChartConfig(chartInformation, parsedData, fileNames);
   }
 };
