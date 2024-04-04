@@ -39,9 +39,9 @@ const getStandardChartConfig = (chartInformation) => {
   };
 
   if (chartInformation.dtformat === 'partial') { 
-    chartConfig.tooltip = { xDateFormat: '%H:%M:%S' }; 
+    chartConfig.tooltip = { xDateFormat: '%H:%M:%S.%L' }; 
   } else { 
-    chartConfig.tooltip = { xDateFormat: '%A, %b %e, %Y %H:%M:%S'}; 
+    chartConfig.tooltip = { xDateFormat: '%A, %b %e, %Y %H:%M:%S.%L'}; 
   }
 
   chartConfig.xAxis = {
