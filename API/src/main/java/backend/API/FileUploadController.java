@@ -227,7 +227,7 @@ public class FileUploadController {
         paths.forEach(
             path -> {
               Path parent = path.getParent();
-              if (storageService.canComputeTimespan(parent.toString()) ) {
+              if (storageService.canComputeTimespan(parent.toString())) {
                 // Updates the parent folder and zero time if the parent folder changes to avoid
                 // recalculating the zero time
                 if (container[0] != parent) {
