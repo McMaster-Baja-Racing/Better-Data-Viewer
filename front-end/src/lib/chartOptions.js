@@ -38,18 +38,21 @@ const getStandardChartConfig = (chartInformation) => {
     zoomType: 'x'
   };
 
-  if (chartInformation.dtformat === 'partial') { 
-    chartConfig.tooltip = { xDateFormat: '%H:%M:%S.%L' }; 
-  } else { 
-    chartConfig.tooltip = { xDateFormat: '%A, %b %e, %Y %H:%M:%S.%L'}; 
-  }
+  // Set custom date time format for partial date time graphs and null to get default for others
+  const dateTimeFormatString = chartInformation.dtformat === 'partial' ? '%H:%M:%S.%L' : null;
+
+  // Use custom date time format instead of default to get year information in the tooltip for full date time graphs
+  chartConfig.tooltip = { xDateFormat: dateTimeFormatString ?? '%A, %b %e, %Y %H:%M:%S.%L' };
 
   chartConfig.xAxis = {
     title: {
       text: chartInformation.files[0].columns[0].header
     },
-    //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
+
     type: chartInformation.dtformat !== 'none' ? 'datetime' : 'linear',
+
+    // Use custom date time format for partial date time graphs and null to get default for full date time graphs
+    dateTimeFormatString: dateTimeFormatString,
 
     lineColor: 'grey',
     tickColor: 'grey',
