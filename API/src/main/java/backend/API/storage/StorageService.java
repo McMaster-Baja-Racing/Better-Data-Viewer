@@ -34,6 +34,8 @@ public interface StorageService {
 
   String getLast(String filename);
 
+  Boolean canComputeTimespan(String foldername);
+
   LocalDateTime[] getTimespan(String filename);
 
   LocalDateTime[] getTimespan(String filename, LocalDateTime zeroTime);

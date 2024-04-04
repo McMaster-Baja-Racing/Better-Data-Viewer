@@ -243,6 +243,19 @@ public class FileSystemStorageService implements StorageService {
     return timestamp;
   }
 
+  @Override
+  public Boolean canComputeTimespan(String foldername) {
+    // Checks if the folder has the necessary files to compute the timespan
+    try {
+      Path folder = rootLocation.resolve("csv/" + foldername);
+      return Files.exists(folder.resolve("GPS SECOND MINUTE HOUR.csv"))
+          && Files.exists(folder.resolve("GPS DAY MONTH YEAR.csv"));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
   // Get timspan for mp4 file from metadata
   @Override
   public LocalDateTime[] getTimespan(String filename) {

@@ -226,11 +226,12 @@ public class FileUploadController {
         Object[] container = {null, null};
         paths.forEach(
             path -> {
-              if (path.getParent() != null) {
+              Path parent = path.getParent();
+              if (storageService.canComputeTimespan(parent.toString()) ) {
                 // Updates the parent folder and zero time if the parent folder changes to avoid
                 // recalculating the zero time
-                if (container[0] != path.getParent()) {
-                  container[0] = path.getParent();
+                if (container[0] != parent) {
+                  container[0] = parent;
                   container[1] = storageService.getZeroTime((Path) container[0]);
                 }
                 // Get the path and filename of each file and print it
