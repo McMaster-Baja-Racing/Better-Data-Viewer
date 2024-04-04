@@ -70,17 +70,30 @@ export const CreateGraphModal = ({
 
     const chartInformationFiles = (buttonID === MAX_VIEWS) ? selectedFiles : seriesInfo;
 
-    const isDateTime = !chartInformationFiles.some(
-      (file) =>
-        file.columns[0].header !== 'Timestamp (ms)' ||
-        file.columns[0].timespan.start === ''
-    );
+    /*
+    * Determine the datetime format of the files:
+    * - full: All files are timestamps and have a defined timespan.
+    * - partial: All files are timestamps, but at least one file has no timespan.
+    * - none: At least one file is not a timestamp.
+    * 
+    * For full datetime format:
+    * - x-axis will be full datetime with timestamps shifted to GMT using timespan.
+    * 
+    * For partial datetime format:
+    * - x-axis will be datetime HH:MM:SS with no shifting of timestamps.
+    * 
+    * For none datetime format:
+    * - x-axis will be linear with no shifting of x-values.
+    */
+    let dtformat = 'full';
+    if (chartInformationFiles.some(file => file.columns[0].timespan.start === '')) dtformat = 'partial';
+    if (chartInformationFiles.some(file => file.columns[0].header !== 'Timestamp (ms)')) dtformat = 'none';
 
     const chartInformation = {
       files: chartInformationFiles,
       live: liveCheck,
       type: graphType,
-      isDateTime: isDateTime
+      dtformat: dtformat
     };
   
     let updatedViewInformation = replaceViewAtIndex(

@@ -58,7 +58,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
           inputColumns,
           minMax,
           chartInformation.type,
-          chartInformation.isDateTime
+          chartInformation.dtformat
         )
       );
       tempTimestamps.push(await getTimestamps(text));
