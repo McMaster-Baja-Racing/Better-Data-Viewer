@@ -11,11 +11,17 @@ export const computeOffsets = (chartInformation, video) => {
 };
 
 export const getPointIndex = (series, videoTimestamp, offset, timestamps) => {
-  const fileTimestamp = videoTimestamp + offset + timestamps[0];
-  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return;
+  const fileTimestamp = getFileTimestamp(videoTimestamp, offset, timestamps);
+  if (fileTimestamp === undefined) return;
   const timestampIndex = findClosestTimestamp(fileTimestamp, timestamps);
   const pointIndex = findPointIndex(timestampIndex, series);
   return pointIndex;
+};
+
+export const getFileTimestamp = (videoTimestamp, offset, timestamps) => {
+  const fileTimestamp = videoTimestamp + offset + timestamps[0];
+  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return;
+  return fileTimestamp;
 };
 
 // Filters the given list of files to only include those that have timespans that overlap with the video

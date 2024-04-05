@@ -7,7 +7,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
-import { computeOffsets, getPointIndex } from '../../lib/videoUtils.js';
+import { computeOffsets, getFileTimestamp, getPointIndex} from '../../lib/videoUtils.js';
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '../../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
@@ -25,6 +25,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   const [fileNames, setFileNames] = useState([]);
   const [offsets, setOffsets] = useState([]);
   const [timestamps, setTimestamps] = useState([]);
+  const [lineX, setLineX] = useState(0);
   let minMax = useRef([0, 0]);
 
   // Fetch the data from the server and format it for the chart
@@ -51,17 +52,19 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
 
       const text = await response.text();
 
-      data.push(
-        await getSeriesData(
-          text,
-          filename,
-          inputColumns,
-          minMax,
-          chartInformation.type,
-          chartInformation.dtformat
-        )
+      const seriesData = await getSeriesData(
+        text,
+        filename,
+        inputColumns,
+        minMax,
+        chartInformation.type,
+        chartInformation.dtformat
       );
-      tempTimestamps.push(await getTimestamps(text));
+
+      data.push(seriesData);
+      tempTimestamps.push(
+        chartInformation.dtformat !== 'none' ? seriesData.map(item => item[0]) : await getTimestamps(text)
+      );
     }
     setParsedData(data);
     setTimestamps(tempTimestamps);
@@ -130,27 +133,41 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   useEffect(() => {
     if (timestamps.length === 0) return;
     try {
-      // Computes the point and series which overlap with the video timestamp
-      const seriesPointIndeces = [];
-      chartRef.current.series.filter(series => series.visible).forEach(activeSeries => {
-        const seriesIndex = chartRef.current.series.indexOf(activeSeries);
-        const pointIndex = getPointIndex(activeSeries, videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex]);
-        if (pointIndex >= 0) seriesPointIndeces.push({series: seriesIndex, point: pointIndex});
-      });
-      // Updates the chart to show the point that is closest to the video timestamp
-      if (seriesPointIndeces.length === 0) return;
-      const point = chartRef.current.series[seriesPointIndeces[0].series].points[seriesPointIndeces[0].point];
-      // Update chart options so that point.x is the value of the first plotline
-      setChartOptions(movePlotLine(chartOptions, point.x));
-      point.onMouseOver();
-      if (seriesPointIndeces.length > 1) seriesPointIndeces.slice(1).forEach(seriesPointIndex => {
-        chartRef.current.series[seriesPointIndex.series].points[seriesPointIndex.point].setState('hover');
-      });
+      if (chartInformation.dtformat !== 'none'){
+        let fileTimestamp = undefined;
+        chartRef.current.series.some((series, index) => {
+          if (series.visible) {
+            fileTimestamp = getFileTimestamp(videoTimestamp, offsets[index], timestamps[index]);
+            return fileTimestamp !== undefined;
+          }
+          return false;
+        });
+        if (fileTimestamp !== undefined) setLineX(Math.floor(fileTimestamp));
+      } else {
+        const firstActiveSeries = chartRef.current.series.find(series => series.visible);
+        if (firstActiveSeries) {
+          const seriesIndex = chartRef.current.series.indexOf(firstActiveSeries);
+          const pointIndex = getPointIndex(
+            firstActiveSeries,
+            videoTimestamp,
+            offsets[seriesIndex],
+            timestamps[seriesIndex]
+          );
+          if (pointIndex >= 0) setLineX(firstActiveSeries.xData[pointIndex]);
+        }
+      }
     } catch (e) {
       console.log(e);
     }
-        
   }, [videoTimestamp, offsets, timestamps]);
+
+  useEffect(() => {
+    try {
+      setChartOptions(movePlotLine(chartOptions, lineX));
+    } catch (e) {
+      console.log(e);
+    }
+  }, [lineX]);
 
   return (
 

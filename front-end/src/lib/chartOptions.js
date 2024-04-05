@@ -102,7 +102,7 @@ const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
 
   chartConfig.chart.type = 'line';
 
-  chartConfig.boost.enabled = false;
+  chartConfig.boost.enabled = chartInformation.dtformat !== 'none';
 
   chartConfig.xAxis.plotLines = [{
     color: 'black',
