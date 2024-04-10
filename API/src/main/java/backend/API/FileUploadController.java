@@ -238,8 +238,7 @@ public class FileUploadController {
                   // Get the path and filename of each file and print it
                   LocalDateTime[] timespan =
                       storageService.getTimespan(path.toString(), (LocalDateTime) container[1]);
-                  timespans.add(
-                    new fileTimespan(
+                  timespans.add(new fileTimespan(
                       path.toString().replace("\\", "/"), timespan[0], timespan[1]));
                 }
               }
