@@ -27,9 +27,7 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType, 
   // If not colour, return values in array to allow for boost
 
   if (chartType !== 'coloredline') {
-    const timestampOffset = columns[headerIndices.x].header === 'Timestamp (ms)' 
-      ? new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]) 
-      : 0;
+    const timestampOffset = dtformat === 'full' ? getTimestampOffset(columns, lines, headerIndices) : 0;
     return lines.map((line) => {
       return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
     });
