@@ -419,7 +419,7 @@ public class FileUploadController {
 
     String filename =
         (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-    filename = filename.substring("/files/maxmin/".length());
+    filename = filename.substring("/files/maxmin/csv/".length());
     // Decode to add spaces back in and special characters
     filename = URLDecoder.decode(filename, StandardCharsets.UTF_8);
 
