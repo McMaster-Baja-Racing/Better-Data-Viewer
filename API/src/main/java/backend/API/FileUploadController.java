@@ -239,7 +239,8 @@ public class FileUploadController {
                   LocalDateTime[] timespan =
                       storageService.getTimespan(path.toString(), (LocalDateTime) container[1]);
                   timespans.add(
-                    new fileTimespan(path.toString().replace("\\", "/"), timespan[0], timespan[1]));
+                    new fileTimespan(
+                      path.toString().replace("\\", "/"), timespan[0], timespan[1]));
                 }
               }
             });
