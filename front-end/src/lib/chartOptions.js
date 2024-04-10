@@ -47,6 +47,10 @@ const getStandardChartConfig = (chartInformation) => {
       text: chartInformation.files[0].columns[0].header
     },
 
+    dateTimeLabelFormats: {
+      day: '%H:%M', // Removes stating the date, instead only shows the time
+    },
+
     type: chartInformation.dtformat !== 'none' ? 'datetime' : 'linear',
 
     lineColor: 'grey',
