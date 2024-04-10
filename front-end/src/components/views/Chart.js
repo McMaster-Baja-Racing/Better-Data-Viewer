@@ -51,7 +51,16 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
 
       const text = await response.text();
 
-      data.push(await getSeriesData(text, filename, inputColumns, minMax, chartInformation.type));
+      data.push(
+        await getSeriesData(
+          text,
+          filename,
+          inputColumns,
+          minMax,
+          chartInformation.type,
+          chartInformation.dtformat
+        )
+      );
       tempTimestamps.push(await getTimestamps(text));
     }
     setParsedData(data);

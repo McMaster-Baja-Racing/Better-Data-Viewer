@@ -38,12 +38,20 @@ const getStandardChartConfig = (chartInformation) => {
     zoomType: 'x'
   };
 
+  chartConfig.tooltip = { 
+    xDateFormat: chartInformation.dtformat === 'partial' ? '%H:%M:%S.%L' : '%A, %b %e, %Y %H:%M:%S.%L' 
+  };
+
   chartConfig.xAxis = {
     title: {
       text: chartInformation.files[0].columns[0].header
     },
-    //Only set type to 'datetime' if the x axis is 'Timestamp (ms)'
-    type: chartInformation.files[0].columns[0].header === 'Timestamp (ms)' ? 'datetime' : 'linear',
+
+    dateTimeLabelFormats: {
+      day: '%H:%M', // Removes stating the date, instead only shows the time
+    },
+
+    type: chartInformation.dtformat !== 'none' ? 'datetime' : 'linear',
 
     lineColor: 'grey',
     tickColor: 'grey',

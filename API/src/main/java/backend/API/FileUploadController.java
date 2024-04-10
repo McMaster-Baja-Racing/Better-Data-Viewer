@@ -226,18 +226,22 @@ public class FileUploadController {
         Object[] container = {null, null};
         paths.forEach(
             path -> {
-              if (path.getParent() != null) {
-                // Updates the parent folder and zero time if the parent folder changes to avoid
-                // recalculating the zero time
-                if (container[0] != path.getParent()) {
-                  container[0] = path.getParent();
-                  container[1] = storageService.getZeroTime((Path) container[0]);
+              Path parent = path.getParent();
+              if (parent != null) {
+                if (storageService.canComputeTimespan(parent.toString())) {
+                  // Updates the parent folder and zero time if the parent folder changes to avoid
+                  // recalculating the zero time
+                  if (container[0] != parent) {
+                    container[0] = parent;
+                    container[1] = storageService.getZeroTime((Path) container[0]);
+                  }
+                  // Get the path and filename of each file and print it
+                  LocalDateTime[] timespan =
+                      storageService.getTimespan(path.toString(), (LocalDateTime) container[1]);
+                  timespans.add(
+                      new fileTimespan(
+                          path.toString().replace("\\", "/"), timespan[0], timespan[1]));
                 }
-                // Get the path and filename of each file and print it
-                LocalDateTime[] timespan =
-                    storageService.getTimespan(path.toString(), (LocalDateTime) container[1]);
-                timespans.add(
-                    new fileTimespan(path.toString().replace("\\", "/"), timespan[0], timespan[1]));
               }
             });
         break;
