@@ -1,6 +1,7 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.model.FileInformation;
+import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -23,6 +24,9 @@ public class FileFetchResource {
 
     @Inject
     private StorageService storageService;
+
+    @Inject
+    FileMetadataService fileMetadataService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -71,7 +75,7 @@ public class FileFetchResource {
       List<FileInformation> fileInformation = storageService.loadAll()   //path.toFile().length()
         .map(path -> new FileInformation(
           path.toString().replace("\\", "/"), 
-          storageService.readHeaders(path),
+          fileMetadataService.readHeaders(path),
           path.toFile().lastModified()
         ))
         .collect(Collectors.toList());
@@ -87,7 +91,7 @@ public class FileFetchResource {
       Path targetPath = Paths.get(filename);
       FileInformation fileInformation = new FileInformation(
         targetPath.toString().replace("\\", "/"),
-        storageService.readHeaders(targetPath),
+        fileMetadataService.readHeaders(targetPath),
         targetPath.toFile().lastModified()
       );
 

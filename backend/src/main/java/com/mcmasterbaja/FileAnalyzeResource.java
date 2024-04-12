@@ -10,6 +10,7 @@ import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
@@ -26,6 +27,9 @@ public class FileAnalyzeResource {
 
   @Inject
   private StorageService storageService;
+
+  @Inject
+  FileMetadataService fileMetadataService;
 
   @GET
   public Response runAnalyzer(@BeanParam AnalyzerParams params) {
@@ -64,7 +68,7 @@ public class FileAnalyzeResource {
     logger.info("Getting min and max for file: " + filename);
 
     Path targetPath = storageService.getRootLocation().resolve(filename);
-    Double[] minMax = storageService.getMinMax(targetPath, column);
+    Double[] minMax = fileMetadataService.getMinMax(targetPath, column);
 
     if (minMax == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("Invalid column").build();
