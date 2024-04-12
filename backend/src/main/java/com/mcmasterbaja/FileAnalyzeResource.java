@@ -8,6 +8,7 @@ import org.jboss.logging.Logger;
 
 import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
+import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.storage.StorageService;
 import jakarta.inject.Inject;
@@ -74,5 +75,26 @@ public class FileAnalyzeResource {
     return Response.ok(minMax).build();
   }
   
+  @GET
+  @jakarta.ws.rs.Path("/togglelive")
+  public Response toggleLive() {
+
+    logger.info("Toggling live data to: " + Serial.exit);
+
+    if (!Serial.exit) {
+      Serial.exit = true;
+    } else {
+      new Thread(
+              () -> {
+                Serial.readLive();
+              })
+          .start();
+    }
+
+    return Response.ok("Live data toggled to " + Serial.exit).build();
+    
+  }
   
+  
+
 }
