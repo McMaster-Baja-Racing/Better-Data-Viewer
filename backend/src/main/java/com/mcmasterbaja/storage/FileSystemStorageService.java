@@ -54,7 +54,7 @@ public class FileSystemStorageService implements StorageService {
 
   public void delete(Path targetPath) {
     try {
-      Files.delete(targetPath);
+      Files.delete(rootLocation.resolve(targetPath));
     } catch (IOException e) {
       logger.error("Could not delete file", e);
     }
@@ -62,7 +62,7 @@ public class FileSystemStorageService implements StorageService {
 
   public Stream<Path> loadAll(Path dir) {
     try {
-      return Files.walk(dir)
+      return Files.walk(rootLocation.resolve(dir))
       .filter(path -> !Files.isDirectory(path))
       .map(rootLocation::relativize);
     } catch (IOException e) {
@@ -73,6 +73,16 @@ public class FileSystemStorageService implements StorageService {
 
   public Stream<Path> loadAll() {
     return loadAll(rootLocation);
+  }
+
+  public String[] readHeaders(Path targetPath) {
+    try {
+      logger.info("Reading headers from: " + targetPath);
+      return Files.lines(rootLocation.resolve(targetPath)).findFirst().get().split(",");
+    } catch (IOException e) {
+      logger.error("Could not read headers", e);
+      return new String[0];
+    }
   }
   
 }

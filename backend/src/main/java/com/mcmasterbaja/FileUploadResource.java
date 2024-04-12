@@ -1,7 +1,8 @@
 package com.mcmasterbaja;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+import com.mcmasterbaja.model.FileUploadForm;
 import com.mcmasterbaja.storage.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -27,7 +28,7 @@ public class FileUploadResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@MultipartForm FileUploadForm form) {
       try {
-        logger.info("UPLOAD_DIR: " + Paths.get(form.fileName).toString());
+        logger.info("Uploading file: " + Paths.get(form.fileName).toString());
 
         storageService.store(form.fileData, Paths.get(form.fileName));
 

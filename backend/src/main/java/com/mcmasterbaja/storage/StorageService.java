@@ -49,5 +49,12 @@ public interface StorageService {
    * @return A Stream of Paths representing the files
    */
   Stream<Path> loadAll(Path dir);
-  
+
+  /**
+   * Reads the headers of a csv file.
+   * @param targetPath The Path of the file to read.
+   * @return A String[] of the headers.
+   */
+  String[] readHeaders(Path targetPath);
+
 }

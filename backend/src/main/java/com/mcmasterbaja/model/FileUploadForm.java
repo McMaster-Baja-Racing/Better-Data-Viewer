@@ -1,4 +1,4 @@
-package com.mcmasterbaja;
+package com.mcmasterbaja.model;
 
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
 import jakarta.ws.rs.FormParam;
