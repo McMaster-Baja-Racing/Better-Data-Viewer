@@ -1,14 +1,11 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.storage.StorageService;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-
-import jakarta.inject.Inject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,9 +15,6 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class Analyzer {
-
-  @Inject
-  protected StorageService storageService;
 
   // Input and output files are arrays because some analyzers may need multiple input files
   protected String[] inputFiles;
@@ -46,15 +40,6 @@ public abstract class Analyzer {
   // Abstract method to be implemented by subclasses
   public abstract void analyze() throws IOException, CsvValidationException; 
 
-  public void analyzePlus() throws IOException, CsvValidationException {
-
-    analyze();
-  }
-
-  public String[] getOutputFiles() {
-    return this.outputFiles;
-  }
-
   // I/O methods
   // Streams as they avoid loading the entire file into memory at once
   public CSVReader getReader(String filePath) throws IOException {
@@ -75,7 +60,6 @@ public abstract class Analyzer {
         .withLineEnd(CSVWriter.DEFAULT_LINE_END)
         .build();
   }
-
 
   // From this list of headers, which one are we actually doing analysis on
   // fileIndex is basically the axis, 0=X, 1=Y, I made it a int to future-proof adding new columns
@@ -99,31 +83,4 @@ public abstract class Analyzer {
     throw new RuntimeException("No column in file exists with analysis column name");
   }
 
-  public static void main(String[] args) {
-    // Test the factory method
-    // System.out.println("Hello");
-    // String[] inputFiles =
-    // {"X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_PRIM.csv"};
-    // String[] outputFiles = {"output.csv"};
-    // Analyzer.createAnalyzer("rollingAvg", inputFiles, outputFiles, 30).analyze();
-
-    // // Now test AccelCurveAnalyzer
-    // String[] inputFiles2 =
-    // {"X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_PRIM.csv",
-    // "X:\\Code\\Projects\\Baja\\Better-Data-Viewer\\data\\live_F_RPM_SEC.csv"};
-    // String[] outputFiles2 = {"prim_average.csv", "sec_average.csv", "interpolate.csv",
-    // "accel_curve.csv"};
-    // Analyzer.createAnalyzer("accelCurve", inputFiles2, outputFiles2).analyze();
-    // System.out.println("Hello");
-
-    // String[] inputFiles3 = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/temp.csv"};
-    // String[] outputFiles3 = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/temp2.csv"};
-    // System.out.println("Hello");
-
-    // String[] range = new String[2];
-    // range[0] = "0";
-    // range[1] = "100";
-
-    // Analyzer.createAnalyzer("average", inputFiles3, outputFiles3, range).analyze();
-  }
 }

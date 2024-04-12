@@ -13,6 +13,8 @@ import com.mcmasterbaja.storage.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
 @jakarta.ws.rs.Path("/analyze")
@@ -54,5 +56,23 @@ public class FileAnalyzeResource {
     return Response.ok(file, "application/octet-stream")
         .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"").build();
   }
+  
+  @GET
+  @jakarta.ws.rs.Path("/minMax/{filename}")
+  public Response getMinMax(@PathParam("filename") String filename, @QueryParam("column") String column) {
+    logger.info("Getting min and max for file: " + filename);
+
+    Path targetPath = storageService.getRootLocation().resolve(filename);
+    Double[] minMax = storageService.getMinMax(targetPath, column);
+
+    if (minMax == null) {
+      return Response.status(Response.Status.BAD_REQUEST).entity("Invalid column").build();
+    }
+
+    logger.info("Min: " + minMax[0] + ", Max: " + minMax[1]);
+
+    return Response.ok(minMax).build();
+  }
+  
   
 }
