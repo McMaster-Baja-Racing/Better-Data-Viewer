@@ -21,6 +21,7 @@ package backend.API;
  */
 
 import backend.API.analyzer.Analyzer;
+import backend.API.analyzer.AnalyzerFactory;
 import backend.API.binary_csv.BinaryTOCSV;
 import backend.API.live.Serial;
 import backend.API.model.fileInformation;
@@ -315,7 +316,7 @@ public class FileUploadController {
     // Then run the selected analyzer
     if (analyzer != null && analyzer.length != 0 && analyzer[0] != null) {
       try {
-        Analyzer.createAnalyzer(
+        AnalyzerFactory.createAnalyzer(
                 analyzer[0],
                 inputFiles,
                 inputColumns,
@@ -354,7 +355,7 @@ public class FileUploadController {
       String[] lastFile = new String[] {fileOutputString};
 
       try {
-        Analyzer.createAnalyzer("split", lastFile, inputColumns, outputFiles, extraValues)
+        AnalyzerFactory.createAnalyzer("split", lastFile, inputColumns, outputFiles, extraValues)
             .analyze();
       } catch (Exception e) {
         System.out.println(e);
