@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.DoubleSummaryStatistics;
 import java.util.stream.Stream;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -75,7 +73,4 @@ public class FileSystemStorageService implements StorageService {
   public Stream<Path> loadAll() {
     return loadAll(rootLocation);
   }
-
-  
-  
 }

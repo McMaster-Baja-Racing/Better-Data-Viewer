@@ -90,8 +90,11 @@ public class DefaultFileMetadataService implements FileMetadataService {
     String timestamp;
 
     try {
-      ReversedLinesFileReader reverseReader =
-          new ReversedLinesFileReader(storageService.load(targetPath).toFile(), StandardCharsets.UTF_8);
+      ReversedLinesFileReader reverseReader = ReversedLinesFileReader.builder()
+        .setPath(storageService.getRootLocation().resolve(targetPath))
+        .setCharset(StandardCharsets.UTF_8)
+        .get();
+        
       timestamp = reverseReader.readLine().split(",")[0];
       reverseReader.close();
     } catch (IOException e) {
@@ -121,7 +124,6 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  @Override
   public LocalDateTime getZeroTime(Path folderPath) {
     try {
       // Get the values of the first line from the gps files ingoring the header
@@ -158,7 +160,6 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  @Override
   public String getTypeFolder(Path targePath) {
     String fileString = targePath.toString();
     int dotIndex = fileString.lastIndexOf(".");
@@ -251,6 +252,5 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
     // Returns the start and end times as strings in GMT with milliseconds
     return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
-  }
-  
+  } 
 }
