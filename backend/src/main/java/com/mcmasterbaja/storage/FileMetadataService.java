@@ -1,6 +1,7 @@
 package com.mcmasterbaja.storage;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 
 public interface FileMetadataService {
 
@@ -18,5 +19,53 @@ public interface FileMetadataService {
    * @return A double[] containing the minimum and maximum values.
    */
   Double[] getMinMax(Path targetPath, String column);
+
+  /**
+   * Gets the last value of a column in a csv file.
+   * @param targetPath The Path of the file to read.
+   * @return The last value of the timestamp (ms).
+   */
+  String getLast(Path targetPath);
+
+  /**
+   * Checks if the timespan of a folder can be computed.
+   * @param folderPath The Path of the folder to analyze.
+   * @return A boolean indicating if the timespan can be computed.
+   */
+  boolean canComputeTimespan(Path folderPath);
+
+  /**
+   * Gets the timespan of a file.
+   * @param targetPath The Path of the folder to analyze.
+   * @return A LocalDateTime[] containing the start and end times of the folder.
+   */
+  LocalDateTime[] getTimespan(Path targetPath);
+
+  /**
+   * Gets the timespan of a file.
+   * @param targetPath The Path of the folder to analyze.
+   * @param zeroTime The datetime when timestamp is zero milliseconds
+   * @return A LocalDateTime[] containing the start and end times of the folder.
+   */
+  LocalDateTime[] getTimespan(Path targetPath, LocalDateTime zeroTime);
+
+  /**
+   * Gets the zero time of a folder.
+   * @param folderPath The Path of the folder to analyze.
+   * @return The datetime of the folder when timestamp (ms) is zero.
+   */
+  LocalDateTime getZeroTime(Path folderPath);
+
+  /**
+   * Gets the desired folder for a file.
+   * @param targetPath The Path of the file to analyze.
+   * @return The desired type folder.
+   */
+  String getTypeFolder(Path targePath);
+
+
+
+
+  
   
 }
