@@ -21,11 +21,11 @@ public interface FileMetadataService {
   Double[] getMinMax(Path targetPath, String column);
 
   /**
-   * Gets the last value of a column in a csv file.
+   * Gets the last value of the column in the file.
    * @param targetPath The Path of the file to read.
-   * @return The last value of the timestamp (ms).
+   * @return The last value of the column
    */
-  String getLast(Path targetPath);
+  String getLast(Path targetPath, String column);
 
   /**
    * Checks if the timespan of a folder can be computed.
@@ -35,22 +35,15 @@ public interface FileMetadataService {
   boolean canComputeTimespan(Path folderPath);
 
   /**
-   * Gets the timespan of a file.
-   * @param targetPath The Path of the folder to analyze.
-   * @return A LocalDateTime[] containing the start and end times of the folder.
-   */
-  LocalDateTime[] getTimespan(Path targetPath);
-
-  /**
-   * Gets the timespan of a file.
-   * @param targetPath The Path of the folder to analyze.
+   * Gets the start and end times of a file in GMT
+   * @param targetPath The Path of the file to analyze.
    * @param zeroTime The datetime when timestamp is zero milliseconds
-   * @return A LocalDateTime[] containing the start and end times of the folder.
+   * @return A LocalDateTime[] containing the start and end times of the file.
    */
   LocalDateTime[] getTimespan(Path targetPath, LocalDateTime zeroTime);
 
   /**
-   * Gets the zero time of a folder.
+   * Gets the datetime in GMT when then timestamp is zero milliseconds.
    * @param folderPath The Path of the folder to analyze.
    * @return The datetime of the folder when timestamp (ms) is zero.
    */

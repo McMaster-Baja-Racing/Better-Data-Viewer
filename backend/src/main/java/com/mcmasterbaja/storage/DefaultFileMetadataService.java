@@ -85,8 +85,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
     
   }
 
-  @Override
-  public String getLast(Path targetPath) {
+  public String getLast(Path targetPath, String column) {
 
     String timestamp;
 
@@ -103,7 +102,6 @@ public class DefaultFileMetadataService implements FileMetadataService {
     return timestamp;
   }
 
-  @Override
   public boolean canComputeTimespan(Path folderPath) {
     try {
       return Files.exists(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"))
@@ -114,48 +112,13 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  @Override
-  public LocalDateTime[] getTimespan(Path targetPath) {
-    // Gets the metadata of the file to find the creation time and duration
-    String metadata = extractMetadata(targetPath);
-
-    // Parses with timezeone, converts to GMT, and then to LocalDateTime
-    assert metadata != null;
-    LocalDateTime creationTime =
-        ZonedDateTime.parse(
-                getTagValue(metadata, "Creation Time"),
-                DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH))
-            .withZoneSameInstant(ZoneId.of("GMT"))
-            .toLocalDateTime();
-
-    // Below calculation gives a better estimate than Duration in Seconds tag
-    // Each is converted to nanoseconds and then divided to preserve precision
-    long duration =
-        (Long.parseLong(getTagValue(metadata, "Duration")) * 1_000_000_000)
-            / (Long.parseLong(getTagValue(metadata, "Media Time Scale")) * 1_000_000_000);
-
-    // Returns the start and end times as strings in GMT with milliseconds
-    return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
-  }
-
-  @Override
   public LocalDateTime[] getTimespan(Path targetPath, LocalDateTime zeroTime) {
-    String firstTimestamp = null;
-    String lastTimestamp = null;
-    try {
-      BufferedReader reader = new BufferedReader(Files.newBufferedReader(targetPath));
-      firstTimestamp = reader.lines().skip(1).findFirst().orElseThrow().split(",")[0];
-      reader.close();
-      lastTimestamp = getLast(targetPath);
-    } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+    switch (getTypeFolder(targetPath)) {
+      case "csv": return getTimespanCSV(targetPath, zeroTime);
+      case "mp4": return getTimespanMP4(targetPath);
+      default:
+        return null;
     }
-
-    LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(firstTimestamp) * 1_000_000);
-    LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(lastTimestamp) * 1_000_000);
-
-    return new LocalDateTime[] {startTime, endTime};
   }
 
   @Override
@@ -246,6 +209,48 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
 
     return null;
+  }
+
+  private LocalDateTime[] getTimespanCSV(Path targetPath, LocalDateTime zeroTime) {
+    String firstTimestamp = null;
+    String lastTimestamp = null;
+    try {
+      BufferedReader reader = new BufferedReader(Files.newBufferedReader(targetPath));
+      firstTimestamp = reader.lines().skip(1).findFirst().orElseThrow().split(",")[0];
+      reader.close();
+      lastTimestamp = getLast(targetPath, "Timestamp (ms)");
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+
+    LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(firstTimestamp) * 1_000_000);
+    LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(lastTimestamp) * 1_000_000);
+
+    return new LocalDateTime[] {startTime, endTime};
+  }
+
+  private LocalDateTime[] getTimespanMP4(Path targetPath) {
+    // Gets the metadata of the file to find the creation time and duration
+    String metadata = extractMetadata(targetPath);
+
+    // Parses with timezeone, converts to GMT, and then to LocalDateTime
+    assert metadata != null;
+    LocalDateTime creationTime =
+        ZonedDateTime.parse(
+                getTagValue(metadata, "Creation Time"),
+                DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH))
+            .withZoneSameInstant(ZoneId.of("GMT"))
+            .toLocalDateTime();
+
+    // Below calculation gives a better estimate than Duration in Seconds tag
+    // Each is converted to nanoseconds and then divided to preserve precision
+    long duration =
+        (Long.parseLong(getTagValue(metadata, "Duration")) * 1_000_000_000)
+            / (Long.parseLong(getTagValue(metadata, "Media Time Scale")) * 1_000_000_000);
+
+    // Returns the start and end times as strings in GMT with milliseconds
+    return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
   }
   
 }
