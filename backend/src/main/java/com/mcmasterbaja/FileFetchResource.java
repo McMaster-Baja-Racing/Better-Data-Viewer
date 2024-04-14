@@ -23,7 +23,7 @@ public class FileFetchResource {
     Logger logger;
 
     @Inject
-    private StorageService storageService;
+    StorageService storageService;
 
     @Inject
     FileMetadataService fileMetadataService;
@@ -54,6 +54,7 @@ public class FileFetchResource {
         .build();
     }
 
+    // TODO: Remove? Shouldnt be needed?
     @GET
     @jakarta.ws.rs.Path("/folder/{folder}")
     public Response getFolder(@PathParam("folder") String folder) {

@@ -26,7 +26,7 @@ public class FileAnalyzeResource {
   Logger logger;
 
   @Inject
-  private StorageService storageService;
+  StorageService storageService;
 
   @Inject
   FileMetadataService fileMetadataService;

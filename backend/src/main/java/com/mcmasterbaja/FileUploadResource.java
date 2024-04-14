@@ -21,7 +21,7 @@ public class FileUploadResource {
     Logger logger;
 
     @Inject
-    private StorageService storageService;
+    StorageService storageService;
 
     @POST
     @Path("/file")

@@ -55,10 +55,5 @@ public interface FileMetadataService {
    * @return The desired type folder.
    */
   String getTypeFolder(Path targePath);
-
-
-
-
-  
   
 }
