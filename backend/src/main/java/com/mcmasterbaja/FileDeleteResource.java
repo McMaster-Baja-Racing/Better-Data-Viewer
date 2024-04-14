@@ -19,7 +19,7 @@ public class FileDeleteResource {
   Logger logger;
 
   @Inject
-  private StorageService storageService;
+  StorageService storageService;
 
   // TODO: Deletes just the one file / one folder, not directories. Should be?
   @DELETE
