@@ -54,20 +54,6 @@ public class FileFetchResource {
         .build();
     }
 
-    // TODO: Remove? Shouldnt be needed?
-    @GET
-    @jakarta.ws.rs.Path("/folder/{folder}")
-    public Response getFolder(@PathParam("folder") String folder) {
-      logger.info("Getting folder: " + folder);
-
-      List<String> filenames = storageService.loadAll(Paths.get(folder))
-        .map(Path::toString)
-        .collect(Collectors.toList());
-
-      logger.info("Files include: " + filenames);
-      return Response.ok(filenames).build();
-    }
-
     @GET
     @jakarta.ws.rs.Path("/information")
     public List<FileInformation> getInformation() {

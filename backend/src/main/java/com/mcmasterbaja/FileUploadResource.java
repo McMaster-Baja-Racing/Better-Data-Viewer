@@ -2,19 +2,21 @@ package com.mcmasterbaja;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import com.mcmasterbaja.binary_csv.BinaryToCSV;
 import com.mcmasterbaja.model.FileUploadForm;
 import com.mcmasterbaja.storage.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.jboss.logging.Logger;
 
 
-@Path("/upload")
+@jakarta.ws.rs.Path("/upload")
 public class FileUploadResource {
 
     @Inject
@@ -24,13 +26,43 @@ public class FileUploadResource {
     StorageService storageService;
 
     @POST
-    @Path("/file")
+    @jakarta.ws.rs.Path("/file")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@MultipartForm FileUploadForm form) {
       try {
-        logger.info("Uploading file: " + Paths.get(form.fileName).toString());
+        logger.info("Uploading file: " + form.fileName);
 
-        storageService.store(form.fileData, Paths.get(form.fileName));
+        String fileName = form.fileName;
+      
+        if (fileName.lastIndexOf('.') == -1) {
+          return Response.status(Response.Status.BAD_REQUEST).entity("Invalid file name").build();
+        }
+
+        String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+
+        switch (fileExtension) {
+          case "csv":
+          case "mp4":
+            storageService.store(form.fileData, Paths.get(fileName));
+            break;
+
+          case "bin":
+            storageService.store(form.fileData, Paths.get(fileName));
+            BinaryToCSV.toCSV(
+              storageService.getRootLocation().resolve(fileName).toString(),
+              storageService.getRootLocation().toString(),
+              true);
+            storageService.delete(Paths.get(fileName));
+            break;
+
+          case "mov":
+            fileName = fileName.substring(0, fileName.lastIndexOf('.') + 1) + "mp4";
+            storageService.store(form.fileData, Paths.get(fileName));
+            break;
+
+          default:
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid file type").build();
+        }
 
         return Response.ok("File uploaded successfully").build();
       } catch (Exception e) {
