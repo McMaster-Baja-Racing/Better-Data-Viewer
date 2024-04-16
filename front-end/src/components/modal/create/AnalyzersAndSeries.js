@@ -1,5 +1,5 @@
 import '../../../styles/modalStyles.css';
-import Help from './Help';
+import Help from './Help.tsx';
 import analyzerData from '../../analyzerData';
 import '../../../styles/analyzersAndSeriesStyles.css';
 import React, { useState, useEffect } from 'react';
@@ -151,7 +151,7 @@ const AnalyzersAndSeries = ({
                 <label><strong>{analyzer.title}</strong></label>
               )}
               <div className="info">
-                <Help data={analyzer} openPopup={openPopup} setOpenPopup={setOpenPopup}/>
+                <Help title={analyzer.title} description={analyzer.description} image={analyzer.image} links={analyzer.links} openPopup={openPopup} setOpenPopup={setOpenPopup}/>
               </div>
               <br></br>
             </div>

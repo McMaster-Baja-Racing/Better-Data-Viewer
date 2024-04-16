@@ -1,4 +1,5 @@
 module.exports = {
+
   'env': {
     'browser': true,
     'es2021': true
@@ -8,6 +9,19 @@ module.exports = {
     'plugin:react/recommended'
   ],
   'overrides': [
+    {
+      'files': ['*.ts', '*.tsx'],
+      'parser': '@typescript-eslint/parser',
+      'parserOptions': {
+        'ecmaVersion': 12,
+        'sourceType': 'module'
+      },
+      'plugins': ['@typescript-eslint'],
+      'extends': [
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended'
+      ]
+    },
     {
       'env': {
         'node': true
@@ -21,7 +35,7 @@ module.exports = {
     }
   ],
   'parserOptions': {
-    'ecmaVersion': 'latest',
+    'ecmaVersion': 12,
     'sourceType': 'module'
   },
   'plugins': [
@@ -42,8 +56,8 @@ module.exports = {
       'always'
     ],
     'max-len': [
-      'warn', 
-      {'code': 120}
+      'warn',
+      { 'code': 120 }
     ],
     'react/prop-types': 'off' // disable react/prop-types rule temporarily, until we figure this out
   }
