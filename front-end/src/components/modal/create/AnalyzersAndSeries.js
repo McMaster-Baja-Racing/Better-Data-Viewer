@@ -151,7 +151,14 @@ const AnalyzersAndSeries = ({
                 <label><strong>{analyzer.title}</strong></label>
               )}
               <div className="info">
-                <Help title={analyzer.title} description={analyzer.description} image={analyzer.image} links={analyzer.links} openPopup={openPopup} setOpenPopup={setOpenPopup}/>
+                <Help 
+                  title={analyzer.title} 
+                  description={analyzer.description} 
+                  image={analyzer.image} 
+                  links={analyzer.links} 
+                  openPopup={openPopup} 
+                  setOpenPopup={setOpenPopup}
+                />
               </div>
               <br></br>
             </div>
