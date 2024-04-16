@@ -39,6 +39,7 @@ public class FileUploadResource {
         }
 
         String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+        fileName = fileExtension + "/" + fileName;
 
         switch (fileExtension) {
           case "csv":
@@ -56,7 +57,7 @@ public class FileUploadResource {
             break;
 
           case "mov":
-            fileName = fileName.substring(0, fileName.lastIndexOf('.') + 1) + "mp4";
+            fileName = "mp4" + fileName.substring(3, fileName.lastIndexOf('.') + 1) + "mp4";
             storageService.store(form.fileData, Paths.get(fileName));
             break;
 

@@ -29,7 +29,7 @@ public class AnalyzerParams {
   @QueryParam("analyzerOptions")
   private String[] options;
 
-  @QueryParam("liveOptions")
+  @QueryParam("live")
   private Boolean live;
 
   public boolean isValid() {

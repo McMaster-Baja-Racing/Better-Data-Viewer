@@ -33,7 +33,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getFolder: async (folderKey) => {
-    const response = await fetch(`http://${window.location.hostname}:8080/files/folder/${folderKey}`);
+    const response = await fetch(`http://${window.location.hostname}:8080/files/information/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response;
   },
@@ -54,18 +54,20 @@ export const ApiUtil = {
      * @param {string} inputFiles - The input files.
      * @param {string} inputColumns - The input columns.
      * @param {string} outputFiles - The output files.
+     * @param {Enum} analyzerType - The analyzer type.
      * @param {string} analyzerOptions - The analyzer options.
-     * @param {string} liveOptions - The live options.
+     * @param {Boolean} live - The live options.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  analyzeFiles: async (inputFiles, inputColumns, outputFiles, analyzerOptions, liveOptions) => {
+  analyzeFiles: async (inputFiles, inputColumns, outputFiles, analyzerType, analyzerOptions, live) => {
     try {
       const response =  await fetch(`http://${window.location.hostname}:8080/analyze?` + new URLSearchParams({
         inputFiles: inputFiles,
         inputColumns: inputColumns,
         outputFiles: outputFiles,
-        analyzer: analyzerOptions,
-        liveOptions: liveOptions
+        analyzerType: analyzerType,
+        analyzerOptions: analyzerOptions,
+        live: live
       }));
       if (!response.ok) {
         alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
@@ -84,7 +86,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getMinMax: async (filename, header) => {
-    const url = `http://${window.location.hostname}:8080/files/maxmin/${filename}?headerName=${header}`;
+    const url = `http://${window.location.hostname}:8080/files/minMax/${filename}?column=${header}`;
     const response = await fetch(url);
         
     if (!response.ok) {
@@ -99,7 +101,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   deleteAllFiles: async () => {
-    const response = await fetch(`http://${window.location.hostname}:8080/deleteAll`, {
+    const response = await fetch(`http://${window.location.hostname}:8080/delete/all`, {
       // method: "DELETE"
     });
 
@@ -116,7 +118,7 @@ export const ApiUtil = {
     const formData = new FormData();
     formData.append('port', port);
 
-    const response = await fetch(`http://${window.location.hostname}:8080/live`, {
+    const response = await fetch(`http://${window.location.hostname}:8080/togglelive`, {
       method: 'POST',
       body: formData,
     });
@@ -134,7 +136,7 @@ export const ApiUtil = {
     const formData = new FormData();
     formData.set('file', file);
 
-    const response = await fetch(`http://${window.location.hostname}:8080/upload`, {
+    const response = await fetch(`http://${window.location.hostname}:8080/upload/file`, {
       method: 'POST',
       body: formData,
     });

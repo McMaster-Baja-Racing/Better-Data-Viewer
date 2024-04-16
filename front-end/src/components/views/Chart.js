@@ -44,8 +44,9 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
         files,
         inputColumns.map(col => col.header),
         [],
-        [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e),
-        [chartInformation.live]
+        chartInformation.files[i].analyze.analysis,
+        [chartInformation.files[i].analyze.analyzerValues].filter(e => e),
+        chartInformation.live
       );
 
       const filename = response.headers.get('content-disposition').split('filename=')[1].slice(1, -1);

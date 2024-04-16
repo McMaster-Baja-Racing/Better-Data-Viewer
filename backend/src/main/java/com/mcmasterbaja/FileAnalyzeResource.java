@@ -19,7 +19,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
-@jakarta.ws.rs.Path("/analyze")
+@jakarta.ws.rs.Path("/")
 public class FileAnalyzeResource {
 
   @Inject
@@ -32,6 +32,7 @@ public class FileAnalyzeResource {
   FileMetadataService fileMetadataService;
 
   @GET
+  @jakarta.ws.rs.Path("analyze")
   public Response runAnalyzer(@BeanParam AnalyzerParams params) {
 
     logger.info("Running analyzer with params: " + params.toString());
@@ -63,11 +64,11 @@ public class FileAnalyzeResource {
   }
   
   @GET
-  @jakarta.ws.rs.Path("/minMax/{filename}")
-  public Response getMinMax(@PathParam("filename") String filename, @QueryParam("column") String column) {
-    logger.info("Getting min and max for file: " + filename);
+  @jakarta.ws.rs.Path("minMax/{filenkey}")
+  public Response getMinMax(@PathParam("filekey") String filekey, @QueryParam("column") String column) {
+    logger.info("Getting min and max for file: " + filekey);
 
-    Path targetPath = storageService.getRootLocation().resolve(filename);
+    Path targetPath = storageService.getRootLocation().resolve(filekey);
     Double[] minMax = fileMetadataService.getMinMax(targetPath, column);
 
     if (minMax == null) {
@@ -80,7 +81,7 @@ public class FileAnalyzeResource {
   }
   
   @GET
-  @jakarta.ws.rs.Path("/togglelive")
+  @jakarta.ws.rs.Path("togglelive")
   public Response toggleLive() {
 
     logger.info("Toggling live data to: " + Serial.exit);

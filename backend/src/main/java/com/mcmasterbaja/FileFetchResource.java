@@ -42,11 +42,11 @@ public class FileFetchResource {
     }
 
     @GET 
-    @jakarta.ws.rs.Path("/{filename}") 
-    public Response getFile(@PathParam("filename") String filename) {
-      logger.info("Getting file: " + filename);
+    @jakarta.ws.rs.Path("/{filekey}") 
+    public Response getFile(@PathParam("filekey") String filekey) {
+      logger.info("Getting file: " + filekey);
 
-      Path targetPath = Paths.get(filename);
+      Path targetPath = Paths.get(filekey);
       File file = storageService.load(targetPath).toFile();
 
       return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
@@ -71,11 +71,11 @@ public class FileFetchResource {
     }
 
     @GET
-    @jakarta.ws.rs.Path("/information/{filename}")
-    public FileInformation getInformation(@PathParam("filename") String filename) {
-      logger.info("Getting file information for: " + filename);
+    @jakarta.ws.rs.Path("/information/{filekey}")
+    public FileInformation getInformation(@PathParam("filekey") String filekey) {
+      logger.info("Getting file information for: " + filekey);
 
-      Path targetPath = Paths.get(filename);
+      Path targetPath = Paths.get(filekey);
       FileInformation fileInformation = new FileInformation(
         targetPath.toString().replace("\\", "/"),
         fileMetadataService.readHeaders(targetPath),
@@ -83,6 +83,24 @@ public class FileFetchResource {
       );
 
       return fileInformation;
+    }
+
+    @GET
+    @jakarta.ws.rs.Path("/information/folder/{folderkey}")
+    public List<FileInformation> getInformationForFolder(@PathParam("folderkey") String folderkey) {
+      logger.info("Getting file information for folder: " + folderkey);
+
+      Path targetPath = Paths.get(folderkey);
+
+      List<FileInformation> fileInformationList = storageService.loadAll(targetPath)
+        .map(path -> new FileInformation(
+          path.toString().replace("\\", "/"),
+          fileMetadataService.readHeaders(path),
+          path.toFile().lastModified()
+        ))
+        .collect(Collectors.toList());
+
+      return fileInformationList;
     }
 
 
