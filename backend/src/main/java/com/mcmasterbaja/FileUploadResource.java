@@ -68,7 +68,7 @@ public class FileUploadResource {
               return Response.serverError().entity("File upload failed: " + e.getMessage()).build();
             }
             
-            storageService.delete(Paths.get(fileName));
+            //storageService.delete(Paths.get(fileName));
             break;
 
           case "mov":
