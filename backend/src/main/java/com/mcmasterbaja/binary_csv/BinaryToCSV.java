@@ -23,7 +23,7 @@ public class BinaryToCSV {
       toCSV(
         Paths.get("src/main/java/com/mcmasterbaja/binary_csv/040918.bin").toAbsolutePath().toString(),
         Paths.get("uploads").toAbsolutePath() + "\\",
-        false);
+        true);
     } catch (UnsatisfiedLinkError e) {
       // Print the error in full
       e.printStackTrace();
