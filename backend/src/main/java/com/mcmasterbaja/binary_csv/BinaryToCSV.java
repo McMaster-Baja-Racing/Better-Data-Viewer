@@ -17,11 +17,19 @@ public class BinaryToCSV {
   }
 
   public static void main(String[] args) {
-    System.out.println(Paths.get("upload-dir").toAbsolutePath() + "\\");
-    toCSV(
-        Paths.get(relativePath + "/151408.bin").toAbsolutePath().toString(),
-        Paths.get("API/upload-dir").toAbsolutePath() + "\\",
+    System.out.println(Paths.get("src/main/java/com/mcmasterbaja/binary_csv/040918.bin").toAbsolutePath().toString());
+    System.out.println(Paths.get("uploads").toAbsolutePath() + "\\");
+    try {
+      toCSV(
+        Paths.get("src/main/java/com/mcmasterbaja/binary_csv/040918.bin").toAbsolutePath().toString(),
+        Paths.get("uploads").toAbsolutePath() + "\\",
         false);
+    } catch (UnsatisfiedLinkError e) {
+      // Print the error in full
+      e.printStackTrace();
+      System.out.println(e);
+    }
+    
     System.out.println("Done");
   }
 }

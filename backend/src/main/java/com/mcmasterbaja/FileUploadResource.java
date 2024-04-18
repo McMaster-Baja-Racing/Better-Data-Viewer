@@ -49,9 +49,10 @@ public class FileUploadResource {
 
           case "bin":
             storageService.store(form.fileData, Paths.get(fileName));
-            BinaryToCSV.toCSV(
+            BinaryToCSV.bytesToCSV(
+              form.fileData.readAllBytes(),
               storageService.getRootLocation().resolve(fileName).toString(),
-              storageService.getRootLocation().toString(),
+              fileName,
               true);
             storageService.delete(Paths.get(fileName));
             break;
