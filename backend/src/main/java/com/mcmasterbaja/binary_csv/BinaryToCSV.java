@@ -5,7 +5,8 @@ import java.nio.file.Paths;
 public class BinaryToCSV {
 
   public static native void toCSV(String filename, String outputDir, boolean folder);
-
+  public static native void bytesToCSV(byte[] bytes, String outputDir, String fileName, boolean folder);
+  
   private static final String relativePath = "/src/main/java/backend/API/binary_csv/";
 
   static {
