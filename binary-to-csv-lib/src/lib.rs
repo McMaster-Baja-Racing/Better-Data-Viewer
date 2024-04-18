@@ -11,6 +11,8 @@ use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::time::Instant;
 
+// Adding a temporary comment to lib.rs
+
 //create an enum  for each data string
 #[allow(dead_code)]
 #[allow(non_camel_case_types)]

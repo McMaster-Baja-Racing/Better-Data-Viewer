@@ -11,6 +11,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.jboss.logging.Logger;
@@ -48,11 +49,25 @@ public class FileUploadResource {
             break;
 
           case "bin":
+            fileName = fileName.substring(4, fileName.length());
+            logger.info("File name: " + fileName);
+
             storageService.store(form.fileData, Paths.get(fileName));
-            BinaryToCSV.toCSV(
-              storageService.getRootLocation().resolve(fileName).toString(),
-              storageService.getRootLocation().toString(),
-              true);
+
+            logger.info("Absolute location: " + storageService.getRootLocation().resolve(fileName).toString());
+
+            logger.info("Bytes: " + form.fileData.readAllBytes().length);
+
+            try {
+              BinaryToCSV.bytesToCSV(
+                form.fileData.readAllBytes(),
+                storageService.getRootLocation().resolve(fileName).toString(),
+                storageService.getRootLocation().resolve(fileName).toString(),
+                true);
+            } catch (UnsatisfiedLinkError e) {
+              return Response.serverError().entity("File upload failed: " + e.getMessage()).build();
+            }
+            
             storageService.delete(Paths.get(fileName));
             break;
 
