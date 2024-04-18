@@ -1,4 +1,4 @@
-use jni::objects::{JClass, JString};
+use jni::objects::{JByteArray, JClass, JString};
 use jni::sys::jboolean;
 use jni::JNIEnv;
 
@@ -221,8 +221,8 @@ pub extern "system" fn get_writer(
 
 #[no_mangle]
 #[allow(non_snake_case)]
-pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(
-    env: JNIEnv,
+pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_toCSV<'local>(
+    mut env: JNIEnv<'local>,
     _class: JClass,
     file_name: JString,
     destination: JString,
@@ -231,11 +231,11 @@ pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(
     let now = Instant::now();
 
     let file_name: String = env
-        .get_string(file_name)
+        .get_string(&file_name)
         .expect("Java string broken")
         .into();
     let destination: String = env
-        .get_string(destination)
+        .get_string(&destination)
         .expect("Java string broken")
         .into();
 
@@ -261,7 +261,156 @@ pub extern "system" fn Java_backend_API_binary_1csv_BinaryTOCSV_toCSV(
                 f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor(),
             )),
             DataType::F_GPS_LONGITUDE => Some(Data::FloatData(
-                (f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor()) * -1.0,
+                (f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor())
+                    * -1.0,
+            )),
+            DataType::INT_GPS_TIME
+            | DataType::INT_GPS_DAYMONTHYEAR
+            | DataType::INT_GPS_SECONDMINUTEHOUR
+            | DataType::INT_PRIM_TEMP
+            | DataType::INT_STRAIN3
+            | DataType::INT_STRAIN4
+            | DataType::INT_STRAIN5
+            | DataType::INT_STRAIN6
+            | DataType::INT_BATT_PERC
+            | DataType::INT_SUS_TRAV_FL
+            | DataType::INT_SUS_TRAV_FR
+            | DataType::INT_SUS_TRAV_RL
+            | DataType::INT_SUS_TRAV_RR => Some(Data::IntData(x[1])),
+
+            DataType::INT_STRAIN1 => Some(Data::FloatData(
+                4078.4 * (f32::from_bits(x[1]) / 1024.0) * 3.3 - 7009.2,
+            )),
+            DataType::INT_STRAIN2 => Some(Data::FloatData(
+                5288.0 * (f32::from_bits(x[1]) / 1024.0) * 3.3 - 5000.0,
+            )),
+            DataType::F_RPM_PRIM | DataType::F_RPM_SEC => {
+                let raw = f32::from_bits(x[1]);
+                (raw < 15000.0).then_some(Data::FloatData(raw))
+            }
+            _ => {
+                let raw = f32::from_bits(x[1]);
+                Some(Data::FloatData(raw))
+            }
+        };
+
+        data.map(|data| Packet {
+            timestamp,
+            datatype,
+            data,
+        })
+    };
+    let parsed_packets = packets.chunks(2).filter_map(parse);
+    let mut utilised_types: HashMap<DataType, BufWriter<std::fs::File>> =
+        HashMap::with_capacity(DATA_TYPE_LEN);
+    let extension_index = file_name.find('.').unwrap();
+    let path_no_extension = &file_name[0..extension_index];
+    if folder {
+        match std::fs::create_dir(path_no_extension) {
+            Ok(_) => println!("Created folder: {}", path_no_extension),
+            Err(e) => {
+                if e.kind() == std::io::ErrorKind::AlreadyExists {
+                    println!(
+                        "Folder already exists: {}\nAttempting to delete and reparse",
+                        path_no_extension
+                    );
+                    std::fs::remove_dir_all(path_no_extension).unwrap();
+                    std::fs::create_dir(path_no_extension).unwrap();
+                } else {
+                    panic!("{}", e);
+                }
+            }
+        }
+    }
+
+    for packet in parsed_packets {
+        utilised_types.entry(packet.datatype).or_insert_with(|| {
+            get_writer(&packet.datatype, &destination, path_no_extension, folder)
+        });
+
+        match packet.datatype {
+            DataType::F_GPS_LATITUDE | DataType::F_GPS_LONGITUDE => {
+                utilised_types
+                    .get_mut(&packet.datatype)
+                    .unwrap()
+                    .write_all(format!("{},{:.7}\n", packet.timestamp, packet.data).as_bytes())
+                    .unwrap();
+            }
+
+            DataType::INT_GPS_DAYMONTHYEAR | DataType::INT_GPS_SECONDMINUTEHOUR => {
+                utilised_types
+                    .get_mut(&packet.datatype)
+                    .unwrap()
+                    .write_all(
+                        format!(
+                            "{},{},{},{}\n",
+                            packet.timestamp,
+                            ((&packet.data & (0b11111111 << 16)).unwrap() >> 16),
+                            ((&packet.data & (0b11111111 << 8)).unwrap() >> 8),
+                            (&packet.data & (0b11111111)).unwrap()
+                        )
+                        .as_bytes(),
+                    )
+                    .unwrap();
+            }
+            _ => {
+                utilised_types
+                    .get_mut(&packet.datatype)
+                    .unwrap()
+                    .write_all(format!("{},{:.2}\n", packet.timestamp, packet.data).as_bytes())
+                    .unwrap();
+            }
+        };
+    }
+    println!("×All Done×\nCompleted in {}ms", now.elapsed().as_millis());
+}
+
+#[no_mangle]
+#[allow(non_snake_case)]
+pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_bytesToCSV<'local>(
+    mut env: JNIEnv<'local>,
+    _class: JClass,
+    jbytes: JByteArray<'local>,
+    destination: JString,
+    file_name: JString,
+    folder: jboolean,
+) {
+    let now = Instant::now();
+
+    let file_name: String = env
+        .get_string(&file_name)
+        .expect("Java string broken")
+        .into();
+    let destination: String = env
+        .get_string(&destination)
+        .expect("Java string broken")
+        .into();
+
+    let folder = !matches!(folder, 0);
+    let bytes = env.convert_byte_array(jbytes).unwrap();
+
+    let packets = convert_to_32bit(&bytes);
+    //let packets = convert_to_32bit(&read_data(file));
+
+    //filter_map
+    let parse = |x: &[u32]| {
+        let timestamp: u32 = x[0] >> 6;
+        let datatype: u8 = (x[0] & 0x3F) as u8;
+
+        if datatype >= 41 {
+            println!("Invalid datatype: {}", datatype);
+            return None;
+        }
+        let datatype: DataType = TryFrom::try_from(datatype).unwrap();
+
+        let data = match datatype {
+            DataType::INT_GPS_LAT | DataType::INT_GPS_LON => None,
+            DataType::F_GPS_LATITUDE => Some(Data::FloatData(
+                f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor(),
+            )),
+            DataType::F_GPS_LONGITUDE => Some(Data::FloatData(
+                (f32::from_bits(x[1]) % 100.0 / 60.0 + (f32::from_bits(x[1]) / 100.0).floor())
+                    * -1.0,
             )),
             DataType::INT_GPS_TIME
             | DataType::INT_GPS_DAYMONTHYEAR
