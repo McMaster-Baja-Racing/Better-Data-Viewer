@@ -49,7 +49,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getTimespans: async (folderKey) => {
-    const response = await fetch(`http://${window.location.hostname}:8080/timespan/folder/${folderKey}`);
+    const response = await fetch(`http://${window.location.hostname}:8080//files/timespan/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response;
   },
@@ -59,21 +59,25 @@ export const ApiUtil = {
      * @param {string} inputFiles - The input files.
      * @param {string} inputColumns - The input columns.
      * @param {string} outputFiles - The output files.
-     * @param {Enum} analyzerType - The analyzer type.
+     * @param {Enum} type - The analyzer type.
      * @param {string} analyzerOptions - The analyzer options.
      * @param {Boolean} live - The live options.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  analyzeFiles: async (inputFiles, inputColumns, outputFiles, analyzerType, analyzerOptions, live) => {
+  analyzeFiles: async (inputFiles, inputColumns, outputFiles, type, analyzerOptions, live) => {
     try {
-      const response =  await fetch(`http://${window.location.hostname}:8080/analyze?` + new URLSearchParams({
-        inputFiles: inputFiles,
-        inputColumns: inputColumns,
-        outputFiles: outputFiles,
-        analyzerType: analyzerType,
-        analyzerOptions: analyzerOptions,
-        live: live
-      }));
+      const params = new URLSearchParams();
+      console.log(inputFiles)
+      const parameters = { inputFiles, inputColumns, outputFiles, type, analyzerOptions, live };
+
+      console.log('Analyzer Parameters:', parameters);
+
+      Object.entries(parameters).forEach(([key, value]) => {
+        if (value && value.length !== 0) params.append(key, value);
+      });
+
+      const response = await fetch(`http://${window.location.hostname}:8080/analyze?` + params.toString());
+
       if (!response.ok) {
         alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
         throw Error(response.statusText);

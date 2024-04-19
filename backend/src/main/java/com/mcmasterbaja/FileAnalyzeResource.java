@@ -33,6 +33,7 @@ public class FileAnalyzeResource {
     logger.info("Running analyzer with params: " + params.toString());
 
     if (!params.isValid()) {
+      logger.error("Invalid parameters");
       return Response.status(Response.Status.BAD_REQUEST).entity("Invalid parameters").build();
     }
 
@@ -41,14 +42,25 @@ public class FileAnalyzeResource {
     params.updateInputFiles(storageService.getRootLocation());
     params.generateOutputFileNames();
 
-    Analyzer analyzer = AnalyzerFactory.createAnalyzer(params);
+    // print input files
+    for (String file : params.getInputFiles()) {
+      logger.info("Input file: " + file);
+    }
 
-    if (analyzer != null) {
-      try {
-        analyzer.analyze();
-      } catch (Exception e) {
-        logger.error("Error running analyzer", e);
-        return Response.serverError().entity("Error running analyzer").build();
+    // print putput files
+    for (String file : params.getOutputFiles()) {
+      logger.info("Output file: " + file);
+    }
+
+    if (params.getType() != null) {
+      Analyzer analyzer = AnalyzerFactory.createAnalyzer(params);
+      if (analyzer != null) {
+        try {
+          analyzer.analyze();
+        } catch (Exception e) {
+          logger.error("Error running analyzer", e);
+          return Response.serverError().entity("Error running analyzer").build();
+        }
       }
     }
 

@@ -45,7 +45,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
         inputColumns.map(col => col.header),
         [],
         chartInformation.files[i].analyze.analysis,
-        [chartInformation.files[i].analyze.analyzerValues].filter(e => e),
+        chartInformation.files[i].analyze.analyzerValues.filter(e => e),
         chartInformation.live
       );
 

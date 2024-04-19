@@ -110,7 +110,7 @@ public class FileFetchResource {
   }
 
   @GET
-  @jakarta.ws.rs.Path("/timespan/{folderkey}")
+  @jakarta.ws.rs.Path("/timespan/folder/{folderkey}")
   public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) {
     logger.info("Getting timespan for folder: " + folderkey);
 

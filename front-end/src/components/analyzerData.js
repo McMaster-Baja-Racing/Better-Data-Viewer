@@ -29,7 +29,7 @@ const analyzerData = [
   },
   {
     title: 'Acceleration Curve Tool',
-    code: 'accelCurve',
+    code: 'ACCEL_CURVE',
     parameters: [],
     description: 'Given both primary (on y-axis) and secondary (x-axis) RPM values, this tool will first apply a noise reduction algorithm, and then interpolate between them to achieve a graph that displays the shift curve. ',
     image: {
