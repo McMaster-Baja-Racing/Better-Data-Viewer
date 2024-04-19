@@ -452,9 +452,9 @@ pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_bytesToCSV<
     let mut utilised_types: HashMap<DataType, BufWriter<std::fs::File>> =
         HashMap::with_capacity(DATA_TYPE_LEN);
     let extension_index = file_name.find('.').unwrap();
-    let path_no_extension = &file_name[0..extension_index];
+    let path_no_extension = destination.to_string() + "/" + &file_name[0..extension_index];
     if folder {
-        match std::fs::create_dir(path_no_extension) {
+        match std::fs::create_dir(&path_no_extension) {
             Ok(_) => println!("Created folder: {}", path_no_extension),
             Err(e) => {
                 if e.kind() == std::io::ErrorKind::AlreadyExists {
@@ -462,8 +462,8 @@ pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_bytesToCSV<
                         "Folder already exists: {}\nAttempting to delete and reparse",
                         path_no_extension
                     );
-                    std::fs::remove_dir_all(path_no_extension).unwrap();
-                    std::fs::create_dir(path_no_extension).unwrap();
+                    std::fs::remove_dir_all(&path_no_extension).unwrap();
+                    std::fs::create_dir(&path_no_extension).unwrap();
                 } else {
                     panic!("{}", e);
                 }
@@ -473,7 +473,7 @@ pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_bytesToCSV<
 
     for packet in parsed_packets {
         utilised_types.entry(packet.datatype).or_insert_with(|| {
-            get_writer(&packet.datatype, &destination, path_no_extension, folder)
+            get_writer(&packet.datatype, &destination, &path_no_extension, folder)
         });
 
         match packet.datatype {

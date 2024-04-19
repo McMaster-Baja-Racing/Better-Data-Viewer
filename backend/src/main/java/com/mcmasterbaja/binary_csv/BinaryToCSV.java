@@ -11,8 +11,8 @@ public class BinaryToCSV {
 
   static {
     String path = System.getProperty("user.dir");
-    path += relativePath + "/binary_to_csv_lib.dll";
-    System.out.println("PATH  " + path);
+    path += relativePath + "/libbinary_to_csv_lib.dylib";
+    // System.out.println("PATH  " + path);
     System.load(path);
   }
 

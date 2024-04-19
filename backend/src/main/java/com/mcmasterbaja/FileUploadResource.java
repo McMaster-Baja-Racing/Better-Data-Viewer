@@ -49,26 +49,23 @@ public class FileUploadResource {
             break;
 
           case "bin":
-            fileName = fileName.substring(4, fileName.length() - 4) + "/";
-            logger.info("File name: " + fileName);
+            fileName = fileName.substring(4, fileName.length());
 
-            //storageService.store(form.fileData, Paths.get(fileName));
-
-            logger.info("Absolute location: " + storageService.getRootLocation().resolve(fileName).toString() + "/");
-
-            //logger.info("Bytes: " + form.fileData.readAllBytes().length);
+            logger.info("Parsing bin to: " 
+              + storageService.getRootLocation().resolve("csv").toString() 
+              + "/"
+              + fileName.substring(0, fileName.lastIndexOf('.'))
+              + "/");
 
             try {
               BinaryToCSV.bytesToCSV(
                 form.fileData.readAllBytes(),
-                storageService.getRootLocation().resolve(fileName).toString() + "/",
-                storageService.getRootLocation().resolve(fileName).toString(),
+                storageService.getRootLocation().resolve("csv/").toString(),
+                fileName,
                 true);
             } catch (UnsatisfiedLinkError e) {
               return Response.serverError().entity("File upload failed: " + e.getMessage()).build();
             }
-            
-            //storageService.delete(Paths.get(fileName));
             break;
 
           case "mov":

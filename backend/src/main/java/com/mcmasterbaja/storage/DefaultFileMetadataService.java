@@ -34,7 +34,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   public String[] readHeaders(Path targetPath) {
     try {
-      logger.info("Reading headers from: " + targetPath);
+      // logger.info("Reading headers from: " + targetPath);
       return Files.lines(storageService.getRootLocation().resolve(targetPath)).findFirst().get().split(",");
     } catch (IOException e) {
       logger.error("Could not read headers", e);

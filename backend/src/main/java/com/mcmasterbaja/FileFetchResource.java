@@ -99,7 +99,7 @@ public class FileFetchResource {
 
       List<FileInformation> fileInformationList = storageService.loadAll(targetPath)
         .map(path -> new FileInformation(
-          path.toString().replace("\\", "/"),
+          targetPath.relativize(path).toString(),
           fileMetadataService.readHeaders(path),
           path.toFile().lastModified()
         ))

@@ -28,7 +28,12 @@ export const ApiUtil = {
   },
 
   /**
-     * @description Sends a GET request to the server to fetch a specific folder.
+     * @description Sends a GET request to the server to fetch fileInformation about a specific folder.
+     * Each file in the list is represented as an object with the following properties:
+     * - key: A  that represents the unique identifier of the file. This will be relative to the folder provided.
+     * - fileHeaders: An array of strings that represents the headers of the file.
+     * - size: A long that represents the size of the file.
+     * 
      * @param {string} folderKey - The unique identifier of the folder.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
@@ -134,7 +139,8 @@ export const ApiUtil = {
      */
   uploadFile: async (file) => {
     const formData = new FormData();
-    formData.set('file', file);
+    formData.set('fileName', file.name);
+    formData.set('fileData', file);
 
     const response = await fetch(`http://${window.location.hostname}:8080/upload/file`, {
       method: 'POST',
