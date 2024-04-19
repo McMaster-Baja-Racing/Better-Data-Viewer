@@ -32,8 +32,7 @@ public class AnalyzerParams {
   private Boolean live;
 
   public boolean isValid() {
-    return inputFiles != null && inputFiles.length != 0 
-      && inputColumns != null;
+    return inputFiles != null && inputFiles.length != 0 && inputColumns != null;
   }
 
   public void updateInputFiles(Path rootLocation) {

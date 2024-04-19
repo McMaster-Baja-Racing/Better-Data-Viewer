@@ -371,7 +371,7 @@ public class FileUploadController {
 
     Path absoluteFilePath = storageService.load(newPath.toString());
     String relativePath = storageService.getRootLocation().relativize(absoluteFilePath).toString();
-    
+
     responseHeaders.add(
         HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + relativePath + "\"");
     responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");

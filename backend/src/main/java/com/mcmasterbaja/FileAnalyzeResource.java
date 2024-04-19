@@ -12,7 +12,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.HttpHeaders;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
