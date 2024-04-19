@@ -67,7 +67,6 @@ export const ApiUtil = {
   analyzeFiles: async (inputFiles, inputColumns, outputFiles, type, analyzerOptions, live) => {
     try {
       const params = new URLSearchParams();
-      console.log(inputFiles)
       const parameters = { inputFiles, inputColumns, outputFiles, type, analyzerOptions, live };
 
       Object.entries(parameters).forEach(([key, value]) => {
