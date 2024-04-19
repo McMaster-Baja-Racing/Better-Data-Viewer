@@ -12,6 +12,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.HttpHeaders;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,16 +37,15 @@ public class FileAnalyzeResource {
       logger.error("Invalid parameters");
       return Response.status(Response.Status.BAD_REQUEST).entity("Invalid parameters").build();
     }
+    // add /csv to the input files
+    for (int i = 0; i < params.getInputFiles().length; i++) {
+      params.getInputFiles()[i] = "csv/" + params.getInputFiles()[i];
+    }
 
     // Update input files with root location and generate output file names (we don't do output
     // files yet)
     params.updateInputFiles(storageService.getRootLocation());
     params.generateOutputFileNames();
-
-    // print input files
-    for (String file : params.getInputFiles()) {
-      logger.info("Input file: " + file);
-    }
 
     // print putput files
     for (String file : params.getOutputFiles()) {
@@ -69,6 +69,7 @@ public class FileAnalyzeResource {
 
     return Response.ok(file, "application/octet-stream")
         .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+        .header("Access-Control-Expose-Headers", "Content-Disposition")
         .build();
   }
 

@@ -368,8 +368,10 @@ public class FileUploadController {
 
     // Set these headers so that you can access from LocalHost and download the file
     HttpHeaders responseHeaders = new HttpHeaders();
+
     Path absoluteFilePath = storageService.load(newPath.toString());
     String relativePath = storageService.getRootLocation().relativize(absoluteFilePath).toString();
+    
     responseHeaders.add(
         HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + relativePath + "\"");
     responseHeaders.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");

@@ -46,7 +46,7 @@ const analyzerData = [
   },
   {
     title: 'Ultimate Smoothener',
-    code: 'sGolay',
+    code: 'SGOLAY',
     parameters: [{ name: 'Window Size', default: '100' }, { name: 'Polynomial Order', default: '3' }],
     description: 'Implements the Savitzky-Golay algorithm in order to smooth out a curve. This is a very powerful tool that can help capture many trends not visible. Input variables are the window and polynomial order.',
     image: {

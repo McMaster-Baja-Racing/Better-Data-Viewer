@@ -70,10 +70,16 @@ export const ApiUtil = {
       console.log(inputFiles)
       const parameters = { inputFiles, inputColumns, outputFiles, type, analyzerOptions, live };
 
-      console.log('Analyzer Parameters:', parameters);
-
       Object.entries(parameters).forEach(([key, value]) => {
-        if (value && value.length !== 0) params.append(key, value);
+        if (value && value.length !== 0) {
+          if (Array.isArray(value)) {
+            value.forEach((val) => {
+              params.append(key, val);
+            });
+          } else {
+            params.append(key, value);
+          }
+        }
       });
 
       const response = await fetch(`http://${window.location.hostname}:8080/analyze?` + params.toString());
