@@ -1,11 +1,5 @@
 package com.mcmasterbaja;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.jboss.logging.Logger;
-
 import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
 import com.mcmasterbaja.live.Serial;
@@ -18,18 +12,19 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.jboss.logging.Logger;
 
 @jakarta.ws.rs.Path("/")
 public class FileAnalyzeResource {
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
-  @Inject
-  StorageService storageService;
+  @Inject StorageService storageService;
 
-  @Inject
-  FileMetadataService fileMetadataService;
+  @Inject FileMetadataService fileMetadataService;
 
   @GET
   @jakarta.ws.rs.Path("analyze")
@@ -41,7 +36,8 @@ public class FileAnalyzeResource {
       return Response.status(Response.Status.BAD_REQUEST).entity("Invalid parameters").build();
     }
 
-    // Update input files with root location and generate output file names (we don't do output files yet)
+    // Update input files with root location and generate output file names (we don't do output
+    // files yet)
     params.updateInputFiles(storageService.getRootLocation());
     params.generateOutputFileNames();
 
@@ -60,12 +56,14 @@ public class FileAnalyzeResource {
     File file = storageService.load(targetPath).toFile();
 
     return Response.ok(file, "application/octet-stream")
-        .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"").build();
+        .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+        .build();
   }
-  
+
   @GET
   @jakarta.ws.rs.Path("minMax/{filenkey}")
-  public Response getMinMax(@PathParam("filekey") String filekey, @QueryParam("column") String column) {
+  public Response getMinMax(
+      @PathParam("filekey") String filekey, @QueryParam("column") String column) {
     logger.info("Getting min and max for file: " + filekey);
 
     Path targetPath = storageService.getRootLocation().resolve(filekey);
@@ -79,7 +77,7 @@ public class FileAnalyzeResource {
 
     return Response.ok(minMax).build();
   }
-  
+
   @GET
   @jakarta.ws.rs.Path("togglelive")
   public Response toggleLive() {
@@ -97,9 +95,5 @@ public class FileAnalyzeResource {
     }
 
     return Response.ok("Live data toggled to " + Serial.exit).build();
-    
   }
-  
-  
-
 }

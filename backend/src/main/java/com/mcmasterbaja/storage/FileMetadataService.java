@@ -7,6 +7,7 @@ public interface FileMetadataService {
 
   /**
    * Reads the headers of a csv file.
+   *
    * @param targetPath The Path of the file to read.
    * @return A String[] of the headers.
    */
@@ -14,6 +15,7 @@ public interface FileMetadataService {
 
   /**
    * Gets the minimum and maximum values of a column in a csv file.
+   *
    * @param targetPath The Path of the file to read.
    * @param column The column to analyze.
    * @return A double[] containing the minimum and maximum values.
@@ -22,6 +24,7 @@ public interface FileMetadataService {
 
   /**
    * Gets the last value of the column in the file.
+   *
    * @param targetPath The Path of the file to read.
    * @return The last value of the column
    */
@@ -29,6 +32,7 @@ public interface FileMetadataService {
 
   /**
    * Checks if the timespan of a folder can be computed.
+   *
    * @param folderPath The Path of the folder to analyze.
    * @return A boolean indicating if the timespan can be computed.
    */
@@ -36,6 +40,7 @@ public interface FileMetadataService {
 
   /**
    * Gets the start and end times of a file in GMT
+   *
    * @param targetPath The Path of the file to analyze.
    * @param zeroTime The datetime when timestamp is zero milliseconds
    * @return A LocalDateTime[] containing the start and end times of the file.
@@ -44,6 +49,7 @@ public interface FileMetadataService {
 
   /**
    * Gets the datetime in GMT when then timestamp is zero milliseconds.
+   *
    * @param folderPath The Path of the folder to analyze.
    * @return The datetime of the folder when timestamp (ms) is zero.
    */
@@ -51,9 +57,9 @@ public interface FileMetadataService {
 
   /**
    * Gets the desired folder for a file.
+   *
    * @param targetPath The Path of the file to analyze.
    * @return The desired type folder.
    */
   String getTypeFolder(Path targePath);
-  
 }

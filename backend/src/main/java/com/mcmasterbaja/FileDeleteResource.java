@@ -1,25 +1,20 @@
 package com.mcmasterbaja;
 
-import java.nio.file.Paths;
-import java.nio.file.Path;
-
-import org.jboss.logging.Logger;
-
 import com.mcmasterbaja.storage.StorageService;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.jboss.logging.Logger;
 
 @jakarta.ws.rs.Path("/delete")
 public class FileDeleteResource {
-  
-  @Inject
-  Logger logger;
 
-  @Inject
-  StorageService storageService;
+  @Inject Logger logger;
+
+  @Inject StorageService storageService;
 
   // TODO: Deletes just the one file / one folder, not directories. Should be?
   @DELETE
@@ -51,6 +46,4 @@ public class FileDeleteResource {
       return Response.serverError().entity("File deletion failed: " + e.getMessage()).build();
     }
   }
-
-  
 }

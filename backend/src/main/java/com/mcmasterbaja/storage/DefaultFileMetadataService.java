@@ -1,5 +1,10 @@
 package com.mcmasterbaja.storage;
 
+import com.drew.imaging.mp4.Mp4MetadataReader;
+import com.drew.metadata.Tag;
+import com.drew.metadata.mp4.Mp4Directory;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,30 +17,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.DoubleSummaryStatistics;
 import java.util.Locale;
 import java.util.stream.Stream;
-
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.jboss.logging.Logger;
-
-import com.drew.imaging.mp4.Mp4MetadataReader;
-import com.drew.metadata.Tag;
-import com.drew.metadata.mp4.Mp4Directory;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class DefaultFileMetadataService implements FileMetadataService {
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
-  @Inject
-  private StorageService storageService;
+  @Inject private StorageService storageService;
 
   public String[] readHeaders(Path targetPath) {
     try {
       // logger.info("Reading headers from: " + targetPath);
-      return Files.lines(storageService.getRootLocation().resolve(targetPath)).findFirst().get().split(",");
+      return Files.lines(storageService.getRootLocation().resolve(targetPath))
+          .findFirst()
+          .get()
+          .split(",");
     } catch (IOException e) {
       logger.error("Could not read headers", e);
       return new String[0];
@@ -82,7 +80,6 @@ public class DefaultFileMetadataService implements FileMetadataService {
       e.printStackTrace();
       return null;
     }
-    
   }
 
   public String getLast(Path targetPath, String column) {
@@ -90,11 +87,12 @@ public class DefaultFileMetadataService implements FileMetadataService {
     String timestamp;
 
     try {
-      ReversedLinesFileReader reverseReader = ReversedLinesFileReader.builder()
-        .setPath(storageService.getRootLocation().resolve(targetPath))
-        .setCharset(StandardCharsets.UTF_8)
-        .get();
-        
+      ReversedLinesFileReader reverseReader =
+          ReversedLinesFileReader.builder()
+              .setPath(storageService.getRootLocation().resolve(targetPath))
+              .setCharset(StandardCharsets.UTF_8)
+              .get();
+
       timestamp = reverseReader.readLine().split(",")[0];
       reverseReader.close();
     } catch (IOException e) {
@@ -107,8 +105,12 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   public boolean canComputeTimespan(Path folderPath) {
     try {
-      Path smhPath = storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
-      Path dmyPath = storageService.getRootLocation().resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
+      Path smhPath =
+          storageService
+              .getRootLocation()
+              .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
+      Path dmyPath =
+          storageService.getRootLocation().resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
       return Files.exists(smhPath) && Files.exists(dmyPath);
     } catch (Exception e) {
       e.printStackTrace();
@@ -118,8 +120,10 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   public LocalDateTime[] getTimespan(Path targetPath, LocalDateTime zeroTime) {
     switch (getTypeFolder(targetPath)) {
-      case "csv": return getTimespanCSV(targetPath, zeroTime);
-      case "mp4": return getTimespanMP4(targetPath);
+      case "csv":
+        return getTimespanCSV(targetPath, zeroTime);
+      case "mp4":
+        return getTimespanMP4(targetPath);
       default:
         return null;
     }
@@ -129,14 +133,20 @@ public class DefaultFileMetadataService implements FileMetadataService {
     try {
       // Get the values of the first line from the gps files ingoring the header
       String[] smhArray =
-          Files.lines(storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv")))
+          Files.lines(
+                  storageService
+                      .getRootLocation()
+                      .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv")))
               .skip(1)
               .findFirst()
               .orElseThrow()
               .split(",");
-              
+
       String[] dmyArray =
-          Files.lines(storageService.getRootLocation().resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv")))
+          Files.lines(
+                  storageService
+                      .getRootLocation()
+                      .resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv")))
               .skip(1)
               .findFirst()
               .orElseThrow()
@@ -217,7 +227,9 @@ public class DefaultFileMetadataService implements FileMetadataService {
     String firstTimestamp = null;
     String lastTimestamp = null;
     try {
-      BufferedReader reader = new BufferedReader(Files.newBufferedReader(storageService.getRootLocation().resolve(targetPath)));
+      BufferedReader reader =
+          new BufferedReader(
+              Files.newBufferedReader(storageService.getRootLocation().resolve(targetPath)));
       firstTimestamp = reader.lines().skip(1).findFirst().orElseThrow().split(",")[0];
       reader.close();
       lastTimestamp = getLast(targetPath, "Timestamp (ms)");
@@ -226,8 +238,10 @@ public class DefaultFileMetadataService implements FileMetadataService {
       return null;
     }
 
-    LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(firstTimestamp) * 1_000_000);
-    LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(lastTimestamp) * 1_000_000);
+    LocalDateTime startTime =
+        zeroTime.plusNanos((long) Double.parseDouble(firstTimestamp) * 1_000_000);
+    LocalDateTime endTime =
+        zeroTime.plusNanos((long) Double.parseDouble(lastTimestamp) * 1_000_000);
 
     return new LocalDateTime[] {startTime, endTime};
   }
@@ -253,5 +267,5 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
     // Returns the start and end times as strings in GMT with milliseconds
     return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
-  } 
+  }
 }
