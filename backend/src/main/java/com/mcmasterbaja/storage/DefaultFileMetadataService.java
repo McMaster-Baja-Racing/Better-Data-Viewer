@@ -107,8 +107,9 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   public boolean canComputeTimespan(Path folderPath) {
     try {
-      return Files.exists(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"))
-          && Files.exists(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
+      Path smhPath = storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
+      Path dmyPath = storageService.getRootLocation().resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
+      return Files.exists(smhPath) && Files.exists(dmyPath);
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -128,14 +129,14 @@ public class DefaultFileMetadataService implements FileMetadataService {
     try {
       // Get the values of the first line from the gps files ingoring the header
       String[] smhArray =
-          Files.lines(storageService.getRootLocation().resolve(folderPath.toString() + "/GPS SECOND MINUTE HOUR.csv"))
+          Files.lines(storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv")))
               .skip(1)
               .findFirst()
               .orElseThrow()
               .split(",");
               
       String[] dmyArray =
-          Files.lines(storageService.getRootLocation().resolve(folderPath.toString() + "/GPS DAY MONTH YEAR.csv"))
+          Files.lines(storageService.getRootLocation().resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv")))
               .skip(1)
               .findFirst()
               .orElseThrow()
@@ -216,7 +217,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
     String firstTimestamp = null;
     String lastTimestamp = null;
     try {
-      BufferedReader reader = new BufferedReader(Files.newBufferedReader(targetPath));
+      BufferedReader reader = new BufferedReader(Files.newBufferedReader(storageService.getRootLocation().resolve(targetPath)));
       firstTimestamp = reader.lines().skip(1).findFirst().orElseThrow().split(",")[0];
       reader.close();
       lastTimestamp = getLast(targetPath, "Timestamp (ms)");
@@ -233,7 +234,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   private LocalDateTime[] getTimespanMP4(Path targetPath) {
     // Gets the metadata of the file to find the creation time and duration
-    String metadata = extractMetadata(targetPath);
+    String metadata = extractMetadata(storageService.getRootLocation().resolve(targetPath));
 
     // Parses with timezeone, converts to GMT, and then to LocalDateTime
     assert metadata != null;

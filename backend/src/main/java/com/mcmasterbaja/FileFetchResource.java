@@ -1,6 +1,7 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.model.FileInformation;
+import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
 import jakarta.inject.Inject;
@@ -9,10 +10,14 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.jboss.logging.Logger;
 import jakarta.ws.rs.Produces;
 
@@ -103,6 +108,54 @@ public class FileFetchResource {
       return fileInformationList;
     }
 
+    @GET
+    @jakarta.ws.rs.Path("/timespan/{folderkey}")
+    public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) {
+      logger.info("Getting timespan for folder: " + folderkey);
 
+      List<FileTimespan> timespans = new ArrayList<>();
+      Stream<Path> paths = storageService.loadAll(Paths.get(folderkey));
 
+      switch (folderkey) {
+        case "csv":
+          // Holds the parent folder and the zero time
+          Object[] container = {null, null};
+          paths.forEach(
+              path -> {
+                logger.info("Getting timespan for file: " + path.toString());
+                Path parent = path.getParent();
+                if (parent.toString() != "csv") {
+                  if (fileMetadataService.canComputeTimespan(parent)) {
+                    // Updates the parent folder and zero time if the parent folder changes to avoid
+                    // recalculating the zero time
+                    if (container[0] != parent) {
+                      container[0] = parent;
+                      container[1] = fileMetadataService.getZeroTime((Path) container[0]);
+                    }
+                    // Get the path and filename of each file and print it
+                    LocalDateTime[] timespan =
+                      fileMetadataService.getTimespan(path, (LocalDateTime) container[1]);
+                    logger.info("Timespan: " + timespan[0] + " - " + timespan[1]);
+                    timespans.add(
+                        new FileTimespan(
+                            path.toString().replace("\\", "/"), timespan[0], timespan[1]));
+                  }
+                }
+              });
+          break;
+        case "mp4":
+          paths.forEach(
+              path -> {
+                // Get the path and filename of each file and print it
+                LocalDateTime[] timespan = fileMetadataService.getTimespan(path, null);
+                timespans.add(
+                    new FileTimespan(path.toString().replace("\\", "/"), timespan[0], timespan[1]));
+              });
+          break;
+        default:
+          throw new IllegalArgumentException("Invalid folder name");
+      }
+
+      return timespans;
+    }
 }
