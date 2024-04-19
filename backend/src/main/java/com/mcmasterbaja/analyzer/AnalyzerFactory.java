@@ -5,7 +5,7 @@ import com.mcmasterbaja.model.AnalyzerParams;
 public class AnalyzerFactory {
 
   public static Analyzer createAnalyzer(AnalyzerParams params) {
-    
+
     String[] inputFiles = params.getInputFiles();
     String[] inputColumns = params.getInputColumns();
     String[] outputFiles = params.getOutputFiles();
@@ -75,7 +75,7 @@ public class AnalyzerFactory {
         double c = Double.parseDouble((String) options[2]);
         double d = Double.parseDouble((String) options[3]);
         return new CubicAnalyzer(inputFiles, inputColumns, outputFiles, a, b1, c, d);
-        
+
       default:
         return null;
     }

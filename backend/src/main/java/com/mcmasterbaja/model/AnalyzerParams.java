@@ -1,10 +1,9 @@
 package com.mcmasterbaja.model;
 
+import jakarta.ws.rs.QueryParam;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-
-import jakarta.ws.rs.QueryParam;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -38,11 +37,12 @@ public class AnalyzerParams {
 
   public void updateInputFiles(Path rootLocation) {
     if (inputFiles != null) {
-      inputFiles = Arrays.stream(inputFiles)
-          .map(Paths::get)
-          .map(rootLocation::resolve)
-          .map(Path::toString)
-          .toArray(String[]::new);
+      inputFiles =
+          Arrays.stream(inputFiles)
+              .map(Paths::get)
+              .map(rootLocation::resolve)
+              .map(Path::toString)
+              .toArray(String[]::new);
     }
   }
 
@@ -54,5 +54,4 @@ public class AnalyzerParams {
       }
     }
   }
-  
 }

@@ -1,8 +1,8 @@
 // Written by Gavin, history of pain on this one
 package com.mcmasterbaja.live;
 
-import com.mcmasterbaja.binary_csv.Packet;
 import com.fazecast.jSerialComm.*;
+import com.mcmasterbaja.binary_csv.Packet;
 import java.io.FileWriter;
 
 public class Serial {

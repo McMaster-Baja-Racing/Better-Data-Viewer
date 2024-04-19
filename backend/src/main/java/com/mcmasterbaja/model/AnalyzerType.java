@@ -13,6 +13,6 @@ public enum AnalyzerType {
   LINEAR_INTERPOLATE;
 
   public String toString() {
-      return this.name();
+    return this.name();
   }
 }
