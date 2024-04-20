@@ -15,14 +15,13 @@ public class FileDeleteResource {
   @Inject Logger logger;
   @Inject StorageService storageService;
 
-  // TODO: Deletes just the one file / one folder, not directories. Should be?
   @DELETE
-  @jakarta.ws.rs.Path("/file/{filename}")
-  public Response deleteFile(@PathParam("filename") String filename) {
+  @jakarta.ws.rs.Path("/file/{filekey}")
+  public Response deleteFile(@PathParam("filekey") String filekey) {
     try {
-      logger.info("Deleting file: " + filename);
+      logger.info("Deleting file: " + filekey);
 
-      Path targetPath = Paths.get(filename);
+      Path targetPath = Paths.get(filekey);
       storageService.delete(targetPath);
 
       return Response.ok("File deleted successfully").build();
@@ -31,14 +30,29 @@ public class FileDeleteResource {
     }
   }
 
-  // TODO: Only deletes all files, not directories. Should clean up directories?
+  @DELETE
+  @jakarta.ws.rs.Path("/folder/{folderkey}")
+  public Response deleteFolder(@PathParam("folderkey") String folderkey) {
+    try {
+      logger.info("Deleting folder: " + folderkey);
+
+      Path targetPath = Paths.get(folderkey);
+      storageService.deleteAll(targetPath);
+
+      return Response.ok("All files deleted successfully").build();
+    } catch (Exception e) {
+      return Response.serverError().entity("File deletion failed: " + e.getMessage()).build();
+    }
+  }
+
   @DELETE
   @jakarta.ws.rs.Path("/all")
   public Response deleteAllFiles() {
     try {
       logger.info("Deleting all files");
 
-      storageService.loadAll().forEach(storageService::delete);
+      storageService.deleteAll();
+      storageService.init();
 
       return Response.ok("All files deleted successfully").build();
     } catch (Exception e) {

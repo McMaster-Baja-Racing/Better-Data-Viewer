@@ -20,9 +20,10 @@ public class FileSystemStorageService implements StorageService {
 
   public void init() {
     try {
+      logger.info("Initializing storage service");
       Files.createDirectories(rootLocation);
-      Files.createDirectories(rootLocation.resolve("/csv"));
-      Files.createDirectories(rootLocation.resolve("/mp4"));
+      Files.createDirectories(rootLocation.resolve("csv/"));
+      Files.createDirectories(rootLocation.resolve("mp4/"));
     } catch (IOException e) {
       logger.error("Could not initialize storage service", e);
     }
@@ -51,14 +52,6 @@ public class FileSystemStorageService implements StorageService {
     return rootLocation.resolve(targetPath);
   }
 
-  public void delete(Path targetPath) {
-    try {
-      Files.delete(rootLocation.resolve(targetPath));
-    } catch (IOException e) {
-      logger.error("Could not delete file", e);
-    }
-  }
-
   public Stream<Path> loadAll(Path dir) {
     try {
       return Files.walk(rootLocation.resolve(dir))
@@ -72,5 +65,32 @@ public class FileSystemStorageService implements StorageService {
 
   public Stream<Path> loadAll() {
     return loadAll(rootLocation);
+  }
+
+  public void delete(Path targetPath) {
+    try {
+      Files.delete(rootLocation.resolve(targetPath));
+    } catch (IOException e) {
+      logger.error("Could not delete file", e);
+    }
+  }
+
+  // TODO: Files.walk returns the folder first, which can't be deleted quite yet
+  public void deleteAll(Path dir) {
+    try {
+      Files.walk(rootLocation.resolve(dir)).forEach(file -> {
+        try {
+          Files.delete(file);
+        } catch (IOException e) {
+          logger.error("Could not delete file", e);
+        }
+      });
+    } catch (Exception e) {
+      logger.error("Could not delete files", e);
+    }
+  }
+
+  public void deleteAll() {
+    deleteAll(rootLocation);
   }
 }

@@ -10,6 +10,13 @@ public interface StorageService {
   void init();
 
   /**
+   * Returns the root location where the files are stored.
+   *
+   * @return The root Path.
+   */
+  Path getRootLocation();
+
+  /**
    * Stores a file.
    *
    * @param fileData The InputStream of the file data to be stored.
@@ -26,20 +33,6 @@ public interface StorageService {
   Path load(Path targetPath);
 
   /**
-   * Deletes a file.
-   *
-   * @param targetPath The Path of the file to delete.
-   */
-  void delete(Path targetPath);
-
-  /**
-   * Returns the root location where the files are stored.
-   *
-   * @return The root Path.
-   */
-  Path getRootLocation();
-
-  /**
    * Lists all files stored in the root location.
    *
    * @return A Stream of Paths representing the files.
@@ -53,4 +46,24 @@ public interface StorageService {
    * @return A Stream of Paths representing the files
    */
   Stream<Path> loadAll(Path dir);
+
+  /**
+   * Deletes a file.
+   *
+   * @param targetPath The Path of the file to delete.
+   */
+  void delete(Path targetPath);
+
+  /**
+   * Deletes all files stored in a directory.
+   * 
+   * @param targetPath The Path of the file to delete.
+   */
+  void deleteAll(Path dir);
+
+  /**
+   * Deletes all files in the root location.
+   * 
+   */
+  void deleteAll();
 }
