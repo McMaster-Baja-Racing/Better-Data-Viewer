@@ -33,12 +33,8 @@ public class FileAnalyzeResource {
       logger.error("Invalid parameters");
       return Response.status(Response.Status.BAD_REQUEST).entity("Invalid parameters").build();
     }
-    // TODO: Why is this required? Should be able to be removed and automated elsewhere
-    for (int i = 0; i < params.getInputFiles().length; i++) {
-      params.getInputFiles()[i] = "csv/" + params.getInputFiles()[i];
-    }
 
-    // Update input files with root location and generate output file names
+    // Update input files with rootLocation/csv and generate output file names
     params.updateInputFiles(storageService.getRootLocation());
     params.generateOutputFileNames();
 

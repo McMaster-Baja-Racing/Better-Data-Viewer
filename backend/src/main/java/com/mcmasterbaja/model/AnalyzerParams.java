@@ -35,17 +35,26 @@ public class AnalyzerParams {
     return inputFiles != null && inputFiles.length != 0 && inputColumns != null;
   }
 
+  /**
+   * Converts to absolute path within the rootLocation/csv/ directory
+   * 
+   * @param rootLocation the root location of the storage service
+   */
   public void updateInputFiles(Path rootLocation) {
     if (inputFiles != null) {
       inputFiles =
           Arrays.stream(inputFiles)
               .map(Paths::get)
-              .map(rootLocation::resolve)
+              .map(rootLocation.resolve("csv")::resolve)
               .map(Path::toString)
               .toArray(String[]::new);
     }
   }
 
+  /**
+   * If output files are empty, auto-populates them with the format:
+   * inputFile_type.csv
+   */
   public void generateOutputFileNames() {
     if (outputFiles == null || outputFiles.length == 0) {
       outputFiles = new String[inputFiles.length];
