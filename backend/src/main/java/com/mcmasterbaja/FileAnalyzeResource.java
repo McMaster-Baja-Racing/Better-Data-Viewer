@@ -57,9 +57,10 @@ public class FileAnalyzeResource {
 
     Path targetPath = Paths.get(params.getOutputFiles()[0]);
     File file = storageService.load(targetPath).toFile();
+    Path relativePath = storageService.getRootLocation().resolve("csv").relativize(targetPath);
 
     return Response.ok(file, "application/octet-stream")
-        .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+        .header("Content-Disposition", "attachment; filename=\"" + relativePath.toString() + "\"")
         .header("Access-Control-Expose-Headers", "Content-Disposition")
         .build();
   }
