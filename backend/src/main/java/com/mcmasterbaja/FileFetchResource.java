@@ -46,7 +46,7 @@ public class FileFetchResource {
   public Response getFile(@PathParam("filekey") String filekey) {
     logger.info("Getting file: " + filekey);
 
-    Path targetPath = Paths.get(filekey);
+    Path targetPath = addTypeFolder(filekey);
     File file = storageService.load(targetPath).toFile();
 
     return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
@@ -177,5 +177,9 @@ public class FileFetchResource {
 
   private String relativizeToString (String root, Path path) {
     return relativizeToString(Paths.get(root), path);
+  }
+
+  private Path addTypeFolder(String fileKey){
+    return Paths.get(fileMetadataService.getTypeFolder(fileKey)).resolve(fileKey);
   }
 }
