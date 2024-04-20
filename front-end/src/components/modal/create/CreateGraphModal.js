@@ -54,6 +54,7 @@ export const CreateGraphModal = ({
     ApiUtil.getTimespans('csv')
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setfileTimespans(data);
       });
   }, []); // Empty dependency array ensures that the fetch is only performed once
@@ -85,7 +86,9 @@ export const CreateGraphModal = ({
     * For none datetime format:
     * - x-axis will be linear with no shifting of x-values.
     */
+
     let dtformat = 'full';
+    console.log(chartInformationFiles)
     if (chartInformationFiles.some(file => file.columns[0].timespan.start === '')) dtformat = 'partial';
     if (chartInformationFiles.some(file => file.columns[0].header !== 'Timestamp (ms)')) dtformat = 'none';
 

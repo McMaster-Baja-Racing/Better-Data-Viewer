@@ -61,11 +61,11 @@ public class FileFetchResource {
 
     List<FileInformation> fileInformation =
         storageService
-            .loadAll() // path.toFile().length()
+            .loadAll() 
             .map(
                 path ->
                     new FileInformation(
-                        path.toString().replace("\\", "/"),
+                        pathToString(path),
                         fileMetadataService.readHeaders(path),
                         path.toFile().lastModified()))
             .collect(Collectors.toList());
@@ -99,11 +99,11 @@ public class FileFetchResource {
         storageService
             .loadAll(targetPath)
             .map(
-                path ->
-                    new FileInformation(
-                        targetPath.relativize(path).toString(),
-                        fileMetadataService.readHeaders(path),
-                        path.toFile().lastModified()))
+                path -> new FileInformation(
+                    relativizeToString(targetPath, path), 
+                    fileMetadataService.readHeaders(path), 
+                    path.toFile().length())
+            )
             .collect(Collectors.toList());
 
     return fileInformationList;
@@ -123,7 +123,6 @@ public class FileFetchResource {
         Object[] container = {null, null};
         paths.forEach(
             path -> {
-              logger.info("Getting timespan for file: " + path.toString());
               Path parent = path.getParent();
               if (parent.toString() != "csv") {
                 if (fileMetadataService.canComputeTimespan(parent)) {
@@ -136,10 +135,13 @@ public class FileFetchResource {
                   // Get the path and filename of each file and print it
                   LocalDateTime[] timespan =
                       fileMetadataService.getTimespan(path, (LocalDateTime) container[1]);
-                  logger.info("Timespan: " + timespan[0] + " - " + timespan[1]);
                   timespans.add(
-                      new FileTimespan(
-                          path.toString().replace("\\", "/"), timespan[0], timespan[1]));
+                    new FileTimespan(
+                      relativizeToString(folderkey, path), 
+                      timespan[0], 
+                      timespan[1]
+                      )
+                    );
                 }
               }
             });
@@ -150,7 +152,12 @@ public class FileFetchResource {
               // Get the path and filename of each file and print it
               LocalDateTime[] timespan = fileMetadataService.getTimespan(path, null);
               timespans.add(
-                  new FileTimespan(path.toString().replace("\\", "/"), timespan[0], timespan[1]));
+                new FileTimespan(
+                  relativizeToString(folderkey, path),
+                   timespan[0], 
+                   timespan[1]
+                   )
+                );
             });
         break;
       default:
@@ -158,5 +165,17 @@ public class FileFetchResource {
     }
 
     return timespans;
+  }
+
+  private String pathToString(Path path) {
+    return path.toString().replace("\\", "/");
+  }
+
+  private String relativizeToString (Path root, Path path) {
+    return pathToString(root.relativize(path));
+  }
+
+  private String relativizeToString (String root, Path path) {
+    return relativizeToString(Paths.get(root), path);
   }
 }
