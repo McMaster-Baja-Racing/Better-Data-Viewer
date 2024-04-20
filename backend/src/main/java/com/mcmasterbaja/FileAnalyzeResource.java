@@ -21,36 +21,28 @@ import org.jboss.logging.Logger;
 public class FileAnalyzeResource {
 
   @Inject Logger logger;
-
   @Inject StorageService storageService;
-
   @Inject FileMetadataService fileMetadataService;
 
   @GET
   @jakarta.ws.rs.Path("analyze")
   public Response runAnalyzer(@BeanParam AnalyzerParams params) {
-
     logger.info("Running analyzer with params: " + params.toString());
 
     if (!params.isValid()) {
       logger.error("Invalid parameters");
       return Response.status(Response.Status.BAD_REQUEST).entity("Invalid parameters").build();
     }
-    // add /csv to the input files
+    // TODO: Why is this required? Should be able to be removed and automated elsewhere
     for (int i = 0; i < params.getInputFiles().length; i++) {
       params.getInputFiles()[i] = "csv/" + params.getInputFiles()[i];
     }
 
-    // Update input files with root location and generate output file names (we don't do output
-    // files yet)
+    // Update input files with root location and generate output file names
     params.updateInputFiles(storageService.getRootLocation());
     params.generateOutputFileNames();
 
-    // print putput files
-    for (String file : params.getOutputFiles()) {
-      logger.info("Output file: " + file);
-    }
-
+    // TODO: Can't pass in null to createAnalyzer, this if statement feels redundant
     if (params.getType() != null) {
       Analyzer analyzer = AnalyzerFactory.createAnalyzer(params);
       if (analyzer != null) {
@@ -84,16 +76,12 @@ public class FileAnalyzeResource {
     if (minMax == null) {
       return Response.status(Response.Status.BAD_REQUEST).entity("Invalid column").build();
     }
-
-    logger.info("Min: " + minMax[0] + ", Max: " + minMax[1]);
-
     return Response.ok(minMax).build();
   }
 
   @GET
   @jakarta.ws.rs.Path("togglelive")
   public Response toggleLive() {
-
     logger.info("Toggling live data to: " + Serial.exit);
 
     if (!Serial.exit) {

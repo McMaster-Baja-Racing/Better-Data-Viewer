@@ -13,7 +13,6 @@ import org.jboss.logging.Logger;
 public class FileDeleteResource {
 
   @Inject Logger logger;
-
   @Inject StorageService storageService;
 
   // TODO: Deletes just the one file / one folder, not directories. Should be?

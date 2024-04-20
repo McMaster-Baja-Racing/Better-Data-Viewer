@@ -21,6 +21,8 @@ public class FileSystemStorageService implements StorageService {
   public void init() {
     try {
       Files.createDirectories(rootLocation);
+      Files.createDirectories(rootLocation.resolve("/csv"));
+      Files.createDirectories(rootLocation.resolve("/mp4"));
     } catch (IOException e) {
       logger.error("Could not initialize storage service", e);
     }

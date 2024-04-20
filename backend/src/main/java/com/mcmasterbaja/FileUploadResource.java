@@ -16,7 +16,6 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 public class FileUploadResource {
 
   @Inject Logger logger;
-
   @Inject StorageService storageService;
 
   @POST
@@ -33,16 +32,19 @@ public class FileUploadResource {
       }
 
       String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
-      fileName = fileExtension + "/" + fileName;
 
       switch (fileExtension) {
         case "csv":
         case "mp4":
+          storageService.store(form.fileData, Paths.get(fileExtension + "/" + fileName));
+          break;
+
+        case "mov":
+          fileName = "mp4/" + fileName.substring(0, fileName.lastIndexOf('.') + 1) + "mp4";
           storageService.store(form.fileData, Paths.get(fileName));
           break;
 
         case "bin":
-          fileName = fileName.substring(4, fileName.length());
 
           logger.info(
               "Parsing bin to: "
@@ -60,11 +62,6 @@ public class FileUploadResource {
           } catch (UnsatisfiedLinkError e) {
             return Response.serverError().entity("Bin parsing failed: " + e.getMessage()).build();
           }
-          break;
-
-        case "mov":
-          fileName = "mp4" + fileName.substring(3, fileName.lastIndexOf('.') + 1) + "mp4";
-          storageService.store(form.fileData, Paths.get(fileName));
           break;
 
         default:

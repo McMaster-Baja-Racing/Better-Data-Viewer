@@ -24,9 +24,7 @@ import org.jboss.logging.Logger;
 public class FileFetchResource {
 
   @Inject Logger logger;
-
   @Inject StorageService storageService;
-
   @Inject FileMetadataService fileMetadataService;
 
   @GET
@@ -61,11 +59,11 @@ public class FileFetchResource {
 
     List<FileInformation> fileInformation =
         storageService
-            .loadAll() // path.toFile().length()
+            .loadAll()
             .map(
                 path ->
                     new FileInformation(
-                        path.toString().replace("\\", "/"),
+                        path.toString().replace("\\", "/"), // TODO: Is this necesary?
                         fileMetadataService.readHeaders(path),
                         path.toFile().lastModified()))
             .collect(Collectors.toList());
@@ -81,7 +79,7 @@ public class FileFetchResource {
     Path targetPath = Paths.get(filekey);
     FileInformation fileInformation =
         new FileInformation(
-            targetPath.toString().replace("\\", "/"),
+            targetPath.toString().replace("\\", "/"), // TODO: Is this necessary?
             fileMetadataService.readHeaders(targetPath),
             targetPath.toFile().lastModified());
 
