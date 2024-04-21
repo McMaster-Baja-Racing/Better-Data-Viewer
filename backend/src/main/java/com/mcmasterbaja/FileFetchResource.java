@@ -63,7 +63,7 @@ public class FileFetchResource {
             .map(
                 path ->
                     new FileInformation(
-                        path.toString().replace("\\", "/"), // TODO: Is this necesary?
+                        path.toString(),
                         fileMetadataService.readHeaders(path),
                         path.toFile().lastModified()))
             .collect(Collectors.toList());
@@ -79,7 +79,7 @@ public class FileFetchResource {
     Path targetPath = Paths.get(filekey);
     FileInformation fileInformation =
         new FileInformation(
-            targetPath.toString().replace("\\", "/"), // TODO: Is this necessary?
+            targetPath.toString(),
             fileMetadataService.readHeaders(targetPath),
             targetPath.toFile().lastModified());
 
@@ -91,14 +91,14 @@ public class FileFetchResource {
   public List<FileInformation> getInformationForFolder(@PathParam("folderkey") String folderkey) {
     logger.info("Getting file information for folder: " + folderkey);
 
-    Path targetPath = Paths.get(folderkey);
+    Path folderPath = Paths.get(folderkey);
 
     List<FileInformation> fileInformationList =
         storageService
-            .loadAll(targetPath)
+            .loadAll(folderPath)
             .map(
                 path -> new FileInformation(
-                    relativizeToString(targetPath, path), 
+                    folderPath.relativize(path).toString(), 
                     fileMetadataService.readHeaders(path), 
                     path.toFile().length())
             )
@@ -112,8 +112,9 @@ public class FileFetchResource {
   public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) {
     logger.info("Getting timespan for folder: " + folderkey);
 
+    Path folderPath = Paths.get(folderkey);
     List<FileTimespan> timespans = new ArrayList<>();
-    Stream<Path> paths = storageService.loadAll(Paths.get(folderkey));
+    Stream<Path> paths = storageService.loadAll(folderPath);
 
     switch (folderkey) {
       case "csv":
@@ -135,7 +136,7 @@ public class FileFetchResource {
                       fileMetadataService.getTimespan(path, (LocalDateTime) container[1]);
                   timespans.add(
                     new FileTimespan(
-                      relativizeToString(folderkey, path), 
+                      folderPath.relativize(path).toString(), 
                       timespan[0], 
                       timespan[1]
                       )
@@ -144,37 +145,26 @@ public class FileFetchResource {
               }
             });
         break;
+
       case "mp4":
         paths.forEach(
             path -> {
-              // Get the path and filename of each file and print it
               LocalDateTime[] timespan = fileMetadataService.getTimespan(path, null);
               timespans.add(
                 new FileTimespan(
-                  relativizeToString(folderkey, path),
-                   timespan[0], 
-                   timespan[1]
-                   )
+                  folderPath.relativize(path).toString(),
+                  timespan[0], 
+                  timespan[1]
+                  )
                 );
             });
         break;
+
       default:
         throw new IllegalArgumentException("Invalid folder name");
     }
 
     return timespans;
-  }
-
-  private String pathToString(Path path) {
-    return path.toString().replace("\\", "/");
-  }
-
-  private String relativizeToString (Path root, Path path) {
-    return pathToString(root.relativize(path));
-  }
-
-  private String relativizeToString (String root, Path path) {
-    return relativizeToString(Paths.get(root), path);
   }
 
   private Path addTypeFolder(String fileKey){
