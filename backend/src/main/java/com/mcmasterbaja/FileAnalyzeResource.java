@@ -8,7 +8,9 @@ import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
-import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HEAD;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
@@ -24,7 +26,7 @@ public class FileAnalyzeResource {
   @Inject StorageService storageService;
   @Inject FileMetadataService fileMetadataService;
 
-  @GET
+  @POST
   @jakarta.ws.rs.Path("analyze")
   public Response runAnalyzer(@BeanParam AnalyzerParams params) {
     logger.info("Running analyzer with params: " + params.toString());
@@ -61,7 +63,7 @@ public class FileAnalyzeResource {
         .build();
   }
 
-  @GET
+  @HEAD
   @jakarta.ws.rs.Path("minMax/{filenkey}")
   public Response getMinMax(
       @PathParam("filekey") String filekey, @QueryParam("column") String column) {
@@ -76,7 +78,7 @@ public class FileAnalyzeResource {
     return Response.ok(minMax).build();
   }
 
-  @GET
+  @PATCH
   @jakarta.ws.rs.Path("togglelive")
   public Response toggleLive() {
     logger.info("Toggling live data to: " + Serial.exit);
