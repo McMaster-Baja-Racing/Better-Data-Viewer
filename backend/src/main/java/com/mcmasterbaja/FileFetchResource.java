@@ -4,11 +4,10 @@ import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
-import com.mcmasterbaja.storage.exceptions.StorageException;
+//import com.mcmasterbaja.storage.exceptions.StorageException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -30,7 +29,7 @@ public class FileFetchResource {
   @Inject StorageService storageService;
   @Inject FileMetadataService fileMetadataService;
 
-  @HEAD
+  @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getAllFiles() {
     logger.info("Getting all files");
@@ -55,7 +54,7 @@ public class FileFetchResource {
         .build();
   }
 
-  @HEAD
+  @GET
   @jakarta.ws.rs.Path("/information")
   public List<FileInformation> getInformation() {
     logger.info("Getting all file information");
@@ -74,7 +73,7 @@ public class FileFetchResource {
     return fileInformation;
   }
 
-  @HEAD
+  @GET
   @jakarta.ws.rs.Path("/information/{filekey}")
   public FileInformation getInformation(@PathParam("filekey") String filekey) {
     logger.info("Getting file information for: " + filekey);
@@ -90,7 +89,7 @@ public class FileFetchResource {
     return fileInformation;
   }
 
-  @HEAD
+  @GET
   @jakarta.ws.rs.Path("/information/folder/{folderkey}")
   public List<FileInformation> getInformationForFolder(@PathParam("folderkey") String folderkey) {
     logger.info("Getting file information for folder: " + folderkey);
@@ -111,7 +110,7 @@ public class FileFetchResource {
     return fileInformationList;
   }
 
-  @HEAD
+  @GET
   @jakarta.ws.rs.Path("/timespan/folder/{folderkey}")
   public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) {
     logger.info("Getting timespan for folder: " + folderkey);

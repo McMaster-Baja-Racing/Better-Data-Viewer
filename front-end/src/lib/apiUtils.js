@@ -81,7 +81,9 @@ export const ApiUtil = {
         }
       });
 
-      const response = await fetch(`http://${window.location.hostname}:8080/analyze?` + params.toString());
+      const response = await fetch(`http://${window.location.hostname}:8080/analyze?` + params.toString(), {
+        method: 'POST'
+      });
 
       if (!response.ok) {
         alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
