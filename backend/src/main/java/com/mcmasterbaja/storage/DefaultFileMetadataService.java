@@ -119,7 +119,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
   }
 
   public LocalDateTime[] getTimespan(Path targetPath, LocalDateTime zeroTime) {
-    switch (getTypeFolder(targetPath)) {
+    switch (getTypeFolder(targetPath.toString())) {
       case "csv":
         return getTimespanCSV(targetPath, zeroTime);
       case "mp4":
@@ -171,12 +171,11 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  public String getTypeFolder(Path targePath) {
-    String fileString = targePath.toString();
-    int dotIndex = fileString.lastIndexOf(".");
-    if (fileString == "" || fileString == null || dotIndex == -1) return ""; // No file extension
+  public String getTypeFolder(String pathString) {
+    int dotIndex = pathString.lastIndexOf(".");
+    if (pathString == "" || pathString == null || dotIndex == -1) return ""; // No file extension
 
-    String extension = fileString.substring(dotIndex + 1).toLowerCase();
+    String extension = pathString.substring(dotIndex + 1).toLowerCase();
     // Returns csv for bin and mp4 for mov for file conversion
     switch (extension) {
       case "bin":
