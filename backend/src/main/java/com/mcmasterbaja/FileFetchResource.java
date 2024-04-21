@@ -63,7 +63,7 @@ public class FileFetchResource {
             .map(
                 path ->
                     new FileInformation(
-                        path.toString(),
+                        path,
                         fileMetadataService.readHeaders(path),
                         path.toFile().lastModified()))
             .collect(Collectors.toList());
@@ -77,9 +77,10 @@ public class FileFetchResource {
     logger.info("Getting file information for: " + filekey);
 
     Path targetPath = Paths.get(filekey);
+
     FileInformation fileInformation =
         new FileInformation(
-            targetPath.toString(),
+            targetPath,
             fileMetadataService.readHeaders(targetPath),
             targetPath.toFile().lastModified());
 
@@ -98,7 +99,7 @@ public class FileFetchResource {
             .loadAll(folderPath)
             .map(
                 path -> new FileInformation(
-                    folderPath.relativize(path).toString(), 
+                    folderPath.relativize(path), 
                     fileMetadataService.readHeaders(path), 
                     path.toFile().length())
             )
@@ -136,7 +137,7 @@ public class FileFetchResource {
                       fileMetadataService.getTimespan(path, (LocalDateTime) container[1]);
                   timespans.add(
                     new FileTimespan(
-                      folderPath.relativize(path).toString(), 
+                      folderPath.relativize(path), 
                       timespan[0], 
                       timespan[1]
                       )
@@ -152,7 +153,7 @@ public class FileFetchResource {
               LocalDateTime[] timespan = fileMetadataService.getTimespan(path, null);
               timespans.add(
                 new FileTimespan(
-                  folderPath.relativize(path).toString(),
+                  folderPath.relativize(path),
                   timespan[0], 
                   timespan[1]
                   )
