@@ -29,8 +29,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   public String[] readHeaders(Path targetPath) {
     try {
-      // logger.info("Reading headers from: " + targetPath);
-      return Files.lines(storageService.getRootLocation().resolve(targetPath))
+      return Files.lines(storageService.load(targetPath))
           .findFirst()
           .get()
           .split(",");
@@ -89,7 +88,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
     try {
       ReversedLinesFileReader reverseReader =
           ReversedLinesFileReader.builder()
-              .setPath(storageService.getRootLocation().resolve(targetPath))
+              .setPath(storageService.load(targetPath))
               .setCharset(StandardCharsets.UTF_8)
               .get();
 
@@ -110,7 +109,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
               .getRootLocation()
               .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
       Path dmyPath =
-          storageService.getRootLocation().resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
+          storageService.load(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
       return Files.exists(smhPath) && Files.exists(dmyPath);
     } catch (Exception e) {
       e.printStackTrace();
@@ -228,7 +227,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
     try {
       BufferedReader reader =
           new BufferedReader(
-              Files.newBufferedReader(storageService.getRootLocation().resolve(targetPath)));
+              Files.newBufferedReader(storageService.load(targetPath)));
       firstTimestamp = reader.lines().skip(1).findFirst().orElseThrow().split(",")[0];
       reader.close();
       lastTimestamp = getLast(targetPath, "Timestamp (ms)");
@@ -247,7 +246,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   private LocalDateTime[] getTimespanMP4(Path targetPath) {
     // Gets the metadata of the file to find the creation time and duration
-    String metadata = extractMetadata(storageService.getRootLocation().resolve(targetPath));
+    String metadata = extractMetadata(storageService.load(targetPath));
 
     // Parses with timezeone, converts to GMT, and then to LocalDateTime
     assert metadata != null;

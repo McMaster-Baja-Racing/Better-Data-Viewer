@@ -4,7 +4,7 @@ import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
-//import com.mcmasterbaja.storage.exceptions.StorageException;
+import com.mcmasterbaja.storage.exceptions.StorageException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -31,7 +31,7 @@ public class FileFetchResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllFiles() {
+  public Response getAllFiles() throws StorageException {
     logger.info("Getting all files");
 
     List<String> filenames =
@@ -41,6 +41,7 @@ public class FileFetchResource {
     return Response.ok(filenames).build();
   }
 
+  // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/{filekey}")
   public Response getFile(@PathParam("filekey") String filekey) {
@@ -56,7 +57,7 @@ public class FileFetchResource {
 
   @GET
   @jakarta.ws.rs.Path("/information")
-  public List<FileInformation> getInformation() {
+  public List<FileInformation> getInformation() throws StorageException {
     logger.info("Getting all file information");
 
     List<FileInformation> fileInformation =
@@ -73,6 +74,7 @@ public class FileFetchResource {
     return fileInformation;
   }
 
+  // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/information/{filekey}")
   public FileInformation getInformation(@PathParam("filekey") String filekey) {
@@ -91,7 +93,7 @@ public class FileFetchResource {
 
   @GET
   @jakarta.ws.rs.Path("/information/folder/{folderkey}")
-  public List<FileInformation> getInformationForFolder(@PathParam("folderkey") String folderkey) {
+  public List<FileInformation> getInformationForFolder(@PathParam("folderkey") String folderkey) throws StorageException {
     logger.info("Getting file information for folder: " + folderkey);
 
     Path folderPath = Paths.get(folderkey);
@@ -112,7 +114,7 @@ public class FileFetchResource {
 
   @GET
   @jakarta.ws.rs.Path("/timespan/folder/{folderkey}")
-  public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) {
+  public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) throws StorageException {
     logger.info("Getting timespan for folder: " + folderkey);
 
     Path folderPath = Paths.get(folderkey);

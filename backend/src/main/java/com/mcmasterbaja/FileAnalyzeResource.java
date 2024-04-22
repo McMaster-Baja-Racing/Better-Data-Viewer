@@ -6,8 +6,11 @@ import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
+import com.mcmasterbaja.storage.exceptions.StorageException;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -26,9 +29,10 @@ public class FileAnalyzeResource {
   @Inject StorageService storageService;
   @Inject FileMetadataService fileMetadataService;
 
+  // TODO: Convert to using POST body rather than path variables
   @POST
   @jakarta.ws.rs.Path("analyze")
-  public Response runAnalyzer(@BeanParam AnalyzerParams params) {
+  public Response runAnalyzer(@BeanParam AnalyzerParams params) throws StorageException {
     logger.info("Running analyzer with params: " + params.toString());
 
     if (!params.isValid()) {
@@ -55,7 +59,7 @@ public class FileAnalyzeResource {
 
     Path targetPath = Paths.get(params.getOutputFiles()[0]);
     File file = storageService.load(targetPath).toFile();
-    Path relativePath = storageService.getRootLocation().resolve("csv").relativize(targetPath);
+    Path relativePath = storageService.load(Paths.get("csv")).relativize(targetPath);
 
     return Response.ok(file, "application/octet-stream")
         .header("Content-Disposition", "attachment; filename=\"" + relativePath.toString() + "\"")
@@ -63,13 +67,13 @@ public class FileAnalyzeResource {
         .build();
   }
 
-  @HEAD
-  @jakarta.ws.rs.Path("minMax/{filenkey}")
+  @GET
+  @jakarta.ws.rs.Path("minMax/{filekey}")
   public Response getMinMax(
       @PathParam("filekey") String filekey, @QueryParam("column") String column) {
     logger.info("Getting min and max for file: " + filekey);
 
-    Path targetPath = storageService.getRootLocation().resolve(filekey);
+    Path targetPath = storageService.load(Paths.get(filekey));
     Double[] minMax = fileMetadataService.getMinMax(targetPath, column);
 
     if (minMax == null) {

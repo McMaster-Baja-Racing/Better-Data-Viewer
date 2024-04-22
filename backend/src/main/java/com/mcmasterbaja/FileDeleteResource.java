@@ -1,6 +1,8 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.storage.StorageService;
+import com.mcmasterbaja.storage.exceptions.StorageException;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.PathParam;
@@ -17,46 +19,34 @@ public class FileDeleteResource {
 
   @DELETE
   @jakarta.ws.rs.Path("/file/{filekey}")
-  public Response deleteFile(@PathParam("filekey") String filekey) {
-    try {
-      logger.info("Deleting file: " + filekey);
+  public Response deleteFile(@PathParam("filekey") String filekey) throws StorageException {
+    logger.info("Deleting file: " + filekey);
 
-      Path targetPath = Paths.get(filekey);
-      storageService.delete(targetPath);
+    Path targetPath = Paths.get(filekey);
+    storageService.delete(targetPath);
 
-      return Response.ok("File deleted successfully").build();
-    } catch (Exception e) {
-      return Response.serverError().entity("File deletion failed: " + e.getMessage()).build();
-    }
+    return Response.ok("File deleted successfully").build();
   }
 
   @DELETE
   @jakarta.ws.rs.Path("/folder/{folderkey}")
-  public Response deleteFolder(@PathParam("folderkey") String folderkey) {
-    try {
-      logger.info("Deleting folder: " + folderkey);
+  public Response deleteFolder(@PathParam("folderkey") String folderkey) throws StorageException {
+    logger.info("Deleting folder: " + folderkey);
 
-      Path targetPath = Paths.get(folderkey);
-      storageService.deleteAll(targetPath);
+    Path targetPath = Paths.get(folderkey);
+    storageService.deleteAll(targetPath);
 
-      return Response.ok("All files deleted successfully").build();
-    } catch (Exception e) {
-      return Response.serverError().entity("File deletion failed: " + e.getMessage()).build();
-    }
+    return Response.ok("All files deleted successfully").build();
   }
 
   @DELETE
   @jakarta.ws.rs.Path("/all")
-  public Response deleteAllFiles() {
-    try {
-      logger.info("Deleting all files");
+  public Response deleteAllFiles() throws StorageException {
+    logger.info("Deleting all files");
 
-      storageService.deleteAll();
-      storageService.init();
+    storageService.deleteAll();
+    storageService.init();
 
-      return Response.ok("All files deleted successfully").build();
-    } catch (Exception e) {
-      return Response.serverError().entity("File deletion failed: " + e.getMessage()).build();
-    }
+    return Response.ok("All files deleted successfully").build();
   }
 }

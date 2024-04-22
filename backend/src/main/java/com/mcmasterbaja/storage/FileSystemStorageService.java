@@ -1,14 +1,20 @@
 package com.mcmasterbaja.storage;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.stream.Stream;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
+
+import com.mcmasterbaja.storage.exceptions.FileNotFoundException;
+import com.mcmasterbaja.storage.exceptions.StorageException;
 
 @ApplicationScoped // Singleton I think
 public class FileSystemStorageService implements StorageService {
@@ -18,14 +24,16 @@ public class FileSystemStorageService implements StorageService {
   @ConfigProperty(name = "quarkus.http.body.uploads-directory")
   private Path rootLocation;
 
-  public void init() {
+  //@PostConstruct
+  public void init() throws StorageException {
     try {
       logger.info("Initializing storage service");
       Files.createDirectories(rootLocation);
-      Files.createDirectories(rootLocation.resolve("csv/"));
-      Files.createDirectories(rootLocation.resolve("mp4/"));
+      Files.createDirectory(rootLocation.resolve("csv/"));
+      Files.createDirectory(rootLocation.resolve("mp4/"));
     } catch (IOException e) {
       logger.error("Could not initialize storage service", e);
+      throw new StorageException("Failed to initialize the storage service.", e);
     }
   }
 
@@ -33,7 +41,7 @@ public class FileSystemStorageService implements StorageService {
     return rootLocation;
   }
 
-  public void store(InputStream fileData, Path targetPath) {
+  public void store(InputStream fileData, Path targetPath) throws StorageException {
     try {
       Path destinationFile = rootLocation.resolve(targetPath).normalize().toAbsolutePath();
 
@@ -52,18 +60,18 @@ public class FileSystemStorageService implements StorageService {
     return rootLocation.resolve(targetPath);
   }
 
-  public Stream<Path> loadAll(Path dir) {
+  public Stream<Path> loadAll(Path dir) throws StorageException {
     try {
       return Files.walk(rootLocation.resolve(dir))
           .filter(path -> !Files.isDirectory(path))
           .map(rootLocation::relativize);
     } catch (IOException e) {
       logger.error("Could not list files", e);
-      return Stream.empty();
+      throw new FileNotFoundException("Could not list files", e);
     }
   }
 
-  public Stream<Path> loadAll() {
+  public Stream<Path> loadAll() throws StorageException {
     return loadAll(rootLocation);
   }
 
@@ -75,22 +83,24 @@ public class FileSystemStorageService implements StorageService {
     }
   }
 
-  // TODO: Files.walk returns the folder first, which can't be deleted quite yet
-  public void deleteAll(Path dir) {
+  // TODO: Does not regenerate csv/ or mp4/ 
+  public void deleteAll(Path dir) throws StorageException {
     try {
-      Files.walk(rootLocation.resolve(dir)).forEach(file -> {
-        try {
-          Files.delete(file);
-        } catch (IOException e) {
-          logger.error("Could not delete file", e);
-        }
-      });
+      Files.walk(rootLocation.resolve(dir))
+        .sorted(Comparator.reverseOrder())
+        .forEach(file -> {
+          try {
+            Files.delete(file);
+          } catch (IOException e) {
+            logger.error("Could not delete file", e);
+          }
+        });
     } catch (Exception e) {
       logger.error("Could not delete files", e);
     }
   }
 
-  public void deleteAll() {
+  public void deleteAll() throws StorageException {
     deleteAll(rootLocation);
   }
 }
