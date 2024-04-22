@@ -39,6 +39,31 @@ export const filterFiles = (video, files, fileTimespans) => {
   return videoSyncFiles;
 };
 
+export const binarySearchClosest = (arr, target) => {
+  let left = 0;
+  let right = arr.length - 1;
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+
+    if (arr[mid] === target) {
+      return mid;
+    } else if (arr[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  // At this point, 'left' is the index of the smallest element > target
+  // and 'right' is the index of the largest element < target
+  if (right < 0) return left; // target is smaller than all elements
+  if (left >= arr.length) return right; // target is larger than all elements
+
+  // Determine the closest element to the target
+  return Math.abs(arr[left] - target) < Math.abs(arr[right] - target) ? left : right;
+};
+
 // Finds the index of the timestamp in array that is closest to the timestamp provided
 const findClosestTimestamp = (targetTimestamp, timestampArray) => {
   const closestTimestamp = timestampArray.reduce((prev, curr) => {

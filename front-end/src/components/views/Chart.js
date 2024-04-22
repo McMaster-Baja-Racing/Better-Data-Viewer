@@ -7,7 +7,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
-import { computeOffsets, getFileTimestamp, getPointIndex} from '../../lib/videoUtils.js';
+import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '../../lib/videoUtils.js';
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '../../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
@@ -26,6 +26,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   const [offsets, setOffsets] = useState([]);
   const [timestamps, setTimestamps] = useState([]);
   const [lineX, setLineX] = useState(0);
+  //const [startTime, setStartTime] = useState(performance.now());
   let minMax = useRef([0, 0]);
 
   // Fetch the data from the server and format it for the chart
@@ -133,29 +134,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   useEffect(() => {
     if (timestamps.length === 0) return;
     try {
-      if (chartInformation.dtformat !== 'none'){
-        let fileTimestamp = undefined;
-        chartRef.current.series.some((series, index) => {
-          if (series.visible) {
-            fileTimestamp = getFileTimestamp(videoTimestamp, offsets[index], timestamps[index]);
-            return fileTimestamp !== undefined;
-          }
-          return false;
-        });
-        if (fileTimestamp !== undefined) setLineX(Math.floor(fileTimestamp));
-      } else {
-        const firstActiveSeries = chartRef.current.series.find(series => series.visible);
-        if (firstActiveSeries) {
-          const seriesIndex = chartRef.current.series.indexOf(firstActiveSeries);
-          const pointIndex = getPointIndex(
-            firstActiveSeries,
-            videoTimestamp,
-            offsets[seriesIndex],
-            timestamps[seriesIndex]
-          );
-          if (pointIndex >= 0) setLineX(firstActiveSeries.xData[pointIndex]);
-        }
-      }
+      chartInformation.dtformat !== 'none' ? timespanUpdate(videoTimestamp) : nonTimespanUpdate(videoTimestamp);
     } catch (e) {
       console.log(e);
     }
@@ -169,8 +148,87 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
     }
   }, [lineX]);
 
-  return (
+  const timespanUpdate = (videoTimestamp) => {
+    // Find the file timestamp that corresponds to the video timestamp
+    let fileTimestamp = undefined;
+    const visibleSeries = chartRef.current.series.filter(series => series.visible);
+    if (visibleSeries.length === 0) return;
+    visibleSeries.some(series => {
+      const seriesIndex = chartRef.current.series.indexOf(series);
+      fileTimestamp = getFileTimestamp(videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex]);
+      return fileTimestamp !== undefined;
+    });
+    const newLineX = Math.floor(fileTimestamp);
+    if (fileTimestamp !== undefined) setLineX(newLineX); else return;
+    
+    const values = visibleSeries.flatMap(series => {
+      if (newLineX < series.xData[0] || newLineX > series.xData[series.xData.length - 1]) return [];
+      const closestXIndex = binarySearchClosest(series.xData, newLineX);
+      return [{ name: series.name, y: series.yData[closestXIndex] }];
+    });
 
+    updateTimespanBox(newLineX, values);
+  };
+
+  const nonTimespanUpdate = (videoTimestamp) => {
+    const visibleSeries = chartRef.current.series.filter(series => series.visible);
+    if (visibleSeries.length === 0) return;
+    const firstVisibleSeries = visibleSeries[0];
+    const seriesIndex = chartRef.current.series.indexOf(firstVisibleSeries);
+    const pointIndex = getPointIndex(
+      firstVisibleSeries,
+      videoTimestamp,
+      offsets[seriesIndex],
+      timestamps[seriesIndex]
+    );
+    if (pointIndex >= 0) hoverPoint(seriesIndex, pointIndex); else return;
+    const values = [
+      { 
+        name: firstVisibleSeries.name,
+        x: firstVisibleSeries.xData[pointIndex], 
+        y: firstVisibleSeries.yData[pointIndex] 
+      }, ...visibleSeries.slice(1).map(series => {
+        const seriesIndex = chartRef.current.series.indexOf(series);
+        const pointIndex = getPointIndex(
+          series,
+          videoTimestamp,
+          offsets[seriesIndex],
+          timestamps[seriesIndex]
+        );
+        if (pointIndex >= 0) {
+          hoverPoint(seriesIndex, pointIndex);
+          return {name: series.name, x: series.xData[pointIndex], y: series.yData[pointIndex]};
+        }
+      })
+    ];
+    updateNonTimespanBox(values);
+  };
+
+  const hoverPoint = (seriesIndex, pointIndex) => {
+    chartRef.current.series[seriesIndex].points.forEach(
+      (point, index) => index == pointIndex ? point.setState('hover') : point.setState('')
+    );
+  };
+
+  const updateTimespanBox = (timestamp, values) => {
+    console.log('Timestamp: ' + new Date(timestamp).toUTCString());
+    chartRef.current.series.forEach(series => {
+      const value = values.find(value => value.name === series.name);
+      if (value === undefined) return;
+      console.log(`${series.name} (${value.y})`);
+    });
+  };
+
+  const updateNonTimespanBox = (values) => {
+    // update series labels with values
+    chartRef.current.series.forEach(series => {
+      const value = values.find(value => value.name === series.name);
+      if (value === undefined) return;
+      console.log(`${series.name} (${value.x}, ${value.y})`);
+    });
+  };
+
+  return (
     <div className="chartContainer" ref={ref}>
       <div className='chart'>
         <HighchartsReact
@@ -181,7 +239,6 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
       </div>
       {loading && <img className="loading" src={loadingImg} alt="Loading..." />}
     </div>
-
   );
 };
 
