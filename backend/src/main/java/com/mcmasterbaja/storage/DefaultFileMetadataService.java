@@ -29,7 +29,6 @@ import org.jboss.logging.Logger;
 public class DefaultFileMetadataService implements FileMetadataService {
 
   @Inject Logger logger;
-
   @Inject private StorageService storageService;
 
   public String[] readHeaders(Path targetPath) {

@@ -11,6 +11,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
@@ -62,8 +63,7 @@ public class FileUploadResource {
               outputDir,
               fileName,
               true);
-        } catch (Exception e) { // UnsatisfiedLinkError, IOException
-          // TODO: Is this the right error to throw?
+        } catch (IOException e) { // UnsatisfiedLinkError, IOException
           throw new StorageException("Failed to read bytes from: " + fileName, e);
         }
         break;

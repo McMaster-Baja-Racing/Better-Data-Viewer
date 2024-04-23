@@ -24,14 +24,25 @@ public class FileSystemStorageService implements StorageService {
   @ConfigProperty(name = "quarkus.http.body.uploads-directory")
   private Path rootLocation;
 
-  //@PostConstruct
+  @PostConstruct
   public void init() {
     try {
       logger.info("Initializing storage service");
-      Files.createDirectories(rootLocation);
-      Files.createDirectory(rootLocation.resolve("csv/"));
-      Files.createDirectory(rootLocation.resolve("mp4/"));
+      Path[] directories = {
+        rootLocation, 
+        rootLocation.resolve("csv/"),
+        rootLocation.resolve("mp4/")
+      };
+
+      for (Path directory : directories) {
+        if (!Files.exists(directory)) {
+          Files.createDirectories(directory);
+        } else {
+          logger.info("Directory already exists: " + directory.toString());
+        }
+      }
     } catch (IOException e) {
+      e.printStackTrace();
       throw new StorageException("Failed to initialize the storage service.", e);
     }
   }

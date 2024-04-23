@@ -73,7 +73,6 @@ public class FileFetchResource {
     return fileInformation;
   }
 
-  // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/information/{filekey}")
   public FileInformation getInformation(@PathParam("filekey") String filekey) {

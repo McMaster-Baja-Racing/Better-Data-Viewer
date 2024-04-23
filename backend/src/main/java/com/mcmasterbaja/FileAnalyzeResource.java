@@ -74,9 +74,6 @@ public class FileAnalyzeResource {
     Path targetPath = storageService.load(Paths.get(filekey));
     Double[] minMax = fileMetadataService.getMinMax(targetPath, column);
 
-    if (minMax == null) {
-      return Response.status(Response.Status.BAD_REQUEST).entity("Invalid column").build();
-    }
     return Response.ok(minMax).build();
   }
 
