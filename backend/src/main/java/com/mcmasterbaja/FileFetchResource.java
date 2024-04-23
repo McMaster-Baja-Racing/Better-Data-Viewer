@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jboss.logging.Logger;
 
-//import com.diffplug.common.base.Errors;
-
 @jakarta.ws.rs.Path("/files") // Use full package name to avoid conflict with java.nio.file.Path
 public class FileFetchResource {
 
@@ -75,7 +73,7 @@ public class FileFetchResource {
                             fileMetadataService.getSize(path));
                       } catch (StorageException e) {
                         logger.error(e);
-                        return null;
+                        throw new RuntimeException(e);
                       }
                     })
             .collect(Collectors.toList());
@@ -120,7 +118,7 @@ public class FileFetchResource {
                           fileMetadataService.getSize(path));
                     } catch (StorageException e) {
                       logger.error(e);
-                      return null;
+                      throw new RuntimeException(e);
                     }
                   })
             .collect(Collectors.toList());

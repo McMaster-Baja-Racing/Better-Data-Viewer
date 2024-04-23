@@ -135,8 +135,8 @@ export const ApiUtil = {
     formData.append('port', port);
 
     const response = await fetch(`http://${window.location.hostname}:8080/togglelive`, {
-      method: 'POST',
-      body: formData,
+      method: 'PATCH',
+      //body: formData,
     });
 
     if (!response.ok) throw Error(response.statusText);
