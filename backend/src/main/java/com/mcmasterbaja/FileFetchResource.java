@@ -4,7 +4,6 @@ import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
-import com.mcmasterbaja.storage.exceptions.StorageException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -31,7 +30,7 @@ public class FileFetchResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllFiles() throws StorageException {
+  public Response getAllFiles() {
     logger.info("Getting all files");
 
     List<String> filenames =
@@ -57,25 +56,18 @@ public class FileFetchResource {
 
   @GET
   @jakarta.ws.rs.Path("/information")
-  public List<FileInformation> getInformation() throws StorageException {
+  public List<FileInformation> getInformation() {
     logger.info("Getting all file information");
 
     List<FileInformation> fileInformation =
         storageService
             .loadAll()
             .map(
-                path ->
-                    {
-                      try {
-                        return new FileInformation(
-                            path,
-                            fileMetadataService.readHeaders(path),
-                            fileMetadataService.getSize(path));
-                      } catch (StorageException e) {
-                        logger.error(e);
-                        throw new RuntimeException(e);
-                      }
-                    })
+                path -> 
+                  new FileInformation(
+                      path,
+                      fileMetadataService.readHeaders(path),
+                      path.toFile().lastModified()))
             .collect(Collectors.toList());
 
     return fileInformation;
@@ -84,7 +76,7 @@ public class FileFetchResource {
   // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/information/{filekey}")
-  public FileInformation getInformation(@PathParam("filekey") String filekey) throws StorageException {
+  public FileInformation getInformation(@PathParam("filekey") String filekey) {
     logger.info("Getting file information for: " + filekey);
 
     Path targetPath = Paths.get(filekey);
@@ -100,7 +92,7 @@ public class FileFetchResource {
 
   @GET
   @jakarta.ws.rs.Path("/information/folder/{folderkey}")
-  public List<FileInformation> getInformationForFolder(@PathParam("folderkey") String folderkey) throws StorageException {
+  public List<FileInformation> getInformationForFolder(@PathParam("folderkey") String folderkey) {
     logger.info("Getting file information for folder: " + folderkey);
 
     Path folderPath = Paths.get(folderkey);
@@ -109,18 +101,11 @@ public class FileFetchResource {
         storageService
             .loadAll(folderPath)
             .map(
-              path ->
-                  {
-                    try {
-                      return new FileInformation(
-                          folderPath.relativize(path),
-                          fileMetadataService.readHeaders(path),
-                          fileMetadataService.getSize(path));
-                    } catch (StorageException e) {
-                      logger.error(e);
-                      throw new RuntimeException(e);
-                    }
-                  })
+                path -> new FileInformation(
+                    folderPath.relativize(path), 
+                    fileMetadataService.readHeaders(path), 
+                    path.toFile().length())
+            )
             .collect(Collectors.toList());
 
     return fileInformationList;
@@ -128,7 +113,7 @@ public class FileFetchResource {
 
   @GET
   @jakarta.ws.rs.Path("/timespan/folder/{folderkey}")
-  public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) throws StorageException {
+  public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) {
     logger.info("Getting timespan for folder: " + folderkey);
 
     Path folderPath = Paths.get(folderkey);

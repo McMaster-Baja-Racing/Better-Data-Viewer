@@ -1,7 +1,6 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.storage.StorageService;
-import com.mcmasterbaja.storage.exceptions.StorageException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
@@ -19,7 +18,7 @@ public class FileDeleteResource {
 
   @DELETE
   @jakarta.ws.rs.Path("/file/{filekey}")
-  public Response deleteFile(@PathParam("filekey") String filekey) throws StorageException {
+  public Response deleteFile(@PathParam("filekey") String filekey) {
     logger.info("Deleting file: " + filekey);
 
     Path targetPath = Paths.get(filekey);
@@ -30,7 +29,7 @@ public class FileDeleteResource {
 
   @DELETE
   @jakarta.ws.rs.Path("/folder/{folderkey}")
-  public Response deleteFolder(@PathParam("folderkey") String folderkey) throws StorageException {
+  public Response deleteFolder(@PathParam("folderkey") String folderkey) {
     logger.info("Deleting folder: " + folderkey);
 
     Path targetPath = Paths.get(folderkey);
@@ -41,7 +40,7 @@ public class FileDeleteResource {
 
   @DELETE
   @jakarta.ws.rs.Path("/all")
-  public Response deleteAllFiles() throws StorageException {
+  public Response deleteAllFiles() {
     logger.info("Deleting all files");
 
     storageService.deleteAll();

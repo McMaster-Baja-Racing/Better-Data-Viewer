@@ -25,7 +25,7 @@ public class FileSystemStorageService implements StorageService {
   private Path rootLocation;
 
   //@PostConstruct
-  public void init() throws StorageException {
+  public void init() {
     try {
       logger.info("Initializing storage service");
       Files.createDirectories(rootLocation);
@@ -41,7 +41,7 @@ public class FileSystemStorageService implements StorageService {
     return rootLocation;
   }
 
-  public void store(InputStream fileData, Path targetPath) throws StorageException {
+  public void store(InputStream fileData, Path targetPath) {
     try {
       Path destinationFile = rootLocation.resolve(targetPath).normalize().toAbsolutePath();
 
@@ -60,7 +60,7 @@ public class FileSystemStorageService implements StorageService {
     return rootLocation.resolve(targetPath);
   }
 
-  public Stream<Path> loadAll(Path dir) throws StorageException {
+  public Stream<Path> loadAll(Path dir) {
     try {
       return Files.walk(rootLocation.resolve(dir))
           .filter(path -> !Files.isDirectory(path))
@@ -71,7 +71,7 @@ public class FileSystemStorageService implements StorageService {
     }
   }
 
-  public Stream<Path> loadAll() throws StorageException {
+  public Stream<Path> loadAll() {
     return loadAll(rootLocation);
   }
 
@@ -84,7 +84,7 @@ public class FileSystemStorageService implements StorageService {
   }
 
   // TODO: Does not regenerate csv/ or mp4/ 
-  public void deleteAll(Path dir) throws StorageException {
+  public void deleteAll(Path dir) {
     try {
       Files.walk(rootLocation.resolve(dir))
         .sorted(Comparator.reverseOrder())
@@ -100,7 +100,7 @@ public class FileSystemStorageService implements StorageService {
     }
   }
 
-  public void deleteAll() throws StorageException {
+  public void deleteAll() {
     deleteAll(rootLocation);
   }
 }

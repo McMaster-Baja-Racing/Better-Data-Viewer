@@ -3,6 +3,8 @@ package com.mcmasterbaja.storage;
 import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.metadata.Tag;
 import com.drew.metadata.mp4.Mp4Directory;
+import com.mcmasterbaja.storage.exceptions.MalformedCsvException;
+import com.mcmasterbaja.storage.exceptions.FileNotFoundException;
 import com.mcmasterbaja.storage.exceptions.StorageException;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -18,6 +20,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.DoubleSummaryStatistics;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.jboss.logging.Logger;
@@ -36,18 +39,18 @@ public class DefaultFileMetadataService implements FileMetadataService {
           .get()
           .split(",");
     } catch (IOException e) {
-      logger.error("Could not read headers", e);
-      return new String[0];
+      throw new FileNotFoundException("Could not read headers of file: " + targetPath.toString(), e);
+    } catch (NoSuchElementException e) {
+      throw new MalformedCsvException("Could not read headers of file: " + targetPath.toString(), e);
     }
   }
 
-  public long getSize(Path targetPath) throws StorageException {
+  public long getSize(Path targetPath) {
     try {
       return Files.size(storageService.load(targetPath));
     } catch (IOException e) {
       throw new StorageException("Failed to get size of file: " + targetPath.toString(), e);
     }
-    
   }
 
   public Double[] getMinMax(Path targetPath, String column) {
@@ -87,8 +90,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
       }
 
     } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+      throw new FileNotFoundException("Failed to get minMax of file: " + targetPath.toString(), e);
     }
   }
 
@@ -106,26 +108,20 @@ public class DefaultFileMetadataService implements FileMetadataService {
       timestamp = reverseReader.readLine().split(",")[0];
       reverseReader.close();
     } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+      throw new FileNotFoundException("Failed to get last of file: " + targetPath.toString(), e);
     }
 
     return timestamp;
   }
 
   public boolean canComputeTimespan(Path folderPath) {
-    try {
-      Path smhPath =
-          storageService
-              .getRootLocation()
-              .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
-      Path dmyPath =
-          storageService.load(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
-      return Files.exists(smhPath) && Files.exists(dmyPath);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
+    Path smhPath =
+        storageService
+            .getRootLocation()
+            .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
+    Path dmyPath =
+        storageService.load(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
+    return Files.exists(smhPath) && Files.exists(dmyPath);
   }
 
   public LocalDateTime[] getTimespan(Path targetPath, LocalDateTime zeroTime) {
@@ -176,8 +172,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
       return zeroTime;
     } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+      throw new FileNotFoundException("Failed to get zeroTime of file: " + folderPath.toString(), e);
     }
   }
 
@@ -199,11 +194,11 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   // Returns all the metadata in the file as string with commas between each value
   // Each value will be in the format "key - value"
-  private String extractMetadata(Path file) {
+  private String extractMetadata(Path targetPath) {
     try {
       // Gets all the  metadata from the file in the form of a directory
       Mp4Directory metadata =
-          Mp4MetadataReader.readMetadata(file.toFile()).getFirstDirectoryOfType(Mp4Directory.class);
+          Mp4MetadataReader.readMetadata(targetPath.toFile()).getFirstDirectoryOfType(Mp4Directory.class);
 
       // Extracts all the key value pairs
       String metadataString = "";
@@ -213,10 +208,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
       return metadataString;
 
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new FileNotFoundException("Failed to extract metadata of file: " + targetPath.toString(), e);
     }
-
-    return null;
   }
 
   // Gets the value of a tag from the metadata of a file
@@ -243,8 +236,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
       reader.close();
       lastTimestamp = getLast(targetPath, "Timestamp (ms)");
     } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+      throw new FileNotFoundException("Failed to get timespan of file: " + targetPath.toString(), e);
     }
 
     LocalDateTime startTime =

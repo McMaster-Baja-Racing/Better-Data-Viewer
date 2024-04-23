@@ -4,12 +4,10 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
-import com.mcmasterbaja.storage.exceptions.StorageException;
-
 public interface StorageService {
 
   /** Initializes the storage service, setting up required directories. */
-  void init() throws StorageException;
+  void init();
 
   /**
    * Returns the root location where the files are stored.
@@ -24,7 +22,7 @@ public interface StorageService {
    * @param fileData The InputStream of the file data to be stored.
    * @param targetPath The Path under which the file is to be stored.
    */
-  void store(InputStream fileData, Path targetPath) throws StorageException;
+  void store(InputStream fileData, Path targetPath);
 
   /**
    * Loads a file as a Path.
@@ -39,7 +37,7 @@ public interface StorageService {
    *
    * @return A Stream of Paths representing the files.
    */
-  Stream<Path> loadAll() throws StorageException;
+  Stream<Path> loadAll();
 
   /**
    * Loads all files in a directory.
@@ -47,25 +45,25 @@ public interface StorageService {
    * @param dir The directory to load files from.
    * @return A Stream of Paths representing the files
    */
-  Stream<Path> loadAll(Path dir) throws StorageException;
+  Stream<Path> loadAll(Path dir);
 
   /**
    * Deletes a file.
    *
    * @param targetPath The Path of the file to delete.
    */
-  void delete(Path targetPath) throws StorageException;
+  void delete(Path targetPath);
 
   /**
    * Deletes all files stored in a directory.
    * 
    * @param targetPath The Path of the file to delete.
    */
-  void deleteAll(Path dir) throws StorageException;
+  void deleteAll(Path dir);
 
   /**
    * Deletes all files in the root location.
    * 
    */
-  void deleteAll() throws StorageException;
+  void deleteAll();
 }

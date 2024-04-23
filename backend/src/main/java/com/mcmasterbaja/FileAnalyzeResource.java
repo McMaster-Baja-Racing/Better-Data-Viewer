@@ -6,12 +6,10 @@ import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
-import com.mcmasterbaja.storage.exceptions.StorageException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
@@ -32,7 +30,7 @@ public class FileAnalyzeResource {
   // TODO: Convert to using POST body rather than path variables
   @POST
   @jakarta.ws.rs.Path("analyze")
-  public Response runAnalyzer(@BeanParam AnalyzerParams params) throws StorageException {
+  public Response runAnalyzer(@BeanParam AnalyzerParams params) {
     logger.info("Running analyzer with params: " + params.toString());
 
     if (!params.isValid()) {

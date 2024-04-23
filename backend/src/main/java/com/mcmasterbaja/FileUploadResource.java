@@ -24,7 +24,7 @@ public class FileUploadResource {
   @POST
   @jakarta.ws.rs.Path("/file")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  public Response uploadFile(@MultipartForm FileUploadForm form) throws StorageException {
+  public Response uploadFile(@MultipartForm FileUploadForm form) {
     logger.info("Uploading file: " + form.fileName);
 
     String fileName = form.fileName;

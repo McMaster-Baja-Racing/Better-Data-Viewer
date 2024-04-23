@@ -3,8 +3,6 @@ package com.mcmasterbaja.storage;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 
-import com.mcmasterbaja.storage.exceptions.StorageException;
-
 public interface FileMetadataService {
 
   /**
@@ -21,7 +19,7 @@ public interface FileMetadataService {
    * @param targetPath The path of the file to read.
    * @return the size of the file
    */
-  long getSize(Path targetPath) throws StorageException;
+  long getSize(Path targetPath);
 
   /**
    * Gets the minimum and maximum values of a column in a csv file.
