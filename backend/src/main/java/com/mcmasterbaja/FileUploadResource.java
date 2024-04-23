@@ -8,7 +8,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +25,7 @@ public class FileUploadResource {
   @POST
   @jakarta.ws.rs.Path("/file")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  public Response uploadFile(
+  public String uploadFile(
     @RestForm("fileName") String fileName, 
     @RestForm("fileData") @PartType(MediaType.APPLICATION_OCTET_STREAM) InputStream fileData
   ) {
@@ -75,7 +74,6 @@ public class FileUploadResource {
         throw new IllegalArgumentException("Invalid filetype: " + fileExtension);
     }
 
-    return Response.ok("File uploaded successfully").build();
-    
+    return "File uploaded successfully";
   }
 }

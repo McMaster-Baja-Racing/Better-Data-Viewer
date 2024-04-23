@@ -14,11 +14,12 @@ import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 @jakarta.ws.rs.Path("/")
 public class FileAnalyzeResource {
@@ -30,12 +31,11 @@ public class FileAnalyzeResource {
   // TODO: Convert to using POST body rather than path variables
   @POST
   @jakarta.ws.rs.Path("analyze")
-  public Response runAnalyzer(@BeanParam AnalyzerParams params) {
+  public RestResponse<File> runAnalyzer(@BeanParam AnalyzerParams params) {
     logger.info("Running analyzer with params: " + params.toString());
 
     if (!params.isValid()) {
-      logger.error("Invalid parameters");
-      return Response.status(Response.Status.BAD_REQUEST).entity("Invalid parameters").build();
+      throw new IllegalArgumentException("Invalid analyzer parameters");
     }
 
     // Update input files with rootLocation/csv and generate output file names
@@ -50,7 +50,7 @@ public class FileAnalyzeResource {
           analyzer.analyze();
         } catch (Exception e) {
           logger.error("Error running analyzer", e);
-          return Response.serverError().entity("Error running analyzer").build();
+          throw new RuntimeException("Error running analyzer");
         }
       }
     }
@@ -59,7 +59,7 @@ public class FileAnalyzeResource {
     File file = storageService.load(targetPath).toFile();
     Path relativePath = storageService.load(Paths.get("csv")).relativize(targetPath);
 
-    return Response.ok(file, "application/octet-stream")
+    return ResponseBuilder.ok(file, "application/octet-stream")
         .header("Content-Disposition", "attachment; filename=\"" + relativePath.toString() + "\"")
         .header("Access-Control-Expose-Headers", "Content-Disposition")
         .build();
@@ -67,19 +67,19 @@ public class FileAnalyzeResource {
 
   @GET
   @jakarta.ws.rs.Path("minMax/{filekey}")
-  public Response getMinMax(
+  public Double[] getMinMax(
       @PathParam("filekey") String filekey, @QueryParam("column") String column) {
     logger.info("Getting min and max for file: " + filekey);
 
     Path targetPath = storageService.load(Paths.get(filekey));
     Double[] minMax = fileMetadataService.getMinMax(targetPath, column);
 
-    return Response.ok(minMax).build();
+    return minMax;
   }
 
   @PATCH
   @jakarta.ws.rs.Path("togglelive")
-  public Response toggleLive() {
+  public String toggleLive() {
     logger.info("Toggling live data to: " + Serial.exit);
 
     if (!Serial.exit) {
@@ -92,6 +92,6 @@ public class FileAnalyzeResource {
           .start();
     }
 
-    return Response.ok("Live data toggled to " + Serial.exit).build();
+    return "Live data toggled to " + Serial.exit;
   }
 }

@@ -10,7 +10,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 @jakarta.ws.rs.Path("/files") // Use full package name to avoid conflict with java.nio.file.Path
 public class FileFetchResource {
@@ -30,26 +31,25 @@ public class FileFetchResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllFiles() {
+  public List<String> getAllFiles() {
     logger.info("Getting all files");
 
-    List<String> filenames =
+    List<String> fileNames =
         storageService.loadAll().map(Path::toString).collect(Collectors.toList());
 
-    logger.info("Files include: " + filenames);
-    return Response.ok(filenames).build();
+    return fileNames;
   }
 
   // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/{filekey}")
-  public Response getFile(@PathParam("filekey") String filekey) {
+  public RestResponse<File> getFile(@PathParam("filekey") String filekey) {
     logger.info("Getting file: " + filekey);
 
     Path targetPath = addTypeFolder(filekey);
     File file = storageService.load(targetPath).toFile();
 
-    return Response.ok(file, MediaType.APPLICATION_OCTET_STREAM)
+    return ResponseBuilder.ok(file, MediaType.APPLICATION_OCTET_STREAM)
         .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
         .build();
   }
