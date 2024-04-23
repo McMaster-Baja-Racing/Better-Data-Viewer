@@ -237,6 +237,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
       lastTimestamp = getLast(targetPath, "Timestamp (ms)");
     } catch (IOException e) {
       throw new FileNotFoundException("Failed to get timespan of file: " + targetPath.toString(), e);
+    } catch (NoSuchElementException e) {
+      throw new MalformedCsvException("Failed to get timespan of file: " + targetPath.toString(), e);
     }
 
     LocalDateTime startTime =

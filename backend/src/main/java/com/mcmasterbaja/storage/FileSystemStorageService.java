@@ -32,7 +32,6 @@ public class FileSystemStorageService implements StorageService {
       Files.createDirectory(rootLocation.resolve("csv/"));
       Files.createDirectory(rootLocation.resolve("mp4/"));
     } catch (IOException e) {
-      logger.error("Could not initialize storage service", e);
       throw new StorageException("Failed to initialize the storage service.", e);
     }
   }
@@ -46,13 +45,13 @@ public class FileSystemStorageService implements StorageService {
       Path destinationFile = rootLocation.resolve(targetPath).normalize().toAbsolutePath();
 
       if (!destinationFile.startsWith(this.rootLocation.toAbsolutePath())) {
-        logger.error("Cannot store file outside current directory");
+        throw new StorageException("Cannot store file outside current directory!");
       }
 
       Files.createDirectories(destinationFile.getParent());
       Files.copy(fileData, destinationFile);
     } catch (IOException e) {
-      logger.error("Could not store file", e);
+      throw new StorageException("Could not store file: " + targetPath.toFile(), e);
     }
   }
 
@@ -66,8 +65,7 @@ public class FileSystemStorageService implements StorageService {
           .filter(path -> !Files.isDirectory(path))
           .map(rootLocation::relativize);
     } catch (IOException e) {
-      logger.error("Could not list files", e);
-      throw new FileNotFoundException("Could not list files", e);
+      throw new FileNotFoundException("Could not list files inside directory: " + dir.toString(), e);
     }
   }
 
@@ -79,7 +77,7 @@ public class FileSystemStorageService implements StorageService {
     try {
       Files.delete(rootLocation.resolve(targetPath));
     } catch (IOException e) {
-      logger.error("Could not delete file", e);
+      throw new FileNotFoundException("Could not delete file: " + targetPath.toString(), e);
     }
   }
 
@@ -92,11 +90,11 @@ public class FileSystemStorageService implements StorageService {
           try {
             Files.delete(file);
           } catch (IOException e) {
-            logger.error("Could not delete file", e);
+            throw new FileNotFoundException("Could not delete file: " + file.toString(), e);
           }
         });
-    } catch (Exception e) {
-      logger.error("Could not delete files", e);
+    } catch (IOException e) {
+      throw new FileNotFoundException("Could not delete directory: " + dir.toString(), e);
     }
   }
 

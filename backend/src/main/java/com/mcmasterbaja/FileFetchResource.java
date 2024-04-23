@@ -67,7 +67,7 @@ public class FileFetchResource {
                   new FileInformation(
                       path,
                       fileMetadataService.readHeaders(path),
-                      path.toFile().lastModified()))
+                      fileMetadataService.getSize(path)))
             .collect(Collectors.toList());
 
     return fileInformation;
@@ -104,7 +104,7 @@ public class FileFetchResource {
                 path -> new FileInformation(
                     folderPath.relativize(path), 
                     fileMetadataService.readHeaders(path), 
-                    path.toFile().length())
+                    fileMetadataService.getSize(path))
             )
             .collect(Collectors.toList());
 
