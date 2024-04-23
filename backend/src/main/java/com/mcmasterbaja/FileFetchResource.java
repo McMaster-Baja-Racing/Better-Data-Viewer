@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jboss.logging.Logger;
 
+//import com.diffplug.common.base.Errors;
+
 @jakarta.ws.rs.Path("/files") // Use full package name to avoid conflict with java.nio.file.Path
 public class FileFetchResource {
 
@@ -65,10 +67,17 @@ public class FileFetchResource {
             .loadAll()
             .map(
                 path ->
-                    new FileInformation(
-                        path,
-                        fileMetadataService.readHeaders(path),
-                        path.toFile().lastModified()))
+                    {
+                      try {
+                        return new FileInformation(
+                            path,
+                            fileMetadataService.readHeaders(path),
+                            fileMetadataService.getSize(path));
+                      } catch (StorageException e) {
+                        logger.error(e);
+                        return null;
+                      }
+                    })
             .collect(Collectors.toList());
 
     return fileInformation;
@@ -77,7 +86,7 @@ public class FileFetchResource {
   // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/information/{filekey}")
-  public FileInformation getInformation(@PathParam("filekey") String filekey) {
+  public FileInformation getInformation(@PathParam("filekey") String filekey) throws StorageException {
     logger.info("Getting file information for: " + filekey);
 
     Path targetPath = Paths.get(filekey);
@@ -86,7 +95,7 @@ public class FileFetchResource {
         new FileInformation(
             targetPath,
             fileMetadataService.readHeaders(targetPath),
-            targetPath.toFile().lastModified());
+            fileMetadataService.getSize(targetPath));
 
     return fileInformation;
   }
@@ -102,11 +111,18 @@ public class FileFetchResource {
         storageService
             .loadAll(folderPath)
             .map(
-                path -> new FileInformation(
-                    folderPath.relativize(path), 
-                    fileMetadataService.readHeaders(path), 
-                    path.toFile().length())
-            )
+              path ->
+                  {
+                    try {
+                      return new FileInformation(
+                          folderPath.relativize(path),
+                          fileMetadataService.readHeaders(path),
+                          fileMetadataService.getSize(path));
+                    } catch (StorageException e) {
+                      logger.error(e);
+                      return null;
+                    }
+                  })
             .collect(Collectors.toList());
 
     return fileInformationList;

@@ -3,6 +3,8 @@ package com.mcmasterbaja.storage;
 import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.metadata.Tag;
 import com.drew.metadata.mp4.Mp4Directory;
+import com.mcmasterbaja.storage.exceptions.StorageException;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.BufferedReader;
@@ -37,6 +39,15 @@ public class DefaultFileMetadataService implements FileMetadataService {
       logger.error("Could not read headers", e);
       return new String[0];
     }
+  }
+
+  public long getSize(Path targetPath) throws StorageException {
+    try {
+      return Files.size(storageService.load(targetPath));
+    } catch (IOException e) {
+      throw new StorageException("Failed to get size of file: " + targetPath.toString(), e);
+    }
+    
   }
 
   public Double[] getMinMax(Path targetPath, String column) {
