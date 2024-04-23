@@ -1,7 +1,6 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.binary_csv.BinaryToCSV;
-import com.mcmasterbaja.model.FileUploadForm;
 import com.mcmasterbaja.storage.StorageService;
 import com.mcmasterbaja.storage.exceptions.StorageException;
 
@@ -12,9 +11,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import org.jboss.logging.Logger;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.jboss.resteasy.reactive.PartType;
+import org.jboss.resteasy.reactive.RestForm;
 
 @jakarta.ws.rs.Path("/upload")
 public class FileUploadResource {
@@ -25,10 +26,12 @@ public class FileUploadResource {
   @POST
   @jakarta.ws.rs.Path("/file")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  public Response uploadFile(@MultipartForm FileUploadForm form) {
-    logger.info("Uploading file: " + form.fileName);
+  public Response uploadFile(
+    @RestForm("fileName") String fileName, 
+    @RestForm("fileData") @PartType(MediaType.APPLICATION_OCTET_STREAM) InputStream fileData
+  ) {
 
-    String fileName = form.fileName;
+    logger.info("Uploading file: " + fileName);
 
     if (fileName.lastIndexOf('.') == -1) {
       throw new IllegalArgumentException("Invalid file name: "+ fileName);
@@ -39,12 +42,12 @@ public class FileUploadResource {
     switch (fileExtension) {
       case "csv":
       case "mp4":
-        storageService.store(form.fileData, Paths.get(fileExtension + "/" + fileName));
+        storageService.store(fileData, Paths.get(fileExtension + "/" + fileName));
         break;
 
       case "mov":
         fileName = "mp4/" + fileName.substring(0, fileName.lastIndexOf('.') + 1) + "mp4";
-        storageService.store(form.fileData, Paths.get(fileName));
+        storageService.store(fileData, Paths.get(fileName));
         break;
 
       case "bin":
@@ -59,7 +62,7 @@ public class FileUploadResource {
 
         try {
           BinaryToCSV.bytesToCSV(
-              form.fileData.readAllBytes(),
+              fileData.readAllBytes(),
               outputDir,
               fileName,
               true);
@@ -73,5 +76,6 @@ public class FileUploadResource {
     }
 
     return Response.ok("File uploaded successfully").build();
+    
   }
 }
