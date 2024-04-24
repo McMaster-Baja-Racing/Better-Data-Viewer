@@ -34,15 +34,15 @@ Setup complete!
 
 ### Individual startup
 
-For Quarkus, you can use the Quarkus CLI or Maven commands.
+For Quarkus, you can use the Quarkus CLI or Maven commands. For more information, see the readme in the `backend/` folder.
 1. Ensure that java 21 is being used. You can check with the `java --version` command.
 2. In the `backend/` folder, run either: `quarkus dev` or `./mvnw quarkus:dev`
-3. Profit.
+3. Head to `localhost:8080` to test it out!
 
 To run the front end, simply use the react scripts
 1. Ensure you have NodeJS and npm installed.
 2. In the `front-end/` folder, run the `npm start` command.
-3. Profit.
+3. Head to `localhost:3000` to test it out!
 
 ## Known errors
 - Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
