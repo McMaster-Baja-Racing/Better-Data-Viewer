@@ -6,6 +6,7 @@ import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
+import com.mcmasterbaja.storage.exceptions.InvalidArgumentException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
@@ -34,8 +35,8 @@ public class FileAnalyzeResource {
   public RestResponse<File> runAnalyzer(@BeanParam AnalyzerParams params) {
     logger.info("Running analyzer with params: " + params.toString());
 
-    if (!params.isValid()) {
-      throw new IllegalArgumentException("Invalid analyzer parameters");
+    if (!params.getErrors().isEmpty()) {
+      throw new InvalidArgumentException(params.getErrors());
     }
 
     // Update input files with rootLocation/csv and generate output file names

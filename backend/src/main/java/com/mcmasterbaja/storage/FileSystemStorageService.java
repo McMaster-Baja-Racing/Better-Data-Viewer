@@ -42,7 +42,6 @@ public class FileSystemStorageService implements StorageService {
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
       throw new StorageException("Failed to initialize the storage service.", e);
     }
   }

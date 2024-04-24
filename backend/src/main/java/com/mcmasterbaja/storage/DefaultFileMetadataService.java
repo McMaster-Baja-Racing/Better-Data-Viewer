@@ -40,7 +40,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
     } catch (IOException e) {
       throw new FileNotFoundException("Could not read headers of file: " + targetPath.toString(), e);
     } catch (NoSuchElementException e) {
-      throw new MalformedCsvException("Could not read headers of file: " + targetPath.toString(), e);
+      throw new MalformedCsvException("Could not read headers of file: " + targetPath.toString(), targetPath.toString(), e);
     }
   }
 
@@ -237,7 +237,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
     } catch (IOException e) {
       throw new FileNotFoundException("Failed to get timespan of file: " + targetPath.toString(), e);
     } catch (NoSuchElementException e) {
-      throw new MalformedCsvException("Failed to get timespan of file: " + targetPath.toString(), e);
+      throw new MalformedCsvException("Failed to get timespan of file: " + targetPath.toString(), targetPath.toString(), e);
     }
 
     LocalDateTime startTime =

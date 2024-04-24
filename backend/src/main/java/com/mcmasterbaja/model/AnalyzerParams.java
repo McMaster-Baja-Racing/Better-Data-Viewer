@@ -3,7 +3,10 @@ package com.mcmasterbaja.model;
 import jakarta.ws.rs.QueryParam;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,8 +34,17 @@ public class AnalyzerParams {
   @QueryParam("live")
   private Boolean live;
 
-  public boolean isValid() {
-    return inputFiles != null && inputFiles.length != 0 && inputColumns != null;
+  public List<String> getErrors() {
+    ArrayList<String> errors = new ArrayList<String>();
+    
+    if (inputFiles == null || inputFiles.length == 0) {
+      errors.add("inputFiles cannot be empty");
+    }
+    if (inputColumns == null || inputColumns.length == 0) {
+      errors.add("inputColumns cannot be empty");
+    }
+
+    return errors;
   }
 
   /**
