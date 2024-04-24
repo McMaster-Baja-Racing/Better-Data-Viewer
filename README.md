@@ -16,13 +16,13 @@ For an in-depth user guide, consult the McMaster Baja Wiki.
 ### Required tools:
 
 NodeJS and NPM
-JDK
+JDK 21+
 
 ### To setup:
 
 1. Clone repository.
 2. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command `npm i --force`
-3. Inside a terminal, navigate to the folder Better-Data-Viewer\API, then run the command `./mvnw spring-boot:run`
+3. Inside a terminal, navigate to the folder Better-Data-Viewer\backend, then run the command `./mvnw quarkus:dev`
 4. Inside start.ps1. add your JDK path to the list of `javaHomeLocations`.
 Setup complete!
 
@@ -31,6 +31,18 @@ Setup complete!
 1. Ensure your Java Development Kit directory is added into the list `javaHomeLocations` in the `start.ps1` file
 2. Run the command `./start.ps1`, and leave all terminals open.
 3. Go to `localhost:3000` to begin.
+
+### Individual startup
+
+For Quarkus, you can use the Quarkus CLI or Maven commands.
+1. Ensure that java 21 is being used. You can check with the `java --version` command.
+2. In the `backend/` folder, run either: `quarkus dev` or `./mvnw quarkus:dev`
+3. Profit.
+
+To run the front end, simply use the react scripts
+1. Ensure you have NodeJS and npm installed.
+2. In the `front-end/` folder, run the `npm start` command.
+3. Profit.
 
 ## Known errors
 - Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
