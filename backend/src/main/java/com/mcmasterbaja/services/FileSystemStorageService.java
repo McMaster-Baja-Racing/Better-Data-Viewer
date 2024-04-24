@@ -1,4 +1,4 @@
-package com.mcmasterbaja.storage;
+package com.mcmasterbaja.services;
 
 import com.mcmasterbaja.exceptions.FileNotFoundException;
 import com.mcmasterbaja.exceptions.StorageException;

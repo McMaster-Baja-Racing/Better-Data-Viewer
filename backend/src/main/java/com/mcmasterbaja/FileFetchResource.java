@@ -2,8 +2,9 @@ package com.mcmasterbaja;
 
 import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
-import com.mcmasterbaja.storage.FileMetadataService;
-import com.mcmasterbaja.storage.StorageService;
+import com.mcmasterbaja.services.FileMetadataService;
+import com.mcmasterbaja.services.StorageService;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PathParam;

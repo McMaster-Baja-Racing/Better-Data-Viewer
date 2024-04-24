@@ -1,4 +1,4 @@
-package com.mcmasterbaja.storage;
+package com.mcmasterbaja.services;
 
 import java.io.InputStream;
 import java.nio.file.Path;
