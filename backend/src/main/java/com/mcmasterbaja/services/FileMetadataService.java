@@ -15,7 +15,7 @@ public interface FileMetadataService {
 
   /**
    * Gets the size of the file.
-   * 
+   *
    * @param targetPath The path of the file to read.
    * @return the size of the file
    */
