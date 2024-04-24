@@ -6,7 +6,6 @@ import com.drew.metadata.mp4.Mp4Directory;
 import com.mcmasterbaja.exceptions.FileNotFoundException;
 import com.mcmasterbaja.exceptions.MalformedCsvException;
 import com.mcmasterbaja.exceptions.StorageException;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.BufferedReader;
@@ -33,14 +32,13 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   public String[] readHeaders(Path targetPath) {
     try {
-      return Files.lines(storageService.load(targetPath))
-          .findFirst()
-          .get()
-          .split(",");
+      return Files.lines(storageService.load(targetPath)).findFirst().get().split(",");
     } catch (IOException e) {
-      throw new FileNotFoundException("Could not read headers of file: " + targetPath.toString(), e);
+      throw new FileNotFoundException(
+          "Could not read headers of file: " + targetPath.toString(), e);
     } catch (NoSuchElementException e) {
-      throw new MalformedCsvException("Could not read headers of file: " + targetPath.toString(), targetPath.toString(), e);
+      throw new MalformedCsvException(
+          "Could not read headers of file: " + targetPath.toString(), targetPath.toString(), e);
     }
   }
 
@@ -115,11 +113,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
   public boolean canComputeTimespan(Path folderPath) {
     Path smhPath =
-        storageService
-            .getRootLocation()
-            .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
-    Path dmyPath =
-        storageService.load(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
+        storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
+    Path dmyPath = storageService.load(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
     return Files.exists(smhPath) && Files.exists(dmyPath);
   }
 
@@ -171,7 +166,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
       return zeroTime;
     } catch (IOException e) {
-      throw new FileNotFoundException("Failed to get zeroTime of file: " + folderPath.toString(), e);
+      throw new FileNotFoundException(
+          "Failed to get zeroTime of file: " + folderPath.toString(), e);
     }
   }
 
@@ -197,7 +193,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
     try {
       // Gets all the  metadata from the file in the form of a directory
       Mp4Directory metadata =
-          Mp4MetadataReader.readMetadata(targetPath.toFile()).getFirstDirectoryOfType(Mp4Directory.class);
+          Mp4MetadataReader.readMetadata(targetPath.toFile())
+              .getFirstDirectoryOfType(Mp4Directory.class);
 
       // Extracts all the key value pairs
       String metadataString = "";
@@ -207,7 +204,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
       return metadataString;
 
     } catch (IOException e) {
-      throw new FileNotFoundException("Failed to extract metadata of file: " + targetPath.toString(), e);
+      throw new FileNotFoundException(
+          "Failed to extract metadata of file: " + targetPath.toString(), e);
     }
   }
 
@@ -229,15 +227,16 @@ public class DefaultFileMetadataService implements FileMetadataService {
     String lastTimestamp = null;
     try {
       BufferedReader reader =
-          new BufferedReader(
-              Files.newBufferedReader(storageService.load(targetPath)));
+          new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
       firstTimestamp = reader.lines().skip(1).findFirst().orElseThrow().split(",")[0];
       reader.close();
       lastTimestamp = getLast(targetPath, "Timestamp (ms)");
     } catch (IOException e) {
-      throw new FileNotFoundException("Failed to get timespan of file: " + targetPath.toString(), e);
+      throw new FileNotFoundException(
+          "Failed to get timespan of file: " + targetPath.toString(), e);
     } catch (NoSuchElementException e) {
-      throw new MalformedCsvException("Failed to get timespan of file: " + targetPath.toString(), targetPath.toString(), e);
+      throw new MalformedCsvException(
+          "Failed to get timespan of file: " + targetPath.toString(), targetPath.toString(), e);
     }
 
     LocalDateTime startTime =

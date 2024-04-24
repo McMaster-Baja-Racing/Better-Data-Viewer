@@ -6,7 +6,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -36,7 +35,7 @@ public class AnalyzerParams {
 
   public List<String> getErrors() {
     ArrayList<String> errors = new ArrayList<String>();
-    
+
     if (inputFiles == null || inputFiles.length == 0) {
       errors.add("inputFiles cannot be empty");
     }
@@ -49,7 +48,7 @@ public class AnalyzerParams {
 
   /**
    * Converts to absolute path within the rootLocation/csv/ directory
-   * 
+   *
    * @param rootLocation the root location of the storage service
    */
   public void updateInputFiles(Path rootLocation) {
@@ -63,10 +62,7 @@ public class AnalyzerParams {
     }
   }
 
-  /**
-   * If output files are empty, auto-populates them with the format:
-   * inputFile_type.csv
-   */
+  /** If output files are empty, auto-populates them with the format: inputFile_type.csv */
   public void generateOutputFileNames() {
     if (outputFiles == null || outputFiles.length == 0) {
       outputFiles = new String[inputFiles.length];

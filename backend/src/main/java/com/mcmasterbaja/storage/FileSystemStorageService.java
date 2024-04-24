@@ -1,9 +1,10 @@
 package com.mcmasterbaja.storage;
 
+import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.StorageException;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -12,9 +13,6 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
-
-import com.mcmasterbaja.exceptions.FileNotFoundException;
-import com.mcmasterbaja.exceptions.StorageException;
 
 @ApplicationScoped // Singleton I think
 public class FileSystemStorageService implements StorageService {
@@ -29,9 +27,7 @@ public class FileSystemStorageService implements StorageService {
     try {
       logger.info("Initializing storage service");
       Path[] directories = {
-        rootLocation, 
-        rootLocation.resolve("csv/"),
-        rootLocation.resolve("mp4/")
+        rootLocation, rootLocation.resolve("csv/"), rootLocation.resolve("mp4/")
       };
 
       for (Path directory : directories) {
@@ -75,7 +71,8 @@ public class FileSystemStorageService implements StorageService {
           .filter(path -> !Files.isDirectory(path))
           .map(rootLocation::relativize);
     } catch (IOException e) {
-      throw new FileNotFoundException("Could not list files inside directory: " + dir.toString(), e);
+      throw new FileNotFoundException(
+          "Could not list files inside directory: " + dir.toString(), e);
     }
   }
 
@@ -91,18 +88,19 @@ public class FileSystemStorageService implements StorageService {
     }
   }
 
-  // TODO: Does not regenerate csv/ or mp4/ 
+  // TODO: Does not regenerate csv/ or mp4/
   public void deleteAll(Path dir) {
     try {
       Files.walk(rootLocation.resolve(dir))
-        .sorted(Comparator.reverseOrder())
-        .forEach(file -> {
-          try {
-            Files.delete(file);
-          } catch (IOException e) {
-            throw new FileNotFoundException("Could not delete file: " + file.toString(), e);
-          }
-        });
+          .sorted(Comparator.reverseOrder())
+          .forEach(
+              file -> {
+                try {
+                  Files.delete(file);
+                } catch (IOException e) {
+                  throw new FileNotFoundException("Could not delete file: " + file.toString(), e);
+                }
+              });
     } catch (IOException e) {
       throw new FileNotFoundException("Could not delete directory: " + dir.toString(), e);
     }

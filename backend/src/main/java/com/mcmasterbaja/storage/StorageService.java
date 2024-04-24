@@ -56,14 +56,11 @@ public interface StorageService {
 
   /**
    * Deletes all files stored in a directory.
-   * 
+   *
    * @param targetPath The Path of the file to delete.
    */
   void deleteAll(Path dir);
 
-  /**
-   * Deletes all files in the root location.
-   * 
-   */
+  /** Deletes all files in the root location. */
   void deleteAll();
 }
