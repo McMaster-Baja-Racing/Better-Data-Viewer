@@ -88,7 +88,6 @@ export const CreateGraphModal = ({
     */
 
     let dtformat = 'full';
-    console.log(chartInformationFiles)
     if (chartInformationFiles.some(file => file.columns[0].timespan.start === '')) dtformat = 'partial';
     if (chartInformationFiles.some(file => file.columns[0].header !== 'Timestamp (ms)')) dtformat = 'none';
 
