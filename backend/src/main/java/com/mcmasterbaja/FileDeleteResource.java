@@ -1,13 +1,12 @@
 package com.mcmasterbaja;
 
+import com.mcmasterbaja.services.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.PathParam;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.jboss.logging.Logger;
-
-import com.mcmasterbaja.services.StorageService;
 
 @jakarta.ws.rs.Path("/delete")
 public class FileDeleteResource {
