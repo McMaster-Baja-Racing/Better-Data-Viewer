@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
-import com.mcmasterbaja.storage.exceptions.FileNotFoundException;
-import com.mcmasterbaja.storage.exceptions.StorageException;
+import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.StorageException;
 
 @ApplicationScoped // Singleton I think
 public class FileSystemStorageService implements StorageService {

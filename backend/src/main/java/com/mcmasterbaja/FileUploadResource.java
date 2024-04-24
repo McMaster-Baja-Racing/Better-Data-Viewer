@@ -1,14 +1,13 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.binary_csv.BinaryToCSV;
+import com.mcmasterbaja.exceptions.StorageException;
 import com.mcmasterbaja.storage.StorageService;
-import com.mcmasterbaja.storage.exceptions.StorageException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.MediaType;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
@@ -26,14 +25,13 @@ public class FileUploadResource {
   @jakarta.ws.rs.Path("/file")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public String uploadFile(
-    @RestForm("fileName") String fileName, 
-    @RestForm("fileData") @PartType(MediaType.APPLICATION_OCTET_STREAM) InputStream fileData
-  ) {
+      @RestForm("fileName") String fileName,
+      @RestForm("fileData") @PartType(MediaType.APPLICATION_OCTET_STREAM) InputStream fileData) {
 
     logger.info("Uploading file: " + fileName);
 
     if (fileName.lastIndexOf('.') == -1) {
-      throw new IllegalArgumentException("Invalid file name: "+ fileName);
+      throw new IllegalArgumentException("Invalid file name: " + fileName);
     }
 
     String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -60,11 +58,7 @@ public class FileUploadResource {
                 + "/");
 
         try {
-          BinaryToCSV.bytesToCSV(
-              fileData.readAllBytes(),
-              outputDir,
-              fileName,
-              true);
+          BinaryToCSV.bytesToCSV(fileData.readAllBytes(), outputDir, fileName, true);
         } catch (IOException e) { // UnsatisfiedLinkError, IOException
           throw new StorageException("Failed to read bytes from: " + fileName, e);
         }

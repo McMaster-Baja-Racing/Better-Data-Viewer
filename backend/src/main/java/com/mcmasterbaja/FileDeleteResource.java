@@ -1,7 +1,6 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.storage.StorageService;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.PathParam;

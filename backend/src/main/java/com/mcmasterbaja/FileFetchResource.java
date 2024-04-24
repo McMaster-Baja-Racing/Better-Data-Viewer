@@ -4,7 +4,6 @@ import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PathParam;
@@ -63,11 +62,11 @@ public class FileFetchResource {
         storageService
             .loadAll()
             .map(
-                path -> 
-                  new FileInformation(
-                      path,
-                      fileMetadataService.readHeaders(path),
-                      fileMetadataService.getSize(path)))
+                path ->
+                    new FileInformation(
+                        path,
+                        fileMetadataService.readHeaders(path),
+                        fileMetadataService.getSize(path)))
             .collect(Collectors.toList());
 
     return fileInformation;
@@ -100,11 +99,11 @@ public class FileFetchResource {
         storageService
             .loadAll(folderPath)
             .map(
-                path -> new FileInformation(
-                    folderPath.relativize(path), 
-                    fileMetadataService.readHeaders(path), 
-                    fileMetadataService.getSize(path))
-            )
+                path ->
+                    new FileInformation(
+                        folderPath.relativize(path),
+                        fileMetadataService.readHeaders(path),
+                        fileMetadataService.getSize(path)))
             .collect(Collectors.toList());
 
     return fileInformationList;
@@ -138,12 +137,7 @@ public class FileFetchResource {
                   LocalDateTime[] timespan =
                       fileMetadataService.getTimespan(path, (LocalDateTime) container[1]);
                   timespans.add(
-                    new FileTimespan(
-                      folderPath.relativize(path), 
-                      timespan[0], 
-                      timespan[1]
-                      )
-                    );
+                      new FileTimespan(folderPath.relativize(path), timespan[0], timespan[1]));
                 }
               }
             });
@@ -154,12 +148,7 @@ public class FileFetchResource {
             path -> {
               LocalDateTime[] timespan = fileMetadataService.getTimespan(path, null);
               timespans.add(
-                new FileTimespan(
-                  folderPath.relativize(path),
-                  timespan[0], 
-                  timespan[1]
-                  )
-                );
+                  new FileTimespan(folderPath.relativize(path), timespan[0], timespan[1]));
             });
         break;
 
@@ -170,7 +159,7 @@ public class FileFetchResource {
     return timespans;
   }
 
-  private Path addTypeFolder(String fileKey){
+  private Path addTypeFolder(String fileKey) {
     return Paths.get(fileMetadataService.getTypeFolder(fileKey)).resolve(fileKey);
   }
 }

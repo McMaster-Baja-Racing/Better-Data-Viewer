@@ -2,11 +2,11 @@ package com.mcmasterbaja;
 
 import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
+import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.storage.FileMetadataService;
 import com.mcmasterbaja.storage.StorageService;
-import com.mcmasterbaja.storage.exceptions.InvalidArgumentException;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;

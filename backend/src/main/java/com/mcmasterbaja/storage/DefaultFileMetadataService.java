@@ -3,9 +3,9 @@ package com.mcmasterbaja.storage;
 import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.metadata.Tag;
 import com.drew.metadata.mp4.Mp4Directory;
-import com.mcmasterbaja.storage.exceptions.MalformedCsvException;
-import com.mcmasterbaja.storage.exceptions.FileNotFoundException;
-import com.mcmasterbaja.storage.exceptions.StorageException;
+import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.MalformedCsvException;
+import com.mcmasterbaja.exceptions.StorageException;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
