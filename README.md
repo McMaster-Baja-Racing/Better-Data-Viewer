@@ -48,6 +48,9 @@ To run the front end, simply use the react scripts
 - Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
   Optionally, run `Set-ExecutionPolicy unrestricted` in an administrator terminal to set it permanently
 
+## Linting
+- To run ESLint on the front end, simply download the ESLint extension (The ) in VSCode. You should then be able to run the `Auto-format file` command via the command palette (Ctrl + Shift + P).
+- To run Java Google Format, go to the repository (https://github.com/google/google-java-format) and download the latest all-deps `.jar` file. Additionally you can find it locally in the backend folder. You can then run it via the command `java -jar /path/to/google-java-format-${GJF_VERSION?}-all-deps.jar <options> [files...]`. A common option to add is`--replace` which will automatically format it.
 
 ## Rust Library Build/Setup (Only necessary if making library changes)
 - first have rustup installed https://www.rust-lang.org/tools/install
