@@ -36,7 +36,7 @@ public interface FileMetadataService {
    * @param targetPath The Path of the file to read.
    * @return The last value of the column
    */
-  String getLast(Path targetPath, String column);
+  String getLast(Path targetPath, int columnIndex);
 
   /**
    * Checks if the timespan of a folder can be computed.

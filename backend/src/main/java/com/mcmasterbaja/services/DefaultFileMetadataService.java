@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.DoubleSummaryStatistics;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -91,7 +92,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  public String getLast(Path targetPath, String column) {
+  public String getLast(Path targetPath, int columnIndex) {
 
     String timestamp;
 
@@ -102,7 +103,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
               .setCharset(StandardCharsets.UTF_8)
               .get();
 
-      timestamp = reverseReader.readLine().split(",")[0];
+      timestamp = reverseReader.readLine().split(",")[columnIndex];
       reverseReader.close();
     } catch (IOException e) {
       throw new FileNotFoundException("Failed to get last of file: " + targetPath.toString(), e);
@@ -228,9 +229,10 @@ public class DefaultFileMetadataService implements FileMetadataService {
     try {
       BufferedReader reader =
           new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
-      firstTimestamp = reader.lines().skip(1).findFirst().orElseThrow().split(",")[0];
+      int timestampIndex = Arrays.asList(reader.readLine().split(",")).indexOf("Timestamp (ms)");
+      firstTimestamp = reader.readLine().split(",")[timestampIndex];
       reader.close();
-      lastTimestamp = getLast(targetPath, "Timestamp (ms)");
+      lastTimestamp = getLast(targetPath, timestampIndex);
     } catch (IOException e) {
       throw new FileNotFoundException(
           "Failed to get timespan of file: " + targetPath.toString(), e);
