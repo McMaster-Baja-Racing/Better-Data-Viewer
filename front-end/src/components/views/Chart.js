@@ -26,7 +26,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   const [offsets, setOffsets] = useState([]);
   const [timestamps, setTimestamps] = useState([]);
   const [lineX, setLineX] = useState(0);
-  //const [startTime, setStartTime] = useState(performance.now());
+  const [valueLines, setValueLines] = useState([]);
   let minMax = useRef([0, 0]);
 
   // Fetch the data from the server and format it for the chart
@@ -148,29 +148,44 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
     }
   }, [lineX]);
 
+
   const timespanUpdate = (videoTimestamp) => {
-    // Find the file timestamp that corresponds to the video timestamp
     let fileTimestamp = undefined;
     const visibleSeries = chartRef.current.series.filter(series => series.visible);
     if (visibleSeries.length === 0) return;
+
+    // Gets the first file timestamp that is not undefined
     visibleSeries.some(series => {
       const seriesIndex = chartRef.current.series.indexOf(series);
       fileTimestamp = getFileTimestamp(videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex]);
       return fileTimestamp !== undefined;
     });
+    
+    // Updates the lineX value with the new file timestamp
     const newLineX = Math.floor(fileTimestamp);
     if (fileTimestamp !== undefined) setLineX(newLineX); else return;
     
+    // Finds the closest value to the new lineX value for each series
+    // Skips the series whose x values do not contain the new lineX value in their domain
     const values = visibleSeries.flatMap(series => {
       if (newLineX < series.xData[0] || newLineX > series.xData[series.xData.length - 1]) return [];
       const closestXIndex = binarySearchClosest(series.xData, newLineX);
       return [{ name: series.name, y: series.yData[closestXIndex] }];
     });
 
-    updateTimespanBox(newLineX, values);
+    // Updates the value box with the found values
+    const tempValueLines = [];
+    tempValueLines.push('Timestamp: ' + new Date(newLineX).toUTCString());
+    chartRef.current.series.forEach(series => {
+      const value = values.find(value => value.name === series.name);
+      if (value === undefined) return;
+      tempValueLines.push(`${series.name}: (${value.y})`);
+    });
+    setValueLines(tempValueLines);
   };
 
   const nonTimespanUpdate = (videoTimestamp) => {
+    // Finds the matching point index for the first visible series using the video timestamp
     const visibleSeries = chartRef.current.series.filter(series => series.visible);
     if (visibleSeries.length === 0) return;
     const firstVisibleSeries = visibleSeries[0];
@@ -182,6 +197,8 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
       timestamps[seriesIndex]
     );
     if (pointIndex >= 0) hoverPoint(seriesIndex, pointIndex); else return;
+
+    // Finds the point index for all the other visible series
     const values = [
       { 
         name: firstVisibleSeries.name,
@@ -201,35 +218,28 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
         }
       })
     ];
-    updateNonTimespanBox(values);
+
+    // Updates the value box with the found values
+    const tempValueLines = [];
+    chartRef.current.series.forEach(series => {
+      const value = values.find(value => value.name === series.name);
+      if (value === undefined) return;
+      tempValueLines.push(`${series.name}: (${value.x}, ${value.y})`);
+    });
+    setValueLines(tempValueLines);
   };
 
+  // Sets the hover state for a point in a series
+  // Resets the state for all other points in the series
   const hoverPoint = (seriesIndex, pointIndex) => {
     chartRef.current.series[seriesIndex].points.forEach(
       (point, index) => index == pointIndex ? point.setState('hover') : point.setState('')
     );
   };
 
-  const updateTimespanBox = (timestamp, values) => {
-    console.log('Timestamp: ' + new Date(timestamp).toUTCString());
-    chartRef.current.series.forEach(series => {
-      const value = values.find(value => value.name === series.name);
-      if (value === undefined) return;
-      console.log(`${series.name} (${value.y})`);
-    });
-  };
-
-  const updateNonTimespanBox = (values) => {
-    // update series labels with values
-    chartRef.current.series.forEach(series => {
-      const value = values.find(value => value.name === series.name);
-      if (value === undefined) return;
-      console.log(`${series.name} (${value.x}, ${value.y})`);
-    });
-  };
-
   return (
     <div className="chartContainer" ref={ref}>
+      {valueLines.length > 0 ? (<div className='valueBox'>{valueLines.join('\n')}</div>) : null}
       <div className='chart'>
         <HighchartsReact
           highcharts={Highcharts}
