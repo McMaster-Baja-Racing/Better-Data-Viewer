@@ -12,9 +12,15 @@ public class BinaryToCSV {
   private static final String relativePath = "/src/main/java/com/mcmasterbaja/binary_csv/";
 
   static {
+
     String path = System.getProperty("user.dir");
-    path += relativePath + "/libbinary_to_csv_lib.dylib";
-    // System.out.println("PATH  " + path);
+
+    if (System.getProperty("os.name").equals("Mac OS X")) {
+      path += relativePath + "/libbinary_to_csv_lib.dylib";
+    } else {
+      path += relativePath + "binary_to_csv_lib.dll";
+    }
+    
     System.load(path);
   }
 
