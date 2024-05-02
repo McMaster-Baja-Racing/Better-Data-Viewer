@@ -1,5 +1,5 @@
 import '../../styles/chart.css';
-import { defaultChartOptions, getChartConfig, movePlotLine } from '../../lib/chartOptions.js';
+import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '../../lib/chartOptions.js';
 import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
 import { ApiUtil } from '../../lib/apiUtils.js';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -26,6 +26,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   const [offsets, setOffsets] = useState([]);
   const [timestamps, setTimestamps] = useState([]);
   const [lineX, setLineX] = useState(0);
+  const [linePoint, setLinePoint] = useState({x: 0, y: 0});
   const [valueLines, setValueLines] = useState([]);
   let minMax = useRef([0, 0]);
 
@@ -142,12 +143,19 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
 
   useEffect(() => {
     try {
-      setChartOptions(movePlotLine(chartOptions, lineX));
+      setChartOptions(movePlotLineX(chartOptions, lineX));
     } catch (e) {
       console.log(e);
     }
   }, [lineX]);
 
+  useEffect(() => {
+    try {
+      setChartOptions(movePlotLines(chartOptions, linePoint.x, linePoint.y));
+    } catch (e) {
+      console.log(e);
+    }
+  }, [linePoint]);
 
   const timespanUpdate = (videoTimestamp) => {
     let fileTimestamp = undefined;
@@ -196,7 +204,10 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
       offsets[seriesIndex],
       timestamps[seriesIndex]
     );
-    if (pointIndex >= 0) hoverPoint(seriesIndex, pointIndex); else return;
+
+    if (pointIndex >= 0) {
+      setLinePoint({x: firstVisibleSeries.xData[pointIndex], y: firstVisibleSeries.yData[pointIndex]});
+    } else return;
 
     // Finds the point index for all the other visible series
     const values = [
@@ -213,7 +224,6 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
           timestamps[seriesIndex]
         );
         if (pointIndex >= 0) {
-          hoverPoint(seriesIndex, pointIndex);
           return {name: series.name, x: series.xData[pointIndex], y: series.yData[pointIndex]};
         }
       })
@@ -227,14 +237,6 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
       tempValueLines.push(`${series.name}: (${value.x}, ${value.y})`);
     });
     setValueLines(tempValueLines);
-  };
-
-  // Sets the hover state for a point in a series
-  // Resets the state for all other points in the series
-  const hoverPoint = (seriesIndex, pointIndex) => {
-    chartRef.current.series[seriesIndex].points.forEach(
-      (point, index) => index == pointIndex ? point.setState('hover') : point.setState('')
-    );
   };
 
   return (

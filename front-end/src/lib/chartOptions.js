@@ -25,16 +25,6 @@ export const defaultChartOptions = {
   }
 };
 
-export const movePlotLine = (chartOptions, x) => {
-  return {
-    ...chartOptions,
-    xAxis: {
-      ...chartOptions.xAxis,
-      plotLines: [{ ...chartOptions.xAxis.plotLines[0], value: x }],
-    },
-  };
-};
-
 const getStandardChartConfig = (chartInformation) => {
 
   var chartConfig = defaultChartOptions;
@@ -106,7 +96,14 @@ const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
 
   chartConfig.xAxis.plotLines = [{
     color: 'black',
-    width: 1.5,
+    width: 2,
+    zIndex: 3,
+  }];
+
+  chartConfig.yAxis.plotLines = [{
+    color: 'black',
+    width: 2,
+    zIndex: 3,
   }];
 
   return chartConfig;
@@ -145,4 +142,28 @@ export const getChartConfig = (chartInformation, parsedData, fileNames, minMax) 
     case 'video': return getVideoChartConfig(chartInformation, parsedData, fileNames);
     default: return getDefaultChartConfig(chartInformation, parsedData, fileNames);
   }
+};
+
+export const movePlotLineX = (chartOptions, x) => {
+  return {
+    ...chartOptions,
+    xAxis: {
+      ...chartOptions.xAxis,
+      plotLines: [{ ...chartOptions.xAxis.plotLines[0], value: x }],
+    },
+  };
+}
+
+export const movePlotLines = (chartOptions, x, y) => {
+  return {
+    ...chartOptions,
+    xAxis: {
+      ...chartOptions.xAxis,
+      plotLines: [{ ...chartOptions.xAxis.plotLines[0], value: x }],
+    },
+    yAxis: {
+      ...chartOptions.yAxis,
+      plotLines: [{ ...chartOptions.yAxis.plotLines[0], value: y }],
+    },
+  };
 };
