@@ -122,7 +122,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
       [`${chosen}/${LAT_COLUMNNAME}.csv`, `${chosen}/${LNG_COLUMNNAME}.csv`],
       [LAT_COLUMNNAME, LNG_COLUMNNAME],
       [],
-      'interpolaterPro',
+      'INTERPOLATER_PRO',
       [],
       false
     )
