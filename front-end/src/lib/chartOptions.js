@@ -152,7 +152,7 @@ export const movePlotLineX = (chartOptions, x) => {
       plotLines: [{ ...chartOptions.xAxis.plotLines[0], value: x }],
     },
   };
-}
+};
 
 export const movePlotLines = (chartOptions, x, y) => {
   return {
