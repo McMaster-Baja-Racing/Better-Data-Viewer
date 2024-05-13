@@ -20,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import java.util.stream.Stream;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.jboss.logging.Logger;
 
@@ -72,7 +71,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
       if (columnIndex == -1) {
         throw new IllegalArgumentException("Column not found in file: " + targetPath.toString());
       }
-      
+
       // Then get the minimum and maximum values
       String line;
       while ((line = reader.readLine()) != null) {
@@ -87,13 +86,12 @@ public class DefaultFileMetadataService implements FileMetadataService {
       }
 
     } catch (IOException e) {
-      throw new FileNotFoundException(
-          "Failed to get min max of file: " + targetPath.toString(), e);
+      throw new FileNotFoundException("Failed to get min max of file: " + targetPath.toString(), e);
     } catch (NumberFormatException e) {
       throw new MalformedCsvException(
           "Failed to get min max of file: " + targetPath.toString(), targetPath.toString(), e);
     }
-  
+
     return new Double[] {min, max};
   }
 

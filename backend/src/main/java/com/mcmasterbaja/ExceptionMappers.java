@@ -96,7 +96,8 @@ public class ExceptionMappers {
         new ErrorResponse(
             errorId,
             e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-            "Failed to link to parser library. Probably need to restart your backend, live reload for the parser does not work.",
+            "Failed to link to parser library. Probably need to restart your backend, live reload"
+                + " for the parser does not work.",
             "UNSATISFIED_LINK_ERROR",
             e.getMessage());
 

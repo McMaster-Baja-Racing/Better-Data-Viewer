@@ -64,7 +64,11 @@ public class FileUploadResource {
         break;
 
       default:
-        try {fileData.close();} catch (IOException e) {throw new StorageException("Failed to close fileData", e);}
+        try {
+          fileData.close();
+        } catch (IOException e) {
+          throw new StorageException("Failed to close fileData", e);
+        }
         throw new IllegalArgumentException("Invalid filetype: " + fileExtension);
     }
 
