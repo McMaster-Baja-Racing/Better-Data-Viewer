@@ -1,3 +1,4 @@
 
 upload-dir/
 .vscode/
+.quarkus/

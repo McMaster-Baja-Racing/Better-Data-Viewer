@@ -11,8 +11,10 @@ import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} f
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '../../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
-import 'highcharts-multicolor-series';
-// require('highcharts-multicolor-series')(Highcharts); Keeping this old import until we test the new one
+// import 'highcharts-multicolor-series';
+
+// eslint-disable-next-line no-undef
+require('highcharts-multicolor-series')(Highcharts); // Keeping this old import until we test the new one
 
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
@@ -45,8 +47,9 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
         files,
         inputColumns.map(col => col.header),
         [],
-        [chartInformation.files[i].analyze.analysis, chartInformation.files[i].analyze.analyzerValues].filter(e => e),
-        [chartInformation.live]
+        chartInformation.files[i].analyze.analysis,
+        chartInformation.files[i].analyze.analyzerValues.filter(e => e),
+        chartInformation.live
       );
 
       const filename = response.headers.get('content-disposition').split('filename=')[1].slice(1, -1);

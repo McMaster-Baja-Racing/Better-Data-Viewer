@@ -27,8 +27,8 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType, 
   const lines = text.trim().split('\n').slice(1).map((line) => line.split(','));
 
   // If not colour, return values in array to allow for boost
-  if (chartType !== 'colour') {
-    // If required, offsets the x values to be the correct unix timestamp (timestampOffset is 0 if not required)
+
+  if (chartType !== 'coloredline') {
     const timestampOffset = hasTimestampX && hasGPSTime ? getTimestampOffset(columns, lines, headerIndices) : 0;
     return lines.map((line) => {
       return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
@@ -37,9 +37,10 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType, 
 
   // If colour, return the data in object format to allow for colouring
   // Make a request to get the maximum and minimum values of the colour value
-  const minMaxResponse = await ApiUtil.getMinMax(filename, columns[headerIndices.colour]);
-
-  let [minval, maxval] = (await minMaxResponse.text()).split(',').map(parseFloat);
+  // TODO: Seems to break when giving it a file with 3+ colomns, worth looking into
+  const minMaxResponse = await ApiUtil.getMinMax(filename, columns[columns.length -1].header);
+  
+  let [minval, maxval] =  JSON.parse(await minMaxResponse.text());
   minMax.current = [minval, maxval];
 
   return lines.map((line) => {

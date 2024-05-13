@@ -5,6 +5,7 @@ import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
 import React from 'react';
 
 const formatSize = (size) => {
+  if (size === 0) return '0 B';
   // Finds the order of magnitude of the size in base 1024 (e.g. how many digits it would have)
   const magnitude = Math.floor(Math.log(size) / Math.log(1024));
   const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'ZB', 'YB', 'RB', 'QB'];

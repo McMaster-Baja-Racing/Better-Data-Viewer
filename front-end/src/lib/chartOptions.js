@@ -47,6 +47,10 @@ const getStandardChartConfig = (chartInformation) => {
       text: chartInformation.files[0].columns[0].header
     },
 
+    dateTimeLabelFormats: {
+      day: '%H:%M', // Removes stating the date, instead only shows the time
+    },
+
     type: chartInformation.hasTimestampX ? 'datetime' : 'linear',
 
     lineColor: 'grey',
@@ -124,8 +128,8 @@ const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) =
   });
 
   chartConfig.colorAxis = {
-    min: minMax.current[0],
-    max: minMax.current[1],
+    min: minMax,
+    max: minMax,
     stops: [
       [0.1, '#20ff60'], // green
       [0.5, '#DDDF0D'], // yellow
