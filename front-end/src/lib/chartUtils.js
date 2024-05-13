@@ -37,8 +37,8 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType, 
   // Make a request to get the maximum and minimum values of the colour value
   // TODO: Seems to break when giving it a file with 3+ colomns, worth looking into
   const minMaxResponse = await ApiUtil.getMinMax(filename, columns[columns.length -1].header);
-
-  let [minval, maxval] = (await minMaxResponse.text()).split(',').map(parseFloat);
+  
+  let [minval, maxval] =  JSON.parse(await minMaxResponse.text());
   minMax.current = [minval, maxval];
 
   return lines.map((line) => {

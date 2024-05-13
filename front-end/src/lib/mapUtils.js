@@ -81,7 +81,7 @@ export function findLapTimes(coords, rects) {
         currLap.checkpoints.push(event.time);
         visitedCheckpoints.push(event.rect);
         // console.log(event.time + ": Checkpoint");
-        console.log(visitedCheckpoints, event.rect);
+        // console.log(visitedCheckpoints, event.rect);
       }
     }
     // console.log(event.time, ": " +event.event + " " + rects[event.rect].type + " " + event.rect);

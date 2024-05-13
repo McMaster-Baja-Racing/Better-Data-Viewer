@@ -85,6 +85,7 @@ export const CreateGraphModal = ({
     * For none datetime format:
     * - x-axis will be linear with no shifting of x-values.
     */
+
     let dtformat = 'full';
     if (chartInformationFiles.some(file => file.columns[0].timespan.start === '')) dtformat = 'partial';
     if (chartInformationFiles.some(file => file.columns[0].header !== 'Timestamp (ms)')) dtformat = 'none';
