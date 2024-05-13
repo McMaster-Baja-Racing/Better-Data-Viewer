@@ -56,7 +56,7 @@ public class FileUploadResource {
                 + fileName.substring(0, fileName.lastIndexOf('.'))
                 + "/");
 
-        try {
+        try (InputStream input = fileData) { // try-with-resources, look it up if you don't know it
           BinaryToCSV.bytesToCSV(fileData.readAllBytes(), outputDir, fileName, true);
         } catch (IOException e) { // UnsatisfiedLinkError, IOException
           throw new StorageException("Failed to read bytes from: " + fileName, e);
