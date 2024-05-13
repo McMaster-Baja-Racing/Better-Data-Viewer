@@ -7,14 +7,14 @@ try{
 
     Start-Process powershell {npm start}
     Set-Location ../backend
-    ./mvnw quarkus:run
+    ./mvnw quarkus:dev
     while ($counter -lt $javaHomeLocations.Length)
     {
             if ($LastExitCode -ne 0)
             {
                     "Add your Java Home locations to the array in the start.ps1 file"
                     $env:JAVA_HOME = $javaHomeLocations[$counter]
-                    ./mvnw quarkus:run
+                    ./mvnw quarkus:dev
                     $counter++
             }
             else
