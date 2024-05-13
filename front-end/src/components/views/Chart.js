@@ -234,7 +234,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
     chartRef.current.series.forEach(series => {
       const value = values.find(value => value.name === series.name);
       if (value === undefined) return;
-      tempValueLines.push(`${series.name}: (${value.x}, ${value.y})`);
+      tempValueLines.push(`${series.name}: (${value.x.toFixed(5)}, ${value.y.toFixed(5)})`);
     });
     setValueLines(tempValueLines);
   };
