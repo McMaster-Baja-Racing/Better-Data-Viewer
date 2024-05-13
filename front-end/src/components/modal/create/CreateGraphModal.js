@@ -54,7 +54,6 @@ export const CreateGraphModal = ({
     ApiUtil.getTimespans('csv')
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setfileTimespans(data);
       });
   }, []); // Empty dependency array ensures that the fetch is only performed once
