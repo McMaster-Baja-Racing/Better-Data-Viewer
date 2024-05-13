@@ -33,7 +33,7 @@ public class FileUploadResource {
       throw new IllegalArgumentException("Invalid file name: " + fileName);
     }
 
-    String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+    String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 
     switch (fileExtension) {
       case "csv":
@@ -64,6 +64,7 @@ public class FileUploadResource {
         break;
 
       default:
+        try {fileData.close();} catch (IOException e) {throw new StorageException("Failed to close fileData", e);}
         throw new IllegalArgumentException("Invalid filetype: " + fileExtension);
     }
 

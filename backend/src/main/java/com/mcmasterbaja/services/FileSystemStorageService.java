@@ -56,6 +56,7 @@ public class FileSystemStorageService implements StorageService {
 
       Files.createDirectories(destinationFile.getParent());
       Files.copy(fileData, destinationFile);
+      fileData.close();
     } catch (IOException e) {
       throw new StorageException("Could not store file: " + targetPath.toFile(), e);
     }

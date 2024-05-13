@@ -18,7 +18,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.DoubleSummaryStatistics;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
@@ -52,44 +51,50 @@ public class DefaultFileMetadataService implements FileMetadataService {
   }
 
   public Double[] getMinMax(Path targetPath, String column) {
+    int columnIndex = -1;
+    Double min = Double.MAX_VALUE;
+    Double max = Double.MIN_VALUE;
 
     try {
-      // First find the index of the column
-      String[] headerArray = readHeaders(targetPath);
-      int index = -1;
+      BufferedReader reader =
+          new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
 
-      for (int i = 0; i < headerArray.length; i++) {
-        if (headerArray[i].equals(column)) {
-          index = i;
+      // First get the column index
+      String[] headers = reader.readLine().split(",");
+
+      for (int i = 0; i < headers.length; i++) {
+        if (headers[i].equals(column)) {
+          columnIndex = i;
           break;
         }
       }
 
-      if (index == -1) {
-        return null;
+      if (columnIndex == -1) {
+        throw new IllegalArgumentException("Column not found in file: " + targetPath.toString());
       }
-
-      // Now find the max and min values
-
-      Path file = storageService.load(targetPath);
-      final int finalIndex = index;
-      try (Stream<String> lines = Files.lines(file)) {
-        DoubleSummaryStatistics stats =
-            lines
-                .skip(1) // Skip the header line
-                .map(line -> line.split(",")[finalIndex])
-                .mapToDouble(Double::parseDouble)
-                .summaryStatistics();
-
-        double min = stats.getMin();
-        double max = stats.getMax();
-
-        return new Double[] {min, max};
+      
+      // Then get the minimum and maximum values
+      String line;
+      while ((line = reader.readLine()) != null) {
+        String[] values = line.split(",");
+        Double value = Double.parseDouble(values[columnIndex]);
+        if (value < min) {
+          min = value;
+        }
+        if (value > max) {
+          max = value;
+        }
       }
 
     } catch (IOException e) {
-      throw new FileNotFoundException("Failed to get minMax of file: " + targetPath.toString(), e);
+      throw new FileNotFoundException(
+          "Failed to get min max of file: " + targetPath.toString(), e);
+    } catch (NumberFormatException e) {
+      throw new MalformedCsvException(
+          "Failed to get min max of file: " + targetPath.toString(), targetPath.toString(), e);
     }
+  
+    return new Double[] {min, max};
   }
 
   public String getLast(Path targetPath, int columnIndex) {

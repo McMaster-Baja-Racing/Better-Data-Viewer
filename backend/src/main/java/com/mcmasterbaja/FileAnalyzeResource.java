@@ -71,7 +71,8 @@ public class FileAnalyzeResource {
       @PathParam("filekey") String filekey, @QueryParam("column") String column) {
     logger.info("Getting min and max for file: " + filekey);
 
-    Path targetPath = storageService.load(Paths.get(filekey));
+    String typeFolder = fileMetadataService.getTypeFolder(Paths.get(filekey));
+    Path targetPath = storageService.load(Paths.get(typeFolder)).resolve(filekey);
     Double[] minMax = fileMetadataService.getMinMax(targetPath, column);
 
     return minMax;

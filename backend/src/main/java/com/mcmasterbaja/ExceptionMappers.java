@@ -17,8 +17,8 @@ public class ExceptionMappers {
   @Inject Logger logger;
 
   // Handles invalid arguments
-  @ServerExceptionMapper
-  public Response invalidArgument(InvalidArgumentException e) {
+  @ServerExceptionMapper(value = {InvalidArgumentException.class, IllegalArgumentException.class})
+  public Response invalidArgument(RuntimeException e) {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
@@ -28,7 +28,7 @@ public class ExceptionMappers {
             e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
             "An invalid argument was passed.",
             "INVALID_ARGUMENT",
-            e.getErrors());
+            e.getMessage());
 
     return Response.status(Response.Status.BAD_REQUEST)
         .entity(errorResponse)
@@ -96,8 +96,7 @@ public class ExceptionMappers {
         new ErrorResponse(
             errorId,
             e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-            "Failed to link to parser library. Probably need to restart your backend, live reload"
-                + " for the parser does not work.",
+            "Failed to link to parser library. Probably need to restart your backend, live reload for the parser does not work.",
             "UNSATISFIED_LINK_ERROR",
             e.getMessage());
 

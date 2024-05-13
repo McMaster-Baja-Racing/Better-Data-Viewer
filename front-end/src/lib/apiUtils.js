@@ -7,6 +7,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getFile: async (fileKey) => {
+    fileKey = encodeURIComponent(fileKey);
     const response = await fetch(`http://${window.location.hostname}:8080/files/${fileKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response;
@@ -102,7 +103,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getMinMax: async (filename, header) => {
-    const url = `http://${window.location.hostname}:8080/files/minMax/${filename}?column=${header}`;
+    const url = `http://${window.location.hostname}:8080/minMax/${encodeURIComponent(filename)}?column=${header}`;
     const response = await fetch(url);
         
     if (!response.ok) {
