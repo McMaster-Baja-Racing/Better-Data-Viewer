@@ -135,28 +135,23 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   // Handles updating the chart when the video timestamp changes
   useEffect(() => {
     if (timestamps.length === 0) return;
-    try {
-      chartInformation.hasTimestampX ? lineXUpdate(videoTimestamp) : linePointUpdate(videoTimestamp);
-    } catch (e) {
-      console.log(e);
-    }
+    chartInformation.hasTimestampX ? lineXUpdate(videoTimestamp) : linePointUpdate(videoTimestamp);
   }, [videoTimestamp, offsets, timestamps]);
 
   useEffect(() => {
-    try {
-      setChartOptions(movePlotLineX(chartOptions, lineX));
-    } catch (e) {
-      console.log(e);
-    }
+    if (lineX === 0) return;
+    setChartOptions(movePlotLineX(chartOptions, lineX));
   }, [lineX]);
 
   useEffect(() => {
-    try {
-      setChartOptions(movePlotLines(chartOptions, linePoint.x, linePoint.y));
-    } catch (e) {
-      console.log(e);
-    }
+    if (linePoint.x === 0 && linePoint.y === 0) return;
+    setChartOptions(movePlotLines(chartOptions, linePoint.x, linePoint.y));
   }, [linePoint]);
+
+  // Reset the value box when chartInformation changes
+  useEffect(() => {
+    setValueLines([]);
+  }, [chartInformation]);
 
   // Calculates and updates which value is closest to the video timestamp for each series
   const lineXUpdate = (videoTimestamp) => {
@@ -184,12 +179,11 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
     });
 
     // Updates the value box with the found values
-    const tempValueLines = [];
-    tempValueLines.push('Timestamp: ' + new Date(newLineX).toUTCString());
+    const tempValueLines = ['Timestamp: ' + new Date(newLineX).toUTCString()];
     chartRef.current.series.forEach(series => {
       const value = values.find(value => value.name === series.name);
       if (value === undefined) return;
-      tempValueLines.push(`${series.name}: (${value.y})`);
+      tempValueLines.push(`${series.name}: ${value.y}`);
     });
     setValueLines(tempValueLines);
   };
