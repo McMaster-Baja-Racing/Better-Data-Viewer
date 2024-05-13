@@ -69,5 +69,5 @@ public interface FileMetadataService {
    * @param pathString The Path of the file to analyze.
    * @return The desired type folder.
    */
-  String getTypeFolder(String pathString);
+  String getTypeFolder(Path targetPath);
 }

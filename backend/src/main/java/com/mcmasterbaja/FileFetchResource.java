@@ -42,15 +42,13 @@ public class FileFetchResource {
   // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/{filekey}")
-  public RestResponse<File> getFile(@PathParam("filekey") String filekey) {
+  public File getFile(@PathParam("filekey") String filekey) {
     logger.info("Getting file: " + filekey);
 
     Path targetPath = addTypeFolder(filekey);
     File file = storageService.load(targetPath).toFile();
 
-    return ResponseBuilder.ok(file, MediaType.APPLICATION_OCTET_STREAM)
-        .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
-        .build();
+    return file;
   }
 
   @GET
@@ -160,6 +158,7 @@ public class FileFetchResource {
   }
 
   private Path addTypeFolder(String fileKey) {
-    return Paths.get(fileMetadataService.getTypeFolder(fileKey)).resolve(fileKey);
+    String typeFolder = fileMetadataService.getTypeFolder(Paths.get(fileKey));
+    return storageService.load(Paths.get(typeFolder)).resolve(fileKey);
   }
 }

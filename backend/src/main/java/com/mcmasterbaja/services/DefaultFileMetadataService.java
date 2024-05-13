@@ -120,7 +120,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
   }
 
   public LocalDateTime[] getTimespan(Path targetPath, LocalDateTime zeroTime) {
-    switch (getTypeFolder(targetPath.toString())) {
+    switch (getTypeFolder(targetPath)) {
       case "csv":
         return getTimespanCSV(targetPath, zeroTime);
       case "mp4":
@@ -172,7 +172,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  public String getTypeFolder(String pathString) {
+  public String getTypeFolder(Path targetPath) {
+    String pathString = targetPath.toString();
     int dotIndex = pathString.lastIndexOf(".");
     if (pathString == "" || pathString == null || dotIndex == -1) return ""; // No file extension
 
