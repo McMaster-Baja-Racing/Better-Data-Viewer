@@ -14,7 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jboss.logging.Logger;
@@ -116,25 +118,20 @@ public class FileFetchResource {
 
     switch (folderkey) {
       case "csv":
-        // Holds the parent folder and the zero time
-        Object[] container = {null, null};
+        // Map of parent folders to zero times to avoid recalculating the zero time
+        Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
         paths.forEach(
             path -> {
               Path parent = path.getParent();
-              if (parent.toString() != "csv") {
-                if (fileMetadataService.canComputeTimespan(parent)) {
-                  // Updates the parent folder and zero time if the parent folder changes to avoid
-                  // recalculating the zero time
-                  if (container[0] != parent) {
-                    container[0] = parent;
-                    container[1] = fileMetadataService.getZeroTime((Path) container[0]);
-                  }
-                  // Get the path and filename of each file and print it
-                  LocalDateTime[] timespan =
-                      fileMetadataService.getTimespan(path, (LocalDateTime) container[1]);
-                  timespans.add(
-                      new FileTimespan(folderPath.relativize(path), timespan[0], timespan[1]));
-                }
+              if (fileMetadataService.canComputeTimespan(parent)) {
+                // Add the zero time to the map if the parent folder has not been analyzed
+                zeroTimeMap.putIfAbsent(parent, fileMetadataService.getZeroTime(parent));
+
+                // Comput the timespan of the file and add it to the list
+                LocalDateTime[] timespan =
+                    fileMetadataService.getTimespan(path, zeroTimeMap.get(parent));
+                timespans.add(
+                    new FileTimespan(folderPath.relativize(path), timespan[0], timespan[1]));
               }
             });
         break;
