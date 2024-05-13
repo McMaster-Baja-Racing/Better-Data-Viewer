@@ -1,16 +1,16 @@
 package com.mcmasterbaja.model;
 
 public enum AnalyzerType {
-  ROLL_AVG,
-  SGOLAY,
-  INTERPOLATER_PRO,
   ACCEL_CURVE,
-  RDP_COMPRESSION,
-  SPLIT,
-  LINEAR_MULTIPLY,
   AVERAGE,
   CUBIC,
-  LINEAR_INTERPOLATE;
+  LINEAR_INTERPOLATE,
+  LINEAR_MULTIPLY,
+  INTERPOLATER_PRO,
+  RDP_COMPRESSION,
+  ROLL_AVG,
+  SGOLAY,
+  SPLIT;
 
   public String toString() {
     return this.name();
