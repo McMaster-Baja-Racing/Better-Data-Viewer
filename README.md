@@ -51,6 +51,7 @@ To run the front end, simply use the react scripts
 ## Linting
 - To run ESLint on the front end, simply download the ESLint extension (The ) in VSCode. You should then be able to run the `Auto-format file` command via the command palette (Ctrl + Shift + P).
 - To run Java Google Format, go to the repository (https://github.com/google/google-java-format) and download the latest all-deps `.jar` file. Additionally you can find it locally in the backend folder. You can then run it via the command `java -jar /path/to/google-java-format-${GJF_VERSION?}-all-deps.jar <options> [files...]`. A common option to add is`--replace` which will automatically format it.
+ - To run it easier, here's a cool command (run in `backend/` directory using bash) `find ./ -name "*.java" -type f -print | xargs java -jar google-java-format-1.22.0-all-deps.jar --replace` Just make sure to check over what it changes
 
 ## Rust Library Build/Setup (Only necessary if making library changes)
 - first have rustup installed https://www.rust-lang.org/tools/install

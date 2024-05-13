@@ -9,7 +9,7 @@ public class Serial {
   public static volatile boolean exit = true;
 
   public static void readLive() {
-    String rootLocation = "./uploads";
+    String rootLocation = "./uploads"; // To be replaced with a path
     exit = false;
     String port = "COM4";
     SerialPort comPort = SerialPort.getCommPort(port);
@@ -58,7 +58,8 @@ public class Serial {
 
       for (int i = 1; i <= 6; i++) {
         // create a new file writer for each file
-        strains[i - 1] = new FileWriter(rootLocation.toString() + "/Live " + strainNames[i - 1] + ".csv");
+        strains[i - 1] =
+            new FileWriter(rootLocation.toString() + "/Live " + strainNames[i - 1] + ".csv");
         // write the header to the file
         strains[i - 1].write("Timestamp (ms)" + "," + strainNames[i - 1] + "\n");
       }

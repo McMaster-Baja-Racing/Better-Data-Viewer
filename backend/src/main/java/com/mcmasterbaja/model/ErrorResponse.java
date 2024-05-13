@@ -11,8 +11,10 @@ import lombok.ToString;
 @ToString
 public class ErrorResponse {
 
-  @JsonInclude(JsonInclude.Include.NON_NULL) // Removes fields that are null from appearing in the response
+  @JsonInclude(
+      JsonInclude.Include.NON_NULL) // Removes fields that are null from appearing in the response
   private String errorId;
+
   private String path;
   private String message;
   private String errorType;
