@@ -116,6 +116,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
   }
 
   public boolean canComputeTimespan(Path folderPath) {
+    if (folderPath.toString().equals("csv")) return false;
     Path smhPath =
         storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
     Path dmyPath = storageService.load(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
