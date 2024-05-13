@@ -60,12 +60,13 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
         inputColumns,
         minMax,
         chartInformation.type,
-        chartInformation.dtformat
+        chartInformation.hasTimestampX,
+        chartInformation.hasGPSTime
       );
 
       data.push(seriesData);
       tempTimestamps.push(
-        chartInformation.dtformat !== 'none' ? seriesData.map(item => item[0]) : await getTimestamps(text)
+        chartInformation.hasTimestampX ? seriesData.map(item => item[0]) : await getTimestamps(text)
       );
     }
     setParsedData(data);
@@ -135,7 +136,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   useEffect(() => {
     if (timestamps.length === 0) return;
     try {
-      chartInformation.dtformat !== 'none' ? timespanUpdate(videoTimestamp) : nonTimespanUpdate(videoTimestamp);
+      chartInformation.hasTimestampX ? lineXUpdate(videoTimestamp) : linePointUpdate(videoTimestamp);
     } catch (e) {
       console.log(e);
     }
@@ -157,7 +158,8 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
     }
   }, [linePoint]);
 
-  const timespanUpdate = (videoTimestamp) => {
+  // Calculates and updates which value is closest to the video timestamp for each series
+  const lineXUpdate = (videoTimestamp) => {
     let fileTimestamp = undefined;
     const visibleSeries = chartRef.current.series.filter(series => series.visible);
     if (visibleSeries.length === 0) return;
@@ -192,7 +194,8 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
     setValueLines(tempValueLines);
   };
 
-  const nonTimespanUpdate = (videoTimestamp) => {
+  // Calculates and updates which point is closest to the video timestamp for each series
+  const linePointUpdate = (videoTimestamp) => {
     // Finds the matching point index for the first visible series using the video timestamp
     const visibleSeries = chartRef.current.series.filter(series => series.visible);
     if (visibleSeries.length === 0) return;

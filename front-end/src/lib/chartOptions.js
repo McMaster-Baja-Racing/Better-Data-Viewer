@@ -39,7 +39,7 @@ const getStandardChartConfig = (chartInformation) => {
   };
 
   chartConfig.tooltip = { 
-    xDateFormat: chartInformation.dtformat === 'partial' ? '%H:%M:%S.%L' : '%A, %b %e, %Y %H:%M:%S.%L' 
+    xDateFormat: chartInformation.hasGPSTime ? '%A, %b %e, %Y %H:%M:%S.%L' : '%H:%M:%S.%L'
   };
 
   chartConfig.xAxis = {
@@ -47,7 +47,7 @@ const getStandardChartConfig = (chartInformation) => {
       text: chartInformation.files[0].columns[0].header
     },
 
-    type: chartInformation.dtformat !== 'none' ? 'datetime' : 'linear',
+    type: chartInformation.hasTimestampX ? 'datetime' : 'linear',
 
     lineColor: 'grey',
     tickColor: 'grey',
@@ -92,7 +92,7 @@ const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
 
   chartConfig.chart.type = 'line';
 
-  chartConfig.boost.enabled = chartInformation.dtformat !== 'none';
+  chartConfig.boost.enabled = chartInformation.hasTimestampX;
 
   chartConfig.xAxis.plotLines = [{
     color: 'black',
