@@ -2,7 +2,9 @@ package com.mcmasterbaja.model;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import lombok.ToString;
 
+@ToString
 public class FileTimespan {
 
   public String key;
@@ -19,14 +21,5 @@ public class FileTimespan {
     this.key = key.toString().replace("\\", "/");
     this.start = start;
     this.end = end;
-  }
-
-  public String toString() {
-    return "File Name: "
-        + key
-        + "\nStart Date: "
-        + start.toString()
-        + "\nEnd Date: "
-        + end.toString();
   }
 }

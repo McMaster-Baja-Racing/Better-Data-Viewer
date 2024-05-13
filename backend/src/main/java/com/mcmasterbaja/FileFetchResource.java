@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jboss.logging.Logger;
-import org.jboss.resteasy.reactive.RestResponse;
-import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 @jakarta.ws.rs.Path("/files") // Use full package name to avoid conflict with java.nio.file.Path
 public class FileFetchResource {
