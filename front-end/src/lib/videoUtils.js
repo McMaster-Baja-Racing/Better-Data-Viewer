@@ -11,11 +11,17 @@ export const computeOffsets = (chartInformation, video) => {
 };
 
 export const getPointIndex = (series, videoTimestamp, offset, timestamps) => {
-  const fileTimestamp = videoTimestamp + offset + timestamps[0];
-  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return;
+  const fileTimestamp = getFileTimestamp(videoTimestamp, offset, timestamps);
+  if (fileTimestamp === undefined) return;
   const timestampIndex = findClosestTimestamp(fileTimestamp, timestamps);
   const pointIndex = findPointIndex(timestampIndex, series);
   return pointIndex;
+};
+
+export const getFileTimestamp = (videoTimestamp, offset, timestamps) => {
+  const fileTimestamp = videoTimestamp + offset + timestamps[0];
+  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return;
+  return fileTimestamp;
 };
 
 // Filters the given list of files to only include those that have timespans that overlap with the video
@@ -31,6 +37,31 @@ export const filterFiles = (video, files, fileTimespans) => {
     if (fileStart < videoEnd && videoStart < fileEnd) videoSyncFiles.push(file);
   });
   return videoSyncFiles;
+};
+
+export const binarySearchClosest = (arr, target) => {
+  let left = 0;
+  let right = arr.length - 1;
+
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+
+    if (arr[mid] === target) {
+      return mid;
+    } else if (arr[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+
+  // At this point, 'left' is the index of the smallest element > target
+  // and 'right' is the index of the largest element < target
+  if (right < 0) return left; // target is smaller than all elements
+  if (left >= arr.length) return right; // target is larger than all elements
+
+  // Determine the closest element to the target
+  return Math.abs(arr[left] - target) < Math.abs(arr[right] - target) ? left : right;
 };
 
 // Finds the index of the timestamp in array that is closest to the timestamp provided

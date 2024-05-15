@@ -1,5 +1,5 @@
 import '../../styles/chart.css';
-import { defaultChartOptions, getChartConfig } from '../../lib/chartOptions.js';
+import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '../../lib/chartOptions.js';
 import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
 import { ApiUtil } from '../../lib/apiUtils.js';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -7,7 +7,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
-import { computeOffsets, getPointIndex } from '../../lib/videoUtils.js';
+import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '../../lib/videoUtils.js';
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '../../assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
@@ -27,6 +27,9 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   const [fileNames, setFileNames] = useState([]);
   const [offsets, setOffsets] = useState([]);
   const [timestamps, setTimestamps] = useState([]);
+  const [lineX, setLineX] = useState(0);
+  const [linePoint, setLinePoint] = useState({x: 0, y: 0});
+  const [valueLines, setValueLines] = useState([]);
   let minMax = useRef([0, 0]);
 
   // Fetch the data from the server and format it for the chart
@@ -54,17 +57,20 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
 
       const text = await response.text();
 
-      data.push(
-        await getSeriesData(
-          text,
-          filename,
-          inputColumns,
-          minMax,
-          chartInformation.type,
-          chartInformation.dtformat
-        )
+      const seriesData = await getSeriesData(
+        text,
+        filename,
+        inputColumns,
+        minMax,
+        chartInformation.type,
+        chartInformation.hasTimestampX,
+        chartInformation.hasGPSTime
       );
-      tempTimestamps.push(await getTimestamps(text));
+
+      data.push(seriesData);
+      tempTimestamps.push(
+        chartInformation.hasTimestampX ? seriesData.map(item => item[0]) : await getTimestamps(text)
+      );
     }
     setParsedData(data);
     setTimestamps(tempTimestamps);
@@ -132,29 +138,110 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
   // Handles updating the chart when the video timestamp changes
   useEffect(() => {
     if (timestamps.length === 0) return;
-    try {
-      // Computes the point and series which overlap with the video timestamp
-      const seriesPointIndeces = [];
-      chartRef.current.series.filter(series => series.visible).forEach(activeSeries => {
-        const seriesIndex = chartRef.current.series.indexOf(activeSeries);
-        const pointIndex = getPointIndex(activeSeries, videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex]);
-        if (pointIndex >= 0) seriesPointIndeces.push({series: seriesIndex, point: pointIndex});
-      });
-      // Updates the chart to show the point that is closest to the video timestamp
-      if (seriesPointIndeces.length === 0) return;
-      chartRef.current.series[seriesPointIndeces[0].series].points[seriesPointIndeces[0].point].onMouseOver();
-      if (seriesPointIndeces.length > 1) seriesPointIndeces.slice(1).forEach(seriesPointIndex => {
-        chartRef.current.series[seriesPointIndex.series].points[seriesPointIndex.point].setState('hover');
-      });
-    } catch (e) {
-      console.log(e);
-    }
-        
+    chartInformation.hasTimestampX ? lineXUpdate(videoTimestamp) : linePointUpdate(videoTimestamp);
   }, [videoTimestamp, offsets, timestamps]);
 
-  return (
+  useEffect(() => {
+    if (lineX === 0) return;
+    setChartOptions(movePlotLineX(chartOptions, lineX));
+  }, [lineX]);
 
+  useEffect(() => {
+    if (linePoint.x === 0 && linePoint.y === 0) return;
+    setChartOptions(movePlotLines(chartOptions, linePoint.x, linePoint.y));
+  }, [linePoint]);
+
+  // Reset the value box when chartInformation changes
+  useEffect(() => {
+    setValueLines([]);
+  }, [chartInformation]);
+
+  // Calculates and updates which value is closest to the video timestamp for each series
+  const lineXUpdate = (videoTimestamp) => {
+    let fileTimestamp = undefined;
+    const visibleSeries = chartRef.current.series.filter(series => series.visible);
+    if (visibleSeries.length === 0) return;
+
+    // Gets the first file timestamp that is not undefined
+    visibleSeries.some(series => {
+      const seriesIndex = chartRef.current.series.indexOf(series);
+      fileTimestamp = getFileTimestamp(videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex]);
+      return fileTimestamp !== undefined;
+    });
+    
+    // Updates the lineX value with the new file timestamp
+    const newLineX = Math.floor(fileTimestamp);
+    if (fileTimestamp !== undefined) setLineX(newLineX); else return;
+    
+    // Finds the closest value to the new lineX value for each series
+    // Skips the series whose x values do not contain the new lineX value in their domain
+    const values = visibleSeries.flatMap(series => {
+      if (newLineX < series.xData[0] || newLineX > series.xData[series.xData.length - 1]) return [];
+      const closestXIndex = binarySearchClosest(series.xData, newLineX);
+      return [{ name: series.name, y: series.yData[closestXIndex] }];
+    });
+
+    // Updates the value box with the found values
+    const tempValueLines = ['Timestamp: ' + new Date(newLineX).toUTCString()];
+    chartRef.current.series.forEach(series => {
+      const value = values.find(value => value.name === series.name);
+      if (value === undefined) return;
+      tempValueLines.push(`${series.name}: ${value.y}`);
+    });
+    setValueLines(tempValueLines);
+  };
+
+  // Calculates and updates which point is closest to the video timestamp for each series
+  const linePointUpdate = (videoTimestamp) => {
+    // Finds the matching point index for the first visible series using the video timestamp
+    const visibleSeries = chartRef.current.series.filter(series => series.visible);
+    if (visibleSeries.length === 0) return;
+    const firstVisibleSeries = visibleSeries[0];
+    const seriesIndex = chartRef.current.series.indexOf(firstVisibleSeries);
+    const pointIndex = getPointIndex(
+      firstVisibleSeries,
+      videoTimestamp,
+      offsets[seriesIndex],
+      timestamps[seriesIndex]
+    );
+
+    if (pointIndex >= 0) {
+      setLinePoint({x: firstVisibleSeries.xData[pointIndex], y: firstVisibleSeries.yData[pointIndex]});
+    } else return;
+
+    // Finds the point index for all the other visible series
+    const values = [
+      { 
+        name: firstVisibleSeries.name,
+        x: firstVisibleSeries.xData[pointIndex], 
+        y: firstVisibleSeries.yData[pointIndex] 
+      }, ...visibleSeries.slice(1).map(series => {
+        const seriesIndex = chartRef.current.series.indexOf(series);
+        const pointIndex = getPointIndex(
+          series,
+          videoTimestamp,
+          offsets[seriesIndex],
+          timestamps[seriesIndex]
+        );
+        if (pointIndex >= 0) {
+          return {name: series.name, x: series.xData[pointIndex], y: series.yData[pointIndex]};
+        }
+      })
+    ];
+
+    // Updates the value box with the found values
+    const tempValueLines = [];
+    chartRef.current.series.forEach(series => {
+      const value = values.find(value => value.name === series.name);
+      if (value === undefined) return;
+      tempValueLines.push(`${series.name}: (${value.x.toFixed(5)}, ${value.y.toFixed(5)})`);
+    });
+    setValueLines(tempValueLines);
+  };
+
+  return (
     <div className="chartContainer" ref={ref}>
+      {valueLines.length > 0 ? (<div className='valueBox'>{valueLines.join('\n')}</div>) : null}
       <div className='chart'>
         <HighchartsReact
           highcharts={Highcharts}
@@ -164,7 +251,6 @@ const Chart = ({ chartInformation, video, videoTimestamp }) => {
       </div>
       {loading && <img className="loading" src={loadingImg} alt="Loading..." />}
     </div>
-
   );
 };
 
