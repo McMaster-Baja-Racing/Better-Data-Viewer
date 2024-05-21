@@ -34,12 +34,12 @@ const getStandardChartConfig = (chartInformation) => {
     chartInformation.files[0].columns[0].header;
 
   chartConfig.chart = {
-    type: chartInformation.type === 'video' ? 'line' : chartInformation.type,
+    type: chartInformation.type,
     zoomType: 'x'
   };
 
   chartConfig.tooltip = { 
-    xDateFormat: chartInformation.dtformat === 'partial' ? '%H:%M:%S.%L' : '%A, %b %e, %Y %H:%M:%S.%L' 
+    xDateFormat: chartInformation.hasGPSTime ? '%A, %b %e, %Y %H:%M:%S.%L' : '%H:%M:%S.%L'
   };
 
   chartConfig.xAxis = {
@@ -51,7 +51,7 @@ const getStandardChartConfig = (chartInformation) => {
       day: '%H:%M', // Removes stating the date, instead only shows the time
     },
 
-    type: chartInformation.dtformat !== 'none' ? 'datetime' : 'linear',
+    type: chartInformation.hasTimestampX ? 'datetime' : 'linear',
 
     lineColor: 'grey',
     tickColor: 'grey',
@@ -69,7 +69,7 @@ const getStandardChartConfig = (chartInformation) => {
   return chartConfig;
 };
 
-const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
+const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
   var chartConfig = getStandardChartConfig(chartInformation);
   const colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey'];
 
@@ -88,7 +88,27 @@ const getNoColourChartConfig = (chartInformation, parsedData, fileNames) => {
 
   chartConfig.colorAxis.showInLegend = false;
 
-  chartConfig.boost.enabled = chartInformation.type !== 'video';
+  return chartConfig;
+};
+
+const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
+  var chartConfig = getDefaultChartConfig(chartInformation, parsedData, fileNames);
+
+  chartConfig.chart.type = 'line';
+
+  chartConfig.boost.enabled = chartInformation.hasTimestampX;
+
+  chartConfig.xAxis.plotLines = [{
+    color: 'black',
+    width: 2,
+    zIndex: 3,
+  }];
+
+  chartConfig.yAxis.plotLines = [{
+    color: 'black',
+    width: 2,
+    zIndex: 3,
+  }];
 
   return chartConfig;
 };
@@ -121,9 +141,33 @@ const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) =
 };
 
 export const getChartConfig = (chartInformation, parsedData, fileNames, minMax) => {
-  if (chartInformation.type === 'coloredline') {
-    return getColourChartConfig(chartInformation, parsedData, fileNames, minMax);
-  } else {
-    return getNoColourChartConfig(chartInformation, parsedData, fileNames);
+  switch(chartInformation.type) {
+    case 'coloredline': return getColourChartConfig(chartInformation, parsedData, fileNames, minMax);
+    case 'video': return getVideoChartConfig(chartInformation, parsedData, fileNames);
+    default: return getDefaultChartConfig(chartInformation, parsedData, fileNames);
   }
+};
+
+export const movePlotLineX = (chartOptions, x) => {
+  return {
+    ...chartOptions,
+    xAxis: {
+      ...chartOptions.xAxis,
+      plotLines: [{ ...chartOptions.xAxis.plotLines[0], value: x }],
+    },
+  };
+};
+
+export const movePlotLines = (chartOptions, x, y) => {
+  return {
+    ...chartOptions,
+    xAxis: {
+      ...chartOptions.xAxis,
+      plotLines: [{ ...chartOptions.xAxis.plotLines[0], value: x }],
+    },
+    yAxis: {
+      ...chartOptions.yAxis,
+      plotLines: [{ ...chartOptions.yAxis.plotLines[0], value: y }],
+    },
+  };
 };

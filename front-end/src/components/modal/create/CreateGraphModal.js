@@ -70,30 +70,14 @@ export const CreateGraphModal = ({
 
     const chartInformationFiles = (buttonID === MAX_VIEWS) ? selectedFiles : seriesInfo;
 
-    /*
-    * Determine the datetime format of the files:
-    * - full: All files are timestamps and have a defined timespan.
-    * - partial: All files are timestamps, but at least one file has no timespan.
-    * - none: At least one file is not a timestamp.
-    * 
-    * For full datetime format:
-    * - x-axis will be full datetime with timestamps shifted to GMT using timespan.
-    * 
-    * For partial datetime format:
-    * - x-axis will be datetime HH:MM:SS with no shifting of timestamps.
-    * 
-    * For none datetime format:
-    * - x-axis will be linear with no shifting of x-values.
-    */
-    let dtformat = 'full';
-    if (chartInformationFiles.some(file => file.columns[0].timespan.start === '')) dtformat = 'partial';
-    if (chartInformationFiles.some(file => file.columns[0].header !== 'Timestamp (ms)')) dtformat = 'none';
-
     const chartInformation = {
       files: chartInformationFiles,
       live: liveCheck,
       type: graphType,
-      dtformat: dtformat
+      // Only true if all files have Timestamp (ms) as the first column
+      hasTimestampX: !chartInformationFiles.some(file => file.columns[0].header !== 'Timestamp (ms)'),
+      // Only true if all files have a timespan from the GPS data
+      hasGPSTime: !chartInformationFiles.some(file => file.columns[0].timespan.start === '')
     };
   
     let updatedViewInformation = replaceViewAtIndex(
@@ -163,65 +147,65 @@ export const CreateGraphModal = ({
 
   const pageSelect = (page) => {
     switch (page) {
-    case 0:
-      return <GraphSettings 
-        movePage={movePage} 
-        graphType={graphType} 
-        setGraphType={setGraphType} 
-        liveCheck={liveCheck} 
-        setLiveCheck={setLiveCheck} 
-        video={video}
-      />;
-    case 1:
-      return <VideoSelect 
-        movePage={movePage} 
-        selectedVideo={selectedVideo} 
-        setSelectedVideo={setSelectedVideo} 
-        files={files} fileTimespans={fileTimespans} 
-        videoTimespans={videoTimespans}
-      />;
-    case 2:
-      return <div className='file-Storage-Container'>
-        <div className="file-browser">
-          <h3>Choose Files</h3>
-          <FileStorage 
-            files={graphType === 'video' 
-              ? filterFiles(selectedVideo.key === '' ? video : selectedVideo, files, fileTimespans) 
-              : files} 
-            selectedFiles={selectedFiles} 
-            setSelectedFiles={setSelectedFiles}
-          />
-        </div>
-        <div className="fileButtons">
-          <button className="pageTwoBackButton" onClick={() => {
-            movePage(graphType === 'video' && selectedVideo.key !== '' ? -1 : -2);
-          }}>Back</button>
-          <button className="pageTwoNextButton" onClick={() => {
-          // OnClick, it should get the selected files from the file storage component
-            if (selectedFiles.length === 0) {
-              alert('Please select at least one file.');
-            } else {
-              getHeaders(selectedFiles);
-              setDimensions(2);
-              movePage(1);
-            }
-          }}>Next</button>
-        </div>
-      </div>;
-    case 3: 
-      return <AnalyzersAndSeries 
-        dimensions={dimensions} 
-        columns={columns} 
-        movePage={movePage} 
-        seriesInfo={seriesInfo} 
-        setSeriesInfo={setSeriesInfo} 
-        setSuccessMessage={setSuccessMessage} 
-        setDimensions={setDimensions} 
-        graphType={graphType} 
-        fileTimespans={fileTimespans}
-      />;
-    default:
-      break;
+      case 0:
+        return <GraphSettings 
+          movePage={movePage} 
+          graphType={graphType} 
+          setGraphType={setGraphType} 
+          liveCheck={liveCheck} 
+          setLiveCheck={setLiveCheck} 
+          video={video}
+        />;
+      case 1:
+        return <VideoSelect 
+          movePage={movePage} 
+          selectedVideo={selectedVideo} 
+          setSelectedVideo={setSelectedVideo} 
+          files={files} fileTimespans={fileTimespans} 
+          videoTimespans={videoTimespans}
+        />;
+      case 2:
+        return <div className='file-Storage-Container'>
+          <div className="file-browser">
+            <h3>Choose Files</h3>
+            <FileStorage 
+              files={graphType === 'video' 
+                ? filterFiles(selectedVideo.key === '' ? video : selectedVideo, files, fileTimespans) 
+                : files} 
+              selectedFiles={selectedFiles} 
+              setSelectedFiles={setSelectedFiles}
+            />
+          </div>
+          <div className="fileButtons">
+            <button className="pageTwoBackButton" onClick={() => {
+              movePage(graphType === 'video' && selectedVideo.key !== '' ? -1 : -2);
+            }}>Back</button>
+            <button className="pageTwoNextButton" onClick={() => {
+              // OnClick, it should get the selected files from the file storage component
+              if (selectedFiles.length === 0) {
+                alert('Please select at least one file.');
+              } else {
+                getHeaders(selectedFiles);
+                setDimensions(2);
+                movePage(1);
+              }
+            }}>Next</button>
+          </div>
+        </div>;
+      case 3: 
+        return <AnalyzersAndSeries 
+          dimensions={dimensions} 
+          columns={columns} 
+          movePage={movePage} 
+          seriesInfo={seriesInfo} 
+          setSeriesInfo={setSeriesInfo} 
+          setSuccessMessage={setSuccessMessage} 
+          setDimensions={setDimensions} 
+          graphType={graphType} 
+          fileTimespans={fileTimespans}
+        />;
+      default:
+        break;
     }
   };
 

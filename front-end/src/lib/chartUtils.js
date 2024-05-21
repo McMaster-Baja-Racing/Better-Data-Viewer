@@ -12,9 +12,11 @@ export const LIVE_DATA_INTERVAL = 300;
  * @param {Object[]} columns - The columns to be fetched.
  * @param {useRef<string[]>} minMax - The minimum and maximum values of the colour value.
  * @param {string} chartType - The type of chart.
+ * @param {boolean} hasTimestampX - True if the x values are Timestamp (ms), false otherwise.
+ * @param {boolean} hasGPSTime - True if all the series have GPS timespans, false otherwise.
  * @returns {Promise<Array<Object>>} A promise that resolves to an array of data objects.
  */
-export const getSeriesData = async (text, filename, columns, minMax, chartType, dtformat) => {
+export const getSeriesData = async (text, filename, columns, minMax, chartType, hasTimestampX, hasGPSTime) => {
 
   let headers = text.trim().split('\n')[0].split(',');
   headers[headers.length - 1] = headers[headers.length - 1].replace('\r', '');
@@ -27,7 +29,7 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType, 
   // If not colour, return values in array to allow for boost
 
   if (chartType !== 'coloredline') {
-    const timestampOffset = dtformat === 'full' ? getTimestampOffset(columns, lines, headerIndices) : 0;
+    const timestampOffset = hasTimestampX && hasGPSTime ? getTimestampOffset(columns, lines, headerIndices) : 0;
     return lines.map((line) => {
       return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
     });
@@ -37,8 +39,8 @@ export const getSeriesData = async (text, filename, columns, minMax, chartType, 
   // Make a request to get the maximum and minimum values of the colour value
   // TODO: Seems to break when giving it a file with 3+ colomns, worth looking into
   const minMaxResponse = await ApiUtil.getMinMax(filename, columns[columns.length -1].header);
-
-  let [minval, maxval] = (await minMaxResponse.text()).split(',').map(parseFloat);
+  
+  let [minval, maxval] =  JSON.parse(await minMaxResponse.text());
   minMax.current = [minval, maxval];
 
   return lines.map((line) => {

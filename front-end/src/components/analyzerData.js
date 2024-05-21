@@ -29,7 +29,7 @@ const analyzerData = [
   },
   {
     title: 'Acceleration Curve Tool',
-    code: 'accelCurve',
+    code: 'ACCEL_CURVE',
     parameters: [],
     description: 'Given both primary (on y-axis) and secondary (x-axis) RPM values, this tool will first apply a noise reduction algorithm, and then interpolate between them to achieve a graph that displays the shift curve. ',
     image: {
@@ -46,7 +46,7 @@ const analyzerData = [
   },
   {
     title: 'Ultimate Smoothener',
-    code: 'sGolay',
+    code: 'SGOLAY',
     parameters: [{ name: 'Window Size', default: '100' }, { name: 'Polynomial Order', default: '3' }],
     description: 'Implements the Savitzky-Golay algorithm in order to smooth out a curve. This is a very powerful tool that can help capture many trends not visible. Input variables are the window and polynomial order.',
     image: {
@@ -63,7 +63,7 @@ const analyzerData = [
   },
   {
     title: 'Interpolation',
-    code: 'interpolaterPro',
+    code: 'INTERPOLATER_PRO',
     parameters: [], // One day should take in column
     description: 'Interpolation is the act of adding new data points between existing data points. This is useful for making data more readable, or for making it easier to compare data sets. This is implemented linearly.',
     image: {
@@ -80,7 +80,7 @@ const analyzerData = [
   },
   {
     title: 'Moving Average',
-    code: 'rollAvg',
+    code: 'ROLL_AVG',
     parameters: [{ name: 'WindowSize', default: '100' }],
     description: 'Given noisy data, this will take the average over a window of points. This should help reduce noise, but can add other imperfections.',
     image: {
@@ -97,7 +97,7 @@ const analyzerData = [
   },
   {
     title: 'Compression',
-    code: 'RDPCompression',
+    code: 'RDP_COMPRESSION',
     parameters: [{ name: 'Epsilon', default: '0.1' }],
     description: 'The Ramer-Douglas-Peucker algorithm helps simplify a curve by removing some of its points while keeping its overall shape intact. It\'s a handy tool for looking at large files!',
     image: {
@@ -114,7 +114,7 @@ const analyzerData = [
   },
   {
     title: 'Split',
-    code: 'split',
+    code: 'SPLIT',
     parameters: [{ name: 'Start', default: '0' }, { name: 'End', default: null }],
     description: 'Splits the data into two parts, given a start and end point (timestamp)',
     image: {
@@ -131,7 +131,7 @@ const analyzerData = [
   },
   {
     title: 'Linear Multiply.',
-    code: 'linearMultiply',
+    code: 'LINEAR_MULTIPLY',
     parameters: [{ name: 'Multiplier', default: '1' }, { name: 'Offset', default: '0' }],
     description: 'Given a multiplier and offset, this will multiply the data by the multiplier and add the offset.',
     image: {
@@ -152,7 +152,7 @@ const analyzerData = [
   },
   {
     title: 'Cubic Multiply.',
-    code: 'cubic',
+    code: 'CUBIC',
     parameters: [{ name: 'A', default: '1' }, { name: 'B', default: '1' }, { name: 'C', default: '1' }, { name: 'D', default: '1' }],
     description: 'Given the coefficients of a cubic function, this will pass the data into the cubic function.',
     image: {
