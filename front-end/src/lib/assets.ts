@@ -18,7 +18,7 @@ import rollAvgImage from '../assets/help/rollAvg.png';
 import savitzkyGolayGif from '../assets/help/sgolay.gif';
 import splitImage from '../assets/help/split.png';
 
-export const icons = {
+export const icons: Record<string, string> = {
   delete: deleteIcon,
   download: downloadIcon,
   folder: folderIcon,
@@ -31,7 +31,7 @@ export const icons = {
   upload: uploadIcon,
 };
 
-export const images = {
+export const images: Record<string, string> = {
   accel: accelImage,
   interpolate: interpolateImage,
   linearMultiplier: linearMultiplier,

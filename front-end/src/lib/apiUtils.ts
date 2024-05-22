@@ -1,3 +1,4 @@
+import { AnalyzerType } from '../types/AnalyzerData';
 
 export const ApiUtil = {
 
@@ -6,7 +7,7 @@ export const ApiUtil = {
      * @param {string} fileKey - The unique identifier of the file.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  getFile: async (fileKey) => {
+  getFile: async (fileKey: string) => {
     fileKey = encodeURIComponent(fileKey);
     const response = await fetch(`http://${window.location.hostname}:8080/files/${fileKey}`);
     if (!response.ok) throw Error(response.statusText);
@@ -19,7 +20,7 @@ export const ApiUtil = {
      * - key: A  that represents the unique identifier of the file.
      * - fileHeaders: An array of strings that represents the headers of the file.
      * - size: A long that represents the size of the file.
-     * @returns {Promise<Array<Object>} A promise that resolves to an array of file objects.
+     * @returns {Promise<Array<Object>>} A promise that resolves to an array of file objects.
      */
   getFiles: async () => {
     const response = await fetch(`http://${window.location.hostname}:8080/files`);
@@ -38,7 +39,7 @@ export const ApiUtil = {
      * @param {string} folderKey - The unique identifier of the folder.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  getFolder: async (folderKey) => {
+  getFolder: async (folderKey: string) => {
     const response = await fetch(`http://${window.location.hostname}:8080/files/information/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response;
@@ -49,7 +50,7 @@ export const ApiUtil = {
      * @param {string} folderKey - The unique identifier of the folder.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  getTimespans: async (folderKey) => {
+  getTimespans: async (folderKey: string) => {
     const response = await fetch(`http://${window.location.hostname}:8080//files/timespan/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response;
@@ -65,13 +66,20 @@ export const ApiUtil = {
      * @param {Boolean} live - The live options.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  analyzeFiles: async (inputFiles, inputColumns, outputFiles, type, analyzerOptions, live) => {
+  analyzeFiles: async (
+    inputFiles: string,
+    inputColumns: string,
+    outputFiles: string,
+    type: AnalyzerType,
+    analyzerOptions: string,
+    live: boolean
+  ) => {
     try {
       const params = new URLSearchParams();
       const parameters = { inputFiles, inputColumns, outputFiles, type, analyzerOptions, live };
 
       Object.entries(parameters).forEach(([key, value]) => {
-        if (value && value.length !== 0) {
+        if (value && (typeof value === 'string' && value.length !== 0)) {
           if (Array.isArray(value)) {
             value.forEach((val) => {
               params.append(key, val);
@@ -102,7 +110,7 @@ export const ApiUtil = {
      * @param {string} header - The name of the column.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  getMinMax: async (filename, header) => {
+  getMinMax: async (filename: string, header: string) => {
     const url = `http://${window.location.hostname}:8080/minMax/${encodeURIComponent(filename)}?column=${header}`;
     const response = await fetch(url);
         
@@ -131,7 +139,7 @@ export const ApiUtil = {
      * @param {string} port - The port to be used for live data.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  toggleLiveData: async (port) => {
+  toggleLiveData: async (port: string) => {
     const formData = new FormData();
     formData.append('port', port);
 
@@ -146,10 +154,10 @@ export const ApiUtil = {
     
   /**
      * @description Sends a POST request to the server to upload a file.
-     * @param {FormData} file - The file to be uploaded.
+     * @param {File} file - The file to be uploaded.
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
-  uploadFile: async (file) => {
+  uploadFile: async (file: File) => {
     const formData = new FormData();
     formData.set('fileName', file.name);
     formData.set('fileData', file);
