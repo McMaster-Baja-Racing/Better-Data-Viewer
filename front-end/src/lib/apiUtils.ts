@@ -61,7 +61,7 @@ export const ApiUtil = {
      * @param {string} inputFiles - The input files.
      * @param {string} inputColumns - The input columns.
      * @param {string} outputFiles - The output files.
-     * @param {Enum} type - The analyzer type.
+     * @param {AnalyzerType} type - The analyzer type.
      * @param {string} analyzerOptions - The analyzer options.
      * @param {Boolean} live - The live options.
      * @returns {Promise<Response>} A promise that resolves to the server's response.

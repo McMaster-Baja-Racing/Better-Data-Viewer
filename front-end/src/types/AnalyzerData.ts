@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { images } from '../lib/assets.ts';
 
 interface AnalyzerData {

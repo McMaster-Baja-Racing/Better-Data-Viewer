@@ -33,5 +33,5 @@ enum GraphType {
 }
 
 
-export { ChartInfo, GraphType };
+export { ChartInfo, File, Column, Timespan, GraphType };
     
