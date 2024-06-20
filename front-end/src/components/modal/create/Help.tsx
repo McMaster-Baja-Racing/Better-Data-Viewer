@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import '../../../styles/help.css';
 
-const HelpButton = ({ onClick }) => {
+interface HelpButtonProps {
+  onClick: MouseEventHandler
+}
+
+const HelpButton: React.FC<HelpButtonProps> = ({ onClick }) => {
   return (
     <span className="popup-button" onClick={onClick}>Help..?</span>
   );
 };
 
-const HelpPopup = ({ data }) => {
-  const { title, description, image, links } = data;
+interface HelpData {
+  title: string;
+  description: string;
+  image?: { src: string, alt: string };
+  links?: { title: string, link: string }[];
+}
+
+const HelpPopup: React.FC<HelpData> = ({ title, description, image, links }) => {
 
   return (
     <div className="popuptext">
@@ -30,20 +40,25 @@ const HelpPopup = ({ data }) => {
   );
 };
 
-const Help = ({ data, openPopup, setOpenPopup }) => {
+interface HelpProps extends HelpData {
+  openPopup: string | null;
+  setOpenPopup: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+const Help: React.FC<HelpProps> = ({ title, description, image, links , openPopup, setOpenPopup }) => {
 
   const togglePopup = () => {
-    if (openPopup === data.title) {
+    if (openPopup === title) {
       setOpenPopup(null);
     } else {
-      setOpenPopup(data.title);
+      setOpenPopup(title);
     }
   };
   
   return (
     <div>
       <HelpButton onClick={togglePopup} /> {}
-      {openPopup === data.title && <HelpPopup data={data} />} {}
+      {openPopup === title && <HelpPopup title={title} description={description} image={image} links={links}/>} {}
     </div>
   );
 };
