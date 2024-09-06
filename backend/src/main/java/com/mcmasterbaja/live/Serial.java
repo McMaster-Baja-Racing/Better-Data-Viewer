@@ -85,7 +85,7 @@ public class Serial {
       while (!exit) {
         byte[] readBuffer = new byte[8];
 
-        int numRead = comPort.readBytes(readBuffer, readBuffer.length);
+        // int numRead = comPort.readBytes(readBuffer, readBuffer.length);
 
         // System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ "
         // Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
