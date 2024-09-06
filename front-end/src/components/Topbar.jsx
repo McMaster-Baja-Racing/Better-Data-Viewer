@@ -1,4 +1,4 @@
-import '../styles/topbar.css';
+import './Topbar.css';
 import React, { useState } from 'react';
 import { ApiUtil } from '../lib/apiUtils.js';
 import bajalogo from '../assets/bajalogo.png';

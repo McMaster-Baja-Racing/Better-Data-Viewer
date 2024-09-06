@@ -1,5 +1,4 @@
-import '../styles/App.css';
-import '../styles/views.css';
+import './App.css';
 import { CreateGraphModal } from './modal/create/CreateGraphModal';
 import { UploadModal } from './modal/upload/uploadModal';
 import { HelpModal } from './modal/help/helpModal';

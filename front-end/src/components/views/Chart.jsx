@@ -1,4 +1,4 @@
-import '../../styles/chart.css';
+import './Chart.css';
 import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions.js';
 import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils.js';
 import { ApiUtil } from '@lib/apiUtils.js';

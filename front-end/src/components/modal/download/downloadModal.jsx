@@ -1,6 +1,6 @@
 import ReactDom from 'react-dom';
 import '../../../styles/modalStyles.css';
-import '../../../styles/downloadModalStyles.css';
+import './downloadModal.css';
 import React, { useState, useRef, useEffect } from 'react';
 import FileStorage from '../FileStorage';
 import JSZip from 'jszip';

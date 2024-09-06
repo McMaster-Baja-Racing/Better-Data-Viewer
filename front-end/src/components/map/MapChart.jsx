@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/mapChart.css';
+import './MapChart.css';
 import MapDisplay from './MapDisplay';
 import LapTimes from './LapTimes';
 

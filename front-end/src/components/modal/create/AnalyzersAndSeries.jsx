@@ -1,7 +1,7 @@
 import '../../../styles/modalStyles.css';
 import Help from './Help';
 import analyzerData from '../../analyzerData';
-import '../../../styles/analyzersAndSeriesStyles.css';
+import './analyzersAndSeries.css';
 import React, { useState, useEffect } from 'react';
 const AnalyzersAndSeries = ({
   dimensions,

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../styles/GraphSettingsStyles.css';
+import './GraphSettings.css';
 
 const GraphSettings = ({ movePage, setGraphType, setLiveCheck, video }) => {
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../../styles/videoPlayerStyles.css';
+import './videoPlayer.css';
 import ReactPlayer from 'react-player';
 import { ApiUtil } from '@lib/apiUtils';
 

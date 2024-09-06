@@ -1,4 +1,4 @@
-import '../../styles/views.css';
+import './Views.css';
 import newGraphImg from '@assets/icons/newGraph2.svg';
 import { viewStyles } from './viewsConfig';
 import React from 'react';
