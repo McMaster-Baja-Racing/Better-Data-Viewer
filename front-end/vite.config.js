@@ -23,6 +23,7 @@ export default defineConfig(() => {
         '@assets': resolve(root, 'assets'),
         '@components': resolve(root, 'components'),
         '@lib': resolve(root, 'lib'),
+        '@styles': resolve(root, 'styles'),
       },
     },
   };

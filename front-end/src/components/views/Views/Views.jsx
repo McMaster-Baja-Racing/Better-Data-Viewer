@@ -1,6 +1,6 @@
 import './Views.css';
 import newGraphImg from '@assets/icons/newGraph2.svg';
-import { viewStyles } from './viewsConfig';
+import { viewStyles } from '../viewsConfig';
 import React from 'react';
 
 const Views = ({ viewInformation, setModal, setButtonID, numViews, videoTimestamp, setVideoTimestamp, video }) => {

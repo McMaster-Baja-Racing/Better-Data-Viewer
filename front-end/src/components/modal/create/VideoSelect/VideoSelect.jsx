@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../../../styles/modalStyles.css';
+import '@styles/modalStyles.css';
 import './videoSelect.css';
 import { AiFillFolder } from 'react-icons/ai';
 import { filterFiles } from '@lib/videoUtils';

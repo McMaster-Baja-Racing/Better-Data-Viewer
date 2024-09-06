@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './MapChart.css';
-import MapDisplay from './MapDisplay';
-import LapTimes from './LapTimes';
+import MapDisplay from '../MapDisplay/MapDisplay';
+import LapTimes from '../LapTimes/LapTimes';
 
 const MapChart = () => {
   const [laps, setLaps] = useState([]);

@@ -1,8 +1,8 @@
 import ReactDom from 'react-dom';
-import '../../../styles/modalStyles.css';
+import '@styles/modalStyles.css';
 import './downloadModal.css';
 import React, { useState, useRef, useEffect } from 'react';
-import FileStorage from '../FileStorage';
+import FileStorage from '../FileStorage/FileStorage';
 import JSZip from 'jszip';
 import { ApiUtil } from '@lib/apiUtils.js';
 
