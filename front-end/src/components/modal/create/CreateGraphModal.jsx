@@ -7,12 +7,12 @@ import FileStorage from '../FileStorage';
 import GraphSettings from './GraphSettings';
 import AnalyzersAndSeries from './AnalyzersAndSeries';
 import { VideoSelect } from './VideoSelect';
-import { MAX_VIEWS } from '../../views/viewsConfig';
-import Chart from '../../views/Chart';
-import VideoPlayer from '../../views/VideoPlayer';
-import { replaceViewAtIndex } from '../../../lib/viewUtils';
-import { filterFiles } from '../../../lib/videoUtils';
-import { ApiUtil } from '../../../lib/apiUtils';
+import { MAX_VIEWS } from '@components/views/viewsConfig';
+import Chart from '@components/views/Chart';
+import VideoPlayer from '@components/views/VideoPlayer';
+import { replaceViewAtIndex } from '@lib/viewUtils';
+import { filterFiles } from '@lib/videoUtils';
+import { ApiUtil } from '@lib/apiUtils';
 
 export const CreateGraphModal = ({
   setModal,

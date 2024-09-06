@@ -1,15 +1,15 @@
 import '../../styles/chart.css';
-import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '../../lib/chartOptions.js';
-import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '../../lib/chartUtils.js';
-import { ApiUtil } from '../../lib/apiUtils.js';
+import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions.js';
+import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils.js';
+import { ApiUtil } from '@lib/apiUtils.js';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
-import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '../../lib/videoUtils.js';
+import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '@lib/videoUtils.js';
 import { useResizeDetector } from 'react-resize-detector';
-import loadingImg from '../../assets/loading.gif';
+import loadingImg from '@assets/loading.gif';
 // TODO: Fix this import (Why is it different?)
 // import 'highcharts-multicolor-series';
 

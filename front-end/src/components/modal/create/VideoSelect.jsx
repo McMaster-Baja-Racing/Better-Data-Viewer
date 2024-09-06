@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../../styles/modalStyles.css';
 import '../../../styles/videoSelectStyles.css';
 import { AiFillFolder } from 'react-icons/ai';
-import { filterFiles } from '../../../lib/videoUtils';
+import { filterFiles } from '@lib/videoUtils';
 
 export const VideoSelect = ({ movePage, selectedVideo, setSelectedVideo, files, fileTimespans, videoTimespans }) => {
 
