@@ -1,8 +1,8 @@
 import './App.css';
 import { CreateGraphModal } from './modal/create/CreateGraphModal/CreateGraphModal';
-import { UploadModal } from './modal/upload/uploadModal';
+import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
-import { DownloadModal } from './modal/download/downloadModal';
+import { DownloadModal } from './modal/download/DownloadModal';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Topbar from './Topbar/Topbar';
