@@ -1,5 +1,5 @@
 import 'font-awesome/css/font-awesome.min.css';
-import '../../styles/fileStorage.css';
+import './FileStorage.css';
 import 'react-keyed-file-browser/dist/react-keyed-file-browser.css';
 import RawFileBrowser, { Icons } from 'react-keyed-file-browser';
 import React from 'react';

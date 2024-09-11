@@ -1,10 +1,10 @@
 import ReactDom from 'react-dom';
-import '../../../styles/modalStyles.css';
-import '../../../styles/downloadModalStyles.css';
+import '@styles/modalStyles.css';
+import './DownloadModal.css';
 import React, { useState, useRef, useEffect } from 'react';
-import FileStorage from '../FileStorage';
+import FileStorage from '../FileStorage/FileStorage';
 import JSZip from 'jszip';
-import { ApiUtil } from '../../../lib/apiUtils.js';
+import { ApiUtil } from '@lib/apiUtils.js';
 
 export const DownloadModal = ({ setModal }) => {
   const [selectedFiles, setSelectedFiles] = useState([]); // the files that the user has selected from the file menu

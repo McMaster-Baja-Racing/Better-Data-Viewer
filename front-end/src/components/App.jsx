@@ -1,17 +1,16 @@
-import '../styles/App.css';
-import '../styles/views.css';
-import { CreateGraphModal } from './modal/create/CreateGraphModal';
-import { UploadModal } from './modal/upload/uploadModal';
+import './App.css';
+import { CreateGraphModal } from './modal/create/CreateGraphModal/CreateGraphModal';
+import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
-import { DownloadModal } from './modal/download/downloadModal';
+import { DownloadModal } from './modal/download/DownloadModal';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Topbar from './Topbar';
-import Views from './views/Views';
+import Topbar from './Topbar/Topbar';
+import Views from './views/Views/Views';
 import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
-import Chart from './views/Chart';
-import MapChart from './map/MapChart';
+import Chart from './views/Chart/Chart';
+import MapChart from './map/MapChart/MapChart';
 
 const App = () => {
 

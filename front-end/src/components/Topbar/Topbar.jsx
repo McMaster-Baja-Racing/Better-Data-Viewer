@@ -1,10 +1,10 @@
-import '../styles/topbar.css';
+import './Topbar.css';
 import React, { useState } from 'react';
-import { ApiUtil } from '../lib/apiUtils.js';
-import bajalogo from '../assets/bajalogo.png';
-import loadingImg from '../assets/loading.gif';
-import { MAX_VIEWS } from './views/viewsConfig.js';
-import { icons } from '../lib/assets.js';
+import { ApiUtil } from '@lib/apiUtils.js';
+import bajalogo from '@assets/bajalogo.png';
+import loadingImg from '@assets/loading.gif';
+import { MAX_VIEWS } from '@components/views/viewsConfig.js';
+import { icons } from '@lib/assets.js';
 
 
 const Topbar = ({ setModal, numViews, setNumViews }) => {

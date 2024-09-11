@@ -1,4 +1,4 @@
-import '../../styles/lapTimes.css';
+import './LapTimes.css';
 import React from 'react';
 
 const SIGFIGS = 3;

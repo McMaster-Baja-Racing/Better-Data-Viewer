@@ -1,12 +1,12 @@
 import { MapContainer, TileLayer, Marker, Rectangle, GeoJSON, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import '../../styles/mapDisplay.css';
+import './MapDisplay.css';
 import React, { useEffect, useState } from 'react';
-import ToolSelection from './ToolSelection';
-import { getBounds, findLapTimes, pointInRect } from '../../lib/mapUtils';
-import { LNG_INDEX, LAT_INDEX, TIME_INDEX, tools, LNG_COLUMNNAME, LAT_COLUMNNAME } from '../../lib/mapOptions';
-import { ApiUtil } from '../../lib/apiUtils';
+import ToolSelection from '../ToolSelection/ToolSelection';
+import { getBounds, findLapTimes, pointInRect } from '@lib/mapUtils';
+import { LNG_INDEX, LAT_INDEX, TIME_INDEX, tools, LNG_COLUMNNAME, LAT_COLUMNNAME } from '@lib/mapOptions';
+import { ApiUtil } from '@lib/apiUtils';
 
 const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
