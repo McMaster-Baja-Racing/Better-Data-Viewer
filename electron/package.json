@@ -1,0 +1,20 @@
+{
+    "name": "dataviewer-desktop",
+    "version": "1.0.0",
+    "main": "src/main.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder"
+    },
+    "build": {
+        "appId": "com.mcmasterbaja.dataviewer",
+        "files": [
+            "src/**/*",
+            "../front-end/build/**/*"
+        ]
+    },
+    "dependencies": {
+        "electron": "^32.1.0",
+        "electron-builder": "^25.0.5"
+    }
+}
