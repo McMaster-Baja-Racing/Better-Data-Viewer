@@ -5,8 +5,8 @@
   "type": "module",
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.1",
+    "child-process": "^1.0.2",
     "concurrently": "^9.0.1",
-    "electron": "^32.1.2",
     "electron-devtools-installer": "^3.2.0",
     "electron-is-dev": "^3.0.1",
     "eslint": "^8.57.0",
@@ -27,15 +27,37 @@
     "react-player": "^2.15.1",
     "react-resize-detector": "^10.0.1",
     "react-router-dom": "^6.22.3",
+    "tree-kill": "^1.2.2",
     "vite": "^5.4.3",
     "vite-plugin-commonjs": "^0.10.1"
   },
   "scripts": {
     "start": "vite",
-    "build": "vite build",
+    "build:frontend": "vite build",
+    "build:electron": "electron-builder",
     "serve": "vite preview",
     "electron": "electron src/electron/main.js",
     "dev": "concurrently \"npm run start\" \"npm run electron\""
+  },
+  "build": {
+    "appId": "com.dataviewer.mcmaster",
+    "files": [
+      "build/**/*",
+      "src/electron/main.js"
+    ],
+    "extraResources": [
+      "../backend/target/backend-1.2.0-runner.jar"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -57,7 +79,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@svgr/webpack": "^8.0.0"
+    "@svgr/webpack": "^8.0.0",
+    "electron": "^32.1.2",
+    "electron-builder": "^25.0.5"
   },
   "overrides": {
     "@svgr/webpack": "$@svgr/webpack"

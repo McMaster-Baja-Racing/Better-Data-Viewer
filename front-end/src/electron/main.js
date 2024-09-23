@@ -4,9 +4,14 @@ import * as isDev from 'electron-is-dev';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { fileURLToPath } from 'url';
 import process from 'process';
+import { spawn } from 'child_process';
+import treeKill from 'tree-kill';
+
+//Reference: https://medium.com/@sgstephans/creating-a-java-electron-react-typescript-desktop-app-414e7edceed2
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 let win;
+let child;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -22,44 +27,44 @@ function createWindow() {
   if (isDev) {
     win.loadURL('http://localhost:5173');
   } else {
-    // 'build/index.html'
-    win.loadURL(`file://${__dirname}/../index.html`);
-  }
-    
-  win.on('closed', () => win = null);
-  
-  // Hot Reloading
-  if (isDev) {
-    // 'node_modules/.bin/electronPath'
-    (path.join(__dirname, '..', '..'), {
-      electron: path.join(__dirname, '..', '..', 'node_modules', '.bin', 'electron'),
-      forceHardReset: true,
-      hardResetMethod: 'exit'
+    // Load the built HTML file in production
+    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
+
+    // Spawn Java child process running the backend JAR
+    const jarPath = path.join(__dirname, '../backend/target/backend-1.2.0-runner.jar'); // Adjust this path as necessary
+    child = spawn('java', ['-jar', jarPath]);
+
+    // Handle process output and errors
+    child.stdout.on('data', (data) => {
+      console.log(`Backend: ${data}`);
+    });
+
+    child.stderr.on('data', (data) => {
+      console.error(`Backend error: ${data}`);
+    });
+
+    child.on('close', (code) => {
+      console.log(`Backend process exited with code ${code}`);
     });
   }
     
-  // DevTools
-  installExtension(REACT_DEVELOPER_TOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
-    
-  if (isDev) {
-    win.webContents.openDevTools();
-  }
+  win.on('closed', () => win = null);
+
 }
     
-app.whenReady().then(() => {
-  createWindow();
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
-});
+app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
+  if (child) {
+    treeKill(child.pid);
+  }
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (win === null) {
+    createWindow();
   }
 });
