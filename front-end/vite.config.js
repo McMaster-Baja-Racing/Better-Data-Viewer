@@ -9,6 +9,7 @@ const root = resolve(__dirname, 'src');
 
 export default defineConfig(() => {
   return {
+    base: './',
     build: {
       outDir: 'build',
     },

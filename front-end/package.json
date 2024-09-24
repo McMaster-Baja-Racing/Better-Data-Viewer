@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "src/electron/main.js",
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.1",
     "child-process": "^1.0.2",
@@ -45,13 +46,10 @@
       "build/**/*",
       "src/electron/main.js"
     ],
-    "extraResources": [
-      "../backend/target/backend-1.2.0-runner.jar"
-    ],
     "win": {
       "target": [
         {
-          "target": "nsis",
+          "target": "zip",
           "arch": [
             "x64"
           ]

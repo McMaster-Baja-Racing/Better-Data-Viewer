@@ -11,7 +11,7 @@ import treeKill from 'tree-kill';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 let win;
-let child;
+//let child;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -25,11 +25,13 @@ function createWindow() {
   win.maximize();
     
   if (isDev) {
-    win.loadURL('http://localhost:5173');
+    win.loadFile( path.resolve(__dirname, '../../build/index.html'));
   } else {
     // Load the built HTML file in production
-    win.loadURL(`file://${path.join(__dirname, '../build/index.html')}`);
+    win.loadFile( path.resolve(__dirname, '/build/index.html'));
+      
 
+    /*
     // Spawn Java child process running the backend JAR
     const jarPath = path.join(__dirname, '../backend/target/backend-1.2.0-runner.jar'); // Adjust this path as necessary
     child = spawn('java', ['-jar', jarPath]);
@@ -46,6 +48,7 @@ function createWindow() {
     child.on('close', (code) => {
       console.log(`Backend process exited with code ${code}`);
     });
+    */
   }
     
   win.on('closed', () => win = null);
@@ -55,9 +58,11 @@ function createWindow() {
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
+  /*
   if (child) {
     treeKill(child.pid);
   }
+  */
   if (process.platform !== 'darwin') {
     app.quit();
   }
