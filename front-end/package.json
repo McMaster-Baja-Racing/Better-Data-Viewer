@@ -44,7 +44,8 @@
     "appId": "com.dataviewer.mcmaster",
     "files": [
       "build/**/*",
-      "src/electron/main.js"
+      "src/electron/main.js",
+      "../backend/target/**/*"
     ],
     "win": {
       "target": [
