@@ -23,7 +23,7 @@ public class FileUploadResource {
   @POST
   @jakarta.ws.rs.Path("/file")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  public String uploadFile(
+  public void uploadFile(
       @RestForm("fileName") String fileName,
       @RestForm("fileData") @PartType(MediaType.APPLICATION_OCTET_STREAM) InputStream fileData) {
 
@@ -71,7 +71,5 @@ public class FileUploadResource {
         }
         throw new IllegalArgumentException("Invalid filetype: " + fileExtension);
     }
-
-    return "File uploaded successfully";
   }
 }

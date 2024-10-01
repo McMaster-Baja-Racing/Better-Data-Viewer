@@ -1,7 +1,7 @@
 import './Chart.css';
 import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions.js';
 import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils.js';
-import { ApiUtil } from '@lib/apiUtils.js';
+import { ApiUtil } from '@lib/apiUtils';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';

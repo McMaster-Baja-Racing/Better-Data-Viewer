@@ -4,7 +4,7 @@ import '@styles/modalStyles.css';
 import './UploadModal.css';
 import { useForm } from 'react-hook-form';
 import React, { useState, useRef } from 'react';
-import { ApiUtil } from '@lib/apiUtils.js';
+import { ApiUtil } from '@lib/apiUtils';
 import loadingImg from '@assets/loading.gif';
 
 export const UploadModal = ({ setModal, setSuccessMessage}) => {
