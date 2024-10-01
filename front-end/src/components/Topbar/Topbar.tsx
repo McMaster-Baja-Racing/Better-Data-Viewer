@@ -1,9 +1,9 @@
 import './Topbar.css';
-import React, { useState } from 'react';
-import { ApiUtil } from '@lib/apiUtils.js';
+import { useState } from 'react';
+import { ApiUtil } from '@lib/apiUtils';
 import bajalogo from '@assets/bajalogo.png';
 import loadingImg from '@assets/loading.gif';
-import { MAX_VIEWS } from '@components/views/viewsConfig.js';
+import { MAX_VIEWS } from '@components/views/viewsConfig';
 import { icons } from '@lib/assets';
 
 interface TopbarProps {
