@@ -16,13 +16,14 @@ function createWindow() {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
   win.maximize();
     
   if (isDev) {
-    win.loadFile( path.resolve(__dirname, '../..//build/index.html'));
+    win.loadFile( path.resolve(__dirname, '../../build/index.html'));
   } else {
     win.loadFile( path.resolve(__dirname, '/build/index.html'));
   }
@@ -32,7 +33,7 @@ function createWindow() {
 }
 
 function startBackend() {
-  backend = spawn('java', ['-jar', path.join(process.cwd(), '../backend/target/backend-1.2.0-runner.jar')]);
+  spawn('java', ['-jar', '../../../backend/target/backend-1.2.0-runner.jar']);
 }
     
 app.whenReady().then(() => {

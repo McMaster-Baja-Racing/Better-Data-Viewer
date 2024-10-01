@@ -1,6 +1,9 @@
 
 export const ApiUtil = {
 
+  // Default to localhost for executables, but use the hostname for development
+  baseUrl: `http://${window.location.hostname || 'localhost'}:8080`,
+
   /**
      * @description Sends a GET request to the server to fetch a specific file.
      * @param {string} fileKey - The unique identifier of the file.
@@ -8,7 +11,7 @@ export const ApiUtil = {
      */
   getFile: async (fileKey) => {
     fileKey = encodeURIComponent(fileKey);
-    const response = await fetch(`http://${window.location.hostname}:8080/files/${fileKey}`);
+    const response = await fetch(`${ApiUtil.baseUrl}/files/${fileKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response;
   },
@@ -22,7 +25,7 @@ export const ApiUtil = {
      * @returns {Promise<Array<Object>} A promise that resolves to an array of file objects.
      */
   getFiles: async () => {
-    const response = await fetch(`http://${window.location.hostname}:8080/files`);
+    const response = await fetch(`${ApiUtil.baseUrl}/files`);
     if (!response.ok) throw Error(response.statusText);
 
     return response;
@@ -39,7 +42,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getFolder: async (folderKey) => {
-    const response = await fetch(`http://${window.location.hostname}:8080/files/information/folder/${folderKey}`);
+    const response = await fetch(`${ApiUtil.baseUrl}/files/information/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response;
   },
@@ -50,7 +53,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getTimespans: async (folderKey) => {
-    const response = await fetch(`http://${window.location.hostname}:8080//files/timespan/folder/${folderKey}`);
+    const response = await fetch(`${ApiUtil.baseUrl}//files/timespan/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response;
   },
@@ -82,7 +85,7 @@ export const ApiUtil = {
         }
       });
 
-      const response = await fetch(`http://${window.location.hostname}:8080/analyze?` + params.toString(), {
+      const response = await fetch(`${ApiUtil.baseUrl}/analyze?` + params.toString(), {
         method: 'POST'
       });
 
@@ -103,7 +106,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   getMinMax: async (filename, header) => {
-    const url = `http://${window.location.hostname}:8080/minMax/${encodeURIComponent(filename)}?column=${header}`;
+    const url = `${ApiUtil.baseUrl}/minMax/${encodeURIComponent(filename)}?column=${header}`;
     const response = await fetch(url);
         
     if (!response.ok) {
@@ -118,7 +121,7 @@ export const ApiUtil = {
      * @returns {Promise<Response>} A promise that resolves to the server's response.
      */
   deleteAllFiles: async () => {
-    const response = await fetch(`http://${window.location.hostname}:8080/delete/all`, {
+    const response = await fetch(`${ApiUtil.baseUrl}/delete/all`, {
       // method: "DELETE"
     });
 
@@ -135,7 +138,7 @@ export const ApiUtil = {
     const formData = new FormData();
     formData.append('port', port);
 
-    const response = await fetch(`http://${window.location.hostname}:8080/togglelive`, {
+    const response = await fetch(`${ApiUtil.baseUrl}/togglelive`, {
       method: 'PATCH',
       //body: formData,
     });

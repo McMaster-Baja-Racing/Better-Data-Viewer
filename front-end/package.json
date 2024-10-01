@@ -37,7 +37,7 @@
     "build:frontend": "vite build",
     "build:electron": "electron-builder",
     "serve": "vite preview",
-    "electron": "electron src/electron/main.js",
+    "electron": "electron src/electron/main.js --trace-warnings",
     "dev": "concurrently \"npm run start\" \"npm run electron\""
   },
   "build": {
