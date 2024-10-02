@@ -27,17 +27,14 @@ function createWindow() {
   } else {
     win.loadFile( path.resolve(__dirname, '/build/index.html'));
   }
+
+  backend = spawn('java', ['-jar', path.resolve(__dirname, '../../../backend/target/backend-1.2.0-runner.jar')]);
     
   win.on('closed', () => win = null);
 
 }
-
-function startBackend() {
-  spawn('java', ['-jar', '../../../backend/target/backend-1.2.0-runner.jar']);
-}
     
 app.whenReady().then(() => {
-  startBackend();
   createWindow();
 });
 

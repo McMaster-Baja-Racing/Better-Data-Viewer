@@ -2,7 +2,8 @@
 export const ApiUtil = {
 
   // Default to localhost for executables, but use the hostname for development
-  baseUrl: `http://${window.location.hostname || 'localhost'}:8080`,
+  // TODO: Make this conditional on the environment
+  baseUrl: `http://localhost:8080`,
 
   /**
      * @description Sends a GET request to the server to fetch a specific file.
@@ -157,7 +158,7 @@ export const ApiUtil = {
     formData.set('fileName', file.name);
     formData.set('fileData', file);
 
-    const response = await fetch(`http://${window.location.hostname}:8080/upload/file`, {
+    const response = await fetch(`${ApiUtil.baseUrl}/upload/file`, {
       method: 'POST',
       body: formData,
     });
