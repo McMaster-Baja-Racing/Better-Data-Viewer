@@ -79,7 +79,7 @@ const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
       data: data,
       colour: colours[index],
       opacity: 1,
-      colorAxis: false, 
+      colorAxis: false,
       findNearestPointBy: 'x',
       boostThreshold: 1,
       marker: { enabled: false }

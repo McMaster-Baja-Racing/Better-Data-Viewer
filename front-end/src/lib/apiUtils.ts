@@ -1,23 +1,23 @@
 // Some defined API types
 
-interface FileInformation {
+export interface FileInformation {
   key: string;
   fileHeaders: string[];
   size: number;
 }
 
-interface FileTimespan {
+export interface FileTimespan {
   key: string;
   start: Date;
   end: Date;
 }
 
-interface MinMax {
+export interface MinMax {
   min: number;
   max: number;
 }
 
-enum AnalyzerType {
+export enum AnalyzerType {
   ACCEL_CURVE = 'ACCEL_CURVE',
   AVERAGE = 'AVERAGE',
   CUBIC = 'CUBIC',

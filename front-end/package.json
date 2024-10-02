@@ -10,7 +10,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "font-awesome": "^4.7.0",
-    "highcharts": "^11.2.0",
+    "highcharts": "^11.4.8",
     "highcharts-multicolor-series": "^2.4.1",
     "highcharts-react-official": "^3.2.1",
     "jquery": "^3.7.1",
