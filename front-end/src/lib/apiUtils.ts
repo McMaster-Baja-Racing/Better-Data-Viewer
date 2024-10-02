@@ -84,19 +84,21 @@ export const ApiUtil = {
   analyzeFiles: async (
     inputFiles: string[],
     inputColumns: string[],
-    outputFiles: string[],
-    type: AnalyzerType,
+    outputFiles: string[] | null,
+    type: AnalyzerType | null,
     analyzerOptions: string[], // This one is weird as its dependent on which analyzer is run
     live: boolean
   ): Promise<Response> => {
     const params = new URLSearchParams();
 
-    params.append('inputFiles', inputFiles.join(','));
-    params.append('inputColumns', inputColumns.join(','));
-    params.append('outputFiles', outputFiles.join(','));
-    params.append('type', type);
-    params.append('analyzerOptions', analyzerOptions.join(','));
-    params.append('live', live.toString());
+    console.log(inputFiles, inputColumns, outputFiles, type, analyzerOptions, live);
+
+    inputFiles.map(file => params.append('inputFiles', file));
+    inputColumns.map(column => params.append('inputColumns', column));
+    outputFiles?.map(file => params.append('outputFiles', file));
+    type && params.append('type', type);
+    analyzerOptions.map(option => params.append('analyzerOptions', option));
+    live && params.append('live', live.toString());
 
     const response = await fetch(`http://${window.location.hostname}:8080/analyze?` + params.toString(), {
       method: 'POST'
