@@ -13,6 +13,7 @@ import loadingImg from '@assets/loading.gif';
 import { FileTimespan, MinMax } from '@lib/apiUtils';
 import { seriesData } from '@lib/chartUtils';
 import { Chart as ChartType } from 'highcharts';
+import { chartInformation } from '@components/App';
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line no-undef
 require('highcharts-multicolor-series')(Highcharts);
@@ -22,7 +23,7 @@ Boost(Highcharts);
 
 
 interface ChartProps {
-  chartInformation: any; // TODO: Define this
+  chartInformation: chartInformation;
   video: FileTimespan;
   videoTimestamp: number;
 }
@@ -56,7 +57,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
         files,
         inputColumns.map(col => col.header),
         [],
-        chartInformation.files[i].analyze.analysis,
+        chartInformation.files[i].analyze.type,
         chartInformation.files[i].analyze.analyzerValues.filter(e => e),
         chartInformation.live
       );

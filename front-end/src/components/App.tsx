@@ -3,7 +3,7 @@ import { CreateGraphModal } from './modal/create/CreateGraphModal/CreateGraphMod
 import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
 import { DownloadModal } from './modal/download/DownloadModal';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Topbar from './Topbar/Topbar';
 import Views from './views/Views/Views';
@@ -11,6 +11,28 @@ import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
+import { AnalyzerType } from '@lib/apiUtils'
+
+export interface chartInformation {
+  files: {
+    columns: {
+      header: string,
+      filename: string,
+      timespan: {
+        start: Date,
+        end: Date
+      }
+    }[],
+    analyze: {
+      type: AnalyzerType,
+      analyzerValues: string[]
+    }
+  }[],
+  live: boolean,
+  type: string //TODO: UPDATE TO ENUM
+  hasGPSTime: boolean
+  hasTimestampX: boolean
+}
 
 const App = () => {
 
@@ -19,33 +41,6 @@ const App = () => {
   const [numViews, setNumViews] = useState(1);
   const [videoTimestamp, setVideoTimestamp] = useState(0);
   const [video, setVideo] = useState({ key: '', start: '', end: '' });
-
-  // sample format for chartInformation: 
-  // {
-  //    files:
-  //    [
-  //      {
-  //        columns: [
-  //          {header:"Timestampt", filename:"PRIM_RPM.csv", 
-  //              timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
-  //          {header:"RPM", filename:"PRIM_RPM.csv",
-  //              timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"},
-  //        ],
-  //        analysis: "none"
-  //      },
-  //      {
-  //        columns: [
-  //          {header:"RPM", filename:"SEC_RPM.csv", 
-  //            timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
-  //          {header:"Timestampt", filename:"SEC_RPM.csv", 
-  //            timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}}
-  //        ],
-  //        analysis: "rollAvg"
-  //      }
-  //   ],
-  //   live: false,
-  //   type: "line"
-  // }
 
   // State for holding the information for each view
   const [viewInformation, setViewInformation] = useState(
@@ -56,7 +51,7 @@ const App = () => {
   );
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
-  const [successMessage, setSuccessMessage] = useState({});
+  const [successMessage, setSuccessMessage] = useState<string>('');
   const [buttonID, setButtonID] = useState(null);
 
   // Catches when success message is updated and displays it after removing old one
@@ -72,7 +67,7 @@ const App = () => {
       <div className="App">
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
         <header className="App-body">
-          <div className="success">{successMessage.message}</div>
+          <div className="success">{successMessage}</div>
           {modal === 'Create' ? <CreateGraphModal 
             setModal={setModal} 
             setViewInformation={setViewInformation} 
