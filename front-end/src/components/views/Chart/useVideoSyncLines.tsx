@@ -132,5 +132,4 @@ export const useVideoSyncLines = (
   };
 
   return { lineX, linePoint, syncedDataPoints };
-
 }

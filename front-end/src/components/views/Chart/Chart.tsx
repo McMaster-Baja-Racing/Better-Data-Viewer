@@ -6,7 +6,6 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
-import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '@lib/videoUtils';
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '@assets/loading.gif';
 import { FileTimespan } from '@lib/apiUtils';
@@ -17,8 +16,6 @@ import { useVideoSyncLines } from './useVideoSyncLines';
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('highcharts-multicolor-series')(Highcharts);
-
-import { Series } from 'highcharts';
 
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);

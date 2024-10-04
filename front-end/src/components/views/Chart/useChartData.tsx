@@ -23,8 +23,6 @@ export const useChartData = (chartInformation: chartInformation) => {
 
     const { hasGPSTime, hasTimestampX, type } = chartInformation
 
-    console.log(chartInformation)
-
     for (const file of chartInformation.files) {
       const { columns, analyze } = file;
 

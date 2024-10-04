@@ -38,8 +38,7 @@ export const DownloadModal = ({ setModal }) => {
       
       // Add each selected file to the zip archive
       for (const file of selectedFiles) {
-        const response = await ApiUtil.getFile(file.key);
-        const blob = await response.blob();
+        const blob = await ApiUtil.getFile(file.key);
         
         // Add the file to the zip archive with the file name as the key
         zip.file(file.key, blob);
