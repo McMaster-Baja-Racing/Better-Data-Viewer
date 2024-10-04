@@ -91,8 +91,6 @@ export const ApiUtil = {
   ): Promise<{ filename: string, text: string }> => {
     const params = new URLSearchParams();
 
-    console.log(inputFiles, inputColumns, outputFiles, type, analyzerOptions, live);
-
     inputFiles.map(file => params.append('inputFiles', file));
     inputColumns.map(column => params.append('inputColumns', column));
     outputFiles?.map(file => params.append('outputFiles', file));

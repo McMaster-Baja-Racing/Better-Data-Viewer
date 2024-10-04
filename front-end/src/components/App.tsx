@@ -11,28 +11,6 @@ import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
-import { AnalyzerType } from '@lib/apiUtils'
-
-export interface chartInformation {
-  files: {
-    columns: {
-      header: string,
-      filename: string,
-      timespan: {
-        start: Date,
-        end: Date
-      }
-    }[],
-    analyze: {
-      type: AnalyzerType,
-      analyzerValues: string[]
-    }
-  }[],
-  live: boolean,
-  type: string //TODO: UPDATE TO ENUM
-  hasGPSTime: boolean
-  hasTimestampX: boolean
-}
 
 const App = () => {
 
@@ -51,12 +29,12 @@ const App = () => {
   );
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
-  const [successMessage, setSuccessMessage] = useState<{message: string}>({});
+  const [successMessage, setSuccessMessage] = useState<{message: string}>({message: ''});
   const [buttonID, setButtonID] = useState(null);
 
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
-    if (Object.keys(successMessage).length === 0) return;
+    if (successMessage.message == '') return;
     // This could use some work to show that they are different messages more clearly
     $('div.success').hide().stop(true, false); 
     $('div.success').slideDown(500).delay(2000).slideUp(1000);

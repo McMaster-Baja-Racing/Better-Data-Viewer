@@ -11,7 +11,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '@assets/loading.gif';
 import { FileTimespan, MinMax } from '@lib/apiUtils';
 import { Chart as ChartType } from 'highcharts';
-import { chartInformation } from '@components/App';
+import { chartInformation } from '@lib/chartUtils';
 import { useChartData } from './useChartData';
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line no-undef
@@ -19,7 +19,6 @@ require('highcharts-multicolor-series')(Highcharts);
 
 HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
-
 
 interface ChartProps {
   chartInformation: chartInformation;

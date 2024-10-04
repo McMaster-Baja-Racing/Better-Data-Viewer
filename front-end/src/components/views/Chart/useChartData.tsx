@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { ApiUtil, MinMax } from '@lib/apiUtils';
 import { getHeadersIndex, getTimestampOffset, getTimestamps, HUE_MAX, HUE_MIN, validateChartInformation } from '@lib/chartUtils';
 import { seriesData } from '@lib/chartUtils';
-import { chartInformation } from '@components/App';
+import { chartInformation } from '@lib/chartUtils';
 
 export const useChartData = (chartInformation: chartInformation) => {
   const [parsedData, setParsedData] = useState<seriesData[]>([]);
@@ -22,6 +22,8 @@ export const useChartData = (chartInformation: chartInformation) => {
     if (!validateChartInformation(chartInformation)) return;
 
     const { hasGPSTime, hasTimestampX, type } = chartInformation
+
+    console.log(chartInformation)
 
     for (const file of chartInformation.files) {
       const { columns, analyze } = file;

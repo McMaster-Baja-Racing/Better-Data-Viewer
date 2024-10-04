@@ -84,7 +84,7 @@ const AnalyzersAndSeries = ({
     const newSeries = {
       'columns': selectColumns,
       'analyze': {
-        'analysis': checkedAnalyzer.code,
+        'type': checkedAnalyzer.code,
         'analyzerValues': checkedAnalyzer.parameters.map(param => {
           const value = document.getElementById(param.name).value;
           return value === '' ? null : value;
