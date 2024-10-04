@@ -11,9 +11,9 @@ export const useVideoSyncLines = (
   videoTimespan: FileTimespan,
   timestamps: number[][]
 ) => {
-  const [offsets, setOffsets] = useState([]);
-  const [lineX, setLineX] = useState(0);
-  const [linePoint, setLinePoint] = useState({x: 0, y: 0});
+  const [offsets, setOffsets] = useState<number[]>([]);
+  const [lineX, setLineX] = useState<number>(0);
+  const [linePoint, setLinePoint] = useState<{x: number, y: number}>({x: 0, y: 0});
   const [syncedDataPoints, setSyncedDataPoints] = useState<string[]>([]);
 
   const resetData = () => {
