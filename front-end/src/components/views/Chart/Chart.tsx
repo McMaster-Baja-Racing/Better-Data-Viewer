@@ -1,8 +1,7 @@
 import './Chart.css';
 import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions';
-import { getSeriesData, getTimestamps, LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils';
-import { ApiUtil } from '@lib/apiUtils';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils';
+import { useState, useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
@@ -11,9 +10,9 @@ import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} f
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '@assets/loading.gif';
 import { FileTimespan, MinMax } from '@lib/apiUtils';
-import { seriesData } from '@lib/chartUtils';
 import { Chart as ChartType } from 'highcharts';
 import { chartInformation } from '@components/App';
+import { useChartData } from './useChartData';
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line no-undef
 require('highcharts-multicolor-series')(Highcharts);
@@ -30,79 +29,12 @@ interface ChartProps {
 
 const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
 
+  const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
   const [chartOptions, setChartOptions] = useState(defaultChartOptions);
-  const [loading, setLoading] = useState(false);
-  const [parsedData, setParsedData] = useState<seriesData[]>([]);
-  const [fileNames, setFileNames] = useState<string[]>([]);
   const [offsets, setOffsets] = useState([]);
-  const [timestamps, setTimestamps] = useState<number[][]>([]);
   const [lineX, setLineX] = useState(0);
   const [linePoint, setLinePoint] = useState({x: 0, y: 0});
   const [valueLines, setValueLines] = useState<string[]>([]);
-  let minMax = useRef<MinMax>({min: 0, max: 0});
-
-  // TODO: This whole function is a bit of a mess, should be refactored
-  // Fetch the data from the server and format it for the chart
-  const getFileFormat = useCallback(async () => {
-    // Runs through all the series and fetches the data, then updates the graph
-    // This also prevents liveData from adding more data as a separate series
-    var data: seriesData[] = [];
-    const tempTimestamps: number[][] = [];
-    for (var i = 0; i < chartInformation.files.length; i++) {
-      // Create a list of all files in order (formatting for backend)
-      let files = chartInformation.files[i].columns.map(column => column.filename);
-      let inputColumns = chartInformation.files[i].columns;
-
-      const response = await ApiUtil.analyzeFiles(
-        files,
-        inputColumns.map(col => col.header),
-        [],
-        chartInformation.files[i].analyze.type,
-        chartInformation.files[i].analyze.analyzerValues.filter(e => e),
-        chartInformation.live
-      );
-
-      //TODO: This should be removed and no longer needed I reckon, in place for a better way to return a file / filename
-      const contentDisposition = response.headers.get('content-disposition');
-      if (!contentDisposition) throw new Error('Content-Disposition header is missing'); 
-      const filename = contentDisposition.split('filename=')[1].slice(1, -1);
-      
-      setFileNames(prevState => [...prevState, filename]);
-
-      const text = await response.text();
-      minMax.current = await ApiUtil.getMinMax(filename, inputColumns[0].header);
-
-      const seriesData = await getSeriesData(
-        text,
-        inputColumns,
-        minMax.current, //TODO THIS MIGHT NOT UPDATE FAST ENOUGH
-        chartInformation.type,
-        chartInformation.hasTimestampX,
-        chartInformation.hasGPSTime
-      );
-
-      data.push(seriesData);
-      // TODO: Fix this section for each case
-      tempTimestamps.push(
-        chartInformation.hasTimestampX ? seriesData.map(item => item[0]) as number[] : await getTimestamps(text)
-      );
-    }
-    setParsedData(data);
-    setTimestamps(tempTimestamps);
-
-  }, [chartInformation, setFileNames, setParsedData, setTimestamps]);
-
-  // Whenever chartInformation is updated (which happens when submit button is pressed), fetch the neccesary data
-  useEffect(() => {
-    if(!validateChartInformation(chartInformation)) return;
-        
-    setLoading(true);
-    setParsedData([]);
-    setFileNames([]);
-
-    getFileFormat();
-    setLoading(false);
-  }, [chartInformation, getFileFormat]);
 
   // Once necessary data is fetched, format it for the chart
   useEffect(() => {
@@ -126,12 +58,12 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
 
     if (chartInformation.live) {
       intervalId = setInterval(() => {
-        getFileFormat(); // TODO: Prevent loading animation or alter it
+        refetch();
       }, LIVE_DATA_INTERVAL);
     }
 
     return () => clearInterval(intervalId);
-  }, [chartInformation, getFileFormat]);
+  }, [chartInformation, refetch]);
 
   const chartRef = useRef<ChartType | null>(null);
   const { width, height, ref } = useResizeDetector({

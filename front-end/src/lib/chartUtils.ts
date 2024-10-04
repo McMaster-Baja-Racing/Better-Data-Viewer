@@ -12,8 +12,8 @@ interface column {
 
 
 // Constants for colour chart
-const HUE_MIN = 150;
-const HUE_MAX = 0;
+export const HUE_MIN = 150;
+export const HUE_MAX = 0;
 export const LIVE_DATA_INTERVAL = 300;
 
 interface colourSeriesData {
@@ -82,7 +82,7 @@ export const getSeriesData = async (
 
 // Calculates the offset required to convert the x values to unix timestamps
 // Adding the timestampOffset results in the x value being a the start time unix millis + millis since first timestamp
-const getTimestampOffset = (columns: column[], lines: string[][], headerIndices: headersIndex): number => {
+export const getTimestampOffset = (columns: column[], lines: string[][], headerIndices: headersIndex): number => {
   // Offset is the start time in unix millis minus the first timestamp in the file
   return new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]);
 };
@@ -101,7 +101,7 @@ interface headersIndex {
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
-const getHeadersIndex = (headers: string[], columns: column[]): headersIndex => {
+export const getHeadersIndex = (headers: string[], columns: column[]): headersIndex => {
   let h: headersIndex = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {

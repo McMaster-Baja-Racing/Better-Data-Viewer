@@ -88,7 +88,7 @@ export const ApiUtil = {
     type: AnalyzerType | null,
     analyzerOptions: string[], // This one is weird as its dependent on which analyzer is run
     live: boolean
-  ): Promise<Response> => {
+  ): Promise<{ filename: string, text: string }> => {
     const params = new URLSearchParams();
 
     console.log(inputFiles, inputColumns, outputFiles, type, analyzerOptions, live);
@@ -108,7 +108,14 @@ export const ApiUtil = {
       alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
       throw Error(response.statusText);
     }
-    return response;
+
+    const contentDisposition = response.headers.get('content-disposition');
+    if (!contentDisposition) throw new Error('Content-Disposition header is missing'); 
+    const filename = contentDisposition.split('filename=')[1].slice(1, -1);
+
+    const text = await response.text();
+
+    return { filename, text };
   },
 
   /**
