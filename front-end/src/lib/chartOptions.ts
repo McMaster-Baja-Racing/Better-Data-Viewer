@@ -1,5 +1,5 @@
 import { Options } from 'highcharts';
-import { chartInformation } from './chartUtils';
+import { ChartInformation } from './chartUtils';
 
 export const defaultChartOptions: Options = {
   chart: {
@@ -30,7 +30,7 @@ export const defaultChartOptions: Options = {
   }
 };
 
-const getStandardChartConfig = (chartInformation: chartInformation) => {
+const getStandardChartConfig = (chartInformation: ChartInformation) => {
 
   const chartConfig = defaultChartOptions;
 

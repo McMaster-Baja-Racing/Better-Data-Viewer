@@ -1,11 +1,11 @@
-import { chartInformation, validateChartInformation } from '@lib/chartUtils';
+import { ChartInformation, validateChartInformation } from '@lib/chartUtils';
 import { useState, useEffect } from 'react';
 import { Chart } from 'highcharts';
 import { FileTimespan } from '@lib/apiUtils';
 import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '@lib/videoUtils';
 
 export const useVideoSyncLines = (
-  chartInformation: chartInformation,
+  chartInformation: ChartInformation,
   chartRef: React.RefObject<Chart>,
   videoTimestamp: number,
   videoTimespan: FileTimespan,

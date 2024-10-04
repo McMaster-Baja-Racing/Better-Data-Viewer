@@ -1,20 +1,20 @@
 import { AnalyzerType } from './apiUtils';
 
-export interface chartInformation {
+export interface ChartInformation {
   files: {
-    columns: column[],
+    columns: Column[];
     analyze: {
-      type: AnalyzerType,
-      analyzerValues: string[]
+      type: AnalyzerType;
+      analyzerValues: string[];
     }
-  }[],
-  live: boolean,
-  type: string //TODO: UPDATE TO ENUM
-  hasGPSTime: boolean
-  hasTimestampX: boolean
+  }[];
+  live: boolean;
+  type: string;
+  hasGPSTime: boolean;
+  hasTimestampX: boolean;
 }
 
-interface column {
+interface Column {
   header: string;
   filename: string;
   timespan: {
@@ -23,28 +23,28 @@ interface column {
   }
 }
 
-export const HUE_MIN = 150;
-export const HUE_MAX = 0;
-export const LIVE_DATA_INTERVAL = 300;
-
-interface colourSeriesData {
+interface ColourSeriesData {
   x: number;
   y: number;
   colorValue: number;
   segmentColor: string;
 }
 
-interface headersIndex {
+interface HeadersIndex {
   x: number;
   y: number;
   colour: number;
 }
 
-export type seriesData = colourSeriesData[] | number[][];
+export type seriesData = ColourSeriesData[] | number[][];
+
+export const HUE_MIN = 150;
+export const HUE_MAX = 0;
+export const LIVE_DATA_INTERVAL = 300;
 
 // Calculates the offset required to convert the x values to unix timestamps
 // Adding the timestampOffset results in the x value being a the start time unix millis + millis since first timestamp
-export const getTimestampOffset = (columns: column[], lines: string[][], headerIndices: headersIndex): number => {
+export const getTimestampOffset = (columns: Column[], lines: string[][], headerIndices: HeadersIndex): number => {
   // Offset is the start time in unix millis minus the first timestamp in the file
   return new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]);
 };
@@ -59,8 +59,8 @@ export const getTimestamps = async (text: string) => {
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
-export const getHeadersIndex = (headers: string[], columns: column[]): headersIndex => {
-  const h: headersIndex = { x: -1, y: -1, colour: -1 };
+export const getHeadersIndex = (headers: string[], columns: Column[]): HeadersIndex => {
+  const h: HeadersIndex = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {
       if (columns[i].header === headers[j].trim()) {
@@ -77,7 +77,7 @@ export const getHeadersIndex = (headers: string[], columns: column[]): headersIn
   return h;
 };
 
-export const validateChartInformation = (chartInformation: chartInformation): boolean => {
+export const validateChartInformation = (chartInformation: ChartInformation): boolean => {
   if (!chartInformation) {
     return false;
   }

@@ -10,7 +10,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '@assets/loading.gif';
 import { FileTimespan } from '@lib/apiUtils';
 import { Chart as ChartType } from 'highcharts';
-import { chartInformation } from '@lib/chartUtils';
+import { ChartInformation } from '@lib/chartUtils';
 import { useChartData } from './useChartData';
 import { useVideoSyncLines } from './useVideoSyncLines';
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
@@ -21,24 +21,20 @@ HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
 interface ChartProps {
-  chartInformation: chartInformation;
+  chartInformation: ChartInformation;
   video: FileTimespan;
   videoTimestamp: number;
 }
 
 const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
-
   const chartRef = useRef<ChartType | null>(null);
   const [chartOptions, setChartOptions] = useState(defaultChartOptions);
-  
   const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(chartInformation, chartRef, videoTimestamp, video, timestamps);
 
-  // Once necessary data is fetched, format it for the chart
   useEffect(() => {
     if(!validateChartInformation(chartInformation)) return;
 
-    // Update the chart options with the new data
     setChartOptions((prevState) => {
       return {
         ...prevState,
