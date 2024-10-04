@@ -46,9 +46,9 @@ export const ApiUtil = {
 
   /**
      * @description Fetches a list of files from the server. 
-     * @returns {Promise<String[]>} A promise that resolves to an array of file names.
+     * @returns {Promise<string[]>} A promise that resolves to an array of file names.
      */
-  getFiles: async (): Promise<String[]> => {
+  getFiles: async (): Promise<string[]> => {
     const response = await fetch(`http://${window.location.hostname}:8080/files`);
     if (!response.ok) throw Error(response.statusText);
 
@@ -94,9 +94,9 @@ export const ApiUtil = {
     inputFiles.map(file => params.append('inputFiles', file));
     inputColumns.map(column => params.append('inputColumns', column));
     outputFiles?.map(file => params.append('outputFiles', file));
-    type && params.append('type', type);
+    if (type) params.append('type', type);
     analyzerOptions.map(option => params.append('analyzerOptions', option));
-    live && params.append('live', live.toString());
+    if (live) params.append('live', live.toString());
 
     const response = await fetch(`http://${window.location.hostname}:8080/analyze?` + params.toString(), {
       method: 'POST'

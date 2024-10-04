@@ -1,5 +1,5 @@
 import { Options } from 'highcharts';
-import { chartInformation } from '@components/App';
+import { chartInformation } from './chartUtils';
 
 export const defaultChartOptions: Options = {
   chart: {
@@ -32,7 +32,7 @@ export const defaultChartOptions: Options = {
 
 const getStandardChartConfig = (chartInformation: chartInformation) => {
 
-  var chartConfig = defaultChartOptions;
+  const chartConfig = defaultChartOptions;
 
   chartConfig.title = {text: chartInformation.files[0].columns[1].header + 
     ' vs ' + 
@@ -77,7 +77,7 @@ const getStandardChartConfig = (chartInformation: chartInformation) => {
 };
 
 const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
-  var chartConfig = getStandardChartConfig(chartInformation);
+  const chartConfig = getStandardChartConfig(chartInformation);
   const colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey'];
 
   chartConfig.series = parsedData.map((data, index) => {
@@ -99,7 +99,7 @@ const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
 };
 
 const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
-  var chartConfig = getDefaultChartConfig(chartInformation, parsedData, fileNames);
+  const chartConfig = getDefaultChartConfig(chartInformation, parsedData, fileNames);
 
   chartConfig.chart = {type: 'line'};
 
@@ -121,7 +121,7 @@ const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
 };
 
 const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) => {
-  var chartConfig = getStandardChartConfig(chartInformation);
+  const chartConfig = getStandardChartConfig(chartInformation);
 
   chartConfig.series = parsedData.map((data, index) => {
     return {

@@ -60,7 +60,7 @@ export const getTimestamps = async (text: string) => {
  * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
 export const getHeadersIndex = (headers: string[], columns: column[]): headersIndex => {
-  let h: headersIndex = { x: -1, y: -1, colour: -1 };
+  const h: headersIndex = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {
       if (columns[i].header === headers[j].trim()) {

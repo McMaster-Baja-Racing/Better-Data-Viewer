@@ -9,7 +9,7 @@ export const useChartData = (chartInformation: chartInformation) => {
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [timestamps, setTimestamps] = useState<number[][]>([]);
   const [loading, setLoading] = useState(false);
-  let minMax = useRef<MinMax>({ min: 0, max: 0 });
+  const minMax = useRef<MinMax>({ min: 0, max: 0 });
 
   const resetData = () => {
     setParsedData([]);
@@ -29,18 +29,18 @@ export const useChartData = (chartInformation: chartInformation) => {
       const { columns, analyze } = file;
 
       const { filename, text } = await ApiUtil.analyzeFiles(
-        columns.map(col => col.filename), 
-        columns.map(col => col.header), 
-        [], 
-        analyze.type, 
-        analyze.analyzerValues.filter(e => e), 
+        columns.map(col => col.filename),
+        columns.map(col => col.header),
+        [],
+        analyze.type,
+        analyze.analyzerValues.filter(e => e),
         chartInformation.live
       );
 
       setFileNames(prev => [...prev, filename]);
 
       // TODO: Maybe separate this logic out since its just formatting
-      let headers = text
+      const headers = text
         .slice(0, text.indexOf('\n'))
         .replace('\r', '')
         .split(',');
@@ -63,8 +63,8 @@ export const useChartData = (chartInformation: chartInformation) => {
 
         seriesData = lines.map((line) => {
 
-          let val = parseFloat(line[headerIndices.colour]);
-          let hue = HUE_MIN + (HUE_MAX - HUE_MIN) * (val - minMax.current.min) / (max - min);
+          const val = parseFloat(line[headerIndices.colour]);
+          const hue = HUE_MIN + (HUE_MAX - HUE_MIN) * (val - minMax.current.min) / (max - min);
       
           return { 
             x: parseFloat(line[headerIndices.x]), 
