@@ -51,12 +51,12 @@ const App = () => {
   );
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<{message: string}>({});
   const [buttonID, setButtonID] = useState(null);
 
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
-    if (successMessage === '' || Object.keys(successMessage).length === 0) return;
+    if (Object.keys(successMessage).length === 0) return;
     // This could use some work to show that they are different messages more clearly
     $('div.success').hide().stop(true, false); 
     $('div.success').slideDown(500).delay(2000).slideUp(1000);
@@ -67,7 +67,7 @@ const App = () => {
       <div className="App">
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
         <header className="App-body">
-          <div className="success">{successMessage}</div>
+          <div className="success">{successMessage.message}</div>
           {modal === 'Create' ? <CreateGraphModal 
             setModal={setModal} 
             setViewInformation={setViewInformation} 
