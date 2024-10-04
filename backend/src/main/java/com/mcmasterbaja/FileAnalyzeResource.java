@@ -5,6 +5,7 @@ import com.mcmasterbaja.analyzer.AnalyzerFactory;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.MinMax;
 import com.mcmasterbaja.services.FileMetadataService;
 import com.mcmasterbaja.services.StorageService;
 import jakarta.inject.Inject;
@@ -67,21 +68,22 @@ public class FileAnalyzeResource {
 
   @GET
   @jakarta.ws.rs.Path("minMax/{filekey}")
-  public Double[] getMinMax(
+  public MinMax getMinMax(
       @PathParam("filekey") String filekey, @QueryParam("column") String column) {
     logger.info("Getting min and max for file: " + filekey);
 
     String typeFolder = fileMetadataService.getTypeFolder(Paths.get(filekey));
     Path targetPath = storageService.load(Paths.get(typeFolder)).resolve(filekey);
-    Double[] minMax = fileMetadataService.getMinMax(targetPath, column);
+    MinMax minMax = fileMetadataService.getMinMax(targetPath, column);
 
     return minMax;
   }
 
   @PATCH
   @jakarta.ws.rs.Path("togglelive")
-  public String toggleLive() {
+  public Boolean toggleLive() {
     logger.info("Toggling live data to: " + Serial.exit);
+    Boolean exit = Serial.exit;
 
     if (!Serial.exit) {
       Serial.exit = true;
@@ -93,6 +95,6 @@ public class FileAnalyzeResource {
           .start();
     }
 
-    return "Live data toggled to " + Serial.exit;
+    return exit;
   }
 }

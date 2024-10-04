@@ -3,6 +3,8 @@ package com.mcmasterbaja.services;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 
+import com.mcmasterbaja.model.MinMax;
+
 public interface FileMetadataService {
 
   /**
@@ -26,9 +28,9 @@ public interface FileMetadataService {
    *
    * @param targetPath The Path of the file to read.
    * @param column The column to analyze.
-   * @return A double[] containing the minimum and maximum values.
+   * @return A MinMax object containing the minimum and maximum values.
    */
-  Double[] getMinMax(Path targetPath, String column);
+  MinMax getMinMax(Path targetPath, String column);
 
   /**
    * Gets the last value of the column in the file.

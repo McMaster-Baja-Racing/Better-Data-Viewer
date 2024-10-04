@@ -42,17 +42,14 @@ export const CreateGraphModal = ({
   useEffect(() => {
     // Fetch data when the component mounts
     ApiUtil.getFolder('csv')
-      .then((response) => response.json())
       .then((data) => {
         setFiles(data);
       });
     ApiUtil.getTimespans('mp4')
-      .then((response) => response.json())
       .then((data) => {
         setvideoTimespans(data);
       });
     ApiUtil.getTimespans('csv')
-      .then((response) => response.json())
       .then((data) => {
         setfileTimespans(data);
       });

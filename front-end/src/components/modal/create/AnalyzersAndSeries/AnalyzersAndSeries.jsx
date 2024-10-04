@@ -19,7 +19,7 @@ const AnalyzersAndSeries = ({
   const isDuplicateSeries = (newSeries) => {
     return seriesInfo.some((series) => {
       const isSameColumns = JSON.stringify(series.columns) === JSON.stringify(newSeries.columns);
-      const isSameAnalyzer = series.analyze.analysis === newSeries.analyze.analysis;
+      const isSameAnalyzer = series.analyze.type === newSeries.analyze.type;
       return isSameColumns && isSameAnalyzer;
     });
   };
@@ -84,7 +84,7 @@ const AnalyzersAndSeries = ({
     const newSeries = {
       'columns': selectColumns,
       'analyze': {
-        'analysis': checkedAnalyzer.code,
+        'type': checkedAnalyzer.code,
         'analyzerValues': checkedAnalyzer.parameters.map(param => {
           const value = document.getElementById(param.name).value;
           return value === '' ? null : value;
