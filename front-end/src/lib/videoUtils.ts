@@ -1,6 +1,6 @@
+import { ExtSeries } from "@components/views/Chart/useVideoSyncLines";
 import { FileInformation, FileTimespan } from "./apiUtils";
 import { ChartInformation } from "./chartUtils";
-import { Series } from "highcharts";
 
 // Computs the offsets between the videoStart and the fileStart for all series
 export const computeOffsets = (chartInformation: ChartInformation, videoTimespan: FileTimespan) => {
@@ -14,7 +14,7 @@ export const computeOffsets = (chartInformation: ChartInformation, videoTimespan
   return tempOffsets;
 };
 
-export const getPointIndex = (series: Series, videoTimestamp: number, offset: number, timestamps: number[]) => {
+export const getPointIndex = (series: ExtSeries, videoTimestamp: number, offset: number, timestamps: number[]) => {
   const fileTimestamp = getFileTimestamp(videoTimestamp, offset, timestamps);
   if (fileTimestamp === undefined) return;
   const timestampIndex = findClosestTimestamp(fileTimestamp, timestamps);
@@ -22,9 +22,10 @@ export const getPointIndex = (series: Series, videoTimestamp: number, offset: nu
   return pointIndex;
 };
 
+// TODO: Error handling instead of null return here?
 export const getFileTimestamp = (videoTimestamp: number, offset: number, timestamps: number[]) => {
   const fileTimestamp = videoTimestamp + offset + timestamps[0];
-  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return;
+  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) throw new Error('Timestamp out of bounds');
   return fileTimestamp;
 };
 
@@ -79,7 +80,7 @@ const findClosestTimestamp = (targetTimestamp: number, timestampArray: number[])
 
 // Finds the index of the point of the on screen series 
 // that matches with the point at the same index as the one provided
-const findPointIndex = (timestampIndex: number, series: Series) => {
+const findPointIndex = (timestampIndex: number, series: ExtSeries) => {
   const timestampPoint = {x: series.xData[timestampIndex], y: series.yData[timestampIndex]};
   const point = series.points.find(point => point.x === timestampPoint.x && point.y === timestampPoint.y);
   if (point === undefined) return -1;

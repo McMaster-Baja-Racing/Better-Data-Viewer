@@ -80,6 +80,13 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     refreshRate: 100,
   });
 
+  useEffect(() => {
+    // chartRef.current?.axes[0].series[0].points gives only visible points
+    // chartRef.current?.axes[0].series[0].options.data is not typescript valid
+    console.log(chartRef.current?.series[0].points);
+
+  }, [chartOptions]);
+
   return (
     <div className="chartContainer" ref={ref}>
       {syncedDataPoints.length > 0 ? (<div className='valueBox'>{syncedDataPoints.join('\n')}</div>) : null}

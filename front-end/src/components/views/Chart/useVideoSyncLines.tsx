@@ -1,8 +1,13 @@
 import { ChartInformation, validateChartInformation } from '@lib/chartUtils';
 import { useState, useEffect } from 'react';
-import { Chart } from 'highcharts';
+import { Chart, Series } from 'highcharts';
 import { FileTimespan } from '@lib/apiUtils';
 import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '@lib/videoUtils';
+
+export interface ExtSeries extends Series {
+  xData: number[];
+  yData: number[];
+}
 
 export const useVideoSyncLines = (
   chartInformation: ChartInformation,
@@ -47,7 +52,8 @@ export const useVideoSyncLines = (
     // TODO: Find a better base value for fileTimestamp
     let fileTimestamp = -Infinity;
   
-    const visibleSeries = chartRef.current.series.filter(series => series.visible);
+    // TODO: This ExtSeries is yucky
+    const visibleSeries = chartRef.current.series.filter(series => series.visible) as ExtSeries[];
     if (visibleSeries.length === 0) return;
 
     // Gets the first file timestamp that is not undefined
@@ -85,7 +91,7 @@ export const useVideoSyncLines = (
     // Finds the matching point index for the first visible series using the video timestamp
     if (chartRef.current === null || chartRef.current.series.length === 0) return;
     //TODO: Update this null check to be inline and return the right case
-    const visibleSeries = chartRef.current.series.filter(series => series.visible);
+    const visibleSeries = chartRef.current.series.filter(series => series.visible) as ExtSeries[];
     if (visibleSeries.length === 0) return;
     const firstVisibleSeries = visibleSeries[0];
     const seriesIndex = chartRef.current.series.indexOf(firstVisibleSeries);
@@ -96,7 +102,7 @@ export const useVideoSyncLines = (
       timestamps[seriesIndex]
     );
 
-    if (pointIndex >= 0) {
+    if (pointIndex && pointIndex >= 0) {
       setLinePoint({x: firstVisibleSeries.xData[pointIndex], y: firstVisibleSeries.yData[pointIndex]});
     } else return;
 
@@ -115,7 +121,7 @@ export const useVideoSyncLines = (
           offsets[seriesIndex],
           timestamps[seriesIndex]
         );
-        if (pointIndex >= 0) {
+        if (pointIndex && pointIndex >= 0) {
           return {name: series.name, x: series.xData[pointIndex], y: series.yData[pointIndex]};
         }
       })
@@ -124,7 +130,7 @@ export const useVideoSyncLines = (
     // Updates the value box with the found values
     const tempValueLines: string[] = [];
     chartRef.current.series.forEach(series => {
-      const value = values.find(value => value.name === series.name);
+      const value = values.find(value => value?.name === series.name);
       if (value === undefined) return;
       tempValueLines.push(`${series.name}: (${value.x.toFixed(5)}, ${value.y.toFixed(5)})`);
     });
