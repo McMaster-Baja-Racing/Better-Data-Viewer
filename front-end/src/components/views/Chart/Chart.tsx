@@ -8,9 +8,8 @@ import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
 import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '@assets/loading.gif';
-import { FileTimespan } from '@lib/apiUtils';
+import { FileTimespan, ChartInformation } from '@types';
 import { Chart as ChartType } from 'highcharts';
-import { ChartInformation } from '@lib/chartUtils';
 import { useChartData } from './useChartData';
 import { useVideoSyncLines } from './useVideoSyncLines';
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp

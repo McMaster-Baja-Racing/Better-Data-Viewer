@@ -1,6 +1,4 @@
-import { ExtSeries } from "@components/views/Chart/useVideoSyncLines";
-import { FileInformation, FileTimespan } from "./apiUtils";
-import { ChartInformation } from "./chartUtils";
+import { FileInformation, FileTimespan, ChartInformation, ExtSeries } from "@types";
 
 // Computs the offsets between the videoStart and the fileStart for all series
 export const computeOffsets = (chartInformation: ChartInformation, videoTimespan: FileTimespan) => {

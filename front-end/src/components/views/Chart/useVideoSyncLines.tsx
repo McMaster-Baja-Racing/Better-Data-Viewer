@@ -1,13 +1,8 @@
-import { ChartInformation, validateChartInformation } from '@lib/chartUtils';
+import { validateChartInformation } from '@lib/chartUtils';
 import { useState, useEffect } from 'react';
-import { Chart, Series } from 'highcharts';
-import { FileTimespan } from '@lib/apiUtils';
+import { Chart } from 'highcharts';
+import { FileTimespan, ChartInformation, ExtSeries } from '@types';
 import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '@lib/videoUtils';
-
-export interface ExtSeries extends Series {
-  xData: number[];
-  yData: number[];
-}
 
 export const useVideoSyncLines = (
   chartInformation: ChartInformation,

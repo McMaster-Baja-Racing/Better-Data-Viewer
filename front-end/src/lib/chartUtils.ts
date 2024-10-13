@@ -1,42 +1,4 @@
-import { AnalyzerType } from './apiUtils';
-
-export interface ChartInformation {
-  files: {
-    columns: Column[];
-    analyze: {
-      type: AnalyzerType;
-      analyzerValues: string[];
-    }
-  }[];
-  live: boolean;
-  type: string;
-  hasGPSTime: boolean;
-  hasTimestampX: boolean;
-}
-
-interface Column {
-  header: string;
-  filename: string;
-  timespan: {
-    start: Date;
-    end: Date;
-  }
-}
-
-interface ColourSeriesData {
-  x: number;
-  y: number;
-  colorValue: number;
-  segmentColor: string;
-}
-
-interface HeadersIndex {
-  x: number;
-  y: number;
-  colour: number;
-}
-
-export type seriesData = ColourSeriesData[] | number[][];
+import { ChartInformation, Column, HeadersIndex } from "@types";
 
 export const HUE_MIN = 150;
 export const HUE_MAX = 0;

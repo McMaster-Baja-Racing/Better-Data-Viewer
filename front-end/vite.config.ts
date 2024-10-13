@@ -23,6 +23,7 @@ export default defineConfig({
       '@components': resolve(root, 'components'),
       '@lib': resolve(root, 'lib'),
       '@styles': resolve(root, 'styles'),
+      '@types': resolve(root, 'types/index.ts'),
     },
   },
 });

@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ApiUtil, MinMax } from '@lib/apiUtils';
+import { ApiUtil } from '@lib/apiUtils';
 import { getHeadersIndex, getTimestampOffset, getTimestamps, HUE_MAX, HUE_MIN, validateChartInformation } from '@lib/chartUtils';
-import { seriesData } from '@lib/chartUtils';
-import { ChartInformation } from '@lib/chartUtils';
+import { ChartInformation, seriesData, MinMax } from '@types';
 
 export const useChartData = (chartInformation: ChartInformation) => {
   const [parsedData, setParsedData] = useState<seriesData[]>([]);

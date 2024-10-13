@@ -1,5 +1,5 @@
 import { Options } from 'highcharts';
-import { ChartInformation } from './chartUtils';
+import { ChartInformation } from '@types';
 
 export const defaultChartOptions: Options = {
   chart: {
