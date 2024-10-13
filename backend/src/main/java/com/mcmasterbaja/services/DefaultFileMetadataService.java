@@ -7,7 +7,6 @@ import com.mcmasterbaja.exceptions.FileNotFoundException;
 import com.mcmasterbaja.exceptions.MalformedCsvException;
 import com.mcmasterbaja.exceptions.StorageException;
 import com.mcmasterbaja.model.MinMax;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.BufferedReader;
