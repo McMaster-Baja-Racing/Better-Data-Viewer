@@ -99,8 +99,9 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
                       <button
                         className="fileButton"
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
                           setfileLists(fileLists.filter((f) => f.name !== file.name));
+                          e.preventDefault();
                         }}
                       >
                         X
