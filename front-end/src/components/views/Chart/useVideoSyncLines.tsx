@@ -21,7 +21,7 @@ export const useVideoSyncLines = (
     setLineX(0);
     setLinePoint({x: 0, y: 0});
     setSyncedDataPoints([]);
-  }
+  };
 
   // Do initial calculation when timespan or chartInformation change
   useEffect(() => {
@@ -108,7 +108,9 @@ export const useVideoSyncLines = (
         x: firstVisibleSeries.xData[pointIndex], 
         y: firstVisibleSeries.yData[pointIndex] 
       }, ...visibleSeries.slice(1).map(series => {
-        if (chartRef.current === null || chartRef.current.series.length === 0) throw new Error('Chart is not initialized');
+        if (chartRef.current === null || chartRef.current.series.length === 0) {
+          throw new Error('Chart is not initialized');
+        }
         const seriesIndex = chartRef.current.series.indexOf(series);
         const pointIndex = getPointIndex(
           series,
@@ -133,4 +135,4 @@ export const useVideoSyncLines = (
   };
 
   return { lineX, linePoint, syncedDataPoints };
-}
+};

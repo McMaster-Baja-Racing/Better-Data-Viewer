@@ -1,6 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
-import { getHeadersIndex, getTimestampOffset, getTimestamps, HUE_MAX, HUE_MIN, validateChartInformation } from '@lib/chartUtils';
+import {
+  getHeadersIndex, 
+  getTimestampOffset, 
+  getTimestamps, 
+  HUE_MAX, 
+  HUE_MIN, 
+  validateChartInformation
+} from '@lib/chartUtils';
 import { ChartInformation, seriesData, MinMax } from '@types';
 
 export const useChartData = (chartInformation: ChartInformation) => {
@@ -20,7 +27,7 @@ export const useChartData = (chartInformation: ChartInformation) => {
   const fetchChartData = useCallback(async () => {
     if (!validateChartInformation(chartInformation)) return;
 
-    const { hasGPSTime, hasTimestampX, type } = chartInformation
+    const { hasGPSTime, hasTimestampX, type } = chartInformation;
 
     for (const file of chartInformation.files) {
       const { columns, analyze } = file;
@@ -77,7 +84,7 @@ export const useChartData = (chartInformation: ChartInformation) => {
       let timestamps: number[];
       if (hasTimestampX) {
         // TODO: Fix this case, which seems to be an overlap of colour and syncing timestamps
-        timestamps = seriesData.map(item => item[0]) as number[]
+        timestamps = seriesData.map(item => item[0]) as number[];
       } else {
         timestamps = await getTimestamps(text);
       }
@@ -95,4 +102,4 @@ export const useChartData = (chartInformation: ChartInformation) => {
   }, [fetchChartData]);
 
   return { parsedData, fileNames, timestamps, minMax, loading, refetch: fetchChartData };
-}
+};

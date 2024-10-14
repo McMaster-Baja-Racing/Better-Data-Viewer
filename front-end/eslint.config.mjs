@@ -9,4 +9,15 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.strict,
   ...tseslint.configs.stylistic,
+  {rules: {
+    'semi': ['warn', 'always'],
+    'max-len': ['warn', {code: 120}],
+    'quotes': ['warn', 'single'],
+    'no-console': 'warn',
+    'indent': [
+      'error',
+      2,  
+      { 'SwitchCase': 1 }
+    ]
+  }}
 );

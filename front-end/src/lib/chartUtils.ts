@@ -1,4 +1,4 @@
-import { ChartInformation, Column, HeadersIndex } from "@types";
+import { ChartInformation, Column, HeadersIndex } from '@types';
 
 export const HUE_MIN = 150;
 export const HUE_MAX = 0;

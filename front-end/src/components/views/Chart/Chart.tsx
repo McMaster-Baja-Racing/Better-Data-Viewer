@@ -29,7 +29,13 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const chartRef = useRef<ChartType | null>(null);
   const [chartOptions, setChartOptions] = useState(defaultChartOptions);
   const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
-  const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(chartInformation, chartRef, videoTimestamp, video, timestamps);
+  const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
+    chartInformation, 
+    chartRef, 
+    videoTimestamp, 
+    video, 
+    timestamps
+  );
 
   useEffect(() => {
     if(!validateChartInformation(chartInformation)) return;
@@ -78,13 +84,6 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     refreshMode: 'debounce',
     refreshRate: 100,
   });
-
-  useEffect(() => {
-    // chartRef.current?.axes[0].series[0].points gives only visible points
-    // chartRef.current?.axes[0].series[0].options.data is not typescript valid
-    console.log(chartRef.current?.series[0].points);
-
-  }, [chartOptions]);
 
   return (
     <div className="chartContainer" ref={ref}>

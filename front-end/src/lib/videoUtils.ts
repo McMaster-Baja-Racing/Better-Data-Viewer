@@ -1,4 +1,4 @@
-import { FileInformation, FileTimespan, ChartInformation, ExtSeries } from "@types";
+import { FileInformation, FileTimespan, ChartInformation, ExtSeries } from '@types';
 
 // Computs the offsets between the videoStart and the fileStart for all series
 export const computeOffsets = (chartInformation: ChartInformation, videoTimespan: FileTimespan) => {
@@ -23,12 +23,13 @@ export const getPointIndex = (series: ExtSeries, videoTimestamp: number, offset:
 // TODO: Error handling instead of null return here?
 export const getFileTimestamp = (videoTimestamp: number, offset: number, timestamps: number[]) => {
   const fileTimestamp = videoTimestamp + offset + timestamps[0];
-  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) throw new Error('Timestamp out of bounds');
+  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) {
+    throw new Error('Timestamp out of bounds');
+  }
   return fileTimestamp;
 };
 
 // Filters the given list of files to only include those that have timespans that overlap with the video
-// TODO: Check types on these
 export const filterFiles = (videoTimespan: FileTimespan, files: FileInformation[], fileTimespans: FileTimespan[]) => {
   const videoSyncFiles: FileInformation[] = [];
   const videoStart = new Date (videoTimespan.start);

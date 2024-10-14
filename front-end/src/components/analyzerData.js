@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // const images = {};
 // const importAll = r => {
 //   r.keys().forEach(key => images[key] = r(key));

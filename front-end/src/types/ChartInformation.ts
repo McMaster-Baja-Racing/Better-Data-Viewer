@@ -1,5 +1,5 @@
-import { AnalyzerType } from "@types";
-import { Series } from "highcharts";
+import { AnalyzerType } from '@types';
+import { Series } from 'highcharts';
 
 export interface ChartInformation {
   files: {

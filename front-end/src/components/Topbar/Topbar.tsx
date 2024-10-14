@@ -19,9 +19,9 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
   const beginLiveData = () => {
 
     ApiUtil.toggleLiveData('COM2').then((res) => {
-      console.log(res);
+      alert(res);
     }).catch((err) => {
-      console.log(err);
+      alert(err);
     });
 
     if (liveStatus === false) {

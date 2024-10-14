@@ -1,4 +1,4 @@
-import { AnalyzerType, FileInformation, FileTimespan, MinMax } from "@types";
+import { AnalyzerType, FileInformation, FileTimespan, MinMax } from '@types';
 
 export const ApiUtil = {
 
