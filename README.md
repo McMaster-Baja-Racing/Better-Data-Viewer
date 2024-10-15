@@ -15,8 +15,8 @@ For an in-depth user guide, consult the McMaster Baja Wiki.
 ## How to run
 ### Required tools:
 
-NodeJS and NPM
-JDK 21+
+- NodeJS and NPM
+- JDK 21+
 
 ### To setup:
 
