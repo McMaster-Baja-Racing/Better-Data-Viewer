@@ -1,8 +1,10 @@
+import { FileInformation, FileTimespan, ChartInformation, ExtSeries } from '@types';
+
 // Computs the offsets between the videoStart and the fileStart for all series
-export const computeOffsets = (chartInformation, video) => {
-  const videoStart = new Date(video.start).getTime();
-        
-  const tempOffsets = [];
+export const computeOffsets = (chartInformation: ChartInformation, videoTimespan: FileTimespan) => {
+  const videoStart = new Date(videoTimespan.start).getTime();
+  
+  const tempOffsets: number[] = [];
   chartInformation.files.forEach(file => {
     const fileStart = new Date(file.columns[0].timespan.start).getTime(); // Unix date of first timestamp in file
     tempOffsets.push(videoStart - fileStart);
@@ -10,7 +12,7 @@ export const computeOffsets = (chartInformation, video) => {
   return tempOffsets;
 };
 
-export const getPointIndex = (series, videoTimestamp, offset, timestamps) => {
+export const getPointIndex = (series: ExtSeries, videoTimestamp: number, offset: number, timestamps: number[]) => {
   const fileTimestamp = getFileTimestamp(videoTimestamp, offset, timestamps);
   if (fileTimestamp === undefined) return;
   const timestampIndex = findClosestTimestamp(fileTimestamp, timestamps);
@@ -18,17 +20,20 @@ export const getPointIndex = (series, videoTimestamp, offset, timestamps) => {
   return pointIndex;
 };
 
-export const getFileTimestamp = (videoTimestamp, offset, timestamps) => {
+// TODO: Error handling instead of null return here?
+export const getFileTimestamp = (videoTimestamp: number, offset: number, timestamps: number[]) => {
   const fileTimestamp = videoTimestamp + offset + timestamps[0];
-  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) return;
+  if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) {
+    throw new Error('Timestamp out of bounds');
+  }
   return fileTimestamp;
 };
 
 // Filters the given list of files to only include those that have timespans that overlap with the video
-export const filterFiles = (video, files, fileTimespans) => {
-  const videoSyncFiles = [];
-  const videoStart = new Date (video.start);
-  const videoEnd = new Date (video.end);
+export const filterFiles = (videoTimespan: FileTimespan, files: FileInformation[], fileTimespans: FileTimespan[]) => {
+  const videoSyncFiles: FileInformation[] = [];
+  const videoStart = new Date (videoTimespan.start);
+  const videoEnd = new Date (videoTimespan.end);
   files.forEach(file => {
     const fileTimespan = fileTimespans.find(timespan => timespan.key === file.key);
     if (fileTimespan === undefined) return;
@@ -39,7 +44,7 @@ export const filterFiles = (video, files, fileTimespans) => {
   return videoSyncFiles;
 };
 
-export const binarySearchClosest = (arr, target) => {
+export const binarySearchClosest = (arr: number[], target: number) => {
   let left = 0;
   let right = arr.length - 1;
 
@@ -65,7 +70,7 @@ export const binarySearchClosest = (arr, target) => {
 };
 
 // Finds the index of the timestamp in array that is closest to the timestamp provided
-const findClosestTimestamp = (targetTimestamp, timestampArray) => {
+const findClosestTimestamp = (targetTimestamp: number, timestampArray: number[]) => {
   const closestTimestamp = timestampArray.reduce((prev, curr) => {
     return Math.abs(curr - targetTimestamp) < Math.abs(prev - targetTimestamp) ? curr : prev;
   });
@@ -74,8 +79,9 @@ const findClosestTimestamp = (targetTimestamp, timestampArray) => {
 
 // Finds the index of the point of the on screen series 
 // that matches with the point at the same index as the one provided
-const findPointIndex = (timestampIndex, series) => {
+const findPointIndex = (timestampIndex: number, series: ExtSeries) => {
   const timestampPoint = {x: series.xData[timestampIndex], y: series.yData[timestampIndex]};
   const point = series.points.find(point => point.x === timestampPoint.x && point.y === timestampPoint.y);
+  if (point === undefined) return -1;
   return series.points.indexOf(point);
 };

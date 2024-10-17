@@ -16,34 +16,34 @@ public class FileDeleteResource {
 
   @DELETE
   @jakarta.ws.rs.Path("/file/{filekey}")
-  public String deleteFile(@PathParam("filekey") String filekey) {
+  public void deleteFile(@PathParam("filekey") String filekey) {
     logger.info("Deleting file: " + filekey);
 
     Path targetPath = Paths.get(filekey);
     storageService.delete(targetPath);
 
-    return "File deleted successfully";
+    return;
   }
 
   @DELETE
   @jakarta.ws.rs.Path("/folder/{folderkey}")
-  public String deleteFolder(@PathParam("folderkey") String folderkey) {
+  public void deleteFolder(@PathParam("folderkey") String folderkey) {
     logger.info("Deleting folder: " + folderkey);
 
     Path targetPath = Paths.get(folderkey);
     storageService.deleteAll(targetPath);
 
-    return "All files deleted successfully";
+    return;
   }
 
   @DELETE
   @jakarta.ws.rs.Path("/all")
-  public String deleteAllFiles() {
+  public void deleteAllFiles() {
     logger.info("Deleting all files");
 
     storageService.deleteAll();
     storageService.init();
 
-    return "All files deleted successfully";
+    return;
   }
 }

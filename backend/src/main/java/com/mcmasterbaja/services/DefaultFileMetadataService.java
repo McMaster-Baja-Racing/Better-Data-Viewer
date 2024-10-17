@@ -6,6 +6,7 @@ import com.drew.metadata.mp4.Mp4Directory;
 import com.mcmasterbaja.exceptions.FileNotFoundException;
 import com.mcmasterbaja.exceptions.MalformedCsvException;
 import com.mcmasterbaja.exceptions.StorageException;
+import com.mcmasterbaja.model.MinMax;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.BufferedReader;
@@ -49,7 +50,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  public Double[] getMinMax(Path targetPath, String column) {
+  public MinMax getMinMax(Path targetPath, String column) {
     int columnIndex = -1;
     Double min = Double.MAX_VALUE;
     Double max = Double.MIN_VALUE;
@@ -92,7 +93,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
           "Failed to get min max of file: " + targetPath.toString(), targetPath.toString(), e);
     }
 
-    return new Double[] {min, max};
+    return new MinMax(min, max);
   }
 
   public String getLast(Path targetPath, int columnIndex) {
