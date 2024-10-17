@@ -16,7 +16,7 @@ For an in-depth user guide, consult the McMaster Baja Wiki.
 ### Required tools:
 
 - NodeJS and NPM
-- JDK 21+
+- JDK 21
 
 ### To setup:
 
