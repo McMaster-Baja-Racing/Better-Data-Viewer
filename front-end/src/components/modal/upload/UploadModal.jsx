@@ -4,7 +4,7 @@ import '@styles/modalStyles.css';
 import './UploadModal.css';
 import { useForm } from 'react-hook-form';
 import React, { useState, useRef } from 'react';
-import { ApiUtil } from '@lib/apiUtils.js';
+import { ApiUtil } from '@lib/apiUtils';
 import loadingImg from '@assets/loading.gif';
 
 export const UploadModal = ({ setModal, setSuccessMessage}) => {
@@ -50,22 +50,13 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
     //start loading
     setLoading(true);
 
-    await new Promise((resolve, reject) => {
+    // TODO: This does not handle uploading multiple, just ensures the last finishes before setting loading to false
+    await new Promise((resolve) => {
       for (let i = 0; i < fileLists.length; i++) {
-        ApiUtil.uploadFile(fileLists[i]).then((res) => {
-          res.text().then(text => {
-            if(res.status !== 200) {
-              alert(JSON.stringify(`${text}, status: ${res.status}`));
-            }
-            if (i===fileLists.length-1) {
-              resolve();
-            }
-          });
-        }).catch(e => { 
-          alert(e);
-          reject(e);
-        });
-        
+        ApiUtil.uploadFile(fileLists[i]);
+        if (i===fileLists.length-1) {
+          resolve();
+        }
       }
     });
 

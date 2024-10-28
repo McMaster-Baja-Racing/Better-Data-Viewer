@@ -1,22 +1,27 @@
 import './Topbar.css';
-import React, { useState } from 'react';
-import { ApiUtil } from '@lib/apiUtils.js';
+import { useState } from 'react';
+import { ApiUtil } from '@lib/apiUtils';
 import bajalogo from '@assets/bajalogo.png';
 import loadingImg from '@assets/loading.gif';
-import { MAX_VIEWS } from '@components/views/viewsConfig.js';
-import { icons } from '@lib/assets.js';
+import { MAX_VIEWS } from '@components/views/viewsConfig';
+import { icons } from '@lib/assets';
 
+interface TopbarProps {
+  numViews: number;
+  setNumViews: (num: number) => void;
+  setModal: (modal: string) => void;
+}
 
-const Topbar = ({ setModal, numViews, setNumViews }) => {
+const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
 
   const [liveStatus, setLiveStatus] = useState(false);
   //This function notifies the backend to begin listening on a certain port for live data
   const beginLiveData = () => {
 
     ApiUtil.toggleLiveData('COM2').then((res) => {
-      console.log(res);
+      alert(res);
     }).catch((err) => {
-      console.log(err);
+      alert(err);
     });
 
     if (liveStatus === false) {
