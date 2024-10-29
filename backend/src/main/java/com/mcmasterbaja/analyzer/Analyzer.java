@@ -1,11 +1,5 @@
 package com.mcmasterbaja.analyzer;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -13,13 +7,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
 public abstract class Analyzer {
 
   // Input and output files are arrays because some analyzers may need multiple input files
   protected String[] inputFiles;
   protected String[] inputColumns;
   protected String[] outputFiles;
-
+// Vector 4 long, add a constant to the 4 dimensions (v1+A,v2+B,v3+C,v4+D)
   public Analyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
     this.inputFiles = inputFiles;
     // inputColumns is the names of the columns we are analyzing. index 0 is the independent

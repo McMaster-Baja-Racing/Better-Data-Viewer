@@ -37,7 +37,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
     Reader r = new CSVReader(super.inputFiles[0]);
     Writer w = new CSVWriter(super.outputFiles[0]);
 
-    w.write(linearMultiply(r.read(), m, b));
+    w.write(linearMultiply(r.read(), m, b)); 
   }
 
   // split data from start to end and return the data
