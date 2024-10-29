@@ -60,6 +60,10 @@ pub enum DataType {
     INT_BATT_PERC,
     F_BATT_VOLT,
     F_BRAKE_PRESS,
+    IMU_QUAT_W,
+    IMU_QUAT_X,
+    IMU_QUAT_Y,
+    IMU_QUAT_Z,
 }
 
 const DATA_TYPE_LEN: usize = DataType::F_BRAKE_PRESS as usize + 1;
@@ -110,6 +114,10 @@ impl<'a> From<&DataType> for &'a str {
             DataType::INT_BATT_PERC => "BATT PERC",
             DataType::F_BATT_VOLT => "BATT VOLT",
             DataType::F_BRAKE_PRESS => "BRAKE PRESS",
+            DataType::IMU_QUAT_W => "IMU QUAT W",
+            DataType::IMU_QUAT_X => "IMU QUAT X",
+            DataType::IMU_QUAT_Y => "IMU QUAT Y",
+            DataType::IMU_QUAT_Z => "IMU QUAT Z",
         }
     }
 }
@@ -249,7 +257,7 @@ pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_toCSV<'loca
         let timestamp: u32 = x[0] >> 6;
         let datatype: u8 = (x[0] & 0x3F) as u8;
 
-        if datatype >= 41 {
+        if datatype >= 45 {
             println!("Invalid datatype: {}", datatype);
             return None;
         }
@@ -397,7 +405,7 @@ pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_bytesToCSV<
         let timestamp: u32 = x[0] >> 6;
         let datatype: u8 = (x[0] & 0x3F) as u8;
 
-        if datatype >= 41 {
+        if datatype >= 45 {
             println!("Invalid datatype: {}", datatype);
             return None;
         }
