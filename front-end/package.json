@@ -42,10 +42,11 @@
   },
   "build": {
     "appId": "com.dataviewer.mcmaster",
+    "asar": false,
     "files": [
-      "build/**/*",
       "src/electron/main.js",
-      "../backend/target/**/*"
+      "build/**/*",
+      "target/**/*"
     ],
     "win": {
       "target": [
