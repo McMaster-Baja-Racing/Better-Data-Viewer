@@ -13,6 +13,10 @@
 /build
 /dist
 
+# electron
+/target
+/src/electron/binary_csv
+
 # misc
 .DS_Store
 .env.local

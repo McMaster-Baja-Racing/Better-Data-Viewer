@@ -20,11 +20,23 @@ function createWindow() {
 
   win.maximize();
 
-  //win.loadFile(path.resolve(__dirname, '../../build/index.html'));
-  //backend = spawn('java', ['-jar', path.resolve(__dirname, '../../../backend/target/backend-1.2.0-runner.jar')]);
-
+  // Development
+  /*
+  win.loadFile(path.resolve(resourcePath, '../../build/index.html'));
+  backend = spawn(
+    'java', 
+    ['-jar', path.resolve(resourcePath, '../../../backend/target/backend-1.2.0-runner.jar')],
+    { env: { ...process.env, RESOURCE_PATH: resourcePath + '/binary_csv/' } }
+  );
+  */
+  
+  // Production
   win.loadFile(path.resolve(resourcePath, 'build/index.html'));
-  backend = spawn('java', ['-jar', path.resolve(resourcePath, 'target/backend-1.2.0-runner.jar')]);
+  backend = spawn(
+    'java', 
+    ['-jar', path.resolve(resourcePath, 'target/backend-1.2.0-runner.jar')],
+    { env: { ...process.env, RESOURCE_PATH: resourcePath + '/src/electron/binary_csv/' } }
+  );
 
   win.on('closed', () => win = null);
 
