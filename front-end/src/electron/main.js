@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { spawn } from 'child_process';
 import treeKill from 'tree-kill';
+import fs from 'fs';
 
 //Reference: https://medium.com/@sgstephans/creating-a-java-electron-react-typescript-desktop-app-414e7edceed2
 let win;
@@ -20,6 +21,10 @@ function createWindow() {
 
   win.maximize();
 
+  const frontendPath = app.isPackaged ? path.resolve(resourcePath, 'build') : path.resolve(resourcePath, '../../build/index.html');
+  const backendPath = app.isPackaged ? path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar') : path.resolve(resourcePath, '../../../backend/target/backend-1.2.0-runner.jar');
+  const dllPath = app.isPackaged ? resourcePath + '/backend/' : resourcePath + '/binary_csv/';
+
   // Development
   /*
   win.loadFile(path.resolve(resourcePath, '../../build/index.html'));
@@ -35,9 +40,11 @@ function createWindow() {
   backend = spawn(
     'java', 
     ['-jar', path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar')],
-    { env: { ...process.env, RESOURCE_PATH: resourcePath + '/backend/' } }
+    { 
+      env: { ...process.env, RESOURCE_PATH: resourcePath + '/backend/' },
+    },
   );
-
+  
   win.on('closed', () => win = null);
 
 }
