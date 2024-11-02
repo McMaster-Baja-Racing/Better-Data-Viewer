@@ -14,7 +14,7 @@
 /dist
 
 # electron
-/target
+/backend
 /src/electron/binary_csv
 
 # misc

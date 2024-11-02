@@ -34,8 +34,8 @@ function createWindow() {
   win.loadFile(path.resolve(resourcePath, 'build/index.html'));
   backend = spawn(
     'java', 
-    ['-jar', path.resolve(resourcePath, 'target/backend-1.2.0-runner.jar')],
-    { env: { ...process.env, RESOURCE_PATH: resourcePath + '/src/electron/binary_csv/' } }
+    ['-jar', path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar')],
+    { env: { ...process.env, RESOURCE_PATH: resourcePath + '/backend/' } }
   );
 
   win.on('closed', () => win = null);
