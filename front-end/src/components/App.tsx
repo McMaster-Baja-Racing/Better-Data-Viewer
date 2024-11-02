@@ -11,7 +11,7 @@ import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
-import ModelViewer from './ModelViewer';
+import ModelViewer from './model/ModelViewer';
 
 const App = () => {
 

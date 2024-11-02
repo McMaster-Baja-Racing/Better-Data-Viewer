@@ -2,7 +2,7 @@ import React, { useRef, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stage } from '@react-three/drei';
 import { Eevee } from './Eevee.jsx';
-import '../styles/modelViewer.css';
+import './modelViewer.css';
 
 const ModelViewer = () => {
 

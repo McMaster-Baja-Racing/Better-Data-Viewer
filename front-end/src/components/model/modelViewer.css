@@ -1,8 +1,9 @@
 .modelContainer {
     /* margin: auto auto auto auto; */
-    padding-top: 10em;
+    padding-top: 2em;
     border: 2px;
-    height: 500px;
+    height: 100%;
+    width: 100%;
 }
 
 
