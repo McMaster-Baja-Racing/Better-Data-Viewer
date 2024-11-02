@@ -44,7 +44,6 @@ public class FileFetchResource {
   @jakarta.ws.rs.Path("/{filekey}")
   public File getFile(@PathParam("filekey") String filekey) {
     logger.info("Getting file: " + filekey);
-
     Path targetPath = addTypeFolder(filekey);
     File file = storageService.load(targetPath).toFile();
 

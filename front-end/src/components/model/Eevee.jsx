@@ -7,67 +7,55 @@ import { useFrame, useThree } from '@react-three/fiber';
 //import { Quaternion, Euler, Vector3 } from 'three';
 import { GridHelper, AxesHelper, BoxHelper, Mesh, BufferGeometry, BufferAttribute, MeshBasicMaterial, Box3 } from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { ApiUtil } from '@lib/ApiUtils';
 
 export function Eevee(props) {
-
-  // TODO: Get data from server and parse it, then run function to replay it
-
-  const fetchData = async () => {
-    const response = await fetch(`http://${window.location.hostname}:8080/files/rotation.csv`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.text(); 
-    return data;
-  };
-
-  const parseData = async (data) => {
-    // Make a list of each column, so we should make 5 lists
-    console.log(data);
-
-    // First, split the data into lines
-    const lines = data.split('\n');
-
-    // Then, split each line into columns
-    const columns = lines.map(line => line.split(','));
-
-    // Then, remove the first column, which is the header
-    const columnsWithoutHeader = columns.slice(1);
-
-    // Then, transpose the columns into rows
-    const rows = columnsWithoutHeader[0].map((_, colIndex) => columnsWithoutHeader.map(row => row[colIndex]));
-
-    // Then make a list for each column
-    const timestamps = rows[0];
-    const x = rows[1];
-    const y = rows[2];
-    const z = rows[3];
-    const w = rows[4];
-
-    return [timestamps, x, y, z, w];
-  };
-
   let timestamps, x, y, z, w;
 
-  const lineupfunction = async () => {
-    let tempData = await fetchData();
-    let tempData2 = await parseData(tempData);
-    console.log(tempData2);
-    timestamps = tempData2[0];
-    x = tempData2[1];
-    y = tempData2[2];
-    z = tempData2[3];
-    w = tempData2[4];
+  const extractColumn = (data, columnIndex = 1) => {
+    return data.map(row => row[columnIndex]);
+  };
+
+  const parseCSV = (data) => {
+    return data
+      .trim()
+      .split('\n')
+      .slice(1)
+      .map(row => row.split(',')); 
+  };
+
+  const lineupfunction = () => {
+    return Promise.all([
+      ApiUtil.getFile('data/IMU QUAT W.csv'),
+      ApiUtil.getFile('data/IMU QUAT X.csv'),
+      ApiUtil.getFile('data/IMU QUAT Y.csv'),
+      ApiUtil.getFile('data/IMU QUAT Z.csv')
+    ]).then(([wDataRaw, xDataRaw, yDataRaw, zDataRaw]) => {
+      const wData = parseCSV(wDataRaw);
+      const xData = parseCSV(xDataRaw);
+      const yData = parseCSV(yDataRaw);
+      const zData = parseCSV(zDataRaw);
+
+      w = extractColumn(wData);
+      x = extractColumn(xData);
+      y = extractColumn(yData);
+      z = extractColumn(zData);
+      timestamps = extractColumn(wData, 0);
+    });
   };
 
   useEffect(() => {
-    lineupfunction();
+    lineupfunction().then(() => {
+      console.log("Data loaded, starting replayTimestamps");
+      replayTimestamps();
+    });
   }, []);
 
   let startTime, endTime, elapsedTime;
 
   // Timestamp stuff
   const replayTimestamps = (index = 0) => {
+    console.log('Replaying timestamp', index, x[index], y[index], z[index], w[index]);
     if (index === 0) {
       startTime = Date.now();
     }
@@ -76,7 +64,7 @@ export function Eevee(props) {
       updateQuaternion(parseFloat(x[index]), parseFloat(y[index]), parseFloat(z[index]), parseFloat(w[index]));
     
       if (index < timestamps.length - 1) {
-        const delay = (timestamps[index + 1] - timestamps[index]) * 50;
+        const delay = (timestamps[index + 1] - timestamps[index]);
         setTimeout(() => replayTimestamps(index + 1), delay);
       } else {
         endTime = Date.now();
@@ -96,8 +84,7 @@ export function Eevee(props) {
   // This is so we can pass in the quaternion values from the server
   const updateQuaternion = (x, y, z, w) => {
     if (meshRef.current) {
-      //console.log("Updating quaternion", x, y, z, w)
-      meshRef.current.quaternion.set(z, w, y, x);
+      meshRef.current.quaternion.set(w, x, y, z);
       // x and w and y
       // y x z w is close but inverted
       // z x y w is close but inverted and slanted
@@ -137,7 +124,7 @@ export function Eevee(props) {
       boxHelperRef.current = new BoxHelper(meshRef.current, 0xffff00);
       scene.add(boxHelperRef.current);      
             
-      replayTimestamps();
+      console.log("Loaded Eevee");
     });
 
     const gridHelper = new GridHelper(1000, 100);
