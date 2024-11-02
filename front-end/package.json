@@ -6,25 +6,36 @@
     "@react-three/drei": "^9.92.6",
     "@react-three/fiber": "^8.15.12",
     "@types/three": "^0.160.0",
+    "@types/node": "^22.5.5",
+    "@types/react": "^18.3.6",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint-plugin-react": "^7.34.1",
     "font-awesome": "^4.7.0",
-    "highcharts": "^11.2.0",
+    "highcharts": "^11.4.8",
     "highcharts-multicolor-series": "^2.4.1",
     "highcharts-react-official": "^3.2.1",
     "jquery": "^3.7.1",
     "jszip": "^3.10.1",
+    "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
+    "react-icons": "^5.0.1",
     "react-keyed-file-browser": "^1.14.0",
-    "react-router-dom": "^6.21.1",
-    "react-scripts": "^5.0.1",
-    "three": "^0.160.0"
+    "react-leaflet": "^4.2.1",
+    "react-player": "^2.15.1",
+    "react-resize-detector": "^10.0.1",
+    "react-router-dom": "^6.22.3",
+    "vite": "^5.4.3",
+    "vite-plugin-commonjs": "^0.10.1",
+    "vitest": "^2.1.1"
   },
   "scripts": {
-    "start": "set GENERATE_SOURCEMAP=false && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "set GENERATE_SOURCEMAP=false && vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
+    "lint": "npx eslint . --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -46,7 +57,12 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@svgr/webpack": "^8.0.0"
+    "@eslint/js": "^9.11.1",
+    "@svgr/webpack": "^8.0.0",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.11.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.0"
   },
   "overrides": {
     "@svgr/webpack": "$@svgr/webpack"
