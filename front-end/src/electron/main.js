@@ -20,10 +20,10 @@ function createWindow() {
   });
 
   win.maximize();
-
+  
   const frontendPath = app.isPackaged ? path.resolve(resourcePath, 'build') : path.resolve(resourcePath, '../../build/index.html');
   const backendPath = app.isPackaged ? path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar') : path.resolve(resourcePath, '../../../backend/target/backend-1.2.0-runner.jar');
-  const dllPath = app.isPackaged ? resourcePath + '/backend/' : resourcePath + '/binary_csv/';
+  const dllPath = app.isPackaged ? resourcePath + '/backend/' : path.resolve(resourcePath, '../../../backend/src/main/java/com/mcmasterbaja/binary_csv').toString() + '/';
 
   // Development
   /*
@@ -44,6 +44,18 @@ function createWindow() {
       env: { ...process.env, RESOURCE_PATH: resourcePath + '/backend/' },
     },
   );
+
+  // Conditional
+  /*
+  win.loadFile(frontendPath);
+  backend = spawn(
+    'java', 
+    ['-jar', backendPath],
+    { 
+      env: { ...process.env, RESOURCE_PATH: dllPath },
+    },
+  );
+  */
   
   win.on('closed', () => win = null);
 
