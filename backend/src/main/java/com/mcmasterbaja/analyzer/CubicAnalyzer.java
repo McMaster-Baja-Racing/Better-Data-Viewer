@@ -84,5 +84,4 @@ public class CubicAnalyzer extends Analyzer {
   private double cubicFunction(double x) {
     return this.a * Math.pow(x, 3) + this.b * Math.pow(x, 2) + this.c * x + this.d;
   }
-
 }

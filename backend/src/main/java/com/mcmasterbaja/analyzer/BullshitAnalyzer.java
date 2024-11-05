@@ -65,5 +65,4 @@ public class BullshitAnalyzer extends Analyzer {
 
     writer.close();
   }
-
 }
