@@ -1,12 +1,10 @@
 package com.mcmasterbaja.analyzer;
 
-
-import java.io.IOException;
-import java.util.List;
-
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
+import java.io.IOException;
+import java.util.List;
 
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a double
@@ -14,9 +12,8 @@ public class AverageAnalyzer extends Analyzer {
 
   public AverageAnalyzer(String[] inputFiles, String[] outputFiles, int[] range) {
     super(inputFiles, outputFiles);
-    this.range =
-        range; // This range is the value, not the index. BinarySearch will be used to find the
-    // index
+    // This range is the value, not the index. BinarySearch will be used to find the index
+    this.range = range;
   }
 
   public void analyze() throws IOException, CsvException {
@@ -35,7 +32,7 @@ public class AverageAnalyzer extends Analyzer {
 
     String[] headers = {"TempColumn", "Average"};
     writer.writeNext(headers);
-    
+
     String[] dataPoint = {"0", Double.toString(average(reader.readAll(), range[0], range[1]))};
     writer.writeNext(dataPoint);
   }
@@ -71,10 +68,16 @@ public class AverageAnalyzer extends Analyzer {
     return mid;
   }
 
-  // Make a main to test it
+  // TODO: Remove this main method in lieu of a test
   public static void main(String[] args) {
-    String[] inputFiles = {"/Users/kaiarseneau/Documents/GitHub/Better-Data-Viewer/backend/uploads/csv/000628 - WFT/BATT PERC.csv"};
-    String[] outputFiles = {"/Users/kaiarseneau/Documents/GitHub/Better-Data-Viewer/backend/uploads/csv/000628 - WFT/temp.csv"};
+    String[] inputFiles = {
+      "/Users/kaiarseneau/Documents/GitHub/Better-Data-Viewer/backend/uploads/csv/000628 - WFT/BATT"
+          + " PERC.csv"
+    };
+    String[] outputFiles = {
+      "/Users/kaiarseneau/Documents/GitHub/Better-Data-Viewer/backend/uploads/csv/000628 -"
+          + " WFT/temp.csv"
+    };
     int[] range = {60000, 210000};
     AverageAnalyzer a = new AverageAnalyzer(inputFiles, outputFiles, range);
     try {
@@ -82,6 +85,5 @@ public class AverageAnalyzer extends Analyzer {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    
   }
 }
