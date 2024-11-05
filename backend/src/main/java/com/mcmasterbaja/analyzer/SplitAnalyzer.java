@@ -1,11 +1,9 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.readwrite.CSVReader;
-import com.mcmasterbaja.readwrite.CSVWriter;
-import com.mcmasterbaja.readwrite.Reader;
-import com.mcmasterbaja.readwrite.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import java.io.IOException;
 
 public class SplitAnalyzer extends Analyzer {
   private final int start;
@@ -19,7 +17,7 @@ public class SplitAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() {
+  public void analyze() throws IOException, CsvException {
 
     System.out.println(
         "Spliting the file named"
@@ -31,54 +29,23 @@ public class SplitAnalyzer extends Analyzer {
             + " and an ending timestamp of "
             + end);
 
-    Reader r = new CSVReader(super.inputFiles[0]);
-    Writer w = new CSVWriter(super.outputFiles[0]);
+    CSVReader reader = getReader(inputFiles[0]);
+    ICSVWriter writer = getWriter(outputFiles[0]);
 
-    w.write(split(r.read(), start, end));
-  }
+    String[] headers = reader.readNext();
+    int columnIndex = this.getColumnIndex(inputColumns[0], headers);
+    writer.writeNext(headers);
 
-  // IMPLEMENT WITH BINARAY SEARCH
-  // WILL SPEED UP A TON
+    String[] dataPoint;
 
-  // split data from start to end and return the data
-  public List<List<String>> split(List<List<String>> data, int start, int end) {
-
-    List<List<String>> dataPoints = new ArrayList<List<String>>();
-    List<String> dataPoint = new ArrayList<String>(2);
-
-    int independentColumn = this.getAnalysisColumnIndex(0, data.get(0));
-    int dependentColumn = this.getAnalysisColumnIndex(1, data.get(0));
-
-    // Add header
-    dataPoint.add(data.get(0).get(independentColumn));
-    dataPoint.add(data.get(0).get(dependentColumn));
-    dataPoints.add(dataPoint);
-
-    dataPoint = new ArrayList<String>(2);
-    // loop through the data and add the date from once the start time is reached to the end time is
-    // reached, the first colomn is the timestamp
-    for (int i = 1; i < data.size(); i++) {
-      if (Integer.parseInt(data.get(i).get(independentColumn)) >= start
-          && Integer.parseInt(data.get(i).get(independentColumn)) <= end) {
-        dataPoint.add(data.get(i).get(independentColumn));
-        dataPoint.add(data.get(i).get(dependentColumn));
-        dataPoints.add(dataPoint);
-        dataPoint = new ArrayList<String>(2);
+    while ((dataPoint = reader.readNext()) != null) {
+      if (Integer.parseInt(dataPoint[columnIndex]) <= end) {
+        break;
+      } else if (Integer.parseInt(dataPoint[columnIndex]) >= start) {
+        writer.writeNext(dataPoint);
       }
     }
 
-    return dataPoints;
-  }
-
-  // make a main to test it
-  public static void main(String[] args) {
-    // String[] filepaths = new String[1];
-    // String[] outputFiles = new String[1];
-    // filepaths[0] =
-    // "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM.csv";
-    // outputFiles[0] =
-    // "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split.csv";
-    // SplitAnalyzer r = new SplitAnalyzer(filepaths, outputFiles, 7749475, 7749619);
-    // r.analyze();
+    writer.close();
   }
 }
