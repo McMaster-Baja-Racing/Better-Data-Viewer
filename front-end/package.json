@@ -7,6 +7,9 @@
   "description": "This project is a data visualization tool for McMaster Baja Racing.",
   "author": "McMaster Baja Racing",
   "dependencies": {
+    "@types/node": "^22.5.5",
+    "@types/react": "^18.3.6",
+    "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "child-process": "^1.0.2",
     "concurrently": "^9.0.1",
@@ -15,7 +18,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "font-awesome": "^4.7.0",
-    "highcharts": "^11.2.0",
+    "highcharts": "^11.4.8",
     "highcharts-multicolor-series": "^2.4.1",
     "highcharts-react-official": "^3.2.1",
     "jquery": "^3.7.1",
@@ -32,13 +35,15 @@
     "react-router-dom": "^6.22.3",
     "tree-kill": "^1.2.2",
     "vite": "^5.4.3",
-    "vite-plugin-commonjs": "^0.10.1"
+    "vite-plugin-commonjs": "^0.10.1",
+    "vitest": "^2.1.1"
   },
   "scripts": {
     "start": "vite",
-    "build:frontend": "vite build",
+    "build:frontend": "tsc && vite build",
     "build:electron": "electron-builder",
     "serve": "vite preview",
+    "lint": "npx eslint . --fix",
     "electron": "electron src/electron/main.js --trace-warnings",
     "dev": "concurrently \"npm run start\" \"npm run electron\""
   },
@@ -81,9 +86,14 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@eslint/js": "^9.11.1",
     "@svgr/webpack": "^8.0.0",
     "electron": "^32.1.2",
-    "electron-builder": "^25.0.5"
+    "electron-builder": "^25.0.5",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.11.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.0"
   },
   "overrides": {
     "@svgr/webpack": "$@svgr/webpack"

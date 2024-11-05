@@ -52,7 +52,6 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
   useEffect(() => {
     ApiUtil.getFolder('csv')
-      .then((response) => response.json())
       .then((json) => {
         let prefixes = [];
         for (let file of json) {
@@ -126,8 +125,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
       [],
       false
     )
-      .then((response) => response.text())
-      .then((text) => {
+      .then(({text}) => {
         const lines = text.trim().split('\n').map((line) => line.split(','));
         setCoords(lines.slice(1).map((c) => c.map((p) => parseFloat(p))));
       });
@@ -144,11 +142,12 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
   return (
     <div id="mapBackground">
       <select className="map_ui_select" defaultValue="none" onChange={loadFile}>
-        <option value="none" selected disabled hidden>Select a file to analyze</option>
+        <option value="none" disabled hidden>Select a file to analyze</option>
         {files.map((f) => {
           return (<option key={f} value={f}>{f}</option>);
         })}
       </select>
+
       <ToolSelection options={tools} setSelected={setCurrTool} selected={currTool}> </ToolSelection>
       {/* <button onClick={() => setLapsCallback(findLapTimes(coords, rects))}
        className="map_ui_button"> Analyze </button> */}
