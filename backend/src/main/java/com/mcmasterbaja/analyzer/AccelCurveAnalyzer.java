@@ -42,8 +42,8 @@ public class AccelCurveAnalyzer extends Analyzer {
 
     System.out.println("Interpolating...");
 
-    LinearInterpolaterAnalyzer linearInterpolate =
-        new LinearInterpolaterAnalyzer(
+    InterpolaterProAnalyzer linearInterpolate =
+        new InterpolaterProAnalyzer(
             Arrays.copyOfRange(outputFiles, 0, 2),
             new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]},
             Arrays.copyOfRange(outputFiles, 2, 3));
