@@ -1,11 +1,11 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.readwrite.CSVReader;
-import com.mcmasterbaja.readwrite.CSVWriter;
-import com.mcmasterbaja.readwrite.Reader;
-import com.mcmasterbaja.readwrite.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class RollingAvgAnalyzer extends Analyzer {
   private final int windowSize;
@@ -22,7 +22,7 @@ public class RollingAvgAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() {
+  public void analyze() throws IOException, CsvException {
 
     System.out.println(
         "Taking the rolling average of "
@@ -32,56 +32,32 @@ public class RollingAvgAnalyzer extends Analyzer {
             + " with a window size of "
             + windowSize);
 
-    Reader r = new CSVReader(super.inputFiles[0]);
-    Writer w = new CSVWriter(super.outputFiles[0]);
+    CSVReader reader = getReader(inputFiles[0]);
+    ICSVWriter writer = getWriter(outputFiles[0]);
 
-    w.write(rollingAverage(r.read(), windowSize));
-  }
-
-  // Currently it uses a sliding window
-  public List<List<String>> rollingAverage(List<List<String>> data, int windowSize) {
+    String[] headers = reader.readNext();
+    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+    writer.writeNext(headers);
 
     double rollSum = 0;
+    String[] dataPoint;
+    Queue<Double> window = new LinkedList<Double>();
 
-    List<List<String>> dataPoints = new ArrayList<List<String>>();
-    List<String> dataPoint = new ArrayList<String>(2);
-
-    int independentColumn = this.getAnalysisColumnIndex(0, data.get(0));
-    int dependentColumn = this.getAnalysisColumnIndex(1, data.get(0));
-
-    // Add header
-    dataPoint.add(data.get(0).get(independentColumn));
-    dataPoint.add(data.get(0).get(dependentColumn));
-    dataPoints.add(dataPoint);
-
-    // Reset
-    dataPoint = new ArrayList<String>(2);
-
-    for (int i = 1; i < data.size(); i++) {
-      dataPoint.add(data.get(i).get(independentColumn)); // Add timestamp
-
-      rollSum += Double.parseDouble(data.get(i).get(dependentColumn));
-      if (i <= windowSize) {
-        // Round this double to 2 decimal places
-        dataPoint.add(Double.toString(Math.round((rollSum / i) * 100.0) / 100.0));
+    while ((dataPoint = reader.readNext()) != null) {
+      rollSum += Double.parseDouble(dataPoint[yAxisIndex]);
+      window.add(Double.parseDouble(dataPoint[yAxisIndex]));
+      String y;
+      if (reader.getLinesRead() <= windowSize) {
+        y = Double.toString(rollSum / reader.getLinesRead());
       } else {
-        rollSum -= Double.parseDouble(data.get(i - windowSize).get(dependentColumn));
-        dataPoint.add(Double.toString(Math.round((rollSum / windowSize) * 100.0) / 100.0));
+        rollSum -= window.remove();
+        y = Double.toString(rollSum / windowSize);
       }
-
-      dataPoints.add(dataPoint);
-      dataPoint = new ArrayList<String>(2);
+      String x = dataPoint[xAxisIndex];
+      writer.writeNext(new String[] {x, y});
     }
 
-    return dataPoints;
-  }
-
-  // make a main to test it
-  public static void main(String[] args) {
-    // String[] filepaths = new String[1];
-    // filepaths[0] =
-    // "C:/Users/Ariel/OneDrive/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM.csv";
-    // RollingAvgAnalyzer r = new RollingAvgAnalyzer(filepaths, filepaths, 30);
-    // r.analyze();
+    writer.close();
   }
 }
