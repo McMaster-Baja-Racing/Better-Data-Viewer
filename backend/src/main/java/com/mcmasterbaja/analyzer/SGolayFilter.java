@@ -1,17 +1,19 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.readwrite.CSVReader;
-import com.mcmasterbaja.readwrite.CSVWriter;
-import com.mcmasterbaja.readwrite.Reader;
-import com.mcmasterbaja.readwrite.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
 public class SGolayFilter extends Analyzer {
   private final int windowSize;
   private final int polynomialDegree;
+  private final CircularBuffer dataBuffer;
+  private final CircularBuffer timestampBuffer;
 
   public SGolayFilter(
       String[] inputFiles,
@@ -22,16 +24,49 @@ public class SGolayFilter extends Analyzer {
     super(inputFiles, inputColumns, outputFiles);
     this.windowSize = windowSize;
     this.polynomialDegree = polynomialDegree;
+    this.dataBuffer = new CircularBuffer(windowSize);
+    this.timestampBuffer = new CircularBuffer(windowSize / 2);
   }
 
   public SGolayFilter(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
     super(inputFiles, inputColumns, outputFiles);
     this.windowSize = 300;
     this.polynomialDegree = 3;
+    this.dataBuffer = new CircularBuffer(windowSize);
+    this.timestampBuffer = new CircularBuffer(windowSize / 2);
+  }
+
+  class CircularBuffer {
+    private final Deque<Double> buffer;
+    private final int maxSize;
+
+    public CircularBuffer(int size) {
+      this.buffer = new ArrayDeque<>(size);
+      this.maxSize = size;
+    }
+
+    public void addPoint(double point) {
+      if (buffer.size() == maxSize) {
+        buffer.removeFirst();
+      }
+      buffer.addLast(point);
+    }
+
+    public Double[] getPoints() {
+      return buffer.toArray(new Double[0]);
+    }
+
+    public int size() {
+      return buffer.size();
+    }
+
+    public double getFirst() {
+      return buffer.getFirst();
+    }
   }
 
   @Override
-  public void analyze() {
+  public void analyze() throws IOException, CsvException {
     System.out.println(
         "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
             + super.inputFiles[0]
@@ -42,53 +77,37 @@ public class SGolayFilter extends Analyzer {
             + " and polynomial degree "
             + polynomialDegree);
 
-    Reader r = new CSVReader(super.inputFiles[0]);
-    Writer w = new CSVWriter(super.outputFiles[0]);
+    CSVReader reader = getReader(inputFiles[0]);
+    ICSVWriter writer = getWriter(outputFiles[0]);
 
-    w.write(sGolay(r.read(), windowSize, polynomialDegree));
-  }
+    String[] headers = reader.readNext();
+    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+    writer.writeNext(headers);
 
-  public List<List<String>> sGolay(List<List<String>> data, int windowSize, int polynomialDegree) {
-    // This would literally be a one liner in python... too bad no one said we should use python
-    List<List<String>> dataPoints = new ArrayList<List<String>>();
-    List<String> dataPoint = new ArrayList<String>(2);
-
-    int independentColumn = this.getAnalysisColumnIndex(0, data.get(0));
-    int dependentColumn = this.getAnalysisColumnIndex(1, data.get(0));
-
-    // Add header
-    dataPoint.add(data.get(0).get(independentColumn));
-    dataPoint.add(data.get(0).get(dependentColumn));
-    dataPoints.add(dataPoint);
-    dataPoint = new ArrayList<String>(2);
-
-    // Put first row of data in
-    dataPoint.add(data.get(1).get(independentColumn));
-    dataPoint.add(data.get(1).get(dependentColumn));
-    dataPoints.add(dataPoint);
-    dataPoint = new ArrayList<String>(2);
-
-    int halfWindowSize = windowSize / 2;
+    String[] dataPoint;
     RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);
 
-    for (int i = 2; i < data.size(); i++) {
-      dataPoint.add(data.get(i).get(independentColumn)); // Add timestamp
+    while ((dataPoint = reader.readNext()) != null) {
+      dataBuffer.addPoint(Double.parseDouble(dataPoint[yAxisIndex]));
+      timestampBuffer.addPoint(Double.parseDouble(dataPoint[xAxisIndex]));
+
+      if (dataBuffer.size() < windowSize) {
+        continue;
+      }
 
       double smoothedValue = 0.0;
 
-      for (int j = -halfWindowSize; j < halfWindowSize; j++) {
-        int dataIndex = Math.min(Math.max(i + j, 1), data.size() - 1);
-        double dataValue = Double.parseDouble(data.get(dataIndex).get(dependentColumn));
-        smoothedValue += coeffMatrix.getEntry(halfWindowSize + j, 0) * dataValue;
+      for (int i = 0; i < dataBuffer.size(); i++) {
+        smoothedValue += coeffMatrix.getEntry(i, 0) * dataBuffer.getPoints()[i];
       }
 
-      dataPoint.add(Double.toString(Math.round(smoothedValue * 100.0) / 100.0));
-
-      dataPoints.add(dataPoint);
-      dataPoint = new ArrayList<String>(2);
+      String x = Double.toString(timestampBuffer.getFirst());
+      String y = Double.toString(smoothedValue);
+      writer.writeNext(new String[] {x, y});
     }
 
-    return dataPoints;
+    writer.close();
   }
 
   public RealMatrix savGolCoeff(int windowSize, int polynomialDegree) {
@@ -106,20 +125,5 @@ public class SGolayFilter extends Analyzer {
     RealMatrix C = A_tA_inv.multiply(A_transpose);
 
     return C.transpose();
-  }
-
-  // make a main to test it
-  public static void main(String[] args) {
-    // String[] filepaths = new String[1];
-    // filepaths[0] = "C:/Users/graha/Downloads/F_RPM_PRIM.csv";
-
-    // String[] outputFiles = new String[1];
-    // outputFiles[0] = "C:/Users/graha/Downloads/F_RPM_PRIM_not_fussy.csv";
-
-    // int windowSize = 1000;
-    // int polynomialDegree = 2;
-
-    // SGolayFilter s = new SGolayFilter(filepaths, outputFiles, windowSize, polynomialDegree);
-    // s.analyze();
   }
 }
