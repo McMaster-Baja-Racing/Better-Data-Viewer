@@ -26,13 +26,14 @@ public class DeleteOutliers extends Analyzer {
     CSVReader reader = getReader(inputFiles[0]);
     ICSVWriter writer = getWriter(outputFiles[0]);
 
-    // Create a single data point with the average
+    String[] headers = reader.readNext();
+    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    writer.writeNext(headers);
+
     String[] dataPoint;
 
-    writer.writeNext(reader.readNext());
-
     while ((dataPoint = reader.readNext()) != null) {
-      if (Double.parseDouble(dataPoint[1]) <= this.limit) {
+      if (Double.parseDouble(dataPoint[xAxisIndex]) <= this.limit) {
         writer.writeNext(dataPoint);
       }
     }

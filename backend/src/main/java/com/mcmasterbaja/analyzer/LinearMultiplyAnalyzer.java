@@ -1,18 +1,13 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.readwrite.CSVReader;
-import com.mcmasterbaja.readwrite.CSVWriter;
-import com.mcmasterbaja.readwrite.Reader;
-import com.mcmasterbaja.readwrite.Writer;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import java.io.IOException;
 
 public class LinearMultiplyAnalyzer extends Analyzer {
   private final double m;
   private final double b;
-
-  private static final DecimalFormat df = new DecimalFormat("0.00");
 
   public LinearMultiplyAnalyzer(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, double m, double b) {
@@ -22,7 +17,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() {
+  public void analyze() throws IOException, CsvException {
 
     System.out.println(
         "Multiplyinh the file named"
@@ -34,48 +29,25 @@ public class LinearMultiplyAnalyzer extends Analyzer {
             + " and an offset value of "
             + b);
 
-    Reader r = new CSVReader(super.inputFiles[0]);
-    Writer w = new CSVWriter(super.outputFiles[0]);
+    CSVReader reader = getReader(inputFiles[0]);
+    ICSVWriter writer = getWriter(outputFiles[0]);
 
-    w.write(linearMultiply(r.read(), m, b));
-  }
+    String[] headers = reader.readNext();
+    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+    writer.writeNext(headers);
 
-  // split data from start to end and return the data
-  public List<List<String>> linearMultiply(List<List<String>> data, double m, double b) {
+    String[] dataPoint;
 
-    List<List<String>> dataPoints = new ArrayList<List<String>>();
-    List<String> dataPoint = new ArrayList<String>(2);
-
-    int independentColumn = this.getAnalysisColumnIndex(0, data.get(0));
-    int dependentColumn = this.getAnalysisColumnIndex(1, data.get(0));
-
-    // Add header
-    dataPoint.add(data.get(0).get(independentColumn));
-    dataPoint.add(data.get(0).get(dependentColumn));
-    dataPoints.add(dataPoint);
-
-    dataPoint = new ArrayList<String>(2);
-
-    // loop through the data and multiply the second coloum by m and then add b
-    for (int i = 1; i < data.size(); i++) {
-      dataPoint.add(data.get(i).get(independentColumn));
-      dataPoint.add(df.format(Double.parseDouble(data.get(i).get(dependentColumn)) * m + b));
-      dataPoints.add(dataPoint);
-      dataPoint = new ArrayList<String>(2);
+    while ((dataPoint = reader.readNext()) != null) {
+      String x = dataPoint[xAxisIndex];
+      double oldY = Double.parseDouble(dataPoint[yAxisIndex]);
+      String newY = Double.toString(linearFunction(oldY));
+      writer.writeNext(new String[] {x, newY});
     }
-
-    return dataPoints;
   }
 
-  // make a main to test it
-  public static void main(String[] args) {
-    // String[] filepaths = new String[1];
-    // String[] outputFiles = new String[1];
-    // filepaths[0] =
-    // "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split.csv";
-    // outputFiles[0] =
-    // "C:/Users/Ariel/OneDrive/Documents/dev/Better-Data-Viewer/API/upload-dir/F_RPM_PRIM_split_multi.csv";
-    // LinearMultiplyAnalyzer r = new LinearMultiplyAnalyzer(filepaths, outputFiles, 0.5, 0.0);
-    // r.analyze();
+  private double linearFunction(double x) {
+    return m * x + b;
   }
 }
