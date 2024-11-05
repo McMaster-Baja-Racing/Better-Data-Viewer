@@ -66,14 +66,4 @@ public class BullshitAnalyzer extends Analyzer {
     writer.close();
   }
 
-  public static void main(String[] args) throws IOException, CsvValidationException {
-    System.out.println("Hello");
-    String[] inputFiles = {"E:/Code/Projects/Baja/Better-Data-Viewer/backend/uploads/csv/hi.csv"};
-    String[] inputColumns = {"Time", "Value"};
-    String[] outputFiles = {"output.csv"};
-
-    BullshitAnalyzer bs = new BullshitAnalyzer(inputFiles, inputColumns, outputFiles, 10);
-
-    bs.analyze();
-  }
 }
