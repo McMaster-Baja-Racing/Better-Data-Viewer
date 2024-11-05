@@ -15,7 +15,13 @@ public class DeleteOutliers extends Analyzer {
   }
 
   public void analyze() throws IOException, CsvException {
-    System.out.println("Delete outliers");
+    System.out.println(
+        "Deleting outliers from "
+            + super.inputFiles[0]
+            + " to "
+            + super.outputFiles[0]
+            + " with a limit of "
+            + this.limit);
 
     CSVReader reader = getReader(inputFiles[0]);
     ICSVWriter writer = getWriter(outputFiles[0]);
