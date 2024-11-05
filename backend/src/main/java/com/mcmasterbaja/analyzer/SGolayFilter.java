@@ -97,9 +97,10 @@ public class SGolayFilter extends Analyzer {
       }
 
       double smoothedValue = 0.0;
+      Double[] dataPoints = dataBuffer.getPoints();
 
       for (int i = 0; i < dataBuffer.size(); i++) {
-        smoothedValue += coeffMatrix.getEntry(i, 0) * dataBuffer.getPoints()[i];
+        smoothedValue += coeffMatrix.getEntry(i, 0) * dataPoints[i];
       }
 
       String x = Double.toString(timestampBuffer.getFirst());
