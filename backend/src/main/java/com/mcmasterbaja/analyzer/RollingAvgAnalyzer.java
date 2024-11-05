@@ -13,6 +13,9 @@ public class RollingAvgAnalyzer extends Analyzer {
   public RollingAvgAnalyzer(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, int windowSize) {
     super(inputFiles, inputColumns, outputFiles);
+    if (windowSize <= 1) {
+      throw new IllegalArgumentException("Window size must be greater than 1");
+    }
     this.windowSize = windowSize;
   }
 
@@ -43,19 +46,24 @@ public class RollingAvgAnalyzer extends Analyzer {
     double rollSum = 0;
     String[] dataPoint;
     Queue<Double> window = new LinkedList<Double>();
+    Queue<String> timestamps = new LinkedList<String>();
 
     while ((dataPoint = reader.readNext()) != null) {
       rollSum += Double.parseDouble(dataPoint[yAxisIndex]);
+      timestamps.add(dataPoint[xAxisIndex]);
       window.add(Double.parseDouble(dataPoint[yAxisIndex]));
-      String y;
-      if (reader.getLinesRead() <= windowSize) {
-        y = Double.toString(rollSum / reader.getLinesRead());
-      } else {
-        rollSum -= window.remove();
+
+      String x, y;
+
+      if (window.size() == windowSize) {
         y = Double.toString(rollSum / windowSize);
+        x = timestamps.remove();
+        writer.writeNext(new String[] {x, y});
+        rollSum -= window.remove();
+      } else if (timestamps.size() == windowSize / 2) {
+        // Remove extra timestamps before window is populated
+        timestamps.remove();
       }
-      String x = dataPoint[xAxisIndex];
-      writer.writeNext(new String[] {x, y});
     }
 
     writer.close();
