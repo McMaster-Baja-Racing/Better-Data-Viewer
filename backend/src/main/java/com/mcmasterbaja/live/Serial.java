@@ -9,6 +9,7 @@ public class Serial {
   public static volatile boolean exit = true;
 
   public static void readLive() {
+    String rootLocation = "./uploads"; // To be replaced with a path
     exit = false;
     String port = "COM4";
     SerialPort comPort = SerialPort.getCommPort(port);
@@ -48,16 +49,17 @@ public class Serial {
     try {
       // print the current path
       // TODO: Use the correct path from the application.properties file
-      fw = new FileWriter("./upload-dir/live_F_RPM_PRIM.csv");
-      fw2 = new FileWriter("./upload-dir/live_F_RPM_SEC.csv");
-      fw42 = new FileWriter("./upload-dir/live_F_BELT_SPEED.csv");
+      fw = new FileWriter(rootLocation.toString() + "/live_F_RPM_PRIM.csv");
+      fw2 = new FileWriter(rootLocation.toString() + "/live_F_RPM_SEC.csv");
+      fw42 = new FileWriter(rootLocation.toString() + "/live_F_BELT_SPEED.csv");
       fw.write("Timestamp (ms),F_RPM_PRIM\n");
       fw2.write("Timestamp (ms),F_RPM_SEC\n");
       fw42.write("Timestamp (ms),F_BELT_SPEED\n");
 
       for (int i = 1; i <= 6; i++) {
         // create a new file writer for each file
-        strains[i - 1] = new FileWriter("./upload-dir/Live " + strainNames[i - 1] + ".csv");
+        strains[i - 1] =
+            new FileWriter(rootLocation.toString() + "/Live " + strainNames[i - 1] + ".csv");
         // write the header to the file
         strains[i - 1].write("Timestamp (ms)" + "," + strainNames[i - 1] + "\n");
       }
@@ -83,7 +85,7 @@ public class Serial {
       while (!exit) {
         byte[] readBuffer = new byte[8];
 
-        int numRead = comPort.readBytes(readBuffer, readBuffer.length);
+        // int numRead = comPort.readBytes(readBuffer, readBuffer.length);
 
         // System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ "
         // Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +

@@ -46,17 +46,17 @@ export function pointInRect(point, bounds) {
 export function findLapTimes(coords, rects) {
   let inside = false;
   let events = [];
-  for (let i = 0; i < coords.length; i++) {
+  for (const coord of coords) {
     for (let [index, elem] of rects.entries()) {
-      if (!inside && pointInRect([coords[i][LAT_INDEX], coords[i][LNG_INDEX]], elem.bounds)) {
+      if (!inside && pointInRect([coord[LAT_INDEX], coord[LNG_INDEX]], elem.bounds)) {
         inside = true;
-        events.push(boundaryEvent(ENTER, index, coords[i][TIME_INDEX]));
+        events.push(boundaryEvent(ENTER, index, coord[TIME_INDEX]));
       }
       else if (inside && events[events.length - 1].rect === index 
-        && !pointInRect([coords[i][LAT_INDEX], coords[i][LNG_INDEX]], elem.bounds)) 
+        && !pointInRect([coord[LAT_INDEX], coord[LNG_INDEX]], elem.bounds)) 
       {
         inside = false;
-        events.push(boundaryEvent(EXIT, index, coords[i][TIME_INDEX]));
+        events.push(boundaryEvent(EXIT, index, coord[TIME_INDEX]));
       }
     }
   }
@@ -81,7 +81,7 @@ export function findLapTimes(coords, rects) {
         currLap.checkpoints.push(event.time);
         visitedCheckpoints.push(event.rect);
         // console.log(event.time + ": Checkpoint");
-        console.log(visitedCheckpoints, event.rect);
+        // console.log(visitedCheckpoints, event.rect);
       }
     }
     // console.log(event.time, ": " +event.event + " " + rects[event.rect].type + " " + event.rect);
