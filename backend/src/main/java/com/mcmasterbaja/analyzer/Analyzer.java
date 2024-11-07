@@ -1,5 +1,4 @@
 package com.mcmasterbaja.analyzer;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -20,7 +19,6 @@ public abstract class Analyzer {
   protected String[] inputFiles;
   protected String[] inputColumns;
   protected String[] outputFiles;
-// Vector 4 long, add a constant to the 4 dimensions (v1+A,v2+B,v3+C,v4+D)
   public Analyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
     this.inputFiles = inputFiles;
     // inputColumns is the names of the columns we are analyzing. index 0 is the independent
