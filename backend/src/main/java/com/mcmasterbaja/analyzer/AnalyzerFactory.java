@@ -1,5 +1,4 @@
 package com.mcmasterbaja.analyzer;
-
 import com.mcmasterbaja.model.AnalyzerParams;
 
 public class AnalyzerFactory {
