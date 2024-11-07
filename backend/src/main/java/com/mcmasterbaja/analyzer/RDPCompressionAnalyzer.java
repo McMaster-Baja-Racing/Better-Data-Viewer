@@ -15,7 +15,8 @@ public class RDPCompressionAnalyzer extends Analyzer {
   private int xAxisIndex;
   private int yAxisIndex;
 
-  public RDPCompressionAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles, double epsilon) {
+  public RDPCompressionAnalyzer(
+      String[] inputFiles, String[] inputColumns, String[] outputFiles, double epsilon) {
     super(inputFiles, inputColumns, outputFiles);
     this.epsilon = epsilon;
   }
