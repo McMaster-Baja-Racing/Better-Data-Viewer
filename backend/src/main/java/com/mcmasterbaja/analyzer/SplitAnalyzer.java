@@ -39,13 +39,14 @@ public class SplitAnalyzer extends Analyzer {
     String[] dataPoint;
 
     while ((dataPoint = reader.readNext()) != null) {
-      if (Integer.parseInt(dataPoint[columnIndex]) <= end) {
+      if (Integer.parseInt(dataPoint[columnIndex]) >= end) {
         break;
       } else if (Integer.parseInt(dataPoint[columnIndex]) >= start) {
         writer.writeNext(dataPoint);
       }
     }
 
+    reader.close();
     writer.close();
   }
 }

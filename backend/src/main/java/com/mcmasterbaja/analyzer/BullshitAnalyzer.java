@@ -63,6 +63,7 @@ public class BullshitAnalyzer extends Analyzer {
       lastDataPoint = dataPoint;
     }
 
+    reader.close();
     writer.close();
   }
 }

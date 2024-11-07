@@ -67,23 +67,4 @@ public class AverageAnalyzer extends Analyzer {
     }
     return mid;
   }
-
-  // TODO: Remove this main method in lieu of a test
-  public static void main(String[] args) {
-    String[] inputFiles = {
-      "/Users/kaiarseneau/Documents/GitHub/Better-Data-Viewer/backend/uploads/csv/000628 - WFT/BATT"
-          + " PERC.csv"
-    };
-    String[] outputFiles = {
-      "/Users/kaiarseneau/Documents/GitHub/Better-Data-Viewer/backend/uploads/csv/000628 -"
-          + " WFT/temp.csv"
-    };
-    int[] range = {60000, 210000};
-    AverageAnalyzer a = new AverageAnalyzer(inputFiles, outputFiles, range);
-    try {
-      a.analyze();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
 }

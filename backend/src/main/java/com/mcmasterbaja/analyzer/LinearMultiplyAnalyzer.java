@@ -45,6 +45,9 @@ public class LinearMultiplyAnalyzer extends Analyzer {
       String newY = Double.toString(linearFunction(oldY));
       writer.writeNext(new String[] {x, newY});
     }
+
+    reader.close();
+    writer.close();
   }
 
   private double linearFunction(double x) {

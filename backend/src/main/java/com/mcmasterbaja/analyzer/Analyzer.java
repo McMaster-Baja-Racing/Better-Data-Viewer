@@ -80,6 +80,6 @@ public abstract class Analyzer {
         return i;
       }
     }
-    throw new RuntimeException("No column in file exists with analysis column name");
+    throw new RuntimeException("No column in file exists with analysis column name " + columnName);
   }
 }

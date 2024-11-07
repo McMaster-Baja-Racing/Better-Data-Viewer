@@ -231,6 +231,11 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
     // Print completed
     System.out.println("Completed interpolation in " + (endTime - startTime) / 1000000 + "ms");
+
+    writer.close();
+    for (CSVReader reader : readers) {
+      reader.close();
+    }
   }
 
   // Interpolate method
@@ -242,23 +247,5 @@ public class InterpolaterProAnalyzer extends Analyzer {
     double b = y1 - m * x1;
 
     return m * x + b;
-  }
-
-  public static void main(String[] args) {
-    String[] inputFiles = {
-      "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/151408/GPS LATITUDE.csv",
-      "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/151408/GPS LONGITUDE.csv",
-      "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/151408/GPS SPEED.csv"
-    };
-    String[] outputFiles = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/temp2.csv"};
-    String[] inputColumns = {"GPS LATITUDE", "GPS LONGITUDE", "GPS SPEED"};
-
-    InterpolaterProAnalyzer analyzer =
-        new InterpolaterProAnalyzer(inputFiles, inputColumns, outputFiles);
-    try {
-      analyzer.analyze();
-    } catch (Exception e) {
-      System.out.println(e);
-    }
   }
 }

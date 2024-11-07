@@ -38,6 +38,7 @@ public class DeleteOutliers extends Analyzer {
       }
     }
 
+    reader.close();
     writer.close();
   }
 }

@@ -66,6 +66,7 @@ public class RollingAvgAnalyzer extends Analyzer {
       }
     }
 
+    reader.close();
     writer.close();
   }
 }

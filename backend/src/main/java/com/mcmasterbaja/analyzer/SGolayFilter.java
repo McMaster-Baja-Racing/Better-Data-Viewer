@@ -108,6 +108,7 @@ public class SGolayFilter extends Analyzer {
       writer.writeNext(new String[] {x, y});
     }
 
+    reader.close();
     writer.close();
   }
 

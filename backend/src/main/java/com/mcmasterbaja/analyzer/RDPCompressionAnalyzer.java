@@ -15,8 +15,8 @@ public class RDPCompressionAnalyzer extends Analyzer {
   private int xAxisIndex;
   private int yAxisIndex;
 
-  public RDPCompressionAnalyzer(String[] inputFiles, String[] outputFiles, double epsilon) {
-    super(inputFiles, outputFiles);
+  public RDPCompressionAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles, double epsilon) {
+    super(inputFiles, inputColumns, outputFiles);
     this.epsilon = epsilon;
   }
 
@@ -40,6 +40,9 @@ public class RDPCompressionAnalyzer extends Analyzer {
     for (String[] point : data) {
       writer.writeNext(point);
     }
+
+    reader.close();
+    writer.close();
   }
 
   public List<String[]> RamerDouglasPeucker(List<String[]> data, double epsilon) {
@@ -82,17 +85,5 @@ public class RDPCompressionAnalyzer extends Analyzer {
 
     return Math.abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1)
         / Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
-  }
-
-  // Set a main to test this
-  public static void main(String[] args) throws IOException, CsvException {
-    String[] inputFiles = new String[1];
-    inputFiles[0] =
-        "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/F_SUS_TRAV_FL_roll.csv";
-    String[] outputFiles = new String[1];
-    outputFiles[0] =
-        "C:/Users/Admin/Documents/GitHub/Better-Data-Viewer/API/upload-dir/EWOOOOOOOOOOOOOOO.csv";
-    RDPCompressionAnalyzer analyzer = new RDPCompressionAnalyzer(inputFiles, outputFiles, 10);
-    analyzer.analyze();
   }
 }
