@@ -12,7 +12,7 @@ test.describe('Upload Form', () => {
   });
 
   test('should open upload form and submit a file', async ({ page }) => {
-    const filePath = path.resolve(__dirname, './test-files/endurance.bin');
+    const filePath = path.resolve('./test-files/endurance.bin');
 
     // Opens the upload form by clicking the Upload button
     await page.getByRole('button', { name: 'Upload' }).click();
