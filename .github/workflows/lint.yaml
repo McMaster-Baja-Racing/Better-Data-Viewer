@@ -105,7 +105,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-
     - name: Install dependencies for Playwright
       run: npm ci
       working-directory: ./e2e
@@ -124,6 +123,8 @@ jobs:
       continue-on-error: true
 
     - name: Run Playwright tests
+      env:
+        DEBUG: pw:browser*,pw:api
       run: npx playwright test
       working-directory: ./e2e
 
