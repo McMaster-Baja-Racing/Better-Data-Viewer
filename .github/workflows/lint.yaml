@@ -86,8 +86,11 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
+    - name: List target directory contents
+      run: ls -la ./backend/target
+
     - name: Start Backend Server
-      run: java -jar ./backend/target/backend-1.2.0.jar &
+      run: java -jar $(ls ./backend/target/backend-*.jar | head -n 1) &
 
     - name: Serve the project
       working-directory: front-end
