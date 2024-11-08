@@ -16,6 +16,10 @@ test.describe('Upload Form', () => {
     console.log("Resolved file path:", filePath);
     console.log("File exists:", fs.existsSync(filePath));
 
+    page.on('console', (msg) => console.log(msg.text()));
+    page.on('pageerror', (err) => console.log('Page error:', err));
+
+
     if (!fs.existsSync(filePath)) {
       throw new Error(`Test file not found at ${filePath}`);
     }
