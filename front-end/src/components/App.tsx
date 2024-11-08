@@ -3,7 +3,7 @@ import { CreateGraphModal } from './modal/create/CreateGraphModal/CreateGraphMod
 import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
 import { DownloadModal } from './modal/download/DownloadModal';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Topbar from './Topbar/Topbar';
 import Views from './views/Views/Views';
@@ -20,33 +20,6 @@ const App = () => {
   const [videoTimestamp, setVideoTimestamp] = useState(0);
   const [video, setVideo] = useState({ key: '', start: '', end: '' });
 
-  // sample format for chartInformation: 
-  // {
-  //    files:
-  //    [
-  //      {
-  //        columns: [
-  //          {header:"Timestampt", filename:"PRIM_RPM.csv", 
-  //              timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
-  //          {header:"RPM", filename:"PRIM_RPM.csv",
-  //              timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"},
-  //        ],
-  //        analysis: "none"
-  //      },
-  //      {
-  //        columns: [
-  //          {header:"RPM", filename:"SEC_RPM.csv", 
-  //            timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}},
-  //          {header:"Timestampt", filename:"SEC_RPM.csv", 
-  //            timespan: {start: "18-00-23F--0:00:00", end: "18-00-23F--0:00:00"}}
-  //        ],
-  //        analysis: "rollAvg"
-  //      }
-  //   ],
-  //   live: false,
-  //   type: "line"
-  // }
-
   // State for holding the information for each view
   const [viewInformation, setViewInformation] = useState(
     Array.from({ length: MAX_VIEWS }, () => ({
@@ -56,12 +29,12 @@ const App = () => {
   );
 
   // This is an object so that other updates to it will always call the useEffect, even if the message is the same
-  const [successMessage, setSuccessMessage] = useState({});
+  const [successMessage, setSuccessMessage] = useState<{message: string}>({message: ''});
   const [buttonID, setButtonID] = useState(null);
 
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
-    if (successMessage === '' || Object.keys(successMessage).length === 0) return;
+    if (successMessage.message == '') return;
     // This could use some work to show that they are different messages more clearly
     $('div.success').hide().stop(true, false); 
     $('div.success').slideDown(500).delay(2000).slideUp(1000);
