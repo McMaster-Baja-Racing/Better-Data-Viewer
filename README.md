@@ -14,10 +14,11 @@ For an in-depth user guide, consult the McMaster Baja Wiki.
 
 ## How to run
 ### Required tools:
-NodeJS and NPM
-JDK 21+
+- NodeJS and NPM
+- JDK 21+
 
 ### To setup:
+
 1. Clone repository.
 2. Inside a terminal, navigate to the folder Better-Data-Viewer\front-end, then run the command `npm i --force`
 3. Inside a terminal, navigate to the folder Better-Data-Viewer\backend, then run the command `./mvnw quarkus:dev`
@@ -25,6 +26,7 @@ JDK 21+
 Setup complete!
 
 ### To run:
+
 1. Ensure your Java Development Kit directory is added into the list `javaHomeLocations` in the `start.ps1` file
 2. Run the command `./start.ps1`, and leave all terminals open.
 3. Go to `localhost:3000` to begin.
@@ -56,3 +58,7 @@ To run the front end, simply use the react scripts
 - in the binary-to-csv-lib folder, run `cargo build --release`
 - once that is complete, copy the resulting dll file(windows) that is now in the `target/release/` folder
 - paste this folder in the `Better-Data-Viewer\API\src\main\java\backend\API\binary_csv\` Folder
+
+
+
+
