@@ -127,7 +127,7 @@ jobs:
       run: |
         max_retries=30
         count=0
-        until curl --output /dev/null --silent --head --fail http://localhost:8080; do
+        until curl --output /dev/null --silent --head --fail http://localhost:8080/files; do
           if [ "$count" -ge "$max_retries" ]; then
             echo "Backend did not start within the expected time."
             exit 1
