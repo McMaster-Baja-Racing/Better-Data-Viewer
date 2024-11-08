@@ -36,7 +36,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: backend-jar
-        path: ./backend/target/backend-*.jar
+        path: ./backend/target/quarkus-app/quarkus-run.jar
 
   Build_Node_js:
     runs-on: ubuntu-latest
@@ -85,7 +85,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: backend-jar
-        path: ./backend/target
+        path: ./backend/target/quarkus-app
 
     - name: Download frontend artifact
       uses: actions/download-artifact@v4
@@ -105,20 +105,14 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: List target directory contents
-      run: |
-        ls -la
-        ls -la ./backend
-        ls -la ./backend/target
-
     - name: Start Backend Server
-      run: java -jar $(ls ./backend/target/backend-*.jar | head -n 1) &
+      run: java -jar ./backend/target/quarkus-app/quarkus-run.jar &
 
     - name: Serve the project
       working-directory: front-end
       run: |
         npm install -g serve
-        serve -s build -l 3000 &
+        serve -s build -l 5173 &
       continue-on-error: true
 
     - name: Wait for Backend to be ready
@@ -130,7 +124,7 @@ jobs:
 
     - name: Wait for Frontend to be ready
       run: |
-        until curl --output /dev/null --silent --head --fail http://localhost:3000; do
+        until curl --output /dev/null --silent --head --fail http://localhost:5173; do
           echo "Waiting for frontend to start..."
           sleep 2
         done
