@@ -21,7 +21,7 @@ test.describe('Upload Form', () => {
     
     // Clicks on the file input label and uploads the file
     await page.getByText('Drag and drop your file here').click();
-    await page.setInputFiles('#label-file-upload', filePath);
+    await page.locator('body').setInputFiles(filePath);
     
     // Clicks the submit button
     await page.getByRole('button', { name: 'Submit' }).click();
