@@ -109,6 +109,9 @@ jobs:
       run: npm ci
       working-directory: ./e2e
 
+    - name: Doubly install
+      run: npm install -D @playwright/test@latest
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
