@@ -34,23 +34,23 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    // {
-    //   name: 'chromium',
-    //   use: { ...devices['Desktop Chrome'] },
-    // },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
 
     {
       name: 'firefox',
       use: { 
         ...devices['Desktop Firefox'],
-        //headless: process.env.CI ? false : true,
+        headless: process.env.CI ? false : true, // Run headful on CI, crashes on form otherwise
       },
     },
 
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
 
     /* Test against mobile viewports. */
     // {

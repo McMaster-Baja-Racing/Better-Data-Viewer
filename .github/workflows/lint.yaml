@@ -122,27 +122,13 @@ jobs:
         serve -s build -l 5173 &
       continue-on-error: true
 
-    # - name: Install Xvfb
-    #   run: sudo apt-get install -y xvfb
+    - name: Install Xvfb
+      run: sudo apt-get install -y xvfb
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libgtk-3-0 libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 libxi6 libxtst6 libnss3 libxrandr2 libasound2 libpangocairo-1.0-0 libatk1.0-0 libcups2 libdrm2
-    
-
-    # - name: Run Playwright tests with Xvfb
-    #   env:
-    #     DEBUG: pw:browser*,pw:api
-    #   run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" npx playwright test
-    #   working-directory: ./e2e
-
-    - name: Run Playwright tests
+    - name: Run Playwright tests with Xvfb
       env:
         DEBUG: pw:browser*,pw:api
-        MOZ_HEADLESS: 1
-        GTK_PATH: /usr/lib/x86_64-linux-gnu/gtk-3.0
-      run: npx playwright test
+      run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" npx playwright test
       working-directory: ./e2e
 
     - name: Upload Playwright report

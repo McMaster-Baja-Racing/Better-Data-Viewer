@@ -30,7 +30,6 @@ test.describe('Upload Form', () => {
     await expect(page.getByText('Files Uploaded')).toBeVisible();
   });
 
-  /*
   test('should display an alert when no file is selected', async ({ page }) => {
     // Open the upload form
     await page.getByRole('button', { name: 'Upload' }).click();
@@ -44,5 +43,4 @@ test.describe('Upload Form', () => {
     // Try to submit without selecting a file, triggering the alert
     await page.getByRole('button', { name: 'Submit' }).click();
   });
-  */
 });
