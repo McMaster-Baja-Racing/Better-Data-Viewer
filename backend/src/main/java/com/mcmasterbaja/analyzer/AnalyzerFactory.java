@@ -32,16 +32,12 @@ public class AnalyzerFactory {
         return new SGolayFilter(
             inputFiles, inputColumns, outputFiles, windowSize, polynomialDegree);
 
-      case LINEAR_INTERPOLATE:
-        return new LinearInterpolaterAnalyzer(
-            inputFiles, new String[] {"Timestamp (ms)", inputColumns[1]}, outputFiles);
-
       case RDP_COMPRESSION:
         if (options.length == 0) {
-          return new RDPCompressionAnalyzer(inputFiles, outputFiles, 15);
+          return new RDPCompressionAnalyzer(inputFiles, inputColumns, outputFiles, 15);
         }
         double epsilon = Double.parseDouble((String) options[0]);
-        return new RDPCompressionAnalyzer(inputFiles, outputFiles, epsilon);
+        return new RDPCompressionAnalyzer(inputFiles, inputColumns, outputFiles, epsilon);
 
       case SPLIT:
         System.out.println("SplitAnalyzer");
