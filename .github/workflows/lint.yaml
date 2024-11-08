@@ -35,8 +35,8 @@ jobs:
     - name: Upload backend artifact
       uses: actions/upload-artifact@v4
       with:
-        name: backend-jar
-        path: ./backend/target/quarkus-app/quarkus-run.jar
+        name: backend-app
+        path: ./backend/target/quarkus-app
 
   Build_Node_js:
     runs-on: ubuntu-latest
@@ -84,7 +84,7 @@ jobs:
     - name: Download backend artifact
       uses: actions/download-artifact@v4
       with:
-        name: backend-jar
+        name: backend-app
         path: ./backend/target/quarkus-app
 
     - name: Download frontend artifact
@@ -115,19 +115,32 @@ jobs:
         serve -s build -l 5173 &
       continue-on-error: true
 
-    - name: Wait for Backend to be ready
+    - name: Wait for Backend and Frontend to be ready
       run: |
-        until curl --output /dev/null --silent --head --fail http://localhost:8080; do
-          echo "Waiting for backend to start..."
-          sleep 2
-        done
-
-    - name: Wait for Frontend to be ready
-      run: |
-        until curl --output /dev/null --silent --head --fail http://localhost:5173; do
-          echo "Waiting for frontend to start..."
-          sleep 2
-        done
+        max_retries=60
+        wait_for_service() {
+          local url=$1
+          local name=$2
+          local count=0
+          until curl --output /dev/null --silent --head --fail "$url"; do
+            if [ "$count" -ge "$max_retries" ]; then
+              echo "$name did not start within the expected time."
+              exit 1
+            fi
+            echo "Waiting for $name to start... attempt #$((count+1))"
+            count=$((count+1))
+            sleep 2
+          done
+        }
+    
+        # Start both checks concurrently
+        wait_for_service http://localhost:8080 "Backend" &
+        wait_for_service http://localhost:5173 "Frontend" &
+    
+        # Wait for both to complete
+        wait
+    
+    
 
     - name: Run Playwright tests
       run: npx playwright test
