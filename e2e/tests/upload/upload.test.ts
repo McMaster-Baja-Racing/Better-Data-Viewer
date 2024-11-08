@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
+import * as fs from 'fs';
 
 test.describe('Upload Form', () => {
 
@@ -12,13 +13,18 @@ test.describe('Upload Form', () => {
   test('should open upload form and submit a file', async ({ page }) => {
     const filePath = path.join(__dirname, '../../test-files/endurance.bin');
 
+    console.log("Resolved file path:", filePath);
+    console.log("File exists:", fs.existsSync(filePath));
+
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`Test file not found at ${filePath}`);
+    }
+
     // Opens the upload form by clicking the Upload button
     await page.getByRole('button', { name: 'Upload' }).click();
     
     // Clicks on the file input label and uploads the file
     await page.locator('#label-file-upload').click();
-    console.log("File path:", filePath);
-    console.log("dir name:", __dirname);
     await page.setInputFiles('#label-file-upload', filePath); 
     
     // Clicks the submit button
