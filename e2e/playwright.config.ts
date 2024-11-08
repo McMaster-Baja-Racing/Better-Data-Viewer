@@ -41,7 +41,19 @@ export default defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        launchOptions: {
+          headless: true,
+          args: [
+            '--headless=new',
+            '--disable-gpu',
+            '--disable-software-rasterizer',
+            '--no-sandbox',
+            '--disable-dev-shm-usage'
+          ],
+        },
+      },
     },
 
     {
