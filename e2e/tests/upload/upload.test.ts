@@ -18,10 +18,14 @@ test.describe('Upload Form', () => {
 
     // Opens the upload form by clicking the Upload button
     await page.getByRole('button', { name: 'Upload' }).click();
+
+    await page.waitForTimeout(2000);
     
     // Clicks on the file input label and uploads the file
-    await page.getByText('Drag and drop your file here').click();
-    await page.locator('body').setInputFiles(filePath);
+    await page.locator('#label-file-upload').click();
+    // delay for the file dialog to open
+    await page.waitForTimeout(2000);
+    await page.setInputFiles('#label-file-upload', filePath); 
     
     // Clicks the submit button
     await page.getByRole('button', { name: 'Submit' }).click();
