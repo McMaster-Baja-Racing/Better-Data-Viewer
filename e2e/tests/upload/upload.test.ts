@@ -19,6 +19,7 @@ test.describe('Upload Form', () => {
     
     // Clicks on the file input label and uploads the file
     await page.locator('#label-file-upload').click();
+    console.log("File path:", filePath);
     await page.setInputFiles('#label-file-upload', filePath); 
     
     // Clicks the submit button

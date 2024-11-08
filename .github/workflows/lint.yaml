@@ -123,33 +123,17 @@ jobs:
         serve -s build -l 5173 &
       continue-on-error: true
 
-    - name: Wait for Backend to be ready
-      run: |
-        max_retries=30
-        count=0
-        until curl --output /dev/null --silent --head --fail http://localhost:8080/files; do
-          if [ "$count" -ge "$max_retries" ]; then
-            echo "Backend did not start within the expected time."
-            exit 1
-          fi
-          echo "Waiting for backend to start... attempt #$((count+1))"
-          count=$((count+1))
-          sleep 2
-        done
+    - name: List files in test directory
+      run: ls -R ./e2e/test-files
+
+    - name: Set up Git LFS
+      run: git lfs install
     
-    - name: Wait for Frontend to be ready
-      run: |
-        max_retries=30
-        count=0
-        until curl --output /dev/null --silent --head --fail http://localhost:5173; do
-          if [ "$count" -ge "$max_retries" ]; then
-            echo "Frontend did not start within the expected time."
-            exit 1
-          fi
-          echo "Waiting for frontend to start... attempt #$((count+1))"
-          count=$((count+1))
-          sleep 2
-        done
+    - name: Download LFS files
+      run: git lfs pull
+
+    - name: List files in test directory
+      run: ls -R ./e2e/test-files
 
     - name: Run Playwright tests
       run: npx playwright test
