@@ -10,7 +10,7 @@ public enum AnalyzerType {
   RDP_COMPRESSION,
   ROLL_AVG,
   SGOLAY,
-  SPLIT, 
+  SPLIT,
   CONSTANT_ADDER;
 
   public String toString() {

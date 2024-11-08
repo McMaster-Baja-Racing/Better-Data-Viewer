@@ -1,16 +1,17 @@
 package com.mcmasterbaja.analyzer;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
+
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 public abstract class Analyzer {
 
@@ -18,6 +19,7 @@ public abstract class Analyzer {
   protected String[] inputFiles;
   protected String[] inputColumns;
   protected String[] outputFiles;
+
   public Analyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
     this.inputFiles = inputFiles;
     // inputColumns is the names of the columns we are analyzing. index 0 is the independent
