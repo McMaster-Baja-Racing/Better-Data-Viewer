@@ -14,6 +14,7 @@ For an in-depth user guide, consult the McMaster Baja Wiki.
 
 ## How to run
 ### Required tools:
+
 - NodeJS and NPM
 - JDK 21+
 
@@ -58,6 +59,7 @@ To run the front end, simply use the react scripts
 - in the binary-to-csv-lib folder, run `cargo build --release`
 - once that is complete, copy the resulting dll file(windows) that is now in the `target/release/` folder
 - paste this folder in the `Better-Data-Viewer\API\src\main\java\backend\API\binary_csv\` Folder
+
 
 
 
