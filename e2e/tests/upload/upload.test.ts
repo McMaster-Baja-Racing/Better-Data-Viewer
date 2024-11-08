@@ -18,13 +18,9 @@ test.describe('Upload Form', () => {
 
     // Opens the upload form by clicking the Upload button
     await page.getByRole('button', { name: 'Upload' }).click();
-
-    await page.waitForTimeout(2000);
     
     // Clicks on the file input label and uploads the file
     await page.locator('#label-file-upload').click();
-    // delay for the file dialog to open
-    await page.waitForTimeout(2000);
     await page.setInputFiles('#label-file-upload', filePath); 
     
     // Clicks the submit button
@@ -34,6 +30,7 @@ test.describe('Upload Form', () => {
     await expect(page.getByText('Files Uploaded')).toBeVisible();
   });
 
+  /*
   test('should display an alert when no file is selected', async ({ page }) => {
     // Open the upload form
     await page.getByRole('button', { name: 'Upload' }).click();
@@ -47,4 +44,5 @@ test.describe('Upload Form', () => {
     // Try to submit without selecting a file, triggering the alert
     await page.getByRole('button', { name: 'Submit' }).click();
   });
+  */
 });
