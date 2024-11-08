@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.resolve();
 
 test.describe('Upload Form', () => {
 
