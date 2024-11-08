@@ -20,7 +20,8 @@ test.describe('Upload Form', () => {
     await page.getByRole('button', { name: 'Upload' }).click();
     
     // Clicks on the file input label and uploads the file
-    await page.locator('#label-file-upload').click();
+    await page.locator('#label-file-upload').click({ timeout: 10000 });
+    await page.waitForSelector('#label-file-upload', { state: 'visible', timeout: 10000 });
     await page.setInputFiles('#label-file-upload', filePath); 
     
     // Clicks the submit button

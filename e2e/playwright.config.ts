@@ -41,7 +41,13 @@ export default defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { 
+        ...devices['Desktop Firefox'],
+        launchOptions: {
+          args: ['--disable-webgl'],
+        },
+        headless: process.env.CI ? false : true,
+      },
     },
 
     // {
