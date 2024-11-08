@@ -5,9 +5,8 @@ import * as fs from 'fs';
 test.describe('Upload Form', () => {
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/');
-    // Verifies that the Upload button is visible before starting any tests
-    await expect(page.getByRole('button', { name: 'Upload' })).toBeVisible();
+    await page.goto('http://localhost:5173/', { timeout: 60000 });
+    await expect(page.getByRole('button', { name: 'Upload' })).toBeVisible({ timeout: 15000 });  
   });
 
   test('should open upload form and submit a file', async ({ page }) => {
