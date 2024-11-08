@@ -114,7 +114,7 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Start Backend Server
-      run: java -jar ./backend/target/quarkus-app/quarkus-run.jar &
+      run: java -jar -Dquarkus.http.host=localhost ./backend/target/quarkus-app/quarkus-run.jar &
 
     - name: Serve the project
       working-directory: front-end
@@ -127,7 +127,7 @@ jobs:
       run: |
         max_retries=30
         count=0
-        until curl --output /dev/null --silent --head --fail http://0.0.0.0:8080; do
+        until curl --output /dev/null --silent --head --fail http://localhost:8080; do
           if [ "$count" -ge "$max_retries" ]; then
             echo "Backend did not start within the expected time."
             exit 1
