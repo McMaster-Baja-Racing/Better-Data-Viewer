@@ -111,6 +111,7 @@ jobs:
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+      working-directory: ./e2e
 
     - name: Start Backend Server
       run: java -jar -Dquarkus.http.host=localhost ./backend/target/quarkus-app/quarkus-run.jar &
