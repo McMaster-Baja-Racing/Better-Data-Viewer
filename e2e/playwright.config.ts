@@ -43,7 +43,7 @@ export default defineConfig({
       name: 'firefox',
       use: { 
         ...devices['Desktop Firefox'],
-        headless: process.env.CI ? false : true,
+        //headless: process.env.CI ? false : true,
       },
     },
 
