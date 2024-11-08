@@ -1,9 +1,10 @@
 package com.mcmasterbaja.analyzer;
 
+import java.io.IOException;
+
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-import java.io.IOException;
 
 public class ConstantAdderAnalyzer extends Analyzer {
   private final double a;
@@ -64,6 +65,4 @@ public class ConstantAdderAnalyzer extends Analyzer {
   private double constantAdder(double var, double constant) throws IOException {
     return var + constant;
   }
-
-  public static void main(String[] args) {}
 }
