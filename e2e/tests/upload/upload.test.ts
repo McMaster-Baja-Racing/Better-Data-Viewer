@@ -24,7 +24,8 @@ test.describe('Upload Form', () => {
     // Clicks the submit button
     await page.getByRole('button', { name: 'Submit' }).click();
     
-    // Add assertions here to verify successful upload, if applicable
+    // Verifies that the 'Files Uploaded' text is visible
+    await expect(page.getByText('Files Uploaded')).toBeVisible();
   });
 
   test('should display an alert when no file is selected', async ({ page }) => {
