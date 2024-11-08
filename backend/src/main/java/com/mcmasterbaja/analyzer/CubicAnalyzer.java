@@ -66,7 +66,6 @@ public class CubicAnalyzer extends Analyzer {
     String[] headers = reader.readNext();
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-
     writer.writeNext(headers);
 
     String[] nextLine;

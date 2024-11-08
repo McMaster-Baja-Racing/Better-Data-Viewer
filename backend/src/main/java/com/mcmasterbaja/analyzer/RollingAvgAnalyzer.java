@@ -43,10 +43,13 @@ public class RollingAvgAnalyzer extends Analyzer {
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);
 
-    double rollSum = 0;
-    String[] dataPoint;
+    // Queues are used here to keep track of the window of data as we read line by line
+    // Timestamps only track half of the window so that when we write data, we write it in the
+    // middle (looking forward and backwards)
     Queue<Double> window = new LinkedList<Double>();
     Queue<String> timestamps = new LinkedList<String>();
+    double rollSum = 0;
+    String[] dataPoint;
 
     while ((dataPoint = reader.readNext()) != null) {
       rollSum += Double.parseDouble(dataPoint[yAxisIndex]);

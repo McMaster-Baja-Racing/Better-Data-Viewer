@@ -8,6 +8,7 @@ import java.io.IOException;
 public class DeleteOutliers extends Analyzer {
   private final double limit;
 
+  // This class deletes all data points that are above a certain limit
   public DeleteOutliers(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, double limit) {
     super(inputFiles, inputColumns, outputFiles);

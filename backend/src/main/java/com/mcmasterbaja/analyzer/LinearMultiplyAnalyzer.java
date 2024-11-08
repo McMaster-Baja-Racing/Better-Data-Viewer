@@ -9,6 +9,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
   private final double m;
   private final double b;
 
+  // Multiplies the y values of a file by a constant m and adds an offset b
   public LinearMultiplyAnalyzer(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, double m, double b) {
     super(inputFiles, inputColumns, outputFiles);

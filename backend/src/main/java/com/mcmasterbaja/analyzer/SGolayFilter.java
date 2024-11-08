@@ -25,6 +25,8 @@ public class SGolayFilter extends Analyzer {
     this.windowSize = windowSize;
     this.polynomialDegree = polynomialDegree;
     this.dataBuffer = new CircularBuffer(windowSize);
+    // Half the size of the data buffer so that when we write data, we write it in the middle
+    // (looking forwards and backwards)
     this.timestampBuffer = new CircularBuffer(windowSize / 2);
   }
 
@@ -92,6 +94,7 @@ public class SGolayFilter extends Analyzer {
       dataBuffer.addPoint(Double.parseDouble(dataPoint[yAxisIndex]));
       timestampBuffer.addPoint(Double.parseDouble(dataPoint[xAxisIndex]));
 
+      // Make sure buffer is full
       if (dataBuffer.size() < windowSize) {
         continue;
       }
