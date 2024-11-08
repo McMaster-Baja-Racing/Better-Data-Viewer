@@ -4,7 +4,7 @@ import './DownloadModal.css';
 import React, { useState, useRef, useEffect } from 'react';
 import FileStorage from '../FileStorage/FileStorage';
 import JSZip from 'jszip';
-import { ApiUtil } from '@lib/apiUtils.js';
+import { ApiUtil } from '@lib/apiUtils';
 
 export const DownloadModal = ({ setModal }) => {
   const [selectedFiles, setSelectedFiles] = useState([]); // the files that the user has selected from the file menu
@@ -38,8 +38,7 @@ export const DownloadModal = ({ setModal }) => {
       
       // Add each selected file to the zip archive
       for (const file of selectedFiles) {
-        const response = await ApiUtil.getFile(file.key);
-        const blob = await response.blob();
+        const blob = await ApiUtil.getFile(file.key);
         
         // Add the file to the zip archive with the file name as the key
         zip.file(file.key, blob);

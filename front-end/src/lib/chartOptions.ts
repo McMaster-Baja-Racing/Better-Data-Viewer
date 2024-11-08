@@ -1,11 +1,16 @@
-export const defaultChartOptions = {
+import { Options } from 'highcharts';
+import { ChartInformation } from '@types';
+
+export const defaultChartOptions: Options = {
   chart: {
     type: 'scatter',
-    zoomType: 'x',
+    zooming: {
+      type: 'x'
+    },
     backgroundColor: '#ffffff'
   },
   title: {
-    text: 'Template'
+    text: ''
   },
   subtitle: {
     text: document.ontouchstart === undefined ?
@@ -25,17 +30,19 @@ export const defaultChartOptions = {
   }
 };
 
-const getStandardChartConfig = (chartInformation) => {
+const getStandardChartConfig = (chartInformation: ChartInformation) => {
 
-  var chartConfig = defaultChartOptions;
+  const chartConfig = defaultChartOptions;
 
-  chartConfig.title.text = chartInformation.files[0].columns[1].header + 
+  chartConfig.title = {text: chartInformation.files[0].columns[1].header + 
     ' vs ' + 
-    chartInformation.files[0].columns[0].header;
+    chartInformation.files[0].columns[0].header};
 
   chartConfig.chart = {
     type: chartInformation.type,
-    zoomType: 'x'
+    zooming: {
+      type: 'x'
+    }
   };
 
   chartConfig.tooltip = { 
@@ -70,7 +77,7 @@ const getStandardChartConfig = (chartInformation) => {
 };
 
 const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
-  var chartConfig = getStandardChartConfig(chartInformation);
+  const chartConfig = getStandardChartConfig(chartInformation);
   const colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey'];
 
   chartConfig.series = parsedData.map((data, index) => {
@@ -79,42 +86,42 @@ const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
       data: data,
       colour: colours[index],
       opacity: 1,
-      colorAxis: false, 
+      colorAxis: false,
       findNearestPointBy: 'x',
       boostThreshold: 1,
       marker: { enabled: false }
     };
   });
 
-  chartConfig.colorAxis.showInLegend = false;
+  chartConfig.colorAxis = {showInLegend: false};
 
   return chartConfig;
 };
 
 const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
-  var chartConfig = getDefaultChartConfig(chartInformation, parsedData, fileNames);
+  const chartConfig = getDefaultChartConfig(chartInformation, parsedData, fileNames);
 
-  chartConfig.chart.type = 'line';
+  chartConfig.chart = {type: 'line'};
 
-  chartConfig.boost.enabled = chartInformation.hasTimestampX;
+  chartConfig.boost = {enabled: chartInformation.hasTimestampX};
 
-  chartConfig.xAxis.plotLines = [{
+  chartConfig.xAxis = {plotLines: [{
     color: 'black',
     width: 2,
     zIndex: 3,
-  }];
+  }]};
 
-  chartConfig.yAxis.plotLines = [{
+  chartConfig.yAxis = {plotLines: [{
     color: 'black',
     width: 2,
     zIndex: 3,
-  }];
+  }]};
 
   return chartConfig;
 };
 
 const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) => {
-  var chartConfig = getStandardChartConfig(chartInformation);
+  const chartConfig = getStandardChartConfig(chartInformation);
 
   chartConfig.series = parsedData.map((data, index) => {
     return {
