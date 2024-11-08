@@ -33,35 +33,30 @@ public class ConstantAdderAnalyzer extends Analyzer {
             + super.inputFiles[0]
             + " to make "
             + super.outputFiles[0]);
-    CSVReader r = getReader(super.inputFiles[0]);
-    ICSVWriter w = getWriter(super.outputFiles[0]);
+    CSVReader reader = getReader(super.inputFiles[0]);
+    ICSVWriter writer = getWriter(super.outputFiles[0]);
     if (inputColumns.length == 4) {
-      String[] headers = r.readNext();
+      String[] headers = reader.readNext();
       int aIndex = this.getColumnIndex(inputColumns[0], headers);
       int bIndex = this.getColumnIndex(inputColumns[1], headers);
       int cIndex = this.getColumnIndex(inputColumns[2], headers);
       int dIndex = this.getColumnIndex(inputColumns[3], headers);
-      w.writeNext(headers);
+      writer.writeNext(headers);
       String[] dataPoint;
-      while ((dataPoint = r.readNext()) != null) {
+      while ((dataPoint = reader.readNext()) != null) {
         // takes original variable and adds the constant
         double oldA = Double.parseDouble(dataPoint[aIndex]);
-        String newA = Double.toString(constantAdder(oldA, a));
+        String newA = Double.toString(oldA + a);
         double oldB = Double.parseDouble(dataPoint[bIndex]);
-        String newB = Double.toString(constantAdder(oldB, b));
+        String newB = Double.toString(oldB + b);
         double oldC = Double.parseDouble(dataPoint[cIndex]);
-        String newC = Double.toString(constantAdder(oldC, c));
+        String newC = Double.toString(oldC + c);
         double oldD = Double.parseDouble(dataPoint[dIndex]);
-        String newD = Double.toString(constantAdder(oldD, d));
-        w.writeNext(new String[] {newA, newB, newC, newD});
+        String newD = Double.toString(oldD + d);
+        writer.writeNext(new String[] {newA, newB, newC, newD});
       }
-      r.close();
-      w.close();
+      reader.close();
+      writer.close();
     }
-  }
-
-  // adds the variable of the line with the constant
-  private double constantAdder(double var, double constant) throws IOException {
-    return var + constant;
   }
 }
