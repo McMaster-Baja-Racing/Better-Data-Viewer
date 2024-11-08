@@ -123,18 +123,6 @@ jobs:
         serve -s build -l 5173 &
       continue-on-error: true
 
-    - name: List files in test directory
-      run: ls -R ./e2e/test-files
-
-    - name: Set up Git LFS
-      run: git lfs install
-    
-    - name: Download LFS files
-      run: git lfs pull
-
-    - name: List files in test directory
-      run: ls -R ./e2e/test-files
-
     - name: Run Playwright tests
       run: npx playwright test
       working-directory: ./e2e

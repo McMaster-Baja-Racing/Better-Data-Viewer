@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
 
-const __dirname = path.resolve();
-
 test.describe('Upload Form', () => {
 
   test.beforeEach(async ({ page }) => {
@@ -12,7 +10,7 @@ test.describe('Upload Form', () => {
   });
 
   test('should open upload form and submit a file', async ({ page }) => {
-    const filePath = path.resolve('./test-files/endurance.bin');
+    const filePath = path.join(__dirname, '../../test-files/endurance.bin');
 
     // Opens the upload form by clicking the Upload button
     await page.getByRole('button', { name: 'Upload' }).click();
