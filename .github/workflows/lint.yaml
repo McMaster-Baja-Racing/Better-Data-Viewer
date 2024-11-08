@@ -32,6 +32,12 @@ jobs:
     - name: Build with Maven
       run: cd ./backend && mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn package --file pom.xml
 
+    - name: Upload backend artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-jar
+        path: ./backend/target/backend-*.jar
+
   Build_Node_js:
     runs-on: ubuntu-latest
     name: "Build Frontend with Node.js"
@@ -64,6 +70,12 @@ jobs:
     #   run: npm test
     #   working-directory: ./front-end
 
+    - name: Upload frontend artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: ./front-end/build
+
 
   Playwright_Tests:
     runs-on: ubuntu-latest
@@ -73,6 +85,18 @@ jobs:
     steps:
     - name: Check out repository code
       uses: actions/checkout@v4
+
+    - name: Download backend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-jar
+        path: ./backend/target
+
+    - name: Download frontend artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: frontend-build
+        path: ./front-end/build
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
