@@ -123,13 +123,13 @@ jobs:
         serve -s build -l 5173 &
       continue-on-error: true
 
-    - name: Install Xvfb
-      run: sudo apt-get install -y xvfb
+    # - name: Install Xvfb
+    #   run: sudo apt-get install -y xvfb
 
     - name: Run Playwright tests with Xvfb
       env:
         DEBUG: pw:browser*,pw:api
-      run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" npx playwright test
+      run: npx playwright test # xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24"
       working-directory: ./e2e 
 
     - name: Upload Playwright report
