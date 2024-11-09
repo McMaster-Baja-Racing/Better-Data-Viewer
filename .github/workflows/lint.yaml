@@ -109,14 +109,14 @@ jobs:
       run: npm install
       working-directory: ./e2e
 
-    - name: Install Playwright Browsers
+    - name: Install Playwright browsers
       run: npx playwright install --with-deps
       working-directory: ./e2e
 
-    - name: Start Backend Server
+    - name: Start the backend server
       run: java -jar -Dquarkus.http.host=localhost ./backend/target/quarkus-app/quarkus-run.jar &
 
-    - name: Serve the project
+    - name: Serve the frontend
       working-directory: front-end
       run: |
         npm install -g serve
@@ -126,7 +126,7 @@ jobs:
     # - name: Install Xvfb
     #   run: sudo apt-get install -y xvfb
 
-    - name: Run Playwright tests
+    - name: Run Playwright Tests
       # env:
       #   DEBUG: pw:browser*,pw:api
       run: npx playwright test # xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24"
