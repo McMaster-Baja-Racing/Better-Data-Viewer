@@ -9,6 +9,7 @@ export class GraphTester extends Tester {
 
   async testCreateGraph() {
     await this.openGraphForm();
+    await this.page.waitForTimeout(60000);
     await this.pressNextButton();
     await this.selectFile('endurance/BATT PERC');
     await this.pressNextButton();
