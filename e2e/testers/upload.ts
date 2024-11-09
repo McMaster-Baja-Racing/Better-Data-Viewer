@@ -10,7 +10,7 @@ export class UploadTester extends Tester {
 
   constructor(page: Page) {
     super(page);
-    this.binFilePath = path.join(__dirname, '../test-files/endurance.bin');
+    this.binFilePath = path.join(__dirname, '../test-files/182848.bin');
     this.csvFilePath = '';
     this.mp4FilePath = '';
 
@@ -56,5 +56,30 @@ export class UploadTester extends Tester {
       expect(dialog.message()).toBe('Please select a file');
       await dialog.accept();
     });
+  }
+
+  // TODO: Implement this better
+  async checkFileParsed(filePath: string) {
+    await this.page.getByRole('button', { name: 'Download' }).click();
+
+    let fileUploaded = false;
+    while (!fileUploaded) {
+      try {
+        // Attempt to locate the file cell and check visibility
+        const fileCell = this.page.getByRole('row', { name: 'endurance 307 MB -' }).getByRole('cell').first();
+        if (await fileCell.isVisible()) {
+          fileUploaded = true; // Exit the loop if the file is visible
+        } else {
+          throw new Error('File not yet visible'); // Continue to the catch block if not visible
+        }
+      } catch (error) {
+        // Close the modal and wait before re-trying
+        await this.page.getByRole('button', { name: 'X' }).click();
+        await this.page.waitForTimeout(1000); // Wait for a short delay before retrying
+        await this.page.getByRole('button', { name: 'Download' }).click(); // Re-open the modal
+      }
+    }
+
+    await this.page.getByRole('button', { name: 'X' }).click();
   }
 }

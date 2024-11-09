@@ -11,7 +11,7 @@ export class GraphTester extends Tester {
     await this.page.waitForTimeout(20000);
     await this.openGraphForm();
     await this.pressNextButton();
-    await this.selectFile('endurance/BATT PERC');
+    await this.selectFile('182848/BATT PERC');
     await this.pressNextButton();
     await this.submitGraph();
     await this.verifyGraphCreated();

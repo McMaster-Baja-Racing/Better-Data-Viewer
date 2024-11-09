@@ -13,7 +13,6 @@ export const DownloadModal = ({ setModal }) => {
   useEffect(() => {
     // Fetch data when the component mounts
     ApiUtil.getFolder('csv')
-      .then((response) => response.json())
       .then((data) => {
         setFiles(data);
       });
