@@ -145,6 +145,11 @@ export const ApiUtil = {
       body: formData,
     });
 
+    // eslint-disable-next-line no-console
+    console.log(response);
+    // eslint-disable-next-line no-console
+    console.log(response.statusText);
+
     if (!response.ok) throw Error(response.statusText);
   },
 };
