@@ -114,7 +114,7 @@ jobs:
       working-directory: ./e2e
 
     - name: Start the backend server
-      run: java -jar -Dquarkus.http.host=localhost ./backend/target/quarkus-app/quarkus-run.jar &
+      run: java -jar -Dquarkus.http.host=localhost ./target/quarkus-app/quarkus-run.jar &
       working-directory: ./backend
 
     - name: Serve the frontend
@@ -141,24 +141,6 @@ jobs:
     
         echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer:"
         ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer
-    
-        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src:"
-        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src
-    
-        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main:"
-        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main
-    
-        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java:"
-        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java
-    
-        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com:"
-        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com
-    
-        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com/mcmasterbaja:"
-        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com/mcmasterbaja
-    
-        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com/mcmasterbaja/binary_csv:"
-        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com/mcmasterbaja/binary_csv
     
         echo "Finished directory check."
     
