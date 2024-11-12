@@ -24,6 +24,7 @@ export class UploadTester extends Tester {
     await this.uploadFile(this.binFilePath);
     await this.submitFile();
     await this.verifyFilesUploaded();
+    await this.awaitFileParsed('182848/BATT PERC');
   }
 
   async testUploadNoFile() {
@@ -32,10 +33,33 @@ export class UploadTester extends Tester {
     await this.verifyNoFileSelectedAlert();
   }
 
+  async awaitFileParsed(filePath: string) {
+    let fileUploaded = false;
+    
+    while (!fileUploaded) {
+      await this.openDownloadForm();
+      await this.page.waitForTimeout(1000);
+
+      if (await this.isFileVisible(filePath)) {
+        fileUploaded = true;
+      }
+      
+      await this.closeDownloadForm()
+    }
+  }
+
   // Basic functions
 
   async openUploadForm() {
     await this.page.getByRole('button', { name: 'Upload' }).click();
+  }
+
+  async openDownloadForm() {
+    await this.page.getByRole('button', { name: 'Download' }).click();
+  }
+
+  async closeDownloadForm() {
+    await this.page.getByRole('button', { name: 'X' }).click();
   }
 
   async uploadFile(filePath: string) {
@@ -58,28 +82,18 @@ export class UploadTester extends Tester {
     });
   }
 
-  // TODO: Implement this better
-  async checkFileParsed(filePath: string) {
-    await this.page.getByRole('button', { name: 'Download' }).click();
-
-    let fileUploaded = false;
-    while (!fileUploaded) {
-      try {
-        // Attempt to locate the file cell and check visibility
-        const fileCell = this.page.getByRole('row', { name: 'endurance 307 MB -' }).getByRole('cell').first();
-        if (await fileCell.isVisible()) {
-          fileUploaded = true; // Exit the loop if the file is visible
-        } else {
-          throw new Error('File not yet visible'); // Continue to the catch block if not visible
-        }
-      } catch (error) {
-        // Close the modal and wait before re-trying
-        await this.page.getByRole('button', { name: 'X' }).click();
-        await this.page.waitForTimeout(1000); // Wait for a short delay before retrying
-        await this.page.getByRole('button', { name: 'Download' }).click(); // Re-open the modal
+  async isFileVisible(filePath: string) {
+    const splitPath = filePath.split('/');
+    for (const path of splitPath) {
+      if (!await this.page.getByRole('cell', { name: path }).isVisible()) {
+        return false;
+      } else if (path === splitPath[splitPath.length - 1]) { 
+        // If last path, return true
+        return true;
+      } else { 
+        // Expand folder
+        await this.page.getByRole('cell', { name: path }).click();
       }
     }
-
-    await this.page.getByRole('button', { name: 'X' }).click();
   }
 }

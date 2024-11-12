@@ -149,6 +149,8 @@ export const ApiUtil = {
     console.log(response);
     // eslint-disable-next-line no-console
     console.log(response.statusText);
+    // eslint-disable-next-line no-console
+    console.log('hostname: ' + window.location.hostname);
 
     if (!response.ok) throw Error(response.statusText);
   },
