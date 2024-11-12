@@ -24,8 +24,7 @@ export class UploadTester extends Tester {
     await this.uploadFile(this.binFilePath);
     await this.submitFile();
     await this.verifyFilesUploaded();
-    await this.awaitFileParsed('182848/BATT PERC');
-    await this.page.waitForTimeout(1000);
+    await this.awaitFileParsed('182848/BATT VOLT');
   }
 
   async testUploadNoFile() {
