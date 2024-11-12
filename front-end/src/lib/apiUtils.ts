@@ -150,7 +150,7 @@ export const ApiUtil = {
     // eslint-disable-next-line no-console
     console.log(response.statusText);
     // eslint-disable-next-line no-console
-    console.log('hostname: ' + window.location.hostname);
+    console.log(await response.text());
 
     if (!response.ok) throw Error(response.statusText);
   },
