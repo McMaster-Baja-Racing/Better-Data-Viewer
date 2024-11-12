@@ -123,6 +123,45 @@ jobs:
         serve -s build -l 5173 &
       continue-on-error: true
 
+    
+    - name: Check directory structure for DLL
+      run: |
+        echo "Listing contents of /home:"
+        ls /home
+    
+        echo "Listing contents of /home/runner:"
+        ls /home/runner
+    
+        echo "Listing contents of /home/runner/work:"
+        ls /home/runner/work
+    
+        echo "Listing contents of /home/runner/work/Better-Data-Viewer:"
+        ls /home/runner/work/Better-Data-Viewer
+    
+        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer:"
+        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer
+    
+        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src:"
+        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src
+    
+        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main:"
+        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main
+    
+        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java:"
+        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java
+    
+        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com:"
+        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com
+    
+        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com/mcmasterbaja:"
+        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com/mcmasterbaja
+    
+        echo "Listing contents of /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com/mcmasterbaja/binary_csv:"
+        ls /home/runner/work/Better-Data-Viewer/Better-Data-Viewer/src/main/java/com/mcmasterbaja/binary_csv
+    
+        echo "Finished directory check."
+    
+
     # - name: Install Xvfb
     #   run: sudo apt-get install -y xvfb
 
