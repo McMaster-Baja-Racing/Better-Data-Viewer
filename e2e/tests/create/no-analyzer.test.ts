@@ -6,6 +6,10 @@ test.describe('Create graphs', () => {
   test.beforeEach(async ({ page }) => {
     const uploadTester = new UploadTester(page);
 
+    page.on('console', msg => {
+      console.log(`Console message: [${msg.type()}] ${msg.text()}`);
+    });
+
     await page.goto('http://localhost:5173/');
     await uploadTester.testUploadBinFile();
   });

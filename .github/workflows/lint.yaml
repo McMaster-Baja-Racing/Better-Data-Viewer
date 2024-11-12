@@ -129,7 +129,7 @@ jobs:
     - name: Run Playwright Tests
       # env:
       #   DEBUG: pw:browser*,pw:api
-      run: npx playwright test # xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24"
+      run: npx playwright test --debug # xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24"
       working-directory: ./e2e 
 
     - name: Upload Playwright report
