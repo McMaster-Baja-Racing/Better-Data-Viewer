@@ -115,6 +115,7 @@ jobs:
 
     - name: Start the backend server
       run: java -jar -Dquarkus.http.host=localhost ./backend/target/quarkus-app/quarkus-run.jar &
+      working-directory: ./backend
 
     - name: Serve the frontend
       working-directory: front-end
