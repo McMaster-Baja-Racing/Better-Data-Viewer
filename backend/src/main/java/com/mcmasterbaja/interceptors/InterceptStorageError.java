@@ -29,6 +29,5 @@ public class InterceptStorageError {
             throw new StorageException(msg, e); // To be caught by exception mappers
 
         }
-        
     }
 }
