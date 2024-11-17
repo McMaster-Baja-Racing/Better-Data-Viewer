@@ -1,5 +1,6 @@
 import './App.css';
 import { CreateGraphModal } from './modal/create/CreateGraphModal/CreateGraphModal';
+import { SimpleCreateGraphModal } from './modal/create/SimpleCreateGraphModal/SimpleCreateGraphModal.jsx';
 import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
 import { DownloadModal } from './modal/download/DownloadModal';
@@ -46,7 +47,7 @@ const App = () => {
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
         <header className="App-body">
           <div className="success">{successMessage.message}</div>
-          {modal === 'Create' ? <CreateGraphModal 
+          {modal === 'Create' ? <SimpleCreateGraphModal 
             setModal={setModal} 
             setViewInformation={setViewInformation} 
             setSuccessMessage={setSuccessMessage} 
