@@ -2,7 +2,6 @@ import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { spawn } from 'child_process';
 import treeKill from 'tree-kill';
-import fs from 'fs';
 
 //Reference: https://medium.com/@sgstephans/creating-a-java-electron-react-typescript-desktop-app-414e7edceed2
 let win;
@@ -20,10 +19,6 @@ function createWindow() {
   });
 
   win.maximize();
-  
-  const frontendPath = app.isPackaged ? path.resolve(resourcePath, 'build') : path.resolve(resourcePath, '../../build/index.html');
-  const backendPath = app.isPackaged ? path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar') : path.resolve(resourcePath, '../../../backend/target/backend-1.2.0-runner.jar');
-  const dllPath = app.isPackaged ? resourcePath + '/backend/' : path.resolve(resourcePath, '../../../backend/src/main/java/com/mcmasterbaja/binary_csv').toString() + '/';
 
   // Development
   /*
@@ -44,6 +39,14 @@ function createWindow() {
       env: { ...process.env, RESOURCE_PATH: resourcePath + '/backend/' },
     },
   );
+
+    // Conditional file paths
+  /*
+  isProduction = app.isPackaged;
+  const frontendPath = isProduction ? path.resolve(resourcePath, 'build') : path.resolve(resourcePath, '../../build/index.html');
+  const backendPath = isProduction ? path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar') : path.resolve(resourcePath, '../../../backend/target/backend-1.2.0-runner.jar');
+  const dllPath = isProduction ? resourcePath + '/backend/' : path.resolve(resourcePath, '../../../backend/src/main/java/com/mcmasterbaja/binary_csv').toString() + '/';
+  */
 
   // Conditional
   /*
