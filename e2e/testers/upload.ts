@@ -7,12 +7,14 @@ export class UploadTester extends Tester {
   binFilePath: string;
   csvFilePath: string;
   mp4FilePath: string;
+  frontendFilePath: string;
 
   constructor(page: Page) {
     super(page);
     this.binFilePath = path.join(__dirname, '../test-files/182848.bin');
     this.csvFilePath = '';
     this.mp4FilePath = '';
+    this.frontendFilePath = '182848/BATT VOLT';
 
     if (!fs.existsSync(this.binFilePath)) {
       throw new Error(`Test file not found at ${this.binFilePath}`);
@@ -24,7 +26,7 @@ export class UploadTester extends Tester {
     await this.uploadFile(this.binFilePath);
     await this.submitFile();
     await this.verifyFilesUploaded();
-    await this.awaitFileParsed('182848/BATT VOLT');
+    await this.awaitFileParsed(this.frontendFilePath);
   }
 
   async testUploadNoFile() {

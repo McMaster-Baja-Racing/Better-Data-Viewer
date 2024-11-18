@@ -2,15 +2,17 @@ import { Page, expect } from '@playwright/test';
 import { Tester } from './tester';
 
 export class GraphTester extends Tester {
+  frontendFilePath: string;
 
   constructor(page: Page) {
     super(page);
+    this.frontendFilePath = '182848/BATT VOLT';
   }
 
   async testCreateGraph() {
     await this.openGraphForm();
     await this.pressNextButton();
-    await this.selectFile('182848/BATT VOLT');
+    await this.selectFile(this.frontendFilePath);
     await this.pressNextButton();
     await this.submitGraph();
     await this.verifyGraphCreated();

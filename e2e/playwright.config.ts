@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
+export const WEB_SERVER_URL = 'http://localhost:5173';
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -72,9 +74,9 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: 'cd ../front-end && npm run start',
+    url: WEB_SERVER_URL,
+    reuseExistingServer: !process.env.CI,
+  },
 });

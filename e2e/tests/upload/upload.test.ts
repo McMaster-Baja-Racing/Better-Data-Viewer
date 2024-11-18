@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { UploadTester } from '../../testers';
+import { WEB_SERVER_URL } from '../../playwright.config';
 
 test.describe('Upload Form', () => {
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/');
+    await page.goto(WEB_SERVER_URL);
     await expect(page.getByRole('button', { name: 'Upload' })).toBeVisible();
   });
 
