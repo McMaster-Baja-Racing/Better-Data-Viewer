@@ -1,6 +1,7 @@
 import React from 'react';
 import './SubteamPresets.css';
-
+import { subteamGraphPresets } from '@lib/subteamGraphPresets';
+import { DataViewerPreset, GraphPreset } from '@types';
 const Preset = ({
     title,
     description,
@@ -17,20 +18,6 @@ const Preset = ({
 };
 
 const SubteamPresets = ({ movePage, setGraphType, setLiveCheck, video }) => {
-    const handleTypeSelect = (e) => {
-        if (e.target.value === 'video') {
-            (
-                document.getElementById('liveDataCheckbox') as HTMLInputElement
-            ).checked = false;
-            (
-                document.getElementById('liveDataCheckbox') as HTMLInputElement
-            ).disabled = true;
-        } else {
-            (
-                document.getElementById('liveDataCheckbox') as HTMLInputElement
-            ).disabled = false;
-        }
-    };
 
     const handleNextPage = () => {
         setGraphType(
@@ -58,11 +45,9 @@ const SubteamPresets = ({ movePage, setGraphType, setLiveCheck, video }) => {
                 </ol>
             </div>
 
-            {Preset({title: "Shift Curve", description: "Primary RPM vs secondary RPM"})}
-            {Preset({title: "Speed", description: "GPS speed over time"})}
-            {Preset({title: "Primary RPM", description: "Primary RPM over time smoothed with Savitzky-Golay filter"})}
-            {Preset({title: "Secondary RPM", description: "Secondary RPM over time smoothed with Savitzky-Golay filter"})}
-            {Preset({title: "Suspension Travel", description: "All four suspension travel graphs over time"})}
+            {subteamGraphPresets.map((preset: DataViewerPreset) => (
+                Preset({title: preset.name, description: preset.description})
+            ))}
 
             <button
                 className="PageButton"

@@ -136,7 +136,7 @@ export const SimpleCreateGraphModal = ({
   };
 
   useEffect(() => {
-    if (displayPage === 4) {
+    if (displayPage === 2) {
       handleSubmit();
       setModal('');
     }

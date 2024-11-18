@@ -47,7 +47,18 @@ const App = () => {
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
         <header className="App-body">
           <div className="success">{successMessage.message}</div>
-          {modal === 'Create' ? <SimpleCreateGraphModal 
+          {modal === 'Create' ? <CreateGraphModal 
+            setModal={setModal} 
+            setViewInformation={setViewInformation} 
+            setSuccessMessage={setSuccessMessage} 
+            viewInformation={viewInformation} 
+            buttonID={buttonID} 
+            setNumViews={setNumViews} 
+            numViews={numViews} 
+            video={video} 
+            setVideo={setVideo}
+          /> : null}
+          {modal === 'ChoosePreset' ? <SimpleCreateGraphModal 
             setModal={setModal} 
             setViewInformation={setViewInformation} 
             setSuccessMessage={setSuccessMessage} 
