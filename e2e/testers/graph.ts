@@ -4,9 +4,9 @@ import { Tester } from './tester';
 export class GraphTester extends Tester {
   frontendFilePath: string;
 
-  constructor(page: Page) {
+  constructor(page: Page, binFileName: string) {
     super(page);
-    this.frontendFilePath = '182848/BATT VOLT';
+    this.frontendFilePath = `${binFileName}/BATT VOLT`;
   }
 
   async testCreateGraph() {

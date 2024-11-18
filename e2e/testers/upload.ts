@@ -9,12 +9,12 @@ export class UploadTester extends Tester {
   mp4FilePath: string;
   frontendFilePath: string;
 
-  constructor(page: Page) {
+  constructor(page: Page, binFileName: string) {
     super(page);
-    this.binFilePath = path.join(__dirname, '../test-files/182848.bin');
+    this.binFilePath = path.join(__dirname, `../test-files/${binFileName}.bin`);;
     this.csvFilePath = '';
     this.mp4FilePath = '';
-    this.frontendFilePath = '182848/BATT VOLT';
+    this.frontendFilePath = `${binFileName}/BATT VOLT`;
 
     if (!fs.existsSync(this.binFilePath)) {
       throw new Error(`Test file not found at ${this.binFilePath}`);
