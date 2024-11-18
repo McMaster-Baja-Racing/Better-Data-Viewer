@@ -77,6 +77,6 @@ export default defineConfig({
   webServer: {
     command: 'cd ../front-end && npm run start',
     url: WEB_SERVER_URL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
   },
 });
