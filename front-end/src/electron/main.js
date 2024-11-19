@@ -33,7 +33,7 @@ function createWindow() {
   // Production
   win.loadFile(path.resolve(resourcePath, 'build/index.html'));
   backend = spawn(
-    'java', 
+    path.resolve(resourcePath, 'backend/jre/bin/java.exe').toString(), 
     ['-jar', path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar')],
     { 
       env: { ...process.env, RESOURCE_PATH: resourcePath + '/backend/' },

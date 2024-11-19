@@ -28,6 +28,10 @@ try {
         throw "No -runner.jar file found in $backendTargetPath."
     }
 
+    # Copy JRE folder to the backend folder
+    Write-Output("Copying JRE folder...")
+    Copy-Item -Path "$backendTargetPath\jre" -Destination $frontendBackendPath -Recurse
+
     # Call electron builder
     Write-Output "Building Electron package..."
     Set-Location -Path $frontendPath
