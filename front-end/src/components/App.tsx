@@ -61,12 +61,10 @@ const App = () => {
           {modal === 'ChoosePreset' ? <SimpleCreateGraphModal 
             setModal={setModal} 
             setViewInformation={setViewInformation} 
-            setSuccessMessage={setSuccessMessage} 
             viewInformation={viewInformation} 
             buttonID={buttonID} 
             setNumViews={setNumViews} 
             numViews={numViews} 
-            video={video} 
             setVideo={setVideo}
           /> : null}
           {modal === 'Upload' ? <UploadModal 

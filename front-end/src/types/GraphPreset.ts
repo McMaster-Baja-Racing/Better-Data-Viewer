@@ -1,13 +1,16 @@
-import { AnalyzerType } from "./ApiTypes"
+import { AnalyzerType } from './ApiTypes';
 
-export type GraphPreset = {
-    xAxis: string,
-    yAxis: string,
+/**
+ * axes[i] is the name of a data series inside axisFiles[i]
+ */
+export interface GraphPreset {
+    axisFiles: string[],
+    axes: string[],
     analyser: AnalyzerType | null,
     graphType: string
 }
 
-export type DataViewerPreset = {
+export interface DataViewerPreset {
     name: string,
     description: string,
     graphs: GraphPreset[]

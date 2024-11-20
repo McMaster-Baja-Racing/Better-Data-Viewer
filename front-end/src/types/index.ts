@@ -1,3 +1,3 @@
 export * from './ApiTypes';
 export * from './ChartInformation';
-export * from './GraphPreset'
+export * from './GraphPreset';
