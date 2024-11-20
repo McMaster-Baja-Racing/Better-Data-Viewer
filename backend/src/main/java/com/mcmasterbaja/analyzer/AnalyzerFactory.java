@@ -1,18 +1,49 @@
 package com.mcmasterbaja.analyzer;
 
+import java.nio.file.Path;
+import java.util.Arrays;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 
 public class AnalyzerFactory {
+
+
+  /**
+   * Default output file names, inputfile_type.csv. As many output files as input files.
+   * 
+   * @param inputFiles Array of input file names
+   * @param type Analyzer type
+   * @return Array of output file names
+   */
+  public static String[] defaultOutputFileNames(String[] inputFiles, AnalyzerType type) {
+    String[] outputFiles = new String[inputFiles.length];
+    for (int i = 0; i < inputFiles.length; i++) {
+      if (type == null) {
+        outputFiles[i] = inputFiles[i];
+      } else {
+        outputFiles[i] = inputFiles[i].replace(".csv", "_" + type.toString() + ".csv");
+      }
+    }
+    return outputFiles;
+  }
 
   public static Analyzer createAnalyzer(AnalyzerParams params) {
 
     String[] inputFiles = params.getInputFiles();
     String[] inputColumns = params.getInputColumns();
-    String[] outputFiles = params.getOutputFiles();
+    String[] outputFiles = defaultOutputFileNames(inputFiles, params.getType());
     Object[] options = params.getOptions();
 
     switch (params.getType()) {
       case ACCEL_CURVE:
+        // Accel curve creates two sgolay and one final output file, so add a new output file to the
+        // list
+        // We assume we want to put the output in the same folder as the 0th output file
+        String outputFolderPath = Path.of(outputFiles[0]).getParent().toString();
+        String finalOutputFilePath = Path.of(outputFolderPath, "ACCEL_CURVE.csv").toString();
+        int N = outputFiles.length;
+        outputFiles = Arrays.copyOf(outputFiles, N + 1);
+        outputFiles[N] = finalOutputFilePath;
         return new AccelCurveAnalyzer(inputFiles, inputColumns, outputFiles);
 
       case ROLL_AVG:
@@ -29,8 +60,8 @@ public class AnalyzerFactory {
         }
         windowSize = Integer.parseInt((String) options[0]);
         int polynomialDegree = Integer.parseInt((String) options[1]);
-        return new SGolayFilter(
-            inputFiles, inputColumns, outputFiles, windowSize, polynomialDegree);
+        return new SGolayFilter(inputFiles, inputColumns, outputFiles, windowSize,
+            polynomialDegree);
 
       case RDP_COMPRESSION:
         if (options.length == 0) {

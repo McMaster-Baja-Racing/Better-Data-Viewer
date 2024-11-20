@@ -40,6 +40,14 @@ public abstract class Analyzer {
   // Abstract method to be implemented by subclasses
   public abstract void analyze() throws IOException, CsvValidationException, CsvException;
 
+  /**
+   * Default behaviour is to use the 0th output file, will need to be overridden in some special cases
+   * @return Filename of the analyzer output
+   */
+  public String getOutputFilename() {
+    return this.outputFiles[0];
+  }
+
   // I/O methods
   // Streams as they avoid loading the entire file into memory at once
   public CSVReader getReader(String filePath) throws IOException {

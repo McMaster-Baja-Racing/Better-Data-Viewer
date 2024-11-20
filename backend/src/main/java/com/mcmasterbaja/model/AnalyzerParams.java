@@ -18,9 +18,6 @@ public class AnalyzerParams {
   @QueryParam("inputFiles")
   private String[] inputFiles;
 
-  @QueryParam("outputFiles")
-  private String[] outputFiles;
-
   @QueryParam("inputColumns")
   private String[] inputColumns;
 
@@ -59,20 +56,6 @@ public class AnalyzerParams {
               .map(rootLocation.resolve("csv")::resolve)
               .map(Path::toString)
               .toArray(String[]::new);
-    }
-  }
-
-  /** If output files are empty, auto-populates them with the format: inputFile_type.csv */
-  public void generateOutputFileNames() {
-    if (outputFiles == null || outputFiles.length == 0) {
-      outputFiles = new String[inputFiles.length];
-      for (int i = 0; i < inputFiles.length; i++) {
-        if (type == null) {
-          outputFiles[i] = inputFiles[i];
-        } else {
-          outputFiles[i] = inputFiles[i].replace(".csv", "_" + type.toString() + ".csv");
-        }
-      }
     }
   }
 }

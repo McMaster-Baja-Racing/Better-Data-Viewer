@@ -39,11 +39,11 @@ public class FileAnalyzeResource {
       throw new InvalidArgumentException(params.getErrors());
     }
 
-    // Update input files with rootLocation/csv and generate output file names
+    // Update input files with rootLocation/csv
     params.updateInputFiles(storageService.getRootLocation());
-    params.generateOutputFileNames();
-
-    // TODO: Can't pass in null to createAnalyzer, this if statement feels redundant
+    // Default to returning the input file, will be overwritten if an analyzer is found later
+    Path targetPath = Path.of(params.getInputFiles()[0]);
+    
     if (params.getType() != null) {
       Analyzer analyzer = AnalyzerFactory.createAnalyzer(params);
       if (analyzer != null) {
@@ -53,10 +53,10 @@ public class FileAnalyzeResource {
           logger.error("Error running analyzer", e);
           throw new RuntimeException("Error running analyzer");
         }
+        targetPath = Path.of(analyzer.getOutputFilename());
       }
     }
 
-    Path targetPath = Paths.get(params.getOutputFiles()[0]);
     File file = storageService.load(targetPath).toFile();
     Path relativePath = storageService.load(Paths.get("csv")).relativize(targetPath);
 

@@ -39,16 +39,24 @@ public class AccelCurveAnalyzer extends Analyzer {
             300,
             3);
     s2.analyze();
+    
 
     System.out.println("Interpolating...");
-
     InterpolaterProAnalyzer linearInterpolate =
         new InterpolaterProAnalyzer(
             Arrays.copyOfRange(outputFiles, 0, 2),
-            new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]},
-            Arrays.copyOfRange(outputFiles, 2, 3));
+            new String[] {inputColumns[0], inputColumns[1]},
+            new String[] {outputFiles[2]});
     linearInterpolate.analyze();
   }
+
+  /**
+   * We run two intermediate analyzers so we want to send back the last output file
+   */
+  @Override
+  public String getOutputFilename() {
+    return outputFiles[2];
+  } 
 
   // Gets start and end timestamps of accel runs based on GPS speed
   @Deprecated
