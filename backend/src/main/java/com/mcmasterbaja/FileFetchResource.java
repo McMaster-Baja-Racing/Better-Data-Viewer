@@ -107,6 +107,21 @@ public class FileFetchResource {
   }
 
   @GET
+  @jakarta.ws.rs.Path("/listBins")
+  public List<String> getFolders() {
+    logger.info("Getting all folders");
+
+    Path dir = Paths.get("csv");
+
+    List<String> folderNames =
+        storageService.loadDirectories(dir)
+            .map(path -> path.toString().replace("\\", "/"))
+            .collect(Collectors.toList());
+
+    return folderNames;
+  }
+
+  @GET
   @jakarta.ws.rs.Path("/timespan/folder/{folderkey}")
   public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) {
     logger.info("Getting timespan for folder: " + folderkey);

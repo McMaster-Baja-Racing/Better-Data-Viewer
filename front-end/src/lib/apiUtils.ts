@@ -37,6 +37,16 @@ export const ApiUtil = {
   },
 
   /**
+   * @description Sends a GET request to the server to fetch all bins that have been uploaded.
+   * @returns {Promise<string[]>} A promise that resolves to an array of bin names.
+   */
+  getBins: async (): Promise<string[]> => {
+    const response = await fetch(`http://${window.location.hostname}:8080/files/listBins`);
+    if (!response.ok) throw Error(response.statusText);
+    return response.json();
+  },
+
+  /**
      * @description Sends a GET request to the server to fetch the timespans of a folder.
      * @param {string} folderKey - The unique identifier of the folder.
      * @returns {Promise<FileTimespan[]>} A promise that resolves to an array of FileTimespan objects.

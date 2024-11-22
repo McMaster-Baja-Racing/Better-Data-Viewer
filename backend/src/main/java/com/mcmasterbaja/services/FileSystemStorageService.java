@@ -81,6 +81,18 @@ public class FileSystemStorageService implements StorageService {
     return loadAll(rootLocation);
   }
 
+  public Stream<Path> loadDirectories(Path dir) {
+    Path directory = rootLocation.resolve(dir);
+    try {
+      return Files.walk(rootLocation.resolve(dir), 1)
+          .filter(path -> Files.isDirectory(path) && !path.equals(rootLocation.resolve(dir)))
+          .map(directory::relativize);
+    } catch (IOException e) {
+      throw new FileNotFoundException(
+          "Could not list directories inside directory: " + dir.toString(), e);
+    }
+  }
+
   public void delete(Path targetPath) {
     try {
       Files.delete(rootLocation.resolve(targetPath));
