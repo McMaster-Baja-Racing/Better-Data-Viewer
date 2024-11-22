@@ -1,0 +1,43 @@
+import { Suspense, useEffect, useState } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Stage } from '@react-three/drei';
+import { Eevee } from './Eevee.js';
+import { useRef } from 'react';
+import { replayData, fetchData } from '@lib/modelUtils.js';
+import './modelViewer.css';
+import { quatReplayData } from 'types/ModelTypes.js';
+
+const ModelViewer = () => {
+  const objRef = useRef<THREE.Group>();
+  const [data, setData] = useState<quatReplayData>([]);
+  const [objectLoaded, setObjectLoaded] = useState(false); 
+
+  useEffect(() => {
+    fetchData().then(fetchedData => setData(fetchedData));
+  }, []);
+
+  useEffect(() => {
+    if (!objRef.current || !objectLoaded || data.length <= 0) return;
+    console.log('Data:', data, 'objRef:', objRef.current);
+    replayData(data, objRef.current);
+  }, [data, objectLoaded]);
+
+  return (
+    <div className="modelContainer">
+      <Canvas shadows dpr={[1, 2]} camera={{ fov: 40, position: [40, 0, 0] }}>
+        <Suspense fallback={null}>
+          <Stage preset="rembrandt" intensity={1} environment="lobby">
+            <directionalLight position={[-5, 10, -35]} intensity={2.0} color="red" />
+            <directionalLight position={[5, 10, 5]} intensity={2.0}  color="blue"/>
+            <ambientLight intensity={0.3} />
+            <Eevee objRef={objRef} onLoad={() => setObjectLoaded(true)}/>
+          </Stage>
+        </Suspense>
+        <OrbitControls/> {/* autoRotate */}
+      </Canvas>
+    </div>
+    
+  );
+};
+
+export default ModelViewer;
