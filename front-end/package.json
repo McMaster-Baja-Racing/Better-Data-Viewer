@@ -49,12 +49,20 @@
   },
   "build": {
     "appId": "com.dataviewer.mcmaster",
+    "asar": true,
     "files": [
       "src/electron/main.js",
-      "build/**/*",
-      "backend/**/*"
+      "build/**/*"
     ],
-    "asar": false,
+    "extraResources": [
+    {
+      "from": "backend",
+      "to": "backend",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
     "win": {
       "target": [
         {
@@ -63,7 +71,11 @@
             "x64"
           ]
         }
-      ]
+      ],
+      "artifactName": "${productName}-v${version}-win.zip"
+    },
+    "extraMetadata": {
+    "productName": "dataviewer"
     }
   },
   "eslintConfig": {

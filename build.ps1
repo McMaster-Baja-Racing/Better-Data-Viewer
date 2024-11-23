@@ -12,10 +12,6 @@ try {
     Set-Location -Path $backendPath
     ./mvnw clean package -D quarkus.package.type=uber-jar
 
-    # Build the JRE
-    Write-Output "Building JRE..."
-    # Move to the backend directory
-
     # Get modules
     Write-Output "Getting modules..."
     $modules = jdeps --module-path $JAVA_HOME/jmods --multi-release 21 --print-module-deps --ignore-missing-deps target/backend-1.2.0-runner.jar

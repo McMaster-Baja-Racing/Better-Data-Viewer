@@ -33,27 +33,25 @@ function createWindow() {
   // Production
   win.loadFile(path.resolve(resourcePath, 'build/index.html'));
   backend = spawn(
-    path.resolve(resourcePath, 'backend/jre/bin/java.exe').toString(), 
-    ['-jar', path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar')],
+    path.resolve(resourcePath, '../backend/jre/bin/java.exe').toString(), 
+    ['-jar', path.resolve(resourcePath, '../backend/backend-1.2.0-runner.jar')],
     { 
-      env: { ...process.env, RESOURCE_PATH: resourcePath + '/backend/' },
+      env: { ...process.env, RESOURCE_PATH: path.resolve(resourcePath, '../backend').toString() + '/' },
     },
   );
 
-    // Conditional file paths
+  // Conditional file paths
   /*
   isProduction = app.isPackaged;
-  const frontendPath = isProduction ? path.resolve(resourcePath, 'build') : path.resolve(resourcePath, '../../build/index.html');
-  const backendPath = isProduction ? path.resolve(resourcePath, 'backend/backend-1.2.0-runner.jar') : path.resolve(resourcePath, '../../../backend/target/backend-1.2.0-runner.jar');
-  const dllPath = isProduction ? resourcePath + '/backend/' : path.resolve(resourcePath, '../../../backend/src/main/java/com/mcmasterbaja/binary_csv').toString() + '/';
-  */
+  const frontendPath = path.resolve(resourcePath, isProduction ? 'build/index.html' : '../../build/index.html');
+  const backendPath = path.resolve(resourcePath, isProduction ? '../backend' : '../../../backend/target')
+  const dllPath = path.resolve(resourcePath, isProduction ? '../backend' : '../../../backend/src/main/java/com/mcmasterbaja/binary_csv').toString() + '/';
 
   // Conditional
-  /*
   win.loadFile(frontendPath);
   backend = spawn(
-    'java', 
-    ['-jar', backendPath],
+    path.resolve(backendPath, 'jre/bin/java.exe').toString(), 
+    ['-jar', path.resolve(backendPath, 'backend-1.2.0-runner.jar')],
     { 
       env: { ...process.env, RESOURCE_PATH: dllPath },
     },
