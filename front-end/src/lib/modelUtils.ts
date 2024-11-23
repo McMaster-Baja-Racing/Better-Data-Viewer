@@ -61,21 +61,87 @@ const updateEuler = (euler: Euler, objRef: THREE.Group) => {
   }
 };
 
-export const replayData = (data: quatReplayData, objRef: THREE.Group) => {
-  for (const { timestamp, x, y, z, w } of data) {
-    setTimeout(() => {
-      console.log('Replaying timestamp: ', timestamp);
-      updateQuaternion(new Quaternion(x, y, z, w), objRef);
-    }, timestamp);
-  }
-};
+export class ModelReplayController {
+  private data: quatReplayData;
+  private objRef: THREE.Group;
+  private isPlaying = false;
+  private currentIndex = 0;
+  private lastTimestamp = 0;
+  private startTime = 0;
+  private angleMode: 'quaternion' | 'euler';
+  private speed = 1;
 
-export const replayDataEuler = (data: {timestamp: number, x: number, y: number, z: number}[], objRef: THREE.Group) => {
-  for (const { timestamp, x, y, z } of data) {
-    setTimeout(() => {
-      console.log('Replaying timestamp: ', timestamp);
-      updateEuler(new Euler(x, y, z), objRef);
-    }, timestamp);
+  constructor(data: quatReplayData, objRef: THREE.Group, angleMode: 'quaternion' | 'euler') {
+    this.data = data;
+    this.objRef = objRef;
+    this.angleMode = angleMode;
   }
-};
+
+  play() {
+    if (this.isPlaying) return; // Already playing
+    console.log('Replay started.');
+    this.isPlaying = true;
+
+    // Initialize start time if playing from the beginning
+    if (this.currentIndex === 0) {
+      this.startTime = performance.now();
+    } else {
+      // Adjust the start time for resuming from the current index
+      this.startTime = performance.now() - this.lastTimestamp / this.speed;
+    }
+
+    this.loop();
+  }
+
+  pause() {   
+    this.isPlaying = false;
+    console.log('Replay paused.');
+  }
+
+  stop() {
+    this.isPlaying = false;
+    console.log('Replay finished.');
+  }
+
+  reset() {
+    this.pause();
+    this.currentIndex = 0;
+    this.lastTimestamp = 0;
+  }
+
+  setSpeed(newSpeed: number) {
+    if (newSpeed <= 0) {
+      console.warn('Speed must be positive. Ignoring invalid value:', newSpeed);
+      return;
+    }
+    this.speed = newSpeed;
+    console.log('Replay speed set to:', this.speed);
+  }
+
+  private loop() {
+    if (!this.isPlaying) return;
+
+    const now = performance.now();
+    const elapsed = (now - this.startTime) * this.speed;
+
+    while (
+      this.currentIndex < this.data.length &&
+      this.data[this.currentIndex].timestamp <= elapsed
+    ) {
+      const { x, y, z, w, timestamp } = this.data[this.currentIndex];
+      console.log('Replaying timestamp: ', timestamp);
+      updateQuaternion(new Quaternion(x, y, z, w), this.objRef);
+      this.lastTimestamp = timestamp;
+      this.currentIndex++;
+    }
+
+    if (this.currentIndex >= this.data.length) {
+      this.stop();
+      return;
+    }
+
+    // Continue the loop
+    requestAnimationFrame(this.loop.bind(this));
+  }
+}
 
