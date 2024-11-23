@@ -15,10 +15,7 @@ const ModelViewer = () => {
   const [bins, setBins] = useState<string[]>([]);
   let replayController: ModelReplayController;
 
-  useEffect(() => {
-    ApiUtil.getBins().then(bins => setBins(bins));
-  }, []);
-
+  // Handle replay events
   const handleEvent = (event: ReplayEvent) => {
     switch (event.type) {
       case ReplayEventType.StateChanged:
@@ -34,6 +31,11 @@ const ModelViewer = () => {
   };
 
   useEffect(() => {
+    ApiUtil.getBins().then(bins => setBins(bins));
+  }, []);
+
+  // Setup the replay controller
+  useEffect(() => {
     if (!objRef.current || !objectLoaded || data.length <= 0) return;
     console.log('Data:', data, 'objRef:', objRef.current);
     replayController = new ModelReplayController(data, objRef.current, 'quaternion');
@@ -42,7 +44,6 @@ const ModelViewer = () => {
 
     return () => {
       replayController?.off(handleEvent);
-
     };
   }, [data, objectLoaded]);
 

@@ -2,7 +2,7 @@ import { quatReplayData, ReplayEvent, ReplayEventType, StateType } from '@types'
 import { ApiUtil } from './apiUtils';
 import { Quaternion, Euler } from 'three';
 
-const extractColumn = (data, columnIndex = 1) => {
+const extractColumn = (data: string[][], columnIndex = 1) => {
   return data.map(row => row[columnIndex]);
 };
 
@@ -14,8 +14,8 @@ const parseCSV = (data: string) => {
     .map(row => row.split(',')); 
 };
 
-const combineData = (timestamps, x, y, z, w) => {
-  return timestamps.map((timestamp: string, i: number) => ({
+const combineData = (timestamps: string[], x: string[], y: string[], z: string[], w: string[]) => {
+  return timestamps.map((timestamp, i) => ({
     timestamp: Number(timestamp),
     x: Number(x[i]),
     y: Number(y[i]),
@@ -72,8 +72,8 @@ export class ModelReplayController {
   private listeners: ((event: ReplayEvent) => void)[] = [];
 
   constructor(
-    data: quatReplayData, 
-    objRef: THREE.Group, 
+    data: quatReplayData,
+    objRef: THREE.Group,
     angleMode: 'quaternion' | 'euler' = 'quaternion',
   ) {
     this.data = data;
