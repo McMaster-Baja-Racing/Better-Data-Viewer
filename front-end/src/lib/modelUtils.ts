@@ -1,4 +1,4 @@
-import { quatReplayData } from 'types/ModelTypes';
+import { quatReplayData, ReplayEvent, ReplayEventType, StateType } from '@types';
 import { ApiUtil } from './apiUtils';
 import { Quaternion, Euler } from 'three';
 
@@ -51,7 +51,6 @@ export const fetchData = async (bin: string) => {
 const updateQuaternion = (quat: Quaternion, objRef: THREE.Group) => {
   if (objRef) {
     objRef.quaternion.set(quat.x, quat.y, quat.z, quat.w);
-    //meshRef.current.rotation.set(x, y, z)
   }
 };
 
@@ -70,16 +69,40 @@ export class ModelReplayController {
   private startTime = 0;
   private angleMode: 'quaternion' | 'euler';
   private speed = 1;
+  private listeners: ((event: ReplayEvent) => void)[] = [];
 
-  constructor(data: quatReplayData, objRef: THREE.Group, angleMode: 'quaternion' | 'euler') {
+  constructor(
+    data: quatReplayData, 
+    objRef: THREE.Group, 
+    angleMode: 'quaternion' | 'euler' = 'quaternion',
+  ) {
     this.data = data;
     this.objRef = objRef;
     this.angleMode = angleMode;
   }
 
+  // Here we setup event listeners to allow other components to listen in on the state of the replaying
+
+  // This allows users to subscribe to events
+  on(eventHandler: (event: ReplayEvent) => void) {
+    this.listeners.push(eventHandler);
+  }
+
+  // This allows users to unsubscribe from events
+  off(eventHandler: (event: ReplayEvent) => void) {
+    this.listeners = this.listeners.filter((handler) => handler !== eventHandler);
+  }
+
+  // This allows us to set the state of the replaying
+  private emit(event: ReplayEvent) {
+    this.listeners.forEach((handler) => handler(event));
+  }
+
+  // Below is the state machine functionality for the replaying
+
   play() {
-    if (this.isPlaying) return; // Already playing
-    console.log('Replay started.');
+    if (this.isPlaying) return;
+    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Playing });
     this.isPlaying = true;
 
     // Initialize start time if playing from the beginning
@@ -95,12 +118,12 @@ export class ModelReplayController {
 
   pause() {   
     this.isPlaying = false;
-    console.log('Replay paused.');
+    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Paused });
   }
 
   stop() {
     this.isPlaying = false;
-    console.log('Replay finished.');
+    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Stopped });
   }
 
   reset() {
@@ -115,7 +138,6 @@ export class ModelReplayController {
       return;
     }
     this.speed = newSpeed;
-    console.log('Replay speed set to:', this.speed);
   }
 
   private loop() {
@@ -129,14 +151,21 @@ export class ModelReplayController {
       this.data[this.currentIndex].timestamp <= elapsed
     ) {
       const { x, y, z, w, timestamp } = this.data[this.currentIndex];
-      console.log('Replaying timestamp: ', timestamp);
       updateQuaternion(new Quaternion(x, y, z, w), this.objRef);
+
+      this.emit({
+        type: ReplayEventType.Progress,
+        currentIndex: this.currentIndex,
+        timestamp,
+      });
+
       this.lastTimestamp = timestamp;
       this.currentIndex++;
     }
 
     if (this.currentIndex >= this.data.length) {
       this.stop();
+      this.emit({ type: ReplayEventType.Finished });
       return;
     }
 

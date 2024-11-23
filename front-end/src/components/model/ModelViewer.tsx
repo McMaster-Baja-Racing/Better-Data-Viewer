@@ -5,8 +5,8 @@ import { Eevee } from './Eevee.js';
 import { useRef } from 'react';
 import { fetchData, ModelReplayController } from '@lib/modelUtils.js';
 import './modelViewer.css';
-import { quatReplayData } from 'types/ModelTypes.js';
 import { ApiUtil } from '@lib/apiUtils.js';
+import { ReplayEvent, ReplayEventType, quatReplayData } from '@types';
 
 const ModelViewer = () => {
   const objRef = useRef<THREE.Group>();
@@ -19,11 +19,31 @@ const ModelViewer = () => {
     ApiUtil.getBins().then(bins => setBins(bins));
   }, []);
 
+  const handleEvent = (event: ReplayEvent) => {
+    switch (event.type) {
+      case ReplayEventType.StateChanged:
+        console.log('State changed:', event.state);
+        break;
+      case ReplayEventType.Progress:
+        console.log('Progress:', event.currentIndex, event.timestamp);
+        break;
+      case ReplayEventType.Finished:
+        console.log('Replay finished!', event);
+        break;
+    }
+  };
+
   useEffect(() => {
     if (!objRef.current || !objectLoaded || data.length <= 0) return;
     console.log('Data:', data, 'objRef:', objRef.current);
-    replayController = new ModelReplayController(data, objRef.current, 'quaternion')
-    //replayData(data, objRef.current);
+    replayController = new ModelReplayController(data, objRef.current, 'quaternion');
+
+    replayController.on(handleEvent);
+
+    return () => {
+      replayController?.off(handleEvent);
+
+    };
   }, [data, objectLoaded]);
 
   const handleBinChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
