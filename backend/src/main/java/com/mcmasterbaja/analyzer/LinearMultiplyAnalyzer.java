@@ -18,7 +18,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() throws IOException, CsvException {
+  public void analyze() throws IOException, CsvException { 
 
     System.out.println(
         "Multiplyinh the file named"

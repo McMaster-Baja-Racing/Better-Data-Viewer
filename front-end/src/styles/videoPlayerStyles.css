@@ -1,0 +1,22 @@
+    .videoBackground{
+        background-color: #343434;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .videoContainerBox{
+        position: relative;  
+        width: 100%;
+        height: 100%; 
+    }
+
+    .videoContainerBox video{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+  
+    

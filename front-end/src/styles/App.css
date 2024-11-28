@@ -1,0 +1,19 @@
+.App {
+  text-align: center;
+  font-family: "HelveticaNeueW01-77BdCnObl";
+}
+
+.App-header {
+  background-color: #3d0202;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5rem;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-header > * {
+  padding: 0rem;
+}
