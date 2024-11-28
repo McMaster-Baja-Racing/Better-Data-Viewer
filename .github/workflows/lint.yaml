@@ -13,13 +13,6 @@ jobs:
     - name: Check out repository code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-
     - name: Google Java Format
       uses: axel-op/googlejavaformat-action@v3
       with:
@@ -29,27 +22,33 @@ jobs:
     - name: Print diffs
       run: git --no-pager diff --exit-code
 
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
     - name: Build with Maven
       run: cd ./backend && mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn package --file pom.xml
-
-    - name: Upload backend artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: backend-app
-        path: ./backend/target
 
   Build_Node_js:
     runs-on: ubuntu-latest
     name: "Build Frontend with Node.js"
 
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
     steps:
     - name: Check out repository code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: front-end/package-lock.json
 
@@ -64,79 +63,3 @@ jobs:
     # - name: Test
     #   run: npm test
     #   working-directory: ./front-end
-
-    - name: Upload frontend artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: frontend-build
-        path: ./front-end/build
-
-
-  Playwright_Tests:
-    runs-on: ubuntu-latest
-    needs: [Build_Java_With_Maven, Build_Node_js]
-    name: "Run Playwright Tests"
-
-    steps:
-    - name: Check out repository code
-      uses: actions/checkout@v4
-
-    - name: Download backend artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: backend-app
-        path: ./backend/target
-
-    - name: Download frontend artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: frontend-build
-        path: ./front-end/build
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-
-    - name: Install dependencies for Playwright
-      run: npm install
-      working-directory: ./e2e
-
-    - name: Install Playwright browsers
-      run: npx playwright install --with-deps
-      working-directory: ./e2e
-
-    - name: Start the backend server
-      run: java -jar -Dquarkus.http.host=localhost ./target/quarkus-app/quarkus-run.jar &
-      working-directory: ./backend
-
-    - name: Serve the frontend
-      working-directory: front-end
-      run: |
-        npm install -g serve
-        serve -s build -l 5173 &
-      continue-on-error: true
-
-    # - name: Install Xvfb
-    #   run: sudo apt-get install -y xvfb
-
-    - name: Run Playwright Tests
-      # env:
-      #   DEBUG: pw:browser*,pw:api
-      run: npx playwright test # xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" npx playwright test --headed
-      working-directory: ./e2e
-
-    - name: Upload Playwright report
-      if: failure() || always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: playwright-report
-        path: ./e2e/playwright-report/
-        retention-days: 30

@@ -1,6 +1,7 @@
 #If the script does not run add your java home locations to the array below
 $javaHomeLocations = @('C:\Program Files\Java\jdk-21\', '')
 $counter = 0
+$env:JAVA_HOME = $javaHomeLocations[0]
 try{
     Set-Location front-end
 

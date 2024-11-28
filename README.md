@@ -44,18 +44,6 @@ To run the front end, simply use the react scripts
 2. In the `front-end/` folder, run the `npm start` command.
 3. Head to `localhost:3000` to test it out!
 
-## Tests
-
-### E2E Testing with Playwright
-All the below steps will take place from within the `/e2e/` directory. Playwright is a E2E testing framework that allows us to automate testing the entire system at once. More information can be found [here](https://playwright.dev/docs/intro).
-
-- Run tests: `npx playwright test`. Results of the tests are shown in the terminal. For more info see the [Running Tests guide](https://playwright.dev/docs/running-tests).
-- After the tests complete, an HTML reporter is generated. You can view these by running `npx playwright show-report` which will open a browser window with the results. For more info see
-- Finally, you can run tests in UI mode as well with `npx playwright test --ui`. This will open an application allowing you to look at each test being run individually. For more information see the [Detailed UI Mode guide](https://playwright.dev/docs/test-ui-mode).
-
-### Playwright in CI
-Playwright will automatically run in the pipeline on pull requests. You can view the trace outputted as an artifact, which can be downloaded through the action. To view the contents, unzip it and open the html file in your browser. Further, if you want to view the actual actions the browser saw, you can load the files in the `/data/` folder. Run `npx playwright show-trace` and upload them, then click through the test case!
-
 ## Known errors
 - Powershell script unsigned, means script won't run unless `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` is run in powershell first
   Optionally, run `Set-ExecutionPolicy unrestricted` in an administrator terminal to set it permanently
