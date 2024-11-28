@@ -275,7 +275,6 @@ pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_toCSV<'loca
             DataType::INT_GPS_TIME
             | DataType::INT_GPS_DAYMONTHYEAR
             | DataType::INT_GPS_SECONDMINUTEHOUR
-            | DataType::INT_PRIM_TEMP
             | DataType::INT_STRAIN3
             | DataType::INT_STRAIN4
             | DataType::INT_STRAIN5
@@ -423,7 +422,6 @@ pub extern "system" fn Java_com_mcmasterbaja_binary_1csv_BinaryToCSV_bytesToCSV<
             DataType::INT_GPS_TIME
             | DataType::INT_GPS_DAYMONTHYEAR
             | DataType::INT_GPS_SECONDMINUTEHOUR
-            | DataType::INT_PRIM_TEMP
             | DataType::INT_STRAIN3
             | DataType::INT_STRAIN4
             | DataType::INT_STRAIN5

@@ -56,6 +56,16 @@ public class AnalyzerFactory {
         double b = Double.parseDouble((String) options[1]);
         return new LinearMultiplyAnalyzer(inputFiles, inputColumns, outputFiles, m, b);
 
+      case CONSTANT_ADDER:
+        if (options[3] == "" || options[2] == "" || options[1] == "" || options[0] == "") {
+          return null;
+        }
+        double a1 = Double.parseDouble((String) options[0]);
+        double b2 = Double.parseDouble((String) options[1]);
+        double c1 = Double.parseDouble((String) options[2]);
+        double d1 = Double.parseDouble((String) options[3]);
+        return new ConstantAdderAnalyzer(inputFiles, inputColumns, outputFiles, a1, b2, c1, d1);
+
       case AVERAGE:
         int[] range = new int[2];
         range[0] = Integer.parseInt((String) options[0]);
@@ -71,7 +81,6 @@ public class AnalyzerFactory {
         double c = Double.parseDouble((String) options[2]);
         double d = Double.parseDouble((String) options[3]);
         return new CubicAnalyzer(inputFiles, inputColumns, outputFiles, a, b1, c, d);
-
       default:
         return null;
     }
