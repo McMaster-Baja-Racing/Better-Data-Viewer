@@ -1,9 +1,11 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
-import java.io.IOException;
+
+import lombok.SneakyThrows;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +32,9 @@ public class InterpolaterProAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() throws IOException, CsvValidationException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public void analyze() {
 
     // Construct string to print message for all input files
     StringBuilder inputFilesString = new StringBuilder();

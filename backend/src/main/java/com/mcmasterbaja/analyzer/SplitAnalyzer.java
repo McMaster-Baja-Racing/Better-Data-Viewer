@@ -1,9 +1,10 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
+
+import lombok.SneakyThrows;
 
 public class SplitAnalyzer extends Analyzer {
   private final int start;
@@ -17,7 +18,9 @@ public class SplitAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() throws IOException, CsvException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public void analyze() {
 
     System.out.println(
         "Spliting the file named"

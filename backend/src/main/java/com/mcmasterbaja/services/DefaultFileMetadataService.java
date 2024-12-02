@@ -1,14 +1,5 @@
 package com.mcmasterbaja.services;
 
-import com.drew.imaging.mp4.Mp4MetadataReader;
-import com.drew.metadata.Tag;
-import com.drew.metadata.mp4.Mp4Directory;
-import com.mcmasterbaja.exceptions.FileNotFoundException;
-import com.mcmasterbaja.exceptions.MalformedCsvException;
-import com.mcmasterbaja.exceptions.StorageException;
-import com.mcmasterbaja.model.MinMax;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -21,8 +12,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.jboss.logging.Logger;
+
+import com.drew.imaging.mp4.Mp4MetadataReader;
+import com.drew.metadata.Tag;
+import com.drew.metadata.mp4.Mp4Directory;
+import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.MalformedCsvException;
+import com.mcmasterbaja.exceptions.StorageException;
+import com.mcmasterbaja.model.MinMax;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class DefaultFileMetadataService implements FileMetadataService {
@@ -278,3 +281,14 @@ public class DefaultFileMetadataService implements FileMetadataService {
     return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
   }
 }
+
+// catch IOException 
+//      a) -> throw FileNotFoundException
+//            - couldn't read headers
+//            - couldn't get min max 
+//            - couldn't get last
+//            - couldn't get zeroTime
+//            - couldn't extract metadata
+//            - couldn't get timespan
+//      b) -> throw StorageException
+//            - couldn't get size of file

@@ -1,9 +1,10 @@
 package com.mcmasterbaja.analyzer;
 
+import java.io.IOException;
+
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-import java.io.IOException;
 
 public class CubicAnalyzer extends Analyzer {
   // Form of y = ax^3 + bx^2 + cx + d
@@ -84,3 +85,5 @@ public class CubicAnalyzer extends Analyzer {
     return this.a * Math.pow(x, 3) + this.b * Math.pow(x, 2) + this.c * x + this.d;
   }
 }
+
+// throws ??

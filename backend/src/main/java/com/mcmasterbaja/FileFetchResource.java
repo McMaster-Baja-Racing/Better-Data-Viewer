@@ -1,14 +1,5 @@
 package com.mcmasterbaja;
 
-import com.mcmasterbaja.model.FileInformation;
-import com.mcmasterbaja.model.FileTimespan;
-import com.mcmasterbaja.services.FileMetadataService;
-import com.mcmasterbaja.services.StorageService;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,7 +10,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.jboss.logging.Logger;
+
+import com.mcmasterbaja.model.FileInformation;
+import com.mcmasterbaja.model.FileTimespan;
+import com.mcmasterbaja.services.FileMetadataService;
+import com.mcmasterbaja.services.StorageService;
+
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 
 @jakarta.ws.rs.Path("/files") // Use full package name to avoid conflict with java.nio.file.Path
 public class FileFetchResource {
@@ -39,7 +42,6 @@ public class FileFetchResource {
     return fileNames;
   }
 
-  // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/{filekey}")
   public File getFile(@PathParam("filekey") String filekey) {
@@ -157,3 +159,6 @@ public class FileFetchResource {
     return storageService.load(Paths.get(typeFolder)).resolve(fileKey);
   }
 }
+
+// invalid folder -> IllegalArgumentException
+//        - name

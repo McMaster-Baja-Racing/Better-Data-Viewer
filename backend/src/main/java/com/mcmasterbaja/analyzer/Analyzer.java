@@ -1,18 +1,19 @@
 package com.mcmasterbaja.analyzer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.List;
+
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvValidationException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
+
+import lombok.SneakyThrows;
 
 public abstract class Analyzer {
 
@@ -38,11 +39,13 @@ public abstract class Analyzer {
   }
 
   // Abstract method to be implemented by subclasses
-  public abstract void analyze() throws IOException, CsvValidationException, CsvException;
+  public abstract void analyze();
 
   // I/O methods
   // Streams as they avoid loading the entire file into memory at once
-  public CSVReader getReader(String filePath) throws IOException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public CSVReader getReader(String filePath) {
     FileReader fileReader = new FileReader(filePath);
     BufferedReader bufferedReader = new BufferedReader(fileReader);
     return new CSVReaderBuilder(bufferedReader)
@@ -50,7 +53,9 @@ public abstract class Analyzer {
         .build();
   }
 
-  public ICSVWriter getWriter(String filePath) throws IOException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public ICSVWriter getWriter(String filePath) {
     FileWriter fileWriter = new FileWriter(filePath);
     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
     return new CSVWriterBuilder(bufferedWriter)
@@ -83,3 +88,7 @@ public abstract class Analyzer {
     throw new RuntimeException("No column in file exists with analysis column name " + columnName);
   }
 }
+
+
+// RuntimeException
+//            - no column in file exists with analysis column name

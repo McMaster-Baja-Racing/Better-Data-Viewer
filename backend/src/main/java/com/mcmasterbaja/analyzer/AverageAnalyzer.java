@@ -1,10 +1,12 @@
 package com.mcmasterbaja.analyzer;
 
+import java.util.List;
+
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
-import java.util.List;
+
+import lombok.SneakyThrows;
 
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a double
@@ -16,7 +18,9 @@ public class AverageAnalyzer extends Analyzer {
     this.range = range;
   }
 
-  public void analyze() throws IOException, CsvException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public void analyze() {
     System.out.println(
         "Taking the average of "
             + super.inputFiles[0]

@@ -1,19 +1,21 @@
 package com.mcmasterbaja;
 
-import com.mcmasterbaja.annotations.OnStorageError;
+import java.io.InputStream;
+import java.nio.file.Paths;
+
+import org.jboss.logging.Logger;
+import org.jboss.resteasy.reactive.PartType;
+import org.jboss.resteasy.reactive.RestForm;
+
+import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.binary_csv.BinaryToCSV;
 import com.mcmasterbaja.services.StorageService;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.MediaType;
 import lombok.SneakyThrows;
-
-import java.io.InputStream;
-import java.nio.file.Paths;
-import org.jboss.logging.Logger;
-import org.jboss.resteasy.reactive.PartType;
-import org.jboss.resteasy.reactive.RestForm;
 
 @jakarta.ws.rs.Path("/upload")
 public class FileUploadResource {
@@ -24,7 +26,7 @@ public class FileUploadResource {
   @POST
   @jakarta.ws.rs.Path("/file")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  @OnStorageError
+  @OnStorageException
   @SneakyThrows
   public void uploadFile(
       @RestForm("fileName") String fileName,
@@ -70,3 +72,8 @@ public class FileUploadResource {
     }
   }
 }
+
+
+// invalid file -> IllegalArgumentException
+//        - name
+//        - type

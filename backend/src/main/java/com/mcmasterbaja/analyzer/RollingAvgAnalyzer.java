@@ -1,9 +1,11 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
+
+import lombok.SneakyThrows;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -25,7 +27,9 @@ public class RollingAvgAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() throws IOException, CsvException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public void analyze() {
 
     System.out.println(
         "Taking the rolling average of "

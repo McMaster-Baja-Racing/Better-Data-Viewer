@@ -1,9 +1,10 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
-import java.io.IOException;
+
+import lombok.SneakyThrows;
 
 public class ConstantAdderAnalyzer extends Analyzer {
   private final double a;
@@ -26,7 +27,9 @@ public class ConstantAdderAnalyzer extends Analyzer {
     this.d = d;
   }
 
-  public void analyze() throws IOException, CsvValidationException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public void analyze() {
 
     System.out.println(
         "Add a constant value to a file named"
