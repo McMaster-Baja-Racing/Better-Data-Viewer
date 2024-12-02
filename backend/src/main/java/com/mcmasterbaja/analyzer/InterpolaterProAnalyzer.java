@@ -1,18 +1,25 @@
 package com.mcmasterbaja.analyzer;
 
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import org.jboss.logging.Logger;
+
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
+import jakarta.inject.Inject;
+
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp
 
 public class InterpolaterProAnalyzer extends Analyzer {
+
+  @Inject Logger logger;
 
   public InterpolaterProAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
     super(inputFiles, inputColumns, outputFiles);
@@ -40,7 +47,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
         inputFilesString.append(", ");
       }
     }
-    System.out.println("Interpolating " + inputFilesString + " to \"" + outputFiles[0] + "\"");
+    logger.info("Interpolating " + inputFilesString + " to \"" + outputFiles[0] + "\"");
 
     // Start timer
     long startTime = System.nanoTime();
@@ -230,7 +237,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
     long endTime = System.nanoTime();
 
     // Print completed
-    System.out.println("Completed interpolation in " + (endTime - startTime) / 1000000 + "ms");
+    logger.info("Completed interpolation in " + (endTime - startTime) / 1000000 + "ms");
 
     writer.close();
     for (CSVReader reader : readers) {

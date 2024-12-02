@@ -1,6 +1,9 @@
 package com.mcmasterbaja.analyzer;
 
 import com.opencsv.exceptions.CsvException;
+
+import jakarta.inject.Inject;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -9,7 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 public class AccelCurveAnalyzer extends Analyzer {
+
+  @Inject Logger logger;
 
   // inputFiles are first primary RPM, then secondary RPM
   // outputFiles are first primary RPM rolling average, then secondary RPM rolling average, then
@@ -20,8 +27,8 @@ public class AccelCurveAnalyzer extends Analyzer {
 
   @Override
   public void analyze() throws IOException, CsvException {
-    System.out.println("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
-    System.out.println("sGolay Averaging...");
+    logger.info("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
+    logger.info("sGolay Averaging...");
 
     SGolayFilter s =
         new SGolayFilter(
@@ -40,7 +47,7 @@ public class AccelCurveAnalyzer extends Analyzer {
             3);
     s2.analyze();
 
-    System.out.println("Interpolating...");
+    logger.info("Interpolating...");
 
     InterpolaterProAnalyzer linearInterpolate =
         new InterpolaterProAnalyzer(

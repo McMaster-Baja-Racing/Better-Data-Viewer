@@ -3,9 +3,14 @@ package com.mcmasterbaja.analyzer;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jboss.logging.Logger;
 
 public class RDPCompressionAnalyzer extends Analyzer {
 
@@ -14,6 +19,8 @@ public class RDPCompressionAnalyzer extends Analyzer {
   private final double epsilon;
   private int xAxisIndex;
   private int yAxisIndex;
+
+  @Inject Logger logger;
 
   public RDPCompressionAnalyzer(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, double epsilon) {
@@ -24,7 +31,7 @@ public class RDPCompressionAnalyzer extends Analyzer {
   @Override
   public void analyze() throws IOException, CsvException {
 
-    System.out.println(
+    logger.info(
         "Compressing " + inputFiles[0] + " with epsilon " + epsilon + " to " + outputFiles[0]);
 
     CSVReader reader = getReader(inputFiles[0]);

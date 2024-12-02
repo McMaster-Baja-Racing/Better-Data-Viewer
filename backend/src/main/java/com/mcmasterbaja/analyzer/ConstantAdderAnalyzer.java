@@ -3,13 +3,20 @@ package com.mcmasterbaja.analyzer;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
+
+import org.jboss.logging.Logger;
 
 public class ConstantAdderAnalyzer extends Analyzer {
   private final double a;
   private final double b;
   private final double c;
   private final double d;
+
+  @Inject Logger logger;
 
   public ConstantAdderAnalyzer(
       String[] inputFiles,
@@ -28,7 +35,7 @@ public class ConstantAdderAnalyzer extends Analyzer {
 
   public void analyze() throws IOException, CsvValidationException {
 
-    System.out.println(
+    logger.info(
         "Add a constant value to a file named"
             + super.inputFiles[0]
             + " to make "

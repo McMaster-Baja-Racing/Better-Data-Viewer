@@ -1,19 +1,26 @@
 package com.mcmasterbaja.analyzer;
 
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.jboss.logging.Logger;
+
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+
+import jakarta.inject.Inject;
 
 public class SGolayFilter extends Analyzer {
   private final int windowSize;
   private final int polynomialDegree;
   private final CircularBuffer dataBuffer;
   private final CircularBuffer timestampBuffer;
+
+  @Inject Logger logger;
 
   public SGolayFilter(
       String[] inputFiles,
@@ -69,7 +76,7 @@ public class SGolayFilter extends Analyzer {
 
   @Override
   public void analyze() throws IOException, CsvException {
-    System.out.println(
+    logger.info(
         "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
             + super.inputFiles[0]
             + " to "

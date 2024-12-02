@@ -1,14 +1,20 @@
 package com.mcmasterbaja.analyzer;
 
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.jboss.logging.Logger;
+
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+
+import jakarta.inject.Inject;
+
 public class RollingAvgAnalyzer extends Analyzer {
   private final int windowSize;
+  @Inject Logger logger;
 
   public RollingAvgAnalyzer(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, int windowSize) {
@@ -27,7 +33,7 @@ public class RollingAvgAnalyzer extends Analyzer {
   @Override
   public void analyze() throws IOException, CsvException {
 
-    System.out.println(
+    logger.info(
         "Taking the rolling average of "
             + super.inputFiles[0]
             + " to "

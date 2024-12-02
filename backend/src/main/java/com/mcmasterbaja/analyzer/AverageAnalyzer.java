@@ -1,14 +1,20 @@
 package com.mcmasterbaja.analyzer;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.jboss.logging.Logger;
+
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
-import java.util.List;
+
+import jakarta.inject.Inject;
 
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a double
   private final int[] range;
+  @Inject Logger logger;
 
   public AverageAnalyzer(String[] inputFiles, String[] outputFiles, int[] range) {
     super(inputFiles, outputFiles);
@@ -17,7 +23,7 @@ public class AverageAnalyzer extends Analyzer {
   }
 
   public void analyze() throws IOException, CsvException {
-    System.out.println(
+    logger.info(
         "Taking the average of "
             + super.inputFiles[0]
             + " to "
