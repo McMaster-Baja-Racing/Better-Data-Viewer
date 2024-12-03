@@ -3,11 +3,9 @@ package com.mcmasterbaja.analyzer;
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-
-import lombok.SneakyThrows;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.SneakyThrows;
 
 public class RDPCompressionAnalyzer extends Analyzer {
 

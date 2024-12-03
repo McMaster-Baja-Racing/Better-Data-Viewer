@@ -45,7 +45,7 @@ public class Serial {
     FileWriter fw42 = null;
     // define an array of file writers with 6 elements
     FileWriter[] strains = new FileWriter[6];
-    String[] strainNames = { "Force X", "Force Z", "Force Y", "Moment X", "Moment Z", "Moment Y" };
+    String[] strainNames = {"Force X", "Force Z", "Force Y", "Moment X", "Moment Z", "Moment Y"};
     try {
       // print the current path
       // TODO: Use the correct path from the application.properties file
@@ -58,7 +58,8 @@ public class Serial {
 
       for (int i = 1; i <= 6; i++) {
         // create a new file writer for each file
-        strains[i - 1] = new FileWriter(rootLocation.toString() + "/Live " + strainNames[i - 1] + ".csv");
+        strains[i - 1] =
+            new FileWriter(rootLocation.toString() + "/Live " + strainNames[i - 1] + ".csv");
         // write the header to the file
         strains[i - 1].write("Timestamp (ms)" + "," + strainNames[i - 1] + "\n");
       }
@@ -152,11 +153,11 @@ public class Serial {
   }
 
   /*
-   * 
+   *
    * public static void readLive() {
-   * 
-   * 
-   * 
+   *
+   *
+   *
    * String port = "COM5";
    * SerialPort comPort = SerialPort.getCommPort(port);
    * comPort.openPort();
@@ -164,7 +165,7 @@ public class Serial {
    * comPort.openPort();
    * Runtime.getRuntime().addShutdownHook(new Thread(() ->
    * {comPort.closePort();}));
-   * 
+   *
    * try {
    * Thread.sleep(1000);
    * while (true)
@@ -174,7 +175,7 @@ public class Serial {
    * Thread.sleep(2000);
    * while (comPort.bytesAvailable() == 0)
    * Thread.sleep(20);
-   * 
+   *
    * /*if (comPort.bytesAvailable() >=8) {
    * byte[] readBuffer = new byte[8];
    * int numRead = comPort.readBytes(readBuffer, 8);
@@ -183,7 +184,7 @@ public class Serial {
    * Packet p = new Packet(readBuffer);
    * System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
    * p.getFloatData());
-   * 
+   *
    * }
    * }
    * } catch (Exception e) { e.printStackTrace(); };
@@ -196,16 +197,16 @@ public class Serial {
    * comPort.setBaudRate(115200);
    * comPort.openPort();
    * comPort.addDataListener(new SerialPortPacketListener() {
-   * 
+   *
    * @Override
    * public int getListeningEvents() { return
    * SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
-   * 
+   *
    * @Override
    * public int getPacketSize() {
    * return 8;
    * }
-   * 
+   *
    * @Override
    * public void serialEvent(SerialPortEvent event)
    * {

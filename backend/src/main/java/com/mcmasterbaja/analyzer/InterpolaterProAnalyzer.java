@@ -3,13 +3,11 @@ package com.mcmasterbaja.analyzer;
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-
-import lombok.SneakyThrows;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
+import lombok.SneakyThrows;
 
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp

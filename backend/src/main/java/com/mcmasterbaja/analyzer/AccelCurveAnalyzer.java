@@ -1,9 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-
-import lombok.SneakyThrows;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.SneakyThrows;
 
 public class AccelCurveAnalyzer extends Analyzer {
 
@@ -148,4 +146,3 @@ public class AccelCurveAnalyzer extends Analyzer {
 
   // my mother is a fish
 }
-

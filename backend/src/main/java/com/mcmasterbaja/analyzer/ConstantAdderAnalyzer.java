@@ -3,7 +3,6 @@ package com.mcmasterbaja.analyzer;
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-
 import lombok.SneakyThrows;
 
 public class ConstantAdderAnalyzer extends Analyzer {

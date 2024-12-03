@@ -1,11 +1,9 @@
 package com.mcmasterbaja.analyzer;
 
-import java.util.List;
-
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-
+import java.util.List;
 import lombok.SneakyThrows;
 
 public class AverageAnalyzer extends Analyzer {

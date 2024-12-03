@@ -1,18 +1,16 @@
 package com.mcmasterbaja.analyzer;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.List;
-
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.List;
 import lombok.SneakyThrows;
 
 public abstract class Analyzer {
@@ -88,7 +86,6 @@ public abstract class Analyzer {
     throw new RuntimeException("No column in file exists with analysis column name " + columnName);
   }
 }
-
 
 // RuntimeException
 //            - no column in file exists with analysis column name

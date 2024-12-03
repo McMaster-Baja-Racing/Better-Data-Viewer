@@ -1,13 +1,5 @@
 package com.mcmasterbaja;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.jboss.logging.Logger;
-import org.jboss.resteasy.reactive.RestResponse;
-import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
-
 import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
@@ -16,7 +8,6 @@ import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.MinMax;
 import com.mcmasterbaja.services.FileMetadataService;
 import com.mcmasterbaja.services.StorageService;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
@@ -24,6 +15,12 @@ import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.jboss.logging.Logger;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 @jakarta.ws.rs.Path("/")
 public class FileAnalyzeResource {

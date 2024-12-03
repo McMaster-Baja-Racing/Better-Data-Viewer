@@ -1,16 +1,13 @@
 package com.mcmasterbaja.analyzer;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
-
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-
+import java.util.ArrayDeque;
+import java.util.Deque;
 import lombok.SneakyThrows;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
 public class SGolayFilter extends Analyzer {
   private final int windowSize;
