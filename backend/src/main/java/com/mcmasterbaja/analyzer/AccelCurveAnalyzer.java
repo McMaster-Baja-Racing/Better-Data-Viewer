@@ -2,6 +2,7 @@ package com.mcmasterbaja.analyzer;
 
 import com.opencsv.exceptions.CsvException;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 import java.io.BufferedWriter;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+@RequestScoped
 public class AccelCurveAnalyzer extends Analyzer {
 
   @Inject Logger logger;

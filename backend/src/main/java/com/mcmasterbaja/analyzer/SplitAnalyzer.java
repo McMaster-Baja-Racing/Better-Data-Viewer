@@ -8,8 +8,10 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
+@RequestScoped
 public class SplitAnalyzer extends Analyzer {
   private final int start;
   private final int end;

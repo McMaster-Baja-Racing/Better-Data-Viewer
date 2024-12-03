@@ -8,8 +8,10 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
+@RequestScoped
 public class BullshitAnalyzer extends Analyzer {
 
   // The point of this analyzer is to add a bunch of fake points based on an input, between

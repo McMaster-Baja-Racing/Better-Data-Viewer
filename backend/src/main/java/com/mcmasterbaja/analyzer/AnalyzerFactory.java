@@ -4,12 +4,14 @@ import org.jboss.logging.Logger;
 
 import com.mcmasterbaja.model.AnalyzerParams;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class AnalyzerFactory {
 
-  @Inject static Logger logger; 
-  
+  @Inject static Logger logger;
+
   public static Analyzer createAnalyzer(AnalyzerParams params) {
 
     String[] inputFiles = params.getInputFiles();

@@ -10,8 +10,10 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
+@RequestScoped
 public class RollingAvgAnalyzer extends Analyzer {
   private final int windowSize;
   @Inject Logger logger;

@@ -8,8 +8,10 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
+@RequestScoped
 public class CubicAnalyzer extends Analyzer {
   // Form of y = ax^3 + bx^2 + cx + d
   private final double a;

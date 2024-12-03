@@ -9,8 +9,10 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
+@RequestScoped
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a double
   private final int[] range;

@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+@RequestScoped
 public class RDPCompressionAnalyzer extends Analyzer {
 
   // Epsilon is the maximum distance between a point and the line between the start and end points
