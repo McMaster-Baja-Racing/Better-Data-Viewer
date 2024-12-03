@@ -98,3 +98,6 @@ public class FileAnalyzeResource {
     return exit;
   }
 }
+
+// idk???? -> RuntimeException
+//        - error running analyzer

@@ -1,11 +1,11 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import lombok.SneakyThrows;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
@@ -68,7 +68,9 @@ public class SGolayFilter extends Analyzer {
   }
 
   @Override
-  public void analyze() throws IOException, CsvException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public void analyze() {
     System.out.println(
         "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
             + super.inputFiles[0]

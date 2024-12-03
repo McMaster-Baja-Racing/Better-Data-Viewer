@@ -278,3 +278,14 @@ public class DefaultFileMetadataService implements FileMetadataService {
     return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
   }
 }
+
+// catch IOException
+//      a) -> throw FileNotFoundException
+//            - couldn't read headers
+//            - couldn't get min max
+//            - couldn't get last
+//            - couldn't get zeroTime
+//            - couldn't extract metadata
+//            - couldn't get timespan
+//      b) -> throw StorageException
+//            - couldn't get size of file

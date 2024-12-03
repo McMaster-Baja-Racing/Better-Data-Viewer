@@ -111,3 +111,13 @@ public class FileSystemStorageService implements StorageService {
     deleteAll(rootLocation);
   }
 }
+
+// catch IOException
+//      a) -> throw FileNotFoundException
+//            - couldn't delete directory,
+//            - couldn't delete file,
+//            - couldn't list files in directory,
+//            - couldn't store file
+//      b) -> throw StorageException
+//            - can't store file outside current directory,
+//            - couldn't initialize storage service

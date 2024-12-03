@@ -39,7 +39,6 @@ public class FileFetchResource {
     return fileNames;
   }
 
-  // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/{filekey}")
   public File getFile(@PathParam("filekey") String filekey) {
@@ -157,3 +156,6 @@ public class FileFetchResource {
     return storageService.load(Paths.get(typeFolder)).resolve(fileKey);
   }
 }
+
+// invalid folder -> IllegalArgumentException
+//        - name

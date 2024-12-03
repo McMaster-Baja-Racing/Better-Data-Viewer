@@ -1,9 +1,9 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
+import lombok.SneakyThrows;
 
 public class DeleteOutliers extends Analyzer {
   private final double limit;
@@ -15,7 +15,9 @@ public class DeleteOutliers extends Analyzer {
     this.limit = limit;
   }
 
-  public void analyze() throws IOException, CsvException {
+  @OnAnalyzerException
+  @SneakyThrows
+  public void analyze() {
     System.out.println(
         "Deleting outliers from "
             + super.inputFiles[0]
