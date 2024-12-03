@@ -1,10 +1,8 @@
 package com.mcmasterbaja.analyzer;
 
 import com.opencsv.exceptions.CsvException;
-
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -12,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.jboss.logging.Logger;
 
 @RequestScoped

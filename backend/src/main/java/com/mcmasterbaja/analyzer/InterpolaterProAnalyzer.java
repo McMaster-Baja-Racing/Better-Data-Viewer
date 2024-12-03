@@ -1,24 +1,21 @@
 package com.mcmasterbaja.analyzer;
 
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
-
 import org.jboss.logging.Logger;
-
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
-
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp
 
-@RequestScoped 
+@RequestScoped
 public class InterpolaterProAnalyzer extends Analyzer {
 
   @Inject Logger logger;

@@ -1,19 +1,17 @@
 package com.mcmasterbaja.analyzer;
 
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.jboss.logging.Logger;
 
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 @RequestScoped
 public class SGolayFilter extends Analyzer {
   private final int windowSize;

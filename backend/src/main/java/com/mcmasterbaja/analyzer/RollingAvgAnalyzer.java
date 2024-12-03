@@ -1,17 +1,14 @@
 package com.mcmasterbaja.analyzer;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
-
-import org.jboss.logging.Logger;
-
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
-
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
+import org.jboss.logging.Logger;
 
 @RequestScoped
 public class RollingAvgAnalyzer extends Analyzer {
