@@ -1,6 +1,5 @@
 package com.mcmasterbaja.model;
 
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.QueryParam;
 
 import java.nio.file.Path;
