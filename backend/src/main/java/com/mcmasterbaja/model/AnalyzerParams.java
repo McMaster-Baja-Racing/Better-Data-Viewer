@@ -1,5 +1,6 @@
 package com.mcmasterbaja.model;
 
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.QueryParam;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@ApplicationScoped
+@RequestScoped
 public class AnalyzerParams {
   // Input and output files defined as strings in order for serialization in quarkus
   @QueryParam("inputFiles")
