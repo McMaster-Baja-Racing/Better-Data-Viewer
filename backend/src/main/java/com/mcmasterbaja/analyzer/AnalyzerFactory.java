@@ -1,9 +1,11 @@
 package com.mcmasterbaja.analyzer;
 
+import org.jboss.logging.Logger;
+
 import com.mcmasterbaja.model.AnalyzerParams;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class AnalyzerFactory {
