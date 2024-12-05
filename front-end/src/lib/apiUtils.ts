@@ -1,7 +1,7 @@
 import { AnalyzerType, FileInformation, FileTimespan, MinMax } from '@types';
 
-//TODO: Update to use window.location.hostname when not in electron
-const baseApiUrl = 'http://localhost:8080';
+export const isElectron = typeof process !== 'undefined' && process.versions?.electron;
+const baseApiUrl = isElectron ? 'http://localhost:8080' : window.location.hostname + ':8080';
 
 export const ApiUtil = {
 

@@ -1,6 +1,6 @@
 import './Topbar.css';
 import { useState } from 'react';
-import { ApiUtil } from '@lib/apiUtils';
+import { ApiUtil, isElectron } from '@lib/apiUtils';
 import bajalogo from '@assets/bajalogo.png';
 import loadingImg from '@assets/loading.gif';
 import { MAX_VIEWS } from '@components/views/viewsConfig';
@@ -41,9 +41,11 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
     setNumViews(num);
   };
 
+  const onTitleClick = () => isElectron ? window.location.reload() : window.location.href='/';
+
   return (
     <div className="topbar">
-      <div className="title" onClick={() => window.location.href='/'}>
+      <div className="title" onClick={onTitleClick}>
         <img src={bajalogo} alt="baja_logo"/>
                 Data Visualizer
         <img src={loadingImg} alt="loading"/>
