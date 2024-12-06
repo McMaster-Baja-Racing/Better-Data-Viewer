@@ -3,14 +3,19 @@ package com.mcmasterbaja.analyzer;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
+import org.jboss.logging.Logger;
 
+@RequestScoped
 public class BullshitAnalyzer extends Analyzer {
 
   // The point of this analyzer is to add a bunch of fake points based on an input, between
   // different pre-existing points (input file) to make it seem like there is some fake noise
 
   private final double numPoints;
+  @Inject Logger logger;
 
   public BullshitAnalyzer(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, double numPoints) {
@@ -19,7 +24,7 @@ public class BullshitAnalyzer extends Analyzer {
   }
 
   public void analyze() throws IOException, CsvValidationException {
-    System.out.println(
+    logger.info(
         "Adding "
             + numPoints
             + " fake points to "

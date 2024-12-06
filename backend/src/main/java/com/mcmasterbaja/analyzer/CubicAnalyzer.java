@@ -3,14 +3,20 @@ package com.mcmasterbaja.analyzer;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
+import org.jboss.logging.Logger;
 
+@RequestScoped
 public class CubicAnalyzer extends Analyzer {
   // Form of y = ax^3 + bx^2 + cx + d
   private final double a;
   private final double b;
   private final double c;
   private final double d;
+
+  @Inject Logger logger;
 
   public CubicAnalyzer(
       String[] inputFiles,
@@ -30,7 +36,7 @@ public class CubicAnalyzer extends Analyzer {
   @Override
   public void analyze() {
 
-    System.out.println(
+    logger.info(
         "Applying the cubic function"
             + this.a
             + "x^3 + "

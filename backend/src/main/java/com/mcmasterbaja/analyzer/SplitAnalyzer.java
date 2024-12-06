@@ -3,11 +3,17 @@ package com.mcmasterbaja.analyzer;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
+import org.jboss.logging.Logger;
 
+@RequestScoped
 public class SplitAnalyzer extends Analyzer {
   private final int start;
   private final int end;
+
+  @Inject Logger logger;
 
   public SplitAnalyzer(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, int start, int end) {
@@ -19,7 +25,7 @@ public class SplitAnalyzer extends Analyzer {
   @Override
   public void analyze() throws IOException, CsvException {
 
-    System.out.println(
+    logger.info(
         "Spliting the file named"
             + super.inputFiles[0]
             + " to "

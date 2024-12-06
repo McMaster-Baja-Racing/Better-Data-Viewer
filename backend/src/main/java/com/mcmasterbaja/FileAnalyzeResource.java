@@ -28,6 +28,8 @@ public class FileAnalyzeResource {
   @Inject Logger logger;
   @Inject StorageService storageService;
   @Inject FileMetadataService fileMetadataService;
+  @Inject Analyzer analyzer;
+  @Inject AnalyzerParams analyzerParams;
 
   // TODO: Convert to using POST body rather than path variables
   @POST

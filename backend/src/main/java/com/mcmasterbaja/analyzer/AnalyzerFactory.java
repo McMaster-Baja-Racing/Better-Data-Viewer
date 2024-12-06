@@ -1,8 +1,16 @@
 package com.mcmasterbaja.analyzer;
 
+import org.jboss.logging.Logger;
+
 import com.mcmasterbaja.model.AnalyzerParams;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
 public class AnalyzerFactory {
+
+  @Inject static Logger logger;
 
   public static Analyzer createAnalyzer(AnalyzerParams params) {
 
@@ -40,7 +48,7 @@ public class AnalyzerFactory {
         return new RDPCompressionAnalyzer(inputFiles, inputColumns, outputFiles, epsilon);
 
       case SPLIT:
-        System.out.println("SplitAnalyzer");
+        logger.info("SplitAnalyzer");
         if (options[1] == "" || options[0] == "") {
           return null;
         }
