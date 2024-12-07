@@ -49,7 +49,7 @@ public interface StorageService {
 
   /**
    * Loads all directories in the root location.
-   * 
+   *
    * @param dir The directory to load directories from.
    * @return A Stream of Paths representing the directories.
    */

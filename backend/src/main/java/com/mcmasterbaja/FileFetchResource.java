@@ -118,7 +118,8 @@ public class FileFetchResource {
     Path dir = Paths.get("csv");
 
     List<String> folderNames =
-        storageService.loadDirectories(dir)
+        storageService
+            .loadDirectories(dir)
             .map(path -> path.toString().replace("\\", "/"))
             .collect(Collectors.toList());
 
