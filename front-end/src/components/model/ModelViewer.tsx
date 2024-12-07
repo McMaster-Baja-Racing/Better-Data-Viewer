@@ -1,11 +1,11 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stage } from '@react-three/drei';
-import { Eevee } from './Eevee.js';
+import { Eevee } from './Eevee';
 import { useRef } from 'react';
-import { fetchData, ModelReplayController } from '@lib/modelUtils.js';
+import { fetchData, ModelReplayController } from '@lib/modelUtils';
 import './modelViewer.css';
-import { ApiUtil } from '@lib/apiUtils.js';
+import { ApiUtil } from '@lib/apiUtils';
 import { ReplayEvent, ReplayEventType, StateType, quatReplayData } from '@types';
 
 const ModelViewer = () => {

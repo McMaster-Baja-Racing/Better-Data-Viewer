@@ -2,7 +2,7 @@ import { quatReplayData, ReplayEvent, ReplayEventType, StateType } from '@types'
 import { ApiUtil } from './apiUtils';
 import { Quaternion, Euler } from 'three';
 
-const extractColumn = (data: string[][], columnIndex = 1) => {
+const extractColumnData = (data: string[][], columnIndex = 1) => {
   return data.map(row => row[columnIndex]);
 };
 
@@ -24,6 +24,7 @@ const combineData = (timestamps: string[], x: string[], y: string[], z: string[]
   }));
 };
 
+// TODO: Handle errors better
 export const fetchData = async (bin: string) => {
   let data: quatReplayData = [];
   await Promise.all([
@@ -37,11 +38,11 @@ export const fetchData = async (bin: string) => {
     const yData = parseCSV(yDataRaw);
     const zData = parseCSV(zDataRaw);
 
-    const w = extractColumn(wData);
-    const x = extractColumn(xData);
-    const y = extractColumn(yData);
-    const z = extractColumn(zData);
-    const timestamps = extractColumn(wData, 0);
+    const w = extractColumnData(wData);
+    const x = extractColumnData(xData);
+    const y = extractColumnData(yData);
+    const z = extractColumnData(zData);
+    const timestamps = extractColumnData(wData, 0);
 
     data = combineData(timestamps, x, y, z, w);
   });
