@@ -6,26 +6,30 @@ import { useRef } from 'react';
 import { fetchData, ModelReplayController } from '@lib/modelUtils.js';
 import './modelViewer.css';
 import { ApiUtil } from '@lib/apiUtils.js';
-import { ReplayEvent, ReplayEventType, quatReplayData } from '@types';
+import { ReplayEvent, ReplayEventType, StateType, quatReplayData } from '@types';
 
 const ModelViewer = () => {
   const objRef = useRef<THREE.Group>();
   const [data, setData] = useState<quatReplayData>([]);
   const [objectLoaded, setObjectLoaded] = useState(false);
   const [bins, setBins] = useState<string[]>([]);
-  let replayController: ModelReplayController;
+  const replayControllerRef = useRef<ModelReplayController | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentTimestamp, setCurrentTimestamp] = useState(0);
+  const [currentState, setCurrentState] = useState(StateType.Stopped);
 
   // Handle replay events
   const handleEvent = (event: ReplayEvent) => {
     switch (event.type) {
       case ReplayEventType.StateChanged:
-        console.log('State changed:', event.state);
+        setCurrentState(event.state);
         break;
       case ReplayEventType.Progress:
-        console.log('Progress:', event.currentIndex, event.timestamp);
+        setCurrentIndex(event.currentIndex);
+        setCurrentTimestamp(event.timestamp);
         break;
       case ReplayEventType.Finished:
-        console.log('Replay finished!', event);
+        alert('Replay finished!' + event);
         break;
     }
   };
@@ -37,13 +41,12 @@ const ModelViewer = () => {
   // Setup the replay controller
   useEffect(() => {
     if (!objRef.current || !objectLoaded || data.length <= 0) return;
-    console.log('Data:', data, 'objRef:', objRef.current);
-    replayController = new ModelReplayController(data, objRef.current, 'quaternion');
+    replayControllerRef.current = new ModelReplayController(data, objRef.current, 'quaternion');
 
-    replayController.on(handleEvent);
+    replayControllerRef.current.on(handleEvent);
 
     return () => {
-      replayController?.off(handleEvent);
+      replayControllerRef.current?.off(handleEvent);
     };
   }, [data, objectLoaded]);
 
@@ -54,16 +57,35 @@ const ModelViewer = () => {
 
   return (
     <div className="modelContainer">
-      <select className="model_bin_select" defaultValue="none" onChange={handleBinChange}>
-        <option value="none" disabled hidden>Select a file to analyze</option>
-        {bins.map((bin) => {
-          return (<option key={bin} value={bin}>{bin}</option>);
-        })}
-      </select>
-      <button onClick={() => replayController.play()}>Play</button>
-      <button onClick={() => replayController.pause()}>Pause</button>
-      <button onClick={() => replayController.stop()}>Stop</button>
-      <button onClick={() => replayController.reset()}>Reset</button>
+      
+      <div className={'control-bar'}>
+        <select className="model_bin_select" defaultValue="none" onChange={handleBinChange}>
+          <option value="none" disabled hidden>Select a file to analyze</option>
+          {bins.map((bin) => {
+            return (<option key={bin} value={bin}>{bin}</option>);
+          })}
+        </select>
+        <button onClick={() => replayControllerRef.current?.play()}>Play</button>
+        <button onClick={() => replayControllerRef.current?.stop()}>Stop</button>
+        <button onClick={() => replayControllerRef.current?.pause()}>Pause</button>
+        <button onClick={() => replayControllerRef.current?.reset()}>Reset</button>
+        <div>
+          <label>Speed:</label>
+          <input type="number" min="0" step="0.1" defaultValue="1" onChange={(e) => replayControllerRef.current?.setSpeed(parseFloat(e.target.value))} />
+        </div>
+        <div>
+          <label>Current Index: </label>
+          <span>{currentIndex}</span>
+        </div>
+        <div>
+          <label>Current Timestamp: </label>
+          <span>{currentTimestamp}</span>
+        </div>
+        <div>
+          <label>Current State: </label>
+          <span>{currentState}</span>
+        </div>
+      </div>
       <Canvas shadows dpr={[1, 2]} camera={{ fov: 40, position: [40, 0, 0] }}>
         <Suspense fallback={null}>
           <Stage preset="rembrandt" intensity={1} environment="lobby">
