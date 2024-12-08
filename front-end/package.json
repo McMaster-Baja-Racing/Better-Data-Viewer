@@ -64,18 +64,30 @@
     }
   ],
     "win": {
+      "icon": "public/bajacar.ico",
       "target": [
         {
-          "target": "zip",
+          "target": "nsis",
           "arch": [
             "x64"
           ]
         }
       ],
-      "artifactName": "${productName}-v${version}-win.zip"
+      "artifactName": "${productName}-v${version}-win.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "public/bajacar.ico",
+      "uninstallerIcon": "public/bajacar.ico",
+      "installerHeaderIcon": "public/bajacar.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Dataviewer"
     },
     "extraMetadata": {
-    "productName": "dataviewer"
+    "productName": "Dataviewer"
     }
   },
   "eslintConfig": {
