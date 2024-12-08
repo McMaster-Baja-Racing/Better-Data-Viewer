@@ -41,8 +41,13 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
     setNumViews(num);
   };
 
-  const onTitleClick = () => isElectron ? window.location.reload() : window.location.href='/';
+  const routePrefix = isElectron ? '#' : '/';
 
+  // Reloads the page if on the home page, otherwise goes to the home page
+  const onTitleClick = () =>  {
+    window.location.href = routePrefix;
+    window.location.reload();
+  }
   return (
     <div className="topbar">
       <div className="title" onClick={onTitleClick}>
@@ -57,7 +62,7 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
             : <img className="icon" src={icons['liveOff']} alt="Live Mode Off" />}
         </button>
 
-        <button title="Go to map" className="map" onClick={() => window.location.href='/map'}>
+        <button title="Go to map" className="map" onClick={() => window.location.href=routePrefix+'map'}>
           <img className="icon" src={icons['map']} alt="Go to map" />
         </button>
                 
