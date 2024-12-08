@@ -1,4 +1,4 @@
-import './Topbar.css';
+import styles from './Topbar.module.scss';
 import { useState } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
 import bajalogo from '@assets/bajalogo.png';
@@ -24,11 +24,7 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
       alert(err);
     });
 
-    if (liveStatus === false) {
-      setLiveStatus(true);
-    } else {
-      setLiveStatus(false);
-    }
+    setLiveStatus(!liveStatus);
   };
 
   const updateNumViews = (num) => {
@@ -42,41 +38,41 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
   };
 
   return (
-    <div className="topbar">
-      <div className="title" onClick={() => window.location.href='/'}>
+    <div className={styles.topbar}>
+      <div className={styles.title} onClick={() => window.location.href='/'}>
         <img src={bajalogo} alt="baja_logo"/>
                 Data Visualizer
         <img src={loadingImg} alt="loading"/>
       </div>
-      <div className="buttons">
-        <button title="Start Live Data" className="beginLive" onClick={beginLiveData}>
+      <div className={styles.buttons}>
+        <button title="Start Live Data" onClick={beginLiveData}>
           {liveStatus
-            ? <img className="icon" src={icons['liveOn']} alt="Live Mode On" />
-            : <img className="icon" src={icons['liveOff']} alt="Live Mode Off" />}
+            ? <img className={styles.icon} src={icons['liveOn']} alt="Live Mode On" />
+            : <img className={styles.icon} src={icons['liveOff']} alt="Live Mode Off" />}
         </button>
 
-        <button title="Go to map" className="map" onClick={() => window.location.href='/map'}>
-          <img className="icon" src={icons['map']} alt="Go to map" />
+        <button title="Go to map" onClick={() => window.location.href='/map'}>
+          <img className={styles.icon} src={icons['map']} alt="Go to map" />
         </button>
                 
-        <button title="Upload Files" className="uploadFiles" onClick={() => setModal('Upload')}>
-          <img className="icon"src={icons['upload']} alt="Upload" />
+        <button title="Upload Files" onClick={() => setModal('Upload')}>
+          <img className={styles.icon} src={icons['upload']} alt="Upload" />
         </button>
 
-        <button title="Download Files" className="downloadFiles" onClick={() => setModal('Download')}>
-          <img className="icon"src={icons['download']} alt="Download" />
+        <button title="Download Files" onClick={() => setModal('Download')}>
+          <img className={styles.icon} src={icons['download']} alt="Download" />
         </button>
 
-        <button title="PlusView" className="plusView" onClick={() => updateNumViews(numViews-1)}>
+        <button title="PlusView" onClick={() => updateNumViews(numViews-1)}>
                     -
         </button>
         <h1>{numViews}</h1>
-        <button title="MinusView" className="minusView" onClick={() => updateNumViews(numViews+1)}>
+        <button title="MinusView" onClick={() => updateNumViews(numViews+1)}>
                     +
         </button>
 
-        <button title="Help" className="helpModal" onClick={() => setModal('Help')}>
-          <img className="icon"src={icons['help']} alt="Help" />
+        <button title="Help" onClick={() => setModal('Help')}>
+          <img className={styles.icon} src={icons['help']} alt="Help" />
         </button>
       </div>
     </div>
