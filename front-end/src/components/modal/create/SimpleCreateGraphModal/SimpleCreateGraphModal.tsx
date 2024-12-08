@@ -3,7 +3,8 @@ import ReactDom from 'react-dom';
 import '@styles/modalStyles.css';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRef } from 'react';
-import SubteamPresets from '../SubteamPresets/SubteamPresets';
+import PresetSelectionPage from '../PresetSelectionPage/PresetSelectionPage';
+import { FileSelectionPage } from '../FileSelectionPage/FileSelectionPage';
 import Chart from '@components/views/Chart/Chart';
 import { replaceViewAtIndex } from '@lib/viewUtils';
 import {
@@ -14,7 +15,6 @@ import {
   DataViewerPreset,
   GraphPreset,
 } from '@types';
-import { subteamGraphPresets } from '@lib/subteamGraphPresets';
 
 export const SimpleCreateGraphModal = ({
   setModal,
@@ -25,22 +25,33 @@ export const SimpleCreateGraphModal = ({
   numViews,
   setVideo,
 }) => {
+
+  //TODO: Hardcoded bin name
+  const [selectedBinFile, setSelectedBinFile] = useState<string>('182848');
+  const [selectedPreset, setSelectedPreset] = useState<DataViewerPreset | null>(null);
   const [displayPage, setDisplayPage] = useState(0);
 
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  
   const closeModal = (e) => {
     if (e.target === modalRef.current) {
       setModal('');
     }
   };
 
+  const movePage = (amount) => { 
+    setDisplayPage(displayPage + amount);
+  };
+
   //Stuff for handling final submit
   const handleSubmit = useCallback(() => {
-    //TODO: Hardcoded bin name
-    const selectedBin = '182848';
-    const selectedPreset: DataViewerPreset = subteamGraphPresets[0];
+    if(selectedPreset == null || selectedBinFile == null)
+    {
+      return;
+    }
+    console.log(selectedPreset);
+    console.log(selectedBinFile);
     const currGraph: GraphPreset = selectedPreset.graphs[0];
-
     const columns: Column[] = [];
     const analyze: ChartAnalyzerInformation = {
       type: currGraph.analyser,
@@ -49,7 +60,7 @@ export const SimpleCreateGraphModal = ({
     for (let i = 0; i < currGraph.axes.length; i++) {
       columns.push({
         header: currGraph.axes[i],
-        filename: selectedBin + '/' + currGraph.axisFiles[i],
+        filename: selectedBinFile + '/' + currGraph.axisFiles[i],
         timespan: { start: null, end: null },
       });
     }
@@ -79,6 +90,7 @@ export const SimpleCreateGraphModal = ({
       props: { chartInformation },
     });
     setViewInformation(updatedViewInformation);
+    setModal('');
   }, [
     buttonID,
     viewInformation,
@@ -86,24 +98,30 @@ export const SimpleCreateGraphModal = ({
     setVideo,
     setNumViews,
     setViewInformation,
+    selectedPreset,
+    selectedBinFile
   ]);
-
-  // This method will update the displayPage state by the given amount
-  const movePage = (amount) => {
-    setDisplayPage(displayPage + amount);
-  };
-
+  
   useEffect(() => {
-    if (displayPage === 1) {
+    if (displayPage === 2) {
       handleSubmit();
       setModal('');
     }
-  }, [displayPage, 4, setModal, handleSubmit]);
+  }, [displayPage, setModal, handleSubmit]);
 
   const pageSelect = (page) => {
     switch (page) {
       case 0:
-        return <SubteamPresets movePage={movePage} />;
+        return <FileSelectionPage handleNextPage={(file) => {
+          console.log("THE FILE IS: " + file);
+          setSelectedBinFile(file);
+          movePage(1);
+        }} />;
+      case 1:
+        return <PresetSelectionPage handleNextPage={(preset) => {
+          setSelectedPreset(preset);
+          movePage(1);
+        }} />;
       default:
         break;
     }

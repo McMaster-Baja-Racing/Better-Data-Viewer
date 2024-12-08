@@ -19,6 +19,10 @@
     border-radius: 4%;
 }
 
+.presets-preset--selected {
+    border: 3px solid black;
+}
+
 .presets-preset-title {
     font-size: 24px;
     margin: 3px;

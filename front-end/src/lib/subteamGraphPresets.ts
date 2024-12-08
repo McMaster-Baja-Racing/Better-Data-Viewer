@@ -12,5 +12,17 @@ export const subteamGraphPresets: DataViewerPreset[] = [
         graphType: 'line'
       },
     ],
+  },
+  {
+    name: 'Speed',
+    description: 'Vehicle speed vs Timestamp (ms) with Sgolay filter',
+    graphs: [
+      {
+        axisFiles: ['GPS SPEED.csv', 'GPS SPEED.csv'],
+        axes: ['Timestamp (ms)', 'GPS SPEED'],
+        analyser: AnalyzerType.SGOLAY,
+        graphType: 'line'
+      },
+    ],
   }
 ];
