@@ -26,7 +26,6 @@ export const SimpleCreateGraphModal = ({
   setVideo,
 }) => {
 
-  //TODO: Hardcoded bin name
   const [selectedBinFile, setSelectedBinFile] = useState<string>('182848');
   const [selectedPreset, setSelectedPreset] = useState<DataViewerPreset | null>(null);
   const [displayPage, setDisplayPage] = useState(0);
@@ -49,8 +48,6 @@ export const SimpleCreateGraphModal = ({
     {
       return;
     }
-    console.log(selectedPreset);
-    console.log(selectedBinFile);
     const currGraph: GraphPreset = selectedPreset.graphs[0];
     const columns: Column[] = [];
     const analyze: ChartAnalyzerInformation = {
@@ -113,7 +110,6 @@ export const SimpleCreateGraphModal = ({
     switch (page) {
       case 0:
         return <FileSelectionPage handleNextPage={(file) => {
-          console.log("THE FILE IS: " + file);
           setSelectedBinFile(file);
           movePage(1);
         }} />;

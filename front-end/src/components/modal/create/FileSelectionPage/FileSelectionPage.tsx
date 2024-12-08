@@ -30,7 +30,6 @@ export const FileSelectionPage = ({ handleNextPage }: {handleNextPage: (file: st
       <button
         className="PageButton"
         onClick={() => {
-          console.log("Here the file is: " + selectedFile);
           handleNextPage(selectedFile);
         }}
       >
