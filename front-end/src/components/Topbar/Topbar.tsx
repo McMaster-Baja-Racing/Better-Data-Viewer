@@ -46,7 +46,7 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
   // Reloads the page if on the home page, otherwise goes to the home page
   const onTitleClick = () =>  {
     window.location.href = routePrefix;
-    window.location.reload();
+    if (isElectron) window.location.reload();
   }
   return (
     <div className="topbar">
