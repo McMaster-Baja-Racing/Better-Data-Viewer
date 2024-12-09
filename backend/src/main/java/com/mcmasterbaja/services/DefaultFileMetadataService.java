@@ -25,6 +25,7 @@ import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
+@OnStorageException
 public class DefaultFileMetadataService implements FileMetadataService {
 
   @Inject Logger logger;

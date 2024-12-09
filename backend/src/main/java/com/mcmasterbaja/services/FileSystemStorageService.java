@@ -1,5 +1,6 @@
 package com.mcmasterbaja.services;
 
+import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.FileNotFoundException;
 import com.mcmasterbaja.exceptions.StorageException;
 import jakarta.annotation.PostConstruct;
@@ -15,6 +16,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 @ApplicationScoped // Singleton I think
+@OnStorageException
 public class FileSystemStorageService implements StorageService {
 
   @Inject Logger logger;

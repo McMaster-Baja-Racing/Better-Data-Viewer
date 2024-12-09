@@ -1,5 +1,6 @@
 package com.mcmasterbaja;
 
+import com.mcmasterbaja.exceptions.AnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.exceptions.MalformedCsvException;
 import com.mcmasterbaja.exceptions.StorageException;
@@ -99,6 +100,23 @@ public class ExceptionMappers {
             "Failed to link to parser library. Probably need to restart your backend, live reload"
                 + " for the parser does not work.",
             "UNSATISFIED_LINK_ERROR",
+            e.getMessage());
+
+    return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
+  }
+
+  // Handles analyzer exceptions
+  @ServerExceptionMapper
+  public Response mapAnalyzerException(AnalyzerException e) {
+    String errorId = UUID.randomUUID().toString();
+    logger.error("errorId[{}]", errorId, e);
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            errorId,
+            e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
+            "An error occurred with the analyzer.",
+            "ANALYZER_ERROR",
             e.getMessage());
 
     return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();

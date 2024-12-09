@@ -2,6 +2,7 @@ package com.mcmasterbaja.interceptors;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.AnalyzerException;
+import com.mcmasterbaja.exceptions.HeaderException;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import jakarta.interceptor.AroundInvoke;
@@ -43,6 +44,15 @@ public class AnalyzerExceptionInterceptor {
               + " - "
               + e.getMessage();
       throw new AnalyzerException(msg, e); // To be caught by exception mappers
+
+    } catch (NullPointerException e) {
+      // Convert NullPointerException to a HeaderException
+      String msg =
+          "Analyzer operation failed due to a null pointer error: "
+              + context.getMethod().getName()
+              + " - "
+              + e.getMessage();
+      throw new HeaderException(msg, e); // To be caught by exception mappers
 
     } catch (AnalyzerException e) {
       String msg =

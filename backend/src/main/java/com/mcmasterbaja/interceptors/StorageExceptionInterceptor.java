@@ -6,6 +6,7 @@ import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 @Interceptor
 @OnStorageException
@@ -32,6 +33,6 @@ public class StorageExceptionInterceptor {
               + " - "
               + e.getMessage();
       throw new StorageException(msg, e); // To be caught by exception mappers
-    }
+    } 
   }
 }
