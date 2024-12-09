@@ -17,8 +17,15 @@ public class BinaryToCSV {
     // Use environment variable if given or default to hardcoded path
     String path = (resourcePath != null) ? resourcePath : (System.getProperty("user.dir") + relativePath);
 
-    // Use proper file and library based on OS
-    path += System.getProperty("os.name").equals("Mac OS X") ? "/libbinary_to_csv_lib.dylib" : "binary_to_csv_lib.dll";
+    // Determine the appropriate library extension based on the OS
+    String osName = System.getProperty("os.name").toLowerCase();
+    if (osName.contains("mac")) {
+      path += "libbinary_to_csv_lib.dylib";
+    } else if (osName.contains("linux")) {
+      path += "libbinary_to_csv_lib.so";
+    } else { // Default to Windows
+      path += "binary_to_csv_lib.dll";
+    }
 
     System.load(path);
   }

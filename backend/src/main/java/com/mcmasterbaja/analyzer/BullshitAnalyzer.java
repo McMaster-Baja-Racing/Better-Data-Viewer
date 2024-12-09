@@ -1,11 +1,9 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.readwrite.CSVReader;
-import com.mcmasterbaja.readwrite.CSVWriter;
-import com.mcmasterbaja.readwrite.Reader;
-import com.mcmasterbaja.readwrite.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+import java.io.IOException;
 
 public class BullshitAnalyzer extends Analyzer {
 
@@ -14,15 +12,13 @@ public class BullshitAnalyzer extends Analyzer {
 
   private final double numPoints;
 
-  // This is the constructor for the BullshitAnalyzer class
   public BullshitAnalyzer(
       String[] inputFiles, String[] inputColumns, String[] outputFiles, double numPoints) {
     super(inputFiles, inputColumns, outputFiles);
     this.numPoints = numPoints;
   }
 
-  // This is the analyze method for the BullshitAnalyzer class
-  public void analyze() {
+  public void analyze() throws IOException, CsvValidationException {
     System.out.println(
         "Adding "
             + numPoints
@@ -31,110 +27,43 @@ public class BullshitAnalyzer extends Analyzer {
             + " to "
             + super.outputFiles[0]);
 
-    // This is the reader for the input file
-    Reader r = new CSVReader(super.inputFiles[0]);
-    // This is the writer for the output file
-    Writer w = new CSVWriter(super.outputFiles[0]);
+    CSVReader reader = getReader(super.inputFiles[0]);
+    ICSVWriter writer = getWriter(super.outputFiles[0]);
 
-    // This is the list of data points
-    List<List<String>> dataPoints = new ArrayList<List<String>>();
-    // This is the list of data points for the output file
-    List<List<String>> outputDataPoints = new ArrayList<List<String>>();
+    String[] headers = reader.readNext();
 
-    // This is the list of data points for the input file
-    dataPoints = r.read();
+    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
 
-    // This is the list of data points for the output file
+    writer.writeNext(headers);
 
-    outputDataPoints = addFakePoints(dataPoints, numPoints);
+    String[] lastDataPoint = reader.readNext();
+    String[] dataPoint;
 
-    // This is the list of data points for the output file
-    w.write(outputDataPoints);
-  }
+    while ((dataPoint = reader.readNext()) != null) {
+      double prevX = Double.parseDouble(lastDataPoint[xAxisIndex]);
+      double currX = Double.parseDouble(dataPoint[xAxisIndex]);
+      double prevY = Double.parseDouble(lastDataPoint[yAxisIndex]);
+      double currY = Double.parseDouble(dataPoint[yAxisIndex]);
 
-  // Add fake points should add the number points between each point in the input file
-  // It should be a random +- 10% of the difference between the two points, linearly interpolated
-  // with even spacing on the x-axis
-  // Idea is to loop through, basically using the equation for linear interpolation (find slope),
-  // then find value at that slope
-  // and then add a random +- 10% of that value to the point
-  // This is the addFakePoints method for the BullshitAnalyzer class
-  public List<List<String>> addFakePoints(List<List<String>> dataPoints, double numPoints) {
-    List<List<String>> outputData = new ArrayList<List<String>>();
+      double realNumPoints = Math.abs(currX - prevX) * numPoints;
 
-    int independentColumn = this.getAnalysisColumnIndex(0, dataPoints.get(0));
-    int dependentColumn = this.getAnalysisColumnIndex(1, dataPoints.get(0));
+      for (int i = 0; i < realNumPoints; i++) {
+        double xValue = prevX + ((currX - prevX) * (1.0 / realNumPoints) * i);
 
-    // Add the headers for our independent variable (x axis, e.g. Timestamp (ms)) and the column
-    // we're bullshitting, ignore the other columns
-    List<String> headerRow = new ArrayList<String>();
-    headerRow.add(dataPoints.get(0).get(independentColumn));
-    headerRow.add(dataPoints.get(0).get(dependentColumn));
+        double slope = (currY - prevY) / (currX - prevX);
+        double yValue = prevY + (xValue - prevX) * slope;
 
-    outputData.add(headerRow);
-
-    List<String> dataPoint = new ArrayList<String>(2);
-
-    // Loop through each point
-    for (int i = 1; i < dataPoints.size() - 1; i++) {
-      // Add the current point to the output data
-      // outputData.add(dataPoints.get(i));
-
-      List<String> currPoint = dataPoints.get(i);
-      List<String> nextPoint = dataPoints.get(i + 1);
-
-      double currX = Double.parseDouble(currPoint.get(independentColumn));
-      double currY = Double.parseDouble(currPoint.get(dependentColumn));
-      double nextX = Double.parseDouble(nextPoint.get(independentColumn));
-      double nextY = Double.parseDouble(nextPoint.get(dependentColumn));
-
-      // print all pf them
-      System.out.println(
-          "Points are: (" + currX + "," + currY + "), (" + nextX + "," + nextY + ")");
-
-      // the amount of times numPoints is should deppend on the difference between the two
-      // points x values
-      // and the number of points
-      double realNumPoints = Math.abs(nextX - currX) * numPoints;
-      System.out.println("numPoints: " + realNumPoints);
-      // Then, for numPoints number of times, add a fake point
-      for (int j = 0; j < realNumPoints; j++) {
-
-        dataPoint = new ArrayList<String>(2);
-
-        // add x value (c1 + diff * interval)
-        double xValue = currX + ((nextX - currX) * (1.0 / realNumPoints) * j);
-
-        System.out.println(
-            "xValue: " + xValue + "   with diff of : " + (nextX - currX) * (1.0 / realNumPoints));
-        dataPoint.add(Double.toString(xValue));
-
-        // add y value
-        double slope = (nextY - currY) / (nextX - currX);
-        double yValue = currY + (xValue - currX) * slope;
-        dataPoint.add(Double.toString(yValue * (0.75 + Math.random() * 0.5)));
-
-        // print it
-        // System.out.println(dataPoint.get(0) + " " + dataPoint.get(1));
-
-        outputData.add(dataPoint);
+        // TODO: This noise is relative to the yValue, so it will be more pronounced for larger
+        // values. Downside is higher y-values have higher noise
+        double noise = yValue * (0.75 + Math.random() * 0.5);
+        writer.writeNext(new String[] {Double.toString(xValue), Double.toString(noise)});
       }
+
+      lastDataPoint = dataPoint;
     }
 
-    return outputData;
-  }
-
-  // Create a main to test it
-  public static void main(String[] args) {
-    // Test the factory method
-    // System.out.println("Hello");
-    // String[] inputFiles = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/test.csv"};
-    // String[] outputFiles = {"output.csv"};
-    // // now make a bullshit analyzer without createAnalyzer
-    // BullshitAnalyzer bs = new BullshitAnalyzer(inputFiles, outputFiles, 10);
-
-    // bs.analyze();
-
-    // // Now test AccelCurveAnalyzer
+    reader.close();
+    writer.close();
   }
 }

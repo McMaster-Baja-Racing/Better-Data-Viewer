@@ -158,12 +158,20 @@ public class InterpolaterProAnalyzer extends Analyzer {
     for (int i = 0; i < readers.size(); i++) {
       queue.add(new TimestampData(currentTimestamp[i], i));
     }
-
     // Now we have our timestamps, we can start going through the files
 
-    // Create a boolean array to track whether each reader has reached the end of its file
+    // At this point, we've skipped all the non-overlapping data points
+    // And populated the different values we need
+    // The concept of the next loop (which writes all the data) is as follows:
+    // 1. Read from file x
+    // 2. Add data from file x and fabricate data for every other file at this timestamp
+    // 3. Find next global timestamp (could be same file)
+    // 4. Repeat
+    // The queue automatically gets the next timestamp (orders properly) since
+    // we always populate it with one timestamp from each file.
+    // The previous and current timestamp / data is for interpolation
 
-    // Loop until priorityQueue is empty
+    // Loop until priorityQueue is empty (Technically won't get here unless all files have same end)
     while (!queue.isEmpty()) {
       // Each loop, we will take the top element from the queue, then create a datapoint for all the
       // files and write it
@@ -223,6 +231,11 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
     // Print completed
     System.out.println("Completed interpolation in " + (endTime - startTime) / 1000000 + "ms");
+
+    writer.close();
+    for (CSVReader reader : readers) {
+      reader.close();
+    }
   }
 
   // Interpolate method
@@ -234,23 +247,5 @@ public class InterpolaterProAnalyzer extends Analyzer {
     double b = y1 - m * x1;
 
     return m * x + b;
-  }
-
-  public static void main(String[] args) {
-    String[] inputFiles = {
-      "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/151408/GPS LATITUDE.csv",
-      "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/151408/GPS LONGITUDE.csv",
-      "X:/Code/Projects/Baja/Better-Data-Viewer/API/upload-dir/151408/GPS SPEED.csv"
-    };
-    String[] outputFiles = {"X:/Code/Projects/Baja/Better-Data-Viewer/data/temp2.csv"};
-    String[] inputColumns = {"GPS LATITUDE", "GPS LONGITUDE", "GPS SPEED"};
-
-    InterpolaterProAnalyzer analyzer =
-        new InterpolaterProAnalyzer(inputFiles, inputColumns, outputFiles);
-    try {
-      analyzer.analyze();
-    } catch (Exception e) {
-      System.out.println(e);
-    }
   }
 }

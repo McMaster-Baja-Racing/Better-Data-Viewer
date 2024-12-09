@@ -5,6 +5,7 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -37,7 +38,7 @@ public abstract class Analyzer {
   }
 
   // Abstract method to be implemented by subclasses
-  public abstract void analyze() throws IOException, CsvValidationException;
+  public abstract void analyze() throws IOException, CsvValidationException, CsvException;
 
   // I/O methods
   // Streams as they avoid loading the entire file into memory at once
@@ -79,6 +80,6 @@ public abstract class Analyzer {
         return i;
       }
     }
-    throw new RuntimeException("No column in file exists with analysis column name");
+    throw new RuntimeException("No column in file exists with analysis column name " + columnName);
   }
 }

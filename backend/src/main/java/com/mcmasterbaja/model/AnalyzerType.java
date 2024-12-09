@@ -4,13 +4,13 @@ public enum AnalyzerType {
   ACCEL_CURVE,
   AVERAGE,
   CUBIC,
-  LINEAR_INTERPOLATE,
   LINEAR_MULTIPLY,
   INTERPOLATER_PRO,
   RDP_COMPRESSION,
   ROLL_AVG,
   SGOLAY,
-  SPLIT;
+  SPLIT,
+  CONSTANT_ADDER;
 
   public String toString() {
     return this.name();

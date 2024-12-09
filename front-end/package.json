@@ -77,10 +77,8 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "public/bajacar.ico",
-      "uninstallerIcon": "public/bajacar.ico",
       "installerHeaderIcon": "public/bajacar.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
