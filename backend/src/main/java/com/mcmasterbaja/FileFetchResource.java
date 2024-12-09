@@ -1,5 +1,7 @@
 package com.mcmasterbaja;
 
+import com.mcmasterbaja.annotations.OnStorageException;
+import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.services.FileMetadataService;
@@ -22,6 +24,7 @@ import java.util.stream.Stream;
 import org.jboss.logging.Logger;
 
 @jakarta.ws.rs.Path("/files") // Use full package name to avoid conflict with java.nio.file.Path
+@OnStorageException
 public class FileFetchResource {
 
   @Inject Logger logger;
@@ -39,7 +42,6 @@ public class FileFetchResource {
     return fileNames;
   }
 
-  // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/{filekey}")
   public File getFile(@PathParam("filekey") String filekey) {
@@ -146,7 +148,7 @@ public class FileFetchResource {
         break;
 
       default:
-        throw new IllegalArgumentException("Invalid folder name");
+        throw new InvalidInputFileException("Invalid folder name");
     }
 
     return timespans;

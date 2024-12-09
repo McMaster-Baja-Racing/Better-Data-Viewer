@@ -1,10 +1,14 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.annotations.OnStorageException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
+import lombok.SneakyThrows;
 
+@OnAnalyzerException
+@OnStorageException
 public class SplitAnalyzer extends Analyzer {
   private final int start;
   private final int end;
@@ -17,8 +21,8 @@ public class SplitAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() throws IOException, CsvException {
-
+  @SneakyThrows
+  public void analyze() {
     System.out.println(
         "Spliting the file named"
             + super.inputFiles[0]
@@ -33,6 +37,8 @@ public class SplitAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+
     int columnIndex = this.getColumnIndex(inputColumns[0], headers);
     writer.writeNext(headers);
 

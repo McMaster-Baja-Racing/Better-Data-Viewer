@@ -1,10 +1,16 @@
 package com.mcmasterbaja.analyzer;
 
+import java.io.IOException;
+
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.annotations.OnStorageException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-import java.io.IOException;
 
+@OnAnalyzerException
+@OnStorageException
 public class CubicAnalyzer extends Analyzer {
   // Form of y = ax^3 + bx^2 + cx + d
   private final double a;
@@ -64,6 +70,8 @@ public class CubicAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);
@@ -84,3 +92,5 @@ public class CubicAnalyzer extends Analyzer {
     return this.a * Math.pow(x, 3) + this.b * Math.pow(x, 2) + this.c * x + this.d;
   }
 }
+
+// throws ??

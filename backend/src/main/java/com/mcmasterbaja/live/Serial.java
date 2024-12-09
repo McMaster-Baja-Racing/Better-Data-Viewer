@@ -87,9 +87,12 @@ public class Serial {
 
         // int numRead = comPort.readBytes(readBuffer, readBuffer.length);
 
-        // System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ "
-        // Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
-        // readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", "
+        // System.out.println("Read " + numRead + " bytes. Number of Bytes: " +
+        // readBuffer.length+ "
+        // Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", "
+        // +
+        // readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " +
+        // readBuffer[6] + ", "
         // + readBuffer[7] );
         // make a packet object from the byte array
 
@@ -114,9 +117,12 @@ public class Serial {
           // flush the file writer
           fw42.flush();
         } else if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
-          // System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+
-          // " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
-          // readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ",
+          // System.out.println("Read " + numRead + " bytes. Number of Bytes: " +
+          // readBuffer.length+
+          // " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ",
+          // " +
+          // readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " +
+          // readBuffer[6] + ",
           // " + readBuffer[7] );
           // System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
           // p.getFloatData());
@@ -147,67 +153,75 @@ public class Serial {
   }
 
   /*
+   *
+   * public static void readLive() {
+   *
+   *
+   *
+   * String port = "COM5";
+   * SerialPort comPort = SerialPort.getCommPort(port);
+   * comPort.openPort();
+   * comPort.closePort();
+   * comPort.openPort();
+   * Runtime.getRuntime().addShutdownHook(new Thread(() ->
+   * {comPort.closePort();}));
+   *
+   * try {
+   * Thread.sleep(1000);
+   * while (true)
+   * {
+   * //print the number of bytes available
+   * System.out.println(comPort.bytesAvailable() + " bytes available");
+   * Thread.sleep(2000);
+   * while (comPort.bytesAvailable() == 0)
+   * Thread.sleep(20);
+   *
+   * /*if (comPort.bytesAvailable() >=8) {
+   * byte[] readBuffer = new byte[8];
+   * int numRead = comPort.readBytes(readBuffer, 8);
+   * System.out.println("Read " + numRead + " bytes.");
+   * System.out.println(bytesToHex(readBuffer));
+   * Packet p = new Packet(readBuffer);
+   * System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
+   * p.getFloatData());
+   *
+   * }
+   * }
+   * } catch (Exception e) { e.printStackTrace(); };
+   * }
+   */
 
-      public static void readLive() {
-
-
-
-          String port = "COM5";
-          SerialPort comPort = SerialPort.getCommPort(port);
-          comPort.openPort();
-          comPort.closePort();
-          comPort.openPort();
-          Runtime.getRuntime().addShutdownHook(new Thread(() -> {comPort.closePort();}));
-
-          try {
-              Thread.sleep(1000);
-              while (true)
-              {
-              //print the number of bytes available
-              System.out.println(comPort.bytesAvailable() + " bytes available");
-              Thread.sleep(2000);
-                 while (comPort.bytesAvailable() == 0)
-                    Thread.sleep(20);
-
-                  /*if (comPort.bytesAvailable() >=8) {
-                      byte[] readBuffer = new byte[8];
-                      int numRead = comPort.readBytes(readBuffer, 8);
-                      System.out.println("Read " + numRead + " bytes.");
-                      System.out.println(bytesToHex(readBuffer));
-                      Packet p = new Packet(readBuffer);
-                      System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
-
-                  }
-              }
-      } catch (Exception e) { e.printStackTrace(); };
-  }*/
-
-  /*public static void readLive() {
-      SerialPort comPort = SerialPort.getCommPort("COM5");
-      comPort.setBaudRate(115200);
-      comPort.openPort();
-      comPort.addDataListener(new SerialPortPacketListener() {
-          @Override
-          public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
-
-          @Override
-          public int getPacketSize() {
-              return 8;
-          }
-
-          @Override
-          public void serialEvent(SerialPortEvent event)
-          {
-              byte[] newData = event.getReceivedData();
-              System.out.println("Received data of size: " + newData.length);
-              for (int i = 0; i < newData.length; ++i)
-                  System.out.print((char)newData[i]);
-              System.out.println("\n");
-              Packet p = new Packet(newData);
-              System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
-          }
-      });
-  }*/
+  /*
+   * public static void readLive() {
+   * SerialPort comPort = SerialPort.getCommPort("COM5");
+   * comPort.setBaudRate(115200);
+   * comPort.openPort();
+   * comPort.addDataListener(new SerialPortPacketListener() {
+   *
+   * @Override
+   * public int getListeningEvents() { return
+   * SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
+   *
+   * @Override
+   * public int getPacketSize() {
+   * return 8;
+   * }
+   *
+   * @Override
+   * public void serialEvent(SerialPortEvent event)
+   * {
+   * byte[] newData = event.getReceivedData();
+   * System.out.println("Received data of size: " + newData.length);
+   * for (int i = 0; i < newData.length; ++i)
+   * System.out.print((char)newData[i]);
+   * System.out.println("\n");
+   * Packet p = new Packet(newData);
+   * System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
+   * p.getFloatData());
+   * }
+   * });
+   * }
+   */
   public static byte[] readSerial() {
     return null;
   }

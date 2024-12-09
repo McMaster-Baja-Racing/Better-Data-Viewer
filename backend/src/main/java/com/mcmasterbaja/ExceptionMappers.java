@@ -1,5 +1,6 @@
 package com.mcmasterbaja;
 
+import com.mcmasterbaja.exceptions.AnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.exceptions.MalformedCsvException;
 import com.mcmasterbaja.exceptions.StorageException;
@@ -14,21 +15,21 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 // Exceptions are mapped in priority of most specific first
 public class ExceptionMappers {
 
-  @Inject Logger logger;
+  @Inject
+  Logger logger;
 
   // Handles invalid arguments
-  @ServerExceptionMapper(value = {InvalidArgumentException.class, IllegalArgumentException.class})
+  @ServerExceptionMapper(value = { InvalidArgumentException.class, IllegalArgumentException.class })
   public Response invalidArgument(RuntimeException e) {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
-    ErrorResponse errorResponse =
-        new ErrorResponse(
-            errorId,
-            e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-            "An invalid argument was passed.",
-            "INVALID_ARGUMENT",
-            e.getMessage());
+    ErrorResponse errorResponse = new ErrorResponse(
+        errorId,
+        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
+        "An invalid argument was passed.",
+        "INVALID_ARGUMENT",
+        e.getMessage());
 
     return Response.status(Response.Status.BAD_REQUEST)
         .entity(errorResponse)
@@ -42,13 +43,12 @@ public class ExceptionMappers {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
-    ErrorResponse errorResponse =
-        new ErrorResponse(
-            errorId,
-            e.getStackTrace()[14].getClassName() + "." + e.getStackTrace()[14].getMethodName(),
-            "The CSV file `" + e.getFile() + "` is invalid. Please check or re-upload.",
-            "MALFORMED_CSV",
-            e.getMessage());
+    ErrorResponse errorResponse = new ErrorResponse(
+        errorId,
+        e.getStackTrace()[14].getClassName() + "." + e.getStackTrace()[14].getMethodName(),
+        "The CSV file `" + e.getFile() + "` is invalid. Please check or re-upload.",
+        "MALFORMED_CSV",
+        e.getMessage());
 
     return Response.status(422).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
   }
@@ -59,13 +59,28 @@ public class ExceptionMappers {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
-    ErrorResponse errorResponse =
-        new ErrorResponse(
-            errorId,
-            e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-            "Something went wrong. It's probably your fault.",
-            "STORAGE_EXCEPTION",
-            e.getMessage());
+    ErrorResponse errorResponse = new ErrorResponse(
+        errorId,
+        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
+        "Something went wrong. It's probably your fault.",
+        "STORAGE_EXCEPTION",
+        e.getMessage());
+
+    return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
+  }
+
+  // Handles analyzer exceptions
+  @ServerExceptionMapper
+  public Response mapAnalyzerException(AnalyzerException e) {
+    String errorId = UUID.randomUUID().toString();
+    logger.error("errorId[{}]", errorId, e);
+
+    ErrorResponse errorResponse = new ErrorResponse(
+        errorId,
+        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
+        "An error occurred with the analyzer.",
+        "ANALYZER_ERROR",
+        e.getMessage());
 
     return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
   }
@@ -76,13 +91,12 @@ public class ExceptionMappers {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
-    ErrorResponse errorResponse =
-        new ErrorResponse(
-            errorId,
-            e.getStackTrace()[6].getClassName() + "." + e.getStackTrace()[6].getMethodName(),
-            "Failed to link to parser library. Might need to restart the backend.",
-            "UNSATISFIED_LINK_ERROR",
-            e.getMessage());
+    ErrorResponse errorResponse = new ErrorResponse(
+        errorId,
+        e.getStackTrace()[6].getClassName() + "." + e.getStackTrace()[6].getMethodName(),
+        "Failed to link to parser library. Might need to restart the backend.",
+        "UNSATISFIED_LINK_ERROR",
+        e.getMessage());
 
     return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
   }
@@ -92,15 +106,15 @@ public class ExceptionMappers {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
-    ErrorResponse errorResponse =
-        new ErrorResponse(
-            errorId,
-            e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-            "Failed to link to parser library. Probably need to restart your backend, live reload"
-                + " for the parser does not work.",
-            "UNSATISFIED_LINK_ERROR",
-            e.getMessage());
+    ErrorResponse errorResponse = new ErrorResponse(
+        errorId,
+        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
+        "Failed to link to parser library. Probably need to restart your backend, live reload"
+            + " for the parser does not work.",
+        "UNSATISFIED_LINK_ERROR",
+        e.getMessage());
 
     return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
   }
+
 }
