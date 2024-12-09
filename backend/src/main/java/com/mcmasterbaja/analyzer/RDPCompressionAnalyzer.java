@@ -1,6 +1,7 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.HeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class RDPCompressionAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers==null) { throw new HeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+
     xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);
