@@ -1,6 +1,7 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.HeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
@@ -39,6 +40,7 @@ public class ConstantAdderAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(super.outputFiles[0]);
     if (inputColumns.length == 4) {
       String[] headers = reader.readNext();
+      if (headers==null) { throw new HeaderException("Failed to read headers from input file: " + inputFiles[0]); }
       int aIndex = this.getColumnIndex(inputColumns[0], headers);
       int bIndex = this.getColumnIndex(inputColumns[1], headers);
       int cIndex = this.getColumnIndex(inputColumns[2], headers);
