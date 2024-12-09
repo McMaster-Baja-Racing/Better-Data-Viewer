@@ -3,12 +3,16 @@ package com.mcmasterbaja.services;
 import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.metadata.Tag;
 import com.drew.metadata.mp4.Mp4Directory;
+import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.InvalidColumnException;
 import com.mcmasterbaja.exceptions.MalformedCsvException;
 import com.mcmasterbaja.exceptions.StorageException;
 import com.mcmasterbaja.model.MinMax;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.SneakyThrows;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -43,12 +47,9 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
+  @SneakyThrows
   public long getSize(Path targetPath) {
-    try {
-      return Files.size(storageService.load(targetPath));
-    } catch (IOException e) {
-      throw new StorageException("Failed to get size of file: " + targetPath.toString(), e);
-    }
+    return Files.size(storageService.load(targetPath));
   }
 
   public MinMax getMinMax(Path targetPath, String column) {
@@ -70,9 +71,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
         }
       }
 
-      if (columnIndex == -1) {
-        throw new IllegalArgumentException("Column not found in file: " + targetPath.toString());
-      }
+      if (columnIndex == -1) { throw new InvalidColumnException("Column not found in file: " + targetPath.toString()); }
 
       // Then get the minimum and maximum values
       String line;

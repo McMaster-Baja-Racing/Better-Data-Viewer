@@ -1,6 +1,6 @@
 package com.mcmasterbaja.exceptions;
 
-public class InvalidOutputFileException extends AnalyzerException {
+public class InvalidOutputFileException extends StorageException {
     public InvalidOutputFileException(String message) {
         super(message);
     }

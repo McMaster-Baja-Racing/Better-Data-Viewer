@@ -1,7 +1,8 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.exceptions.HeaderException;
+import com.mcmasterbaja.annotations.OnStorageException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import lombok.SneakyThrows;
 
 @OnAnalyzerException
+@OnStorageException
 public class RDPCompressionAnalyzer extends Analyzer {
 
   // Epsilon is the maximum distance between a point and the line between the start and end points
@@ -34,7 +36,7 @@ public class RDPCompressionAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
-    if (headers==null) { throw new HeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+    if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
 
     xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     yAxisIndex = this.getColumnIndex(inputColumns[1], headers);

@@ -1,7 +1,8 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.exceptions.HeaderException;
+import com.mcmasterbaja.annotations.OnStorageException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import lombok.SneakyThrows;
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp
 @OnAnalyzerException
+@OnStorageException
 public class InterpolaterProAnalyzer extends Analyzer {
 
   public InterpolaterProAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
@@ -72,7 +74,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
       CSVReader reader = readers.get(i);
       String[] headers = reader.readNext();
-      if (headers==null) { throw new HeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+      if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
 
       timestampIndices[i] = getColumnIndex("Timestamp (ms)", headers);
       dataIndices[i] = getColumnIndex(inputColumns[i], headers);

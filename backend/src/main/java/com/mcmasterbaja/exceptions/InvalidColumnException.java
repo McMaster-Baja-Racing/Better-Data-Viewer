@@ -1,6 +1,6 @@
 package com.mcmasterbaja.exceptions;
 
-public class InvalidColumnException extends AnalyzerException {
+public class InvalidColumnException extends StorageException {
     public InvalidColumnException(String message) {
         super(message);
     }
