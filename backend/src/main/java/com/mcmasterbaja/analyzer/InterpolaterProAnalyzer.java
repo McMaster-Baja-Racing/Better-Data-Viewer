@@ -1,6 +1,7 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.HeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
       CSVReader reader = readers.get(i);
       String[] headers = reader.readNext();
+      if (headers==null) { throw new HeaderException("Failed to read headers from input file: " + inputFiles[0]); }
 
       timestampIndices[i] = getColumnIndex("Timestamp (ms)", headers);
       dataIndices[i] = getColumnIndex(inputColumns[i], headers);
