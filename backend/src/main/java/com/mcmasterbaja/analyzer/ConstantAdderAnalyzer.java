@@ -5,6 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class ConstantAdderAnalyzer extends Analyzer {
   private final double a;
   private final double b;
@@ -26,7 +27,6 @@ public class ConstantAdderAnalyzer extends Analyzer {
     this.d = d;
   }
 
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
 

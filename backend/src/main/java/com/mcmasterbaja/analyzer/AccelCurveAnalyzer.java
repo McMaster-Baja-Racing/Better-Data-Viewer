@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class AccelCurveAnalyzer extends Analyzer {
 
   // inputFiles are first primary RPM, then secondary RPM
@@ -20,7 +21,6 @@ public class AccelCurveAnalyzer extends Analyzer {
   }
 
   @Override
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
     System.out.println("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");

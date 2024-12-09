@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class RDPCompressionAnalyzer extends Analyzer {
 
   // Epsilon is the maximum distance between a point and the line between the start and end points
@@ -22,7 +23,6 @@ public class RDPCompressionAnalyzer extends Analyzer {
   }
 
   @Override
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
 

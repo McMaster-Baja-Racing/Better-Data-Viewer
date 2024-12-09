@@ -5,6 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class BullshitAnalyzer extends Analyzer {
 
   // The point of this analyzer is to add a bunch of fake points based on an input, between
@@ -18,7 +19,6 @@ public class BullshitAnalyzer extends Analyzer {
     this.numPoints = numPoints;
   }
 
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
     System.out.println(

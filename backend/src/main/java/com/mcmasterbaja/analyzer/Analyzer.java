@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.util.List;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public abstract class Analyzer {
 
   // Input and output files are arrays because some analyzers may need multiple input files
@@ -41,7 +42,6 @@ public abstract class Analyzer {
 
   // I/O methods
   // Streams as they avoid loading the entire file into memory at once
-  @OnAnalyzerException
   @SneakyThrows
   public CSVReader getReader(String filePath) {
     FileReader fileReader = new FileReader(filePath);
@@ -51,7 +51,6 @@ public abstract class Analyzer {
         .build();
   }
 
-  @OnAnalyzerException
   @SneakyThrows
   public ICSVWriter getWriter(String filePath) {
     FileWriter fileWriter = new FileWriter(filePath);

@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
+@OnAnalyzerException
 public class SGolayFilter extends Analyzer {
   private final int windowSize;
   private final int polynomialDegree;
@@ -68,7 +69,6 @@ public class SGolayFilter extends Analyzer {
   }
 
   @Override
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
     System.out.println(

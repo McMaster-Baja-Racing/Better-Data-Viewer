@@ -11,7 +11,7 @@ import lombok.SneakyThrows;
 
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp
-
+@OnAnalyzerException
 public class InterpolaterProAnalyzer extends Analyzer {
 
   public InterpolaterProAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
@@ -30,7 +30,6 @@ public class InterpolaterProAnalyzer extends Analyzer {
   }
 
   @Override
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
 

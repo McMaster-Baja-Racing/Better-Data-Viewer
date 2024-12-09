@@ -5,6 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class LinearMultiplyAnalyzer extends Analyzer {
   private final double m;
   private final double b;
@@ -18,7 +19,6 @@ public class LinearMultiplyAnalyzer extends Analyzer {
   }
 
   @Override
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
 

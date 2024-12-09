@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class RollingAvgAnalyzer extends Analyzer {
   private final int windowSize;
 
@@ -25,7 +26,6 @@ public class RollingAvgAnalyzer extends Analyzer {
   }
 
   @Override
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
 

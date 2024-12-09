@@ -5,6 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class SplitAnalyzer extends Analyzer {
   private final int start;
   private final int end;
@@ -17,10 +18,8 @@ public class SplitAnalyzer extends Analyzer {
   }
 
   @Override
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
-
     System.out.println(
         "Spliting the file named"
             + super.inputFiles[0]

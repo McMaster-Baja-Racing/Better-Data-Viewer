@@ -6,6 +6,7 @@ import com.opencsv.ICSVWriter;
 import java.util.List;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a double
   private final int[] range;
@@ -16,7 +17,6 @@ public class AverageAnalyzer extends Analyzer {
     this.range = range;
   }
 
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
     System.out.println(

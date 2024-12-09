@@ -5,6 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class DeleteOutliers extends Analyzer {
   private final double limit;
 
@@ -15,7 +16,6 @@ public class DeleteOutliers extends Analyzer {
     this.limit = limit;
   }
 
-  @OnAnalyzerException
   @SneakyThrows
   public void analyze() {
     System.out.println(
