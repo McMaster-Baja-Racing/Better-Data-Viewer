@@ -44,7 +44,7 @@ public class AnalyzerExceptionInterceptor {
               + e.getMessage();
       throw new AnalyzerException(msg, e); // To be caught by exception mappers
 
-    } catch (AnalyzerException e) {
+    } catch (Exception e) {
       String msg =
           "Analyzer operation failed during method: "
               + context.getMethod().getName()

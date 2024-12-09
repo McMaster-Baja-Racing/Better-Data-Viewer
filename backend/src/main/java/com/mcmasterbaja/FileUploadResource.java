@@ -2,6 +2,7 @@ package com.mcmasterbaja;
 
 import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.binary_csv.BinaryToCSV;
+import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.services.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -31,9 +32,7 @@ public class FileUploadResource {
 
     logger.info("Uploading file: " + fileName);
 
-    if (fileName.lastIndexOf('.') == -1) {
-      throw new IllegalArgumentException("Invalid file name: " + fileName);
-    }
+    if (fileName.lastIndexOf('.') == -1) { throw new InvalidInputFileException("Invalid file name: " + fileName); }
 
     String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
 
@@ -65,11 +64,7 @@ public class FileUploadResource {
 
       default:
         fileData.close();
-        throw new IllegalArgumentException("Invalid filetype: " + fileExtension);
+        throw new InvalidInputFileException("Invalid filetype: " + fileExtension);
     }
   }
 }
-
-// invalid file -> IllegalArgumentException
-//        - name
-//        - type

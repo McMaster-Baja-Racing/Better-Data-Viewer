@@ -6,6 +6,8 @@ import com.mcmasterbaja.exceptions.StorageException;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.SneakyThrows;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -25,8 +27,8 @@ public class FileSystemStorageService implements StorageService {
   private Path rootLocation;
 
   @PostConstruct
+  @SneakyThrows
   public void init() {
-    try {
       logger.info("Initializing storage service");
       Path[] directories = {
         rootLocation, rootLocation.resolve("csv/"), rootLocation.resolve("mp4/")
@@ -39,17 +41,14 @@ public class FileSystemStorageService implements StorageService {
           logger.info("Directory already exists: " + directory.toString());
         }
       }
-    } catch (IOException e) {
-      throw new StorageException("Failed to initialize the storage service.", e);
-    }
   }
 
   public Path getRootLocation() {
     return rootLocation;
   }
 
+  @SneakyThrows
   public void store(InputStream fileData, Path targetPath) {
-    try {
       Path destinationFile = rootLocation.resolve(targetPath).normalize().toAbsolutePath();
 
       if (!destinationFile.startsWith(this.rootLocation.toAbsolutePath())) {
@@ -59,9 +58,6 @@ public class FileSystemStorageService implements StorageService {
       Files.createDirectories(destinationFile.getParent());
       Files.copy(fileData, destinationFile);
       fileData.close();
-    } catch (IOException e) {
-      throw new StorageException("Could not store file: " + targetPath.toFile(), e);
-    }
   }
 
   public Path load(Path targetPath) {
@@ -120,6 +116,3 @@ public class FileSystemStorageService implements StorageService {
 //            - couldn't delete file,
 //            - couldn't list files in directory,
 //            - couldn't store file
-//      b) -> throw StorageException
-//            - can't store file outside current directory,
-//            - couldn't initialize storage service
