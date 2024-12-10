@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import ToolSelection from '../ToolSelection/ToolSelection';
 import { getBounds, findLapTimes, pointInRect } from '@lib/mapUtils';
 import { LNG_INDEX, LAT_INDEX, TIME_INDEX, tools, LNG_COLUMNNAME, LAT_COLUMNNAME } from '@lib/mapOptions';
-import { ApiUtil } from '@lib/apiUtils';
+import { ApiUtil, isElectron } from '@lib/apiUtils';
 
 const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 
@@ -134,7 +134,7 @@ const MapDisplay = ({ setLapsCallback, gotoTime }) => {
   // GEOJSON USES LONG, LAT NOT LAT, LONG
 
   const marker = L.icon({
-    iconUrl: '/topdown_outline.png',
+    iconUrl: (isElectron ? __dirname : '') + '/topdown_outline.png',
     shadowUrl: 'https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png',
     iconSize: [50, 50],
     iconAnchor: [25, 25]

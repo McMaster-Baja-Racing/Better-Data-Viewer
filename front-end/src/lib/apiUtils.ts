@@ -1,5 +1,8 @@
 import { AnalyzerType, FileInformation, FileTimespan, MinMax } from '@types';
 
+export const isElectron = typeof process !== 'undefined' && process.versions?.electron;
+const baseApiUrl = isElectron ? 'http://localhost:8080' : window.location.hostname + ':8080';
+
 export const ApiUtil = {
 
   /**
@@ -9,7 +12,7 @@ export const ApiUtil = {
     */
   getFile: async (fileKey: string): Promise<Blob> => {
     fileKey = encodeURIComponent(fileKey);
-    const response = await fetch(`http://${window.location.hostname}:8080/files/${fileKey}`);
+    const response = await fetch(`${baseApiUrl}/files/${fileKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response.blob();
   },
@@ -19,7 +22,7 @@ export const ApiUtil = {
      * @returns {Promise<string[]>} A promise that resolves to an array of file names.
      */
   getFiles: async (): Promise<string[]> => {
-    const response = await fetch(`http://${window.location.hostname}:8080/files`);
+    const response = await fetch(`${baseApiUrl}/files`);
     if (!response.ok) throw Error(response.statusText);
 
     return response.json();
@@ -31,7 +34,7 @@ export const ApiUtil = {
      * @returns {Promise<FileInformation[]>} A promise that resolves to an array of fileInformation objects.
      */
   getFolder: async (folderKey: string): Promise<FileInformation[]> => {
-    const response = await fetch(`http://${window.location.hostname}:8080/files/information/folder/${folderKey}`);
+    const response = await fetch(`${baseApiUrl}/files/information/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response.json();
   },
@@ -42,7 +45,7 @@ export const ApiUtil = {
      * @returns {Promise<FileTimespan[]>} A promise that resolves to an array of FileTimespan objects.
      */
   getTimespans: async (folderKey: string): Promise<FileTimespan[]> => {
-    const response = await fetch(`http://${window.location.hostname}:8080//files/timespan/folder/${folderKey}`);
+    const response = await fetch(`${baseApiUrl}/files/timespan/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response.json();
   },
@@ -68,7 +71,7 @@ export const ApiUtil = {
     analyzerOptions.map(option => params.append('analyzerOptions', option));
     if (live) params.append('live', live.toString());
 
-    const response = await fetch(`http://${window.location.hostname}:8080/analyze?` + params.toString(), {
+    const response = await fetch(`${baseApiUrl}/analyze?` + params.toString(), {
       method: 'POST'
     });
 
@@ -91,7 +94,7 @@ export const ApiUtil = {
      * @returns {Promise<MinMax>} A promise that resolves to an object containing the min and max values of the column.
      */
   getMinMax: async (filename: string, header: string): Promise<MinMax> => {
-    const url = `http://${window.location.hostname}:8080/minMax/${encodeURIComponent(filename)}?column=${header}`;
+    const url = `${baseApiUrl}/minMax/${encodeURIComponent(filename)}?column=${header}`;
     const response = await fetch(url);
         
     if (!response.ok) {
@@ -105,7 +108,7 @@ export const ApiUtil = {
      * @description Sends a DELETE request to the server to delete all files.
      */
   deleteAllFiles: async (): Promise<void> => {
-    const response = await fetch(`http://${window.location.hostname}:8080/delete/all`, {
+    const response = await fetch(`${baseApiUrl}/delete/all`, {
       // TODO: Why isn't this included?
       // method: "DELETE" 
     });
@@ -123,7 +126,7 @@ export const ApiUtil = {
     formData.append('port', port);
 
     // TODO: this method should use the form data
-    const response = await fetch(`http://${window.location.hostname}:8080/togglelive`, {
+    const response = await fetch(`${baseApiUrl}/togglelive`, {
       method: 'PATCH',
       //body: formData,
     });
@@ -140,7 +143,7 @@ export const ApiUtil = {
     formData.set('fileName', file.name);
     formData.set('fileData', file);
 
-    const response = await fetch(`http://${window.location.hostname}:8080/upload/file`, {
+    const response = await fetch(`${baseApiUrl}/upload/file`, {
       method: 'POST',
       body: formData,
     });
