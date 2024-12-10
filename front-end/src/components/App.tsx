@@ -11,7 +11,7 @@ import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
-import { isElectron } from '@lib/apiUtils';
+import { RouterComponent } from '@lib/electronUtils';
 
 const App = () => {
 
@@ -41,7 +41,7 @@ const App = () => {
     $('div.success').slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
 
-  const RouterComponent = isElectron ? HashRouter : BrowserRouter;
+
 
   return (
     <RouterComponent>

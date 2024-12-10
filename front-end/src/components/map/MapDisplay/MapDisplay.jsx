@@ -6,7 +6,8 @@ import React, { useEffect, useState } from 'react';
 import ToolSelection from '../ToolSelection/ToolSelection';
 import { getBounds, findLapTimes, pointInRect } from '@lib/mapUtils';
 import { LNG_INDEX, LAT_INDEX, TIME_INDEX, tools, LNG_COLUMNNAME, LAT_COLUMNNAME } from '@lib/mapOptions';
-import { ApiUtil, isElectron } from '@lib/apiUtils';
+import { ApiUtil } from '@lib/apiUtils';
+import { isElectron} from '@lib/electronUtils';
 
 const MapDisplay = ({ setLapsCallback, gotoTime }) => {
 

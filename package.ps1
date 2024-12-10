@@ -5,7 +5,6 @@ $ErrorActionPreference = "Stop"
 $frontendPath = "front-end"
 
 try {
-
     # Call electron builder
     Write-Output "Building Electron package..."
     Set-Location -Path $frontendPath

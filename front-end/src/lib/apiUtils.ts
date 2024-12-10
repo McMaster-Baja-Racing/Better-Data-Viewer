@@ -1,7 +1,5 @@
 import { AnalyzerType, FileInformation, FileTimespan, MinMax } from '@types';
-
-export const isElectron = typeof process !== 'undefined' && process.versions?.electron;
-const baseApiUrl = isElectron ? 'http://localhost:8080' : window.location.hostname + ':8080';
+import { baseApiUrl } from './electronUtils';
 
 export const ApiUtil = {
 

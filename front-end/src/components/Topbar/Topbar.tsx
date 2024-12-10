@@ -1,6 +1,7 @@
 import './Topbar.css';
 import { useState } from 'react';
-import { ApiUtil, isElectron } from '@lib/apiUtils';
+import { ApiUtil } from '@lib/apiUtils';
+import { onIconClick } from '@lib/electronUtils';
 import bajalogo from '@assets/bajalogo.png';
 import loadingImg from '@assets/loading.gif';
 import { MAX_VIEWS } from '@components/views/viewsConfig';
@@ -41,17 +42,6 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
     setNumViews(num);
   };
 
-
-  const routePrefix = isElectron ? '#' : '/';
-  const [page, setPage] = useState('');
-  const onIconClick = (path: string) => {
-    if (page != path) {
-      setPage(path);
-      window.location.href = routePrefix + path;
-    } else if (isElectron) {
-      window.location.reload();
-    }
-  }
 
   return (
     <div className="topbar">
