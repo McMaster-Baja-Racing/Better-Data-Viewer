@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BrowserRouter, HashRouter } from "react-router-dom";
 
 // Determines if the app is running in an Electron environment
@@ -12,12 +11,7 @@ export const RouterComponent = isElectron ? HashRouter : BrowserRouter;
 
 // Determines what should happen when an icon is clicked based on the environment
 const routePrefix = isElectron ? '#' : '/';
-const [page, setPage] = useState('');
 export const onIconClick = (path: string) => {
-  if (page != path) {
-    setPage(path);
     window.location.href = routePrefix + path;
-  } else if (isElectron) {
-    window.location.reload();
-  }
+    if (isElectron) window.location.reload();
 }
