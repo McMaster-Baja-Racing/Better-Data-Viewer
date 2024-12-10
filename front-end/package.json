@@ -44,8 +44,7 @@
     "build:electron": "electron-builder",
     "serve": "vite preview",
     "lint": "npx eslint . --fix",
-    "electron": "electron src/main.ts --trace-warnings",
-    "dev": "concurrently \"npm run start\" \"npm run electron\""
+    "electron": "electron src/main.js --trace-warnings"
   },
   "build": {
     "appId": "com.dataviewer.mcmaster",
