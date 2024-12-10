@@ -3,12 +3,13 @@ $ErrorActionPreference = "Stop"
 
 # Define paths
 $backendPath = "backend"
-$frontendPath = "front-end"
 $jrePath = "target/jre"
+$rustPath = "binary-to-csv-lib"
+$frontendPath = "front-end"
 
 try {
-    # Build the backend
-    Write-Output "Building backend package..."
+    # Build the Quarkus backend
+    Write-Output "Building Quarkus package..."
     Set-Location -Path $backendPath
     ./mvnw clean package -D quarkus.package.type=uber-jar
 
@@ -22,7 +23,7 @@ try {
 
     # Delete target folder if it exists
     if (Test-Path $jrePath) {
-        Remove-Item -Recurse -Force $target
+        Remove-Item -Recurse -Force $jrePath
     }
 
     # Run jlink to create the JRE
@@ -32,8 +33,16 @@ try {
     # Return to the root directory
     Set-Location -Path ..
 
+    # Build the Rust DLL
+    Write-Output "Building Rust DLL..."
+    Set-Location -Path $rustPath
+    cargo build --release
+
+    # Return to the root directory
+    Set-Location -Path ..
+
     # Build the frontend
-    Write-Output "Building frontend package..."
+    Write-Output "Building frontend..."
     Set-Location -Path $frontendPath
     npm run build:frontend
     Set-Location -Path ..

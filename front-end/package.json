@@ -56,10 +56,18 @@
     ],
     "extraResources": [
     {
-      "from": "backend",
+      "from": "../backend/target",
       "to": "backend",
       "filter": [
-        "**/*"
+        "jre/**/*",
+        "backend-1.2.0-runner.jar"
+      ]
+    },
+    {
+      "from": "../binary-to-csv-lib/target/release",
+      "to": "backend",
+      "filter": [
+        "binary_to_csv_lib.dll"
       ]
     }
   ],
@@ -81,7 +89,7 @@
       "installerIcon": "public/bajacar.ico",
       "installerHeaderIcon": "public/bajacar.ico",
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
+      "createStartMenuShortcut": false,
       "shortcutName": "Dataviewer"
     },
     "extraMetadata": {
