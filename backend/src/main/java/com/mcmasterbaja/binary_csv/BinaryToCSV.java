@@ -15,7 +15,8 @@ public class BinaryToCSV {
     String resourcePath = System.getenv("RESOURCE_PATH");
 
     // Use environment variable if given or default to hardcoded path
-    String path = (resourcePath != null) ? resourcePath : (System.getProperty("user.dir") + relativePath);
+    String path = (System.getProperty("user.dir") + relativePath);
+    if (resourcePath != null) path = resourcePath;
 
     // Determine the appropriate library extension based on the OS
     String osName = System.getProperty("os.name").toLowerCase();
