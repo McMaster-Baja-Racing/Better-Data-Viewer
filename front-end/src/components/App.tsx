@@ -4,7 +4,7 @@ import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
 import { DownloadModal } from './modal/download/DownloadModal';
 import { useEffect, useState } from 'react';
-import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Topbar from './Topbar/Topbar';
 import Views from './views/Views/Views';
 import $ from 'jquery';
