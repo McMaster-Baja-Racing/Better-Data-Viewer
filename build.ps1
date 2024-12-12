@@ -45,6 +45,12 @@ try {
     Write-Output "Building frontend..."
     Set-Location -Path $frontendPath
     npm run build:frontend
+
+    # Build Electron file
+    Write-Output "Building Electron main..."
+    npm run build:main
+
+    # Return to the root directory
     Set-Location -Path ..
 
     # Package the application

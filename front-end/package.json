@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "src/main.js",
+  "main": "build/main.js",
   "description": "This project is a data visualization tool for McMaster Baja Racing.",
   "author": "McMaster Baja Racing",
   "dependencies": {
@@ -41,16 +41,16 @@
   "scripts": {
     "start": "vite",
     "build:frontend": "tsc && vite build",
+    "build:main": "tsc -p tsconfig.main.json",
     "build:electron": "electron-builder",
     "serve": "vite preview",
     "lint": "npx eslint . --fix",
-    "electron": "electron src/main.js --trace-warnings"
+    "electron": "electron src/main.ts --trace-warnings"
   },
   "build": {
     "appId": "com.dataviewer.mcmaster",
     "asar": true,
     "files": [
-      "src/main.js",
       "build/**/*"
     ],
     "extraResources": [

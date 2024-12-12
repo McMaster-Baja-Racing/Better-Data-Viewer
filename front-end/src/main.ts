@@ -1,11 +1,11 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
-import { spawn } from 'child_process';
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import treeKill from 'tree-kill';
 
 //Reference: https://medium.com/@sgstephans/creating-a-java-electron-react-typescript-desktop-app-414e7edceed2
-let win;
-let backend;
+let win: BrowserWindow | null;
+let backend: ChildProcessWithoutNullStreams;
 const resourcePath = path.resolve(app.getAppPath());
 
 function createWindow() {
@@ -67,7 +67,7 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
-  if (backend) treeKill(backend.pid);
+  if (backend && backend.pid !== undefined) treeKill(backend.pid);
   if (process.platform !== 'darwin') app.quit();
 });
 
