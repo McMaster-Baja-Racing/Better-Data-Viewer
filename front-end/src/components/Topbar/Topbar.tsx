@@ -1,7 +1,7 @@
 import './Topbar.css';
 import { useState } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
-import { onIconClick } from '@lib/electronUtils';
+import { onIconClick } from '@lib/navigationUtils';
 import bajalogo from '@assets/bajalogo.png';
 import loadingImg from '@assets/loading.gif';
 import { MAX_VIEWS } from '@components/views/viewsConfig';

@@ -1,5 +1,7 @@
 import { AnalyzerType, FileInformation, FileTimespan, MinMax } from '@types';
-import { baseApiUrl } from './electronUtils';
+import { isElectron } from './navigationUtils';
+
+const baseApiUrl = 'http://' + (isElectron ? 'localhost' : window.location.hostname) + ':8080';
 
 export const ApiUtil = {
 

@@ -2,10 +2,7 @@ import { BrowserRouter, HashRouter } from "react-router-dom";
 console.log(typeof process !== 'undefined' && process.versions?.electron);
 
 // Determines if the app is running in an Electron environment
-const isElectron = typeof process !== 'undefined' && process.versions?.electron;
-
-// Determines what the base API URL should be based on the environment
-export const baseApiUrl = 'http://' + (isElectron ? 'localhost' : window.location.hostname) + ':8080';
+export const isElectron = typeof process !== 'undefined' && process.versions?.electron;
 
 // Determines what the base URL should be based on the environment
 export const RouterComponent = isElectron ? HashRouter : BrowserRouter;
