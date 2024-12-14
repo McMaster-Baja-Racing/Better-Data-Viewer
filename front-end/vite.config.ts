@@ -10,6 +10,7 @@ export default defineConfig({
   server: {
     strictPort: true,
   },
+  base: './',
   build: {
     outDir: 'build',
   },
