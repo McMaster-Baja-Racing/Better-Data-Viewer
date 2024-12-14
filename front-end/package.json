@@ -84,11 +84,13 @@
     },
     "nsis": {
       "oneClick": false,
+      "perMachine": true,
+      "runAfterFinish": false,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "public/bajacar.ico",
-      "installerHeaderIcon": "public/bajacar.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": false,
+      "installerIcon": "public/bajacar.ico",
+      "installerHeaderIcon": "public/bajacar.ico",
       "shortcutName": "Dataviewer"
     },
     "extraMetadata": {
