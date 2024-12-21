@@ -1,52 +1,58 @@
-package com.mcmasterbaja.analyzer;
+// package com.mcmasterbaja.analyzer;
 
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
+// import com.opencsv.CSVReader;
+// import com.opencsv.ICSVWriter;
+// import com.opencsv.exceptions.CsvException;
+// import jakarta.enterprise.context.RequestScoped;
+// import jakarta.inject.Inject;
+// import java.io.IOException;
+// import org.jboss.logging.Logger;
 
-public class SplitAnalyzer extends Analyzer {
-  private final int start;
-  private final int end;
+// @RequestScoped
+// public class SplitAnalyzer extends Analyzer {
+//   private final int start;
+//   private final int end;
 
-  public SplitAnalyzer(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, int start, int end) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.start = start;
-    this.end = end;
-  }
+//   @Inject Logger logger;
 
-  @Override
-  public void analyze() throws IOException, CsvException {
+//   public SplitAnalyzer(
+//       String[] inputFiles, String[] inputColumns, String[] outputFiles, int start, int end) {
+//     super(inputFiles, inputColumns, outputFiles);
+//     this.start = start;
+//     this.end = end;
+//   }
 
-    System.out.println(
-        "Spliting the file named"
-            + super.inputFiles[0]
-            + " to "
-            + super.outputFiles[0]
-            + " with a startingt timestamp of "
-            + start
-            + " and an ending timestamp of "
-            + end);
+//   @Override
+//   public void analyze() throws IOException, CsvException {
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+//     logger.info(
+//         "Spliting the file named"
+//             + super.inputFiles[0]
+//             + " to "
+//             + super.outputFiles[0]
+//             + " with a startingt timestamp of "
+//             + start
+//             + " and an ending timestamp of "
+//             + end);
 
-    String[] headers = reader.readNext();
-    int columnIndex = this.getColumnIndex(inputColumns[0], headers);
-    writer.writeNext(headers);
+//     CSVReader reader = getReader(inputFiles[0]);
+//     ICSVWriter writer = getWriter(outputFiles[0]);
 
-    String[] dataPoint;
+//     String[] headers = reader.readNext();
+//     int columnIndex = this.getColumnIndex(inputColumns[0], headers);
+//     writer.writeNext(headers);
 
-    while ((dataPoint = reader.readNext()) != null) {
-      if (Integer.parseInt(dataPoint[columnIndex]) >= end) {
-        break;
-      } else if (Integer.parseInt(dataPoint[columnIndex]) >= start) {
-        writer.writeNext(dataPoint);
-      }
-    }
+//     String[] dataPoint;
 
-    reader.close();
-    writer.close();
-  }
-}
+//     while ((dataPoint = reader.readNext()) != null) {
+//       if (Integer.parseInt(dataPoint[columnIndex]) >= end) {
+//         break;
+//       } else if (Integer.parseInt(dataPoint[columnIndex]) >= start) {
+//         writer.writeNext(dataPoint);
+//       }
+//     }
+
+//     reader.close();
+//     writer.close();
+//   }
+// }

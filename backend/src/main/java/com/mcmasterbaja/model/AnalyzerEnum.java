@@ -1,6 +1,6 @@
 package com.mcmasterbaja.model;
 
-public enum AnalyzerType {
+public enum AnalyzerEnum {
   ACCEL_CURVE,
   AVERAGE,
   CUBIC,
