@@ -2,8 +2,11 @@ package com.mcmasterbaja;
 
 import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
+import com.mcmasterbaja.analyzer.AnalyzerType;
+import com.mcmasterbaja.analyzer.AverageAnalyzer;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.live.Serial;
+import com.mcmasterbaja.model.AnalyzerEnum;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.MinMax;
 import com.mcmasterbaja.services.FileMetadataService;
@@ -28,8 +31,8 @@ public class FileAnalyzeResource {
   @Inject Logger logger;
   @Inject StorageService storageService;
   @Inject FileMetadataService fileMetadataService;
-  @Inject Analyzer analyzer;
-  @Inject AnalyzerParams analyzerParams;
+  @Inject AnalyzerFactory analyzerFactory;
+  @Inject @AnalyzerType(AnalyzerEnum.AVERAGE) Analyzer averageAnalyzer;
 
   // TODO: Convert to using POST body rather than path variables
   @POST
@@ -38,6 +41,8 @@ public class FileAnalyzeResource {
     logger.info("Running analyzer with params: " + params.toString());
 
     if (!params.getErrors().isEmpty()) {
+      // print errors
+      logger.error(params.getErrors());
       throw new InvalidArgumentException(params.getErrors());
     }
 
@@ -47,16 +52,14 @@ public class FileAnalyzeResource {
 
     // TODO: Can't pass in null to createAnalyzer, this if statement feels redundant
     if (params.getType() != null) {
-      Analyzer analyzer = AnalyzerFactory.createAnalyzer(params);
-      if (analyzer != null) {
-        try {
-          analyzer.analyze();
-        } catch (Exception e) {
+      Analyzer analyzer = analyzerFactory.createAnalyzer(params.getType());
+      try {
+          analyzer.analyze(params); // No need to pass params; it's injected
+      } catch (Exception e) {
           logger.error("Error running analyzer", e);
           throw new RuntimeException("Error running analyzer");
-        }
       }
-    }
+  }
 
     Path targetPath = Paths.get(params.getOutputFiles()[0]);
     File file = storageService.load(targetPath).toFile();

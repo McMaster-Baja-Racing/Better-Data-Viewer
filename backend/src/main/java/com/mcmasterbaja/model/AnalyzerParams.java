@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jakarta.enterprise.context.RequestScoped;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,7 +15,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@RequestScoped
 public class AnalyzerParams {
   // Input and output files defined as strings in order for serialization in quarkus
   @QueryParam("inputFiles")
@@ -29,7 +27,7 @@ public class AnalyzerParams {
   private String[] inputColumns;
 
   @QueryParam("type")
-  private AnalyzerType type;
+  private AnalyzerEnum type;
 
   @QueryParam("analyzerOptions")
   private String[] options;
