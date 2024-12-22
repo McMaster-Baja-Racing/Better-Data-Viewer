@@ -3,7 +3,6 @@ package com.mcmasterbaja.analyzer;
 import com.mcmasterbaja.model.AnalyzerEnum;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.exceptions.CsvException;
-
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.io.BufferedWriter;
