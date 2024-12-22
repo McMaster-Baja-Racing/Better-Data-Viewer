@@ -1,14 +1,13 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
+
 import lombok.SneakyThrows;
 
 @OnAnalyzerException
-@OnStorageException
 public class SplitAnalyzer extends Analyzer {
   private final int start;
   private final int end;
@@ -37,7 +36,9 @@ public class SplitAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
-    if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
 
     int columnIndex = this.getColumnIndex(inputColumns[0], headers);
     writer.writeNext(headers);

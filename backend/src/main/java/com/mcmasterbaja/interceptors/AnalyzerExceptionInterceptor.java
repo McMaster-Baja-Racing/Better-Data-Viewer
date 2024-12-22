@@ -24,7 +24,7 @@ public class AnalyzerExceptionInterceptor {
               + context.getMethod().getName()
               + " - "
               + e.getMessage();
-      throw new AnalyzerException(msg, e); // To be caught by exception mappers
+      throw new AnalyzerException(msg, e); 
 
     } catch (CsvValidationException e) {
       // Convert CsvValidationException to an AnalyzerException
@@ -33,7 +33,7 @@ public class AnalyzerExceptionInterceptor {
               + context.getMethod().getName()
               + " - "
               + e.getMessage();
-      throw new AnalyzerException(msg, e); // To be caught by exception mappers
+      throw new AnalyzerException(msg, e); 
 
     } catch (CsvException e) {
       // Convert CsvException to an AnalyzerException
@@ -42,7 +42,7 @@ public class AnalyzerExceptionInterceptor {
               + context.getMethod().getName()
               + " - "
               + e.getMessage();
-      throw new AnalyzerException(msg, e); // To be caught by exception mappers
+      throw new AnalyzerException(msg, e); 
 
     } catch (Exception e) {
       String msg =
@@ -50,7 +50,7 @@ public class AnalyzerExceptionInterceptor {
               + context.getMethod().getName()
               + " - "
               + e.getMessage();
-      throw new AnalyzerException(msg, e); // To be caught by exception mappers
+      throw new AnalyzerException(msg, e); 
     }
   }
 }

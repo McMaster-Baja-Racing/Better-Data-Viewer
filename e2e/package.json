@@ -13,7 +13,6 @@
     "playwright": "^1.48.2"
   },
   "dependencies": {
-    "e2e": "file:",
     "path": "^0.12.7",
     "url": "^0.11.4"
   }

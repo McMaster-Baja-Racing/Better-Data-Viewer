@@ -1,17 +1,5 @@
 package com.mcmasterbaja.services;
 
-import com.drew.imaging.mp4.Mp4MetadataReader;
-import com.drew.metadata.Tag;
-import com.drew.metadata.mp4.Mp4Directory;
-import com.mcmasterbaja.annotations.OnStorageException;
-import com.mcmasterbaja.exceptions.FileNotFoundException;
-import com.mcmasterbaja.exceptions.InvalidColumnException;
-import com.mcmasterbaja.exceptions.MalformedCsvException;
-import com.mcmasterbaja.model.MinMax;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import lombok.SneakyThrows;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -24,11 +12,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.jboss.logging.Logger;
 
+import com.drew.imaging.mp4.Mp4MetadataReader;
+import com.drew.metadata.Tag;
+import com.drew.metadata.mp4.Mp4Directory;
+import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.InvalidColumnException;
+import com.mcmasterbaja.exceptions.MalformedCsvException;
+import com.mcmasterbaja.exceptions.StorageException;
+import com.mcmasterbaja.model.MinMax;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
 @ApplicationScoped
-@OnStorageException
 public class DefaultFileMetadataService implements FileMetadataService {
 
   @Inject
@@ -48,9 +48,12 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  @SneakyThrows
   public long getSize(Path targetPath) {
-    return Files.size(storageService.load(targetPath));
+    try {
+      return Files.size(storageService.load(targetPath));
+    } catch (IOException e) {
+      throw new StorageException("Failed to get size of file: " + targetPath.toString(), e);
+    }
   }
 
   public MinMax getMinMax(Path targetPath, String column) {
