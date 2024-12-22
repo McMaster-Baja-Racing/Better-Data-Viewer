@@ -21,7 +21,10 @@ public class RollingAvgAnalyzer extends Analyzer {
   @Override
   public void analyze(AnalyzerParams params) throws IOException, CsvException {
     extractParams(params);
-    this.windowSize = Integer.parseInt(params.getOptions()[0]) > 0 ? Integer.parseInt(params.getOptions()[0]) : 30;
+    this.windowSize =
+        Integer.parseInt(params.getOptions()[0]) > 0
+            ? Integer.parseInt(params.getOptions()[0])
+            : 30;
 
     logger.info(
         "Taking the rolling average of "

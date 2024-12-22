@@ -1,11 +1,5 @@
 package com.mcmasterbaja.analyzer;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -14,6 +8,11 @@ import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public abstract class Analyzer {
   protected String[] inputFiles;
@@ -21,7 +20,8 @@ public abstract class Analyzer {
   protected String[] outputFiles;
 
   // Abstract method to be implemented by subclasses
-  public abstract void analyze(AnalyzerParams params) throws IOException, CsvValidationException, CsvException;
+  public abstract void analyze(AnalyzerParams params)
+      throws IOException, CsvValidationException, CsvException;
 
   public void extractParams(AnalyzerParams params) {
     this.inputFiles = params.getInputFiles();

@@ -1,11 +1,9 @@
 package com.mcmasterbaja.analyzer;
 
-import org.jboss.logging.Logger;
-
 import com.mcmasterbaja.model.AnalyzerEnum;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class AnalyzerFactory {
@@ -16,8 +14,8 @@ public class AnalyzerFactory {
   @AnalyzerType(AnalyzerEnum.ACCEL_CURVE)
   Analyzer accelCurveAnalyzer;
 
-  @Inject 
-  @AnalyzerType(AnalyzerEnum.AVERAGE) 
+  @Inject
+  @AnalyzerType(AnalyzerEnum.AVERAGE)
   Analyzer averageAnalyzer;
 
   @Inject
@@ -51,29 +49,29 @@ public class AnalyzerFactory {
   @Inject
   @AnalyzerType(AnalyzerEnum.SPLIT)
   Analyzer splitAnalyzer;
-  
-    public Analyzer createAnalyzer(AnalyzerEnum type) {
-      switch (type) {
-        case ACCEL_CURVE:
-          return accelCurveAnalyzer;
-        case AVERAGE:
-          return averageAnalyzer;
-        case CONSTANT_ADDER:
-          return constantAdderAnalyzer;
-        case CUBIC:
-          return cubicAnalyzer;
-        case INTERPOLATER_PRO:
-          return interpolaterProAnalyzer;
-        case LINEAR_MULTIPLY:
-          return linearMultiplyAnalyzer;
-        case RDP_COMPRESSION:
-          return rdpCompressionAnalyzer;
-        case ROLL_AVG:
-          return rollAvgAnalyzer;
-        case SGOLAY:
-          return sgolayAnalyzer;
-        case SPLIT:
-          return splitAnalyzer;
+
+  public Analyzer createAnalyzer(AnalyzerEnum type) {
+    switch (type) {
+      case ACCEL_CURVE:
+        return accelCurveAnalyzer;
+      case AVERAGE:
+        return averageAnalyzer;
+      case CONSTANT_ADDER:
+        return constantAdderAnalyzer;
+      case CUBIC:
+        return cubicAnalyzer;
+      case INTERPOLATER_PRO:
+        return interpolaterProAnalyzer;
+      case LINEAR_MULTIPLY:
+        return linearMultiplyAnalyzer;
+      case RDP_COMPRESSION:
+        return rdpCompressionAnalyzer;
+      case ROLL_AVG:
+        return rollAvgAnalyzer;
+      case SGOLAY:
+        return sgolayAnalyzer;
+      case SPLIT:
+        return splitAnalyzer;
       default:
         throw new IllegalArgumentException("Invalid analyzer type");
     }

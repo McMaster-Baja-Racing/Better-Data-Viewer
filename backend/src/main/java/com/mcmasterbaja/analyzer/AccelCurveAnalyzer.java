@@ -51,7 +51,8 @@ public class AccelCurveAnalyzer extends Analyzer {
     InterpolaterProAnalyzer interpolater = new InterpolaterProAnalyzer();
     AnalyzerParams interpolateParams = new AnalyzerParams();
     interpolateParams.setInputFiles(Arrays.copyOfRange(outputFiles, 0, 2));
-    interpolateParams.setInputColumns(new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]});
+    interpolateParams.setInputColumns(
+        new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]});
     interpolateParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 2, 3));
     interpolater.analyze(interpolateParams);
 

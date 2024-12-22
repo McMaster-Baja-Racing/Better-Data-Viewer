@@ -3,7 +3,6 @@ package com.mcmasterbaja;
 import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
 import com.mcmasterbaja.analyzer.AnalyzerType;
-import com.mcmasterbaja.analyzer.AverageAnalyzer;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerEnum;
@@ -32,7 +31,10 @@ public class FileAnalyzeResource {
   @Inject StorageService storageService;
   @Inject FileMetadataService fileMetadataService;
   @Inject AnalyzerFactory analyzerFactory;
-  @Inject @AnalyzerType(AnalyzerEnum.AVERAGE) Analyzer averageAnalyzer;
+
+  @Inject
+  @AnalyzerType(AnalyzerEnum.AVERAGE)
+  Analyzer averageAnalyzer;
 
   // TODO: Convert to using POST body rather than path variables
   @POST
@@ -54,12 +56,12 @@ public class FileAnalyzeResource {
     if (params.getType() != null) {
       Analyzer analyzer = analyzerFactory.createAnalyzer(params.getType());
       try {
-          analyzer.analyze(params); // No need to pass params; it's injected
+        analyzer.analyze(params); // No need to pass params; it's injected
       } catch (Exception e) {
-          logger.error("Error running analyzer", e);
-          throw new RuntimeException("Error running analyzer");
+        logger.error("Error running analyzer", e);
+        throw new RuntimeException("Error running analyzer");
       }
-  }
+    }
 
     Path targetPath = Paths.get(params.getOutputFiles()[0]);
     File file = storageService.load(targetPath).toFile();

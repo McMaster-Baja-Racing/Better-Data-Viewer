@@ -62,7 +62,7 @@ public class SGolayFilter extends Analyzer {
     // Half the size of the data buffer so that when we write data, we write it in the middle
     // (looking forwards and backwards)
     this.timestampBuffer = new CircularBuffer(windowSize / 2);
-    
+
     logger.info(
         "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
             + super.inputFiles[0]
