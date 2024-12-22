@@ -1,14 +1,12 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
 @OnAnalyzerException
-@OnStorageException
 public class DeleteOutliers extends Analyzer {
   private final double limit;
 

@@ -1,7 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
@@ -12,7 +11,6 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 
 @OnAnalyzerException
-@OnStorageException
 public class SGolayFilter extends Analyzer {
   private final int windowSize;
   private final int polynomialDegree;

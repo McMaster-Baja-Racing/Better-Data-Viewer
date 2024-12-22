@@ -3,14 +3,12 @@ package com.mcmasterbaja.analyzer;
 import java.io.IOException;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 
 @OnAnalyzerException
-@OnStorageException
 public class CubicAnalyzer extends Analyzer {
   // Form of y = ax^3 + bx^2 + cx + d
   private final double a;

@@ -1,6 +1,5 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.exceptions.InvalidOutputFileException;
 import com.mcmasterbaja.exceptions.InvalidColumnException;
@@ -16,7 +15,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-@OnStorageException 
 public abstract class Analyzer {
 
   protected String[] inputFiles;

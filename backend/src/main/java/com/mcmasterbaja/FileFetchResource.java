@@ -1,6 +1,5 @@
 package com.mcmasterbaja;
 
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
@@ -24,7 +23,6 @@ import java.util.stream.Stream;
 import org.jboss.logging.Logger;
 
 @jakarta.ws.rs.Path("/files") // Use full package name to avoid conflict with java.nio.file.Path
-@OnStorageException
 public class FileFetchResource {
 
   @Inject Logger logger;

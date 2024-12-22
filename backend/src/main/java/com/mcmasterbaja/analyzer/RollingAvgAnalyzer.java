@@ -1,7 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
@@ -10,7 +9,6 @@ import java.util.Queue;
 import lombok.SneakyThrows;
 
 @OnAnalyzerException
-@OnStorageException
 public class RollingAvgAnalyzer extends Analyzer {
   private final int windowSize;
 

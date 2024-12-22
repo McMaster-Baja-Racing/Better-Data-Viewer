@@ -1,14 +1,12 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
 @OnAnalyzerException
-@OnStorageException
 public class BullshitAnalyzer extends Analyzer {
 
   // The point of this analyzer is to add a bunch of fake points based on an input, between

@@ -1,7 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.annotations.OnStorageException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
@@ -14,7 +13,6 @@ import lombok.SneakyThrows;
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp
 @OnAnalyzerException
-@OnStorageException
 public class InterpolaterProAnalyzer extends Analyzer {
 
   public InterpolaterProAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
