@@ -72,7 +72,10 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
       CSVReader reader = readers.get(i);
       String[] headers = reader.readNext();
-      if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+      if (headers == null) {
+        throw new InvalidHeaderException(
+            "Failed to read headers from input file: " + inputFiles[0]);
+      }
 
       timestampIndices[i] = getColumnIndex("Timestamp (ms)", headers);
       dataIndices[i] = getColumnIndex(inputColumns[i], headers);

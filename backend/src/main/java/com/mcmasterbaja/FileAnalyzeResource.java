@@ -50,7 +50,7 @@ public class FileAnalyzeResource {
     if (params.getType() != null) {
       Analyzer analyzer = AnalyzerFactory.createAnalyzer(params);
       if (analyzer != null) {
-      analyzer.analyze();
+        analyzer.analyze();
       }
     }
 
@@ -96,4 +96,3 @@ public class FileAnalyzeResource {
     return exit;
   }
 }
-

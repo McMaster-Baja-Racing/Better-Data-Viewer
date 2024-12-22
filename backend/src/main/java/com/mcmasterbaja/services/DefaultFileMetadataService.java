@@ -1,5 +1,15 @@
 package com.mcmasterbaja.services;
 
+import com.drew.imaging.mp4.Mp4MetadataReader;
+import com.drew.metadata.Tag;
+import com.drew.metadata.mp4.Mp4Directory;
+import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.InvalidColumnException;
+import com.mcmasterbaja.exceptions.MalformedCsvException;
+import com.mcmasterbaja.exceptions.StorageException;
+import com.mcmasterbaja.model.MinMax;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,29 +22,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.jboss.logging.Logger;
-
-import com.drew.imaging.mp4.Mp4MetadataReader;
-import com.drew.metadata.Tag;
-import com.drew.metadata.mp4.Mp4Directory;
-import com.mcmasterbaja.exceptions.FileNotFoundException;
-import com.mcmasterbaja.exceptions.InvalidColumnException;
-import com.mcmasterbaja.exceptions.MalformedCsvException;
-import com.mcmasterbaja.exceptions.StorageException;
-import com.mcmasterbaja.model.MinMax;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class DefaultFileMetadataService implements FileMetadataService {
 
-  @Inject
-  Logger logger;
-  @Inject
-  private StorageService storageService;
+  @Inject Logger logger;
+  @Inject private StorageService storageService;
 
   public String[] readHeaders(Path targetPath) {
     try {
@@ -62,7 +57,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
     Double max = Double.MIN_VALUE;
 
     try {
-      BufferedReader reader = new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
+      BufferedReader reader =
+          new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
 
       // First get the column index
       String[] headers = reader.readLine().split(",");
@@ -106,10 +102,11 @@ public class DefaultFileMetadataService implements FileMetadataService {
     String timestamp;
 
     try {
-      ReversedLinesFileReader reverseReader = ReversedLinesFileReader.builder()
-          .setPath(storageService.load(targetPath))
-          .setCharset(StandardCharsets.UTF_8)
-          .get();
+      ReversedLinesFileReader reverseReader =
+          ReversedLinesFileReader.builder()
+              .setPath(storageService.load(targetPath))
+              .setCharset(StandardCharsets.UTF_8)
+              .get();
 
       timestamp = reverseReader.readLine().split(",")[columnIndex];
       reverseReader.close();
@@ -121,9 +118,9 @@ public class DefaultFileMetadataService implements FileMetadataService {
   }
 
   public boolean canComputeTimespan(Path folderPath) {
-    if (folderPath.toString().equals("csv"))
-      return false;
-    Path smhPath = storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
+    if (folderPath.toString().equals("csv")) return false;
+    Path smhPath =
+        storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
     Path dmyPath = storageService.load(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
     return Files.exists(smhPath) && Files.exists(dmyPath);
   }
@@ -142,34 +139,37 @@ public class DefaultFileMetadataService implements FileMetadataService {
   public LocalDateTime getZeroTime(Path folderPath) {
     try {
       // Get the values of the first line from the gps files ingoring the header
-      String[] smhArray = Files.lines(
-          storageService
-              .getRootLocation()
-              .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv")))
-          .skip(1)
-          .findFirst()
-          .orElseThrow()
-          .split(",");
+      String[] smhArray =
+          Files.lines(
+                  storageService
+                      .getRootLocation()
+                      .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv")))
+              .skip(1)
+              .findFirst()
+              .orElseThrow()
+              .split(",");
 
-      String[] dmyArray = Files.lines(
-          storageService
-              .getRootLocation()
-              .resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv")))
-          .skip(1)
-          .findFirst()
-          .orElseThrow()
-          .split(",");
+      String[] dmyArray =
+          Files.lines(
+                  storageService
+                      .getRootLocation()
+                      .resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv")))
+              .skip(1)
+              .findFirst()
+              .orElseThrow()
+              .split(",");
 
       // Convert the values to a LocalDateTime and subtract the timestamp
       long timestamp = Long.parseLong(smhArray[0]);
-      LocalDateTime zeroTime = LocalDateTime.of(
-          2000 + Integer.parseInt(dmyArray[3]),
-          Integer.parseInt(dmyArray[2]),
-          Integer.parseInt(dmyArray[1]),
-          Integer.parseInt(smhArray[3]),
-          Integer.parseInt(smhArray[2]),
-          Integer.parseInt(smhArray[1]))
-          .minusNanos(timestamp * 1_000_000);
+      LocalDateTime zeroTime =
+          LocalDateTime.of(
+                  2000 + Integer.parseInt(dmyArray[3]),
+                  Integer.parseInt(dmyArray[2]),
+                  Integer.parseInt(dmyArray[1]),
+                  Integer.parseInt(smhArray[3]),
+                  Integer.parseInt(smhArray[2]),
+                  Integer.parseInt(smhArray[1]))
+              .minusNanos(timestamp * 1_000_000);
 
       return zeroTime;
     } catch (IOException e) {
@@ -181,8 +181,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
   public String getTypeFolder(Path targetPath) {
     String pathString = targetPath.toString();
     int dotIndex = pathString.lastIndexOf(".");
-    if (pathString == "" || pathString == null || dotIndex == -1)
-      return ""; // No file extension
+    if (pathString == "" || pathString == null || dotIndex == -1) return ""; // No file extension
 
     String extension = pathString.substring(dotIndex + 1).toLowerCase();
     // Returns csv for bin and mp4 for mov for file conversion
@@ -201,8 +200,9 @@ public class DefaultFileMetadataService implements FileMetadataService {
   private String extractMetadata(Path targetPath) {
     try {
       // Gets all the metadata from the file in the form of a directory
-      Mp4Directory metadata = Mp4MetadataReader.readMetadata(targetPath.toFile())
-          .getFirstDirectoryOfType(Mp4Directory.class);
+      Mp4Directory metadata =
+          Mp4MetadataReader.readMetadata(targetPath.toFile())
+              .getFirstDirectoryOfType(Mp4Directory.class);
 
       // Extracts all the key value pairs
       String metadataString = "";
@@ -234,7 +234,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
     String firstTimestamp = null;
     String lastTimestamp = null;
     try {
-      BufferedReader reader = new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
+      BufferedReader reader =
+          new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
       int timestampIndex = Arrays.asList(reader.readLine().split(",")).indexOf("Timestamp (ms)");
       firstTimestamp = reader.readLine().split(",")[timestampIndex];
       reader.close();
@@ -247,10 +248,12 @@ public class DefaultFileMetadataService implements FileMetadataService {
           "Failed to get timespan of file: " + targetPath.toString(), targetPath.toString(), e);
     }
 
-    LocalDateTime startTime = zeroTime.plusNanos((long) Double.parseDouble(firstTimestamp) * 1_000_000);
-    LocalDateTime endTime = zeroTime.plusNanos((long) Double.parseDouble(lastTimestamp) * 1_000_000);
+    LocalDateTime startTime =
+        zeroTime.plusNanos((long) Double.parseDouble(firstTimestamp) * 1_000_000);
+    LocalDateTime endTime =
+        zeroTime.plusNanos((long) Double.parseDouble(lastTimestamp) * 1_000_000);
 
-    return new LocalDateTime[] { startTime, endTime };
+    return new LocalDateTime[] {startTime, endTime};
   }
 
   private LocalDateTime[] getTimespanMP4(Path targetPath) {
@@ -259,18 +262,20 @@ public class DefaultFileMetadataService implements FileMetadataService {
 
     // Parses with timezeone, converts to GMT, and then to LocalDateTime
     assert metadata != null;
-    LocalDateTime creationTime = ZonedDateTime.parse(
-        getTagValue(metadata, "Creation Time"),
-        DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH))
-        .withZoneSameInstant(ZoneId.of("GMT"))
-        .toLocalDateTime();
+    LocalDateTime creationTime =
+        ZonedDateTime.parse(
+                getTagValue(metadata, "Creation Time"),
+                DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH))
+            .withZoneSameInstant(ZoneId.of("GMT"))
+            .toLocalDateTime();
 
     // Below calculation gives a better estimate than Duration in Seconds tag
     // Each is converted to nanoseconds and then divided to preserve precision
-    long duration = (Long.parseLong(getTagValue(metadata, "Duration")) * 1_000_000_000)
-        / (Long.parseLong(getTagValue(metadata, "Media Time Scale")) * 1_000_000_000);
+    long duration =
+        (Long.parseLong(getTagValue(metadata, "Duration")) * 1_000_000_000)
+            / (Long.parseLong(getTagValue(metadata, "Media Time Scale")) * 1_000_000_000);
 
     // Returns the start and end times as strings in GMT with milliseconds
-    return new LocalDateTime[] { creationTime, creationTime.plusSeconds(duration) };
+    return new LocalDateTime[] {creationTime, creationTime.plusSeconds(duration)};
   }
 }

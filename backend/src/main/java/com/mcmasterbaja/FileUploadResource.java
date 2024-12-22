@@ -1,30 +1,25 @@
 package com.mcmasterbaja;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
-
-import org.jboss.logging.Logger;
-import org.jboss.resteasy.reactive.PartType;
-import org.jboss.resteasy.reactive.RestForm;
-
 import com.mcmasterbaja.binary_csv.BinaryToCSV;
 import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.exceptions.StorageException;
 import com.mcmasterbaja.services.StorageService;
-
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
+import org.jboss.logging.Logger;
+import org.jboss.resteasy.reactive.PartType;
+import org.jboss.resteasy.reactive.RestForm;
 
 @jakarta.ws.rs.Path("/upload")
 public class FileUploadResource {
 
-  @Inject
-  Logger logger;
-  @Inject
-  StorageService storageService;
+  @Inject Logger logger;
+  @Inject StorageService storageService;
 
   @POST
   @jakarta.ws.rs.Path("/file")

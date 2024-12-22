@@ -40,7 +40,10 @@ public class ConstantAdderAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(super.outputFiles[0]);
     if (inputColumns.length == 4) {
       String[] headers = reader.readNext();
-      if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+      if (headers == null) {
+        throw new InvalidHeaderException(
+            "Failed to read headers from input file: " + inputFiles[0]);
+      }
       int aIndex = this.getColumnIndex(inputColumns[0], headers);
       int bIndex = this.getColumnIndex(inputColumns[1], headers);
       int cIndex = this.getColumnIndex(inputColumns[2], headers);

@@ -4,7 +4,6 @@ import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-
 import lombok.SneakyThrows;
 
 @OnAnalyzerException

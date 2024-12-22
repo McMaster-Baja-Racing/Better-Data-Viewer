@@ -1,8 +1,8 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.exceptions.InvalidColumnException;
 import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.exceptions.InvalidOutputFileException;
-import com.mcmasterbaja.exceptions.InvalidColumnException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
@@ -39,9 +39,7 @@ public abstract class Analyzer {
     try {
       FileReader fileReader = new FileReader(filePath);
       BufferedReader bufferedReader = new BufferedReader(fileReader);
-      return new CSVReaderBuilder(bufferedReader)
-          .withSkipLines(0)
-          .build();
+      return new CSVReaderBuilder(bufferedReader).withSkipLines(0).build();
     } catch (IOException e) {
       throw new InvalidInputFileException("Failed to read input file: " + filePath, e);
     }
@@ -68,7 +66,8 @@ public abstract class Analyzer {
         return i;
       }
     }
-    throw new InvalidColumnException("No column in file exists with analysis column name " + this.inputColumns[fileIndex]);
+    throw new InvalidColumnException(
+        "No column in file exists with analysis column name " + this.inputColumns[fileIndex]);
   }
 
   public int getColumnIndex(String columnName, String[] fileHeaders) {
@@ -77,6 +76,7 @@ public abstract class Analyzer {
         return i;
       }
     }
-    throw new InvalidColumnException("No column in file exists with analysis column name " + columnName);
+    throw new InvalidColumnException(
+        "No column in file exists with analysis column name " + columnName);
   }
 }

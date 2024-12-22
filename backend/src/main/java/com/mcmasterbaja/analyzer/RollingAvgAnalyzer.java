@@ -42,7 +42,9 @@ public class RollingAvgAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
-    if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
 
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);

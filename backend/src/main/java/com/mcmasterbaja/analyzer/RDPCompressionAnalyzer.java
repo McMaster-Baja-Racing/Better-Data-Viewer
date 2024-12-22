@@ -34,7 +34,9 @@ public class RDPCompressionAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
-    if (headers==null) { throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]); }
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
 
     xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
