@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { GridHelper, AxesHelper, BoxHelper } from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as THREE from 'three';
+import EeveeObj from '@assets/Eevee.obj';
 
 //props to pass in rotation through euler angles
 interface EeveeProps {
@@ -25,7 +26,7 @@ export function Eevee({ objRef, onLoad }: EeveeProps) {
   useEffect(() => {
     const loader = new OBJLoader();
 
-    loader.load('/Eevee.obj', (object) => {
+    loader.load(EeveeObj, (object) => {
       // Add the loaded object to the scene
       scene.add(object);
       objRef.current = object;
