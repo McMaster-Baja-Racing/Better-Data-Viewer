@@ -2,10 +2,8 @@ package com.mcmasterbaja;
 
 import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
-import com.mcmasterbaja.analyzer.AnalyzerType;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.live.Serial;
-import com.mcmasterbaja.model.AnalyzerEnum;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.MinMax;
 import com.mcmasterbaja.services.FileMetadataService;
@@ -32,10 +30,6 @@ public class FileAnalyzeResource {
   @Inject FileMetadataService fileMetadataService;
   @Inject AnalyzerFactory analyzerFactory;
 
-  @Inject
-  @AnalyzerType(AnalyzerEnum.AVERAGE)
-  Analyzer averageAnalyzer;
-
   // TODO: Convert to using POST body rather than path variables
   @POST
   @jakarta.ws.rs.Path("analyze")
@@ -43,8 +37,6 @@ public class FileAnalyzeResource {
     logger.info("Running analyzer with params: " + params.toString());
 
     if (!params.getErrors().isEmpty()) {
-      // print errors
-      logger.error(params.getErrors());
       throw new InvalidArgumentException(params.getErrors());
     }
 
