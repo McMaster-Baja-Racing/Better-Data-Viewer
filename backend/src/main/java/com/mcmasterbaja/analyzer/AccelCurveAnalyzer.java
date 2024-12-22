@@ -3,7 +3,8 @@ package com.mcmasterbaja.analyzer;
 import com.mcmasterbaja.model.AnalyzerEnum;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.exceptions.CsvException;
-import jakarta.enterprise.context.RequestScoped;
+
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.jboss.logging.Logger;
 
-@RequestScoped
+@Dependent
 @AnalyzerType(AnalyzerEnum.ACCEL_CURVE)
 public class AccelCurveAnalyzer extends Analyzer {
 

@@ -5,7 +5,7 @@ import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import org.jboss.logging.Logger;
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp
 
-@RequestScoped
+@Dependent
 @AnalyzerType(AnalyzerEnum.INTERPOLATER_PRO)
 public class InterpolaterProAnalyzer extends Analyzer {
 

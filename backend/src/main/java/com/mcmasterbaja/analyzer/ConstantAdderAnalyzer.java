@@ -5,12 +5,12 @@ import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import org.jboss.logging.Logger;
 
-@RequestScoped
+@Dependent
 @AnalyzerType(AnalyzerEnum.CONSTANT_ADDER)
 public class ConstantAdderAnalyzer extends Analyzer {
   private double a;

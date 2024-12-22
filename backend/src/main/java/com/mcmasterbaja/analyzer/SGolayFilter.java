@@ -5,7 +5,7 @@ import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -14,7 +14,7 @@ import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.jboss.logging.Logger;
 
-@RequestScoped
+@Dependent
 @AnalyzerType(AnalyzerEnum.SGOLAY)
 public class SGolayFilter extends Analyzer {
   private int windowSize;

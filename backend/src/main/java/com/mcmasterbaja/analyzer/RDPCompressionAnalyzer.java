@@ -5,14 +5,14 @@ import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jboss.logging.Logger;
 
-@RequestScoped
+@Dependent
 @AnalyzerType(AnalyzerEnum.RDP_COMPRESSION)
 public class RDPCompressionAnalyzer extends Analyzer {
 
