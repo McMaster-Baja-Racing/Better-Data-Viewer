@@ -45,8 +45,10 @@ public class CubicAnalyzer extends Analyzer {
       cubicMultiply(
           super.inputFiles, super.inputColumns, super.outputFiles, this.a, this.b, this.c, this.d);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e);
     }
+
+    logger.info("Finished applying the cubic function to the file " + super.inputFiles[0]);
   }
 
   public void cubicMultiply(
