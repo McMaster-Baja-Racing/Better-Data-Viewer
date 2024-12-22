@@ -16,9 +16,18 @@ import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 
 public abstract class Analyzer {
+  protected String[] inputFiles;
+  protected String[] inputColumns;
+  protected String[] outputFiles;
 
   // Abstract method to be implemented by subclasses
   public abstract void analyze(AnalyzerParams params) throws IOException, CsvValidationException, CsvException;
+
+  public void extractParams(AnalyzerParams params) {
+    this.inputFiles = params.getInputFiles();
+    this.inputColumns = params.getInputColumns();
+    this.outputFiles = params.getOutputFiles();
+  }
 
   // I/O methods
   // Streams as they avoid loading the entire file into memory at once

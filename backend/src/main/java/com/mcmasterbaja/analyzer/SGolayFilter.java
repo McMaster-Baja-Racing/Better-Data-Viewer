@@ -1,140 +1,128 @@
-// package com.mcmasterbaja.analyzer;
+package com.mcmasterbaja.analyzer;
 
-// import com.opencsv.CSVReader;
-// import com.opencsv.ICSVWriter;
-// import com.opencsv.exceptions.CsvException;
-// import jakarta.enterprise.context.RequestScoped;
-// import jakarta.inject.Inject;
-// import java.io.IOException;
-// import java.util.ArrayDeque;
-// import java.util.Deque;
-// import org.apache.commons.math3.linear.MatrixUtils;
-// import org.apache.commons.math3.linear.RealMatrix;
-// import org.jboss.logging.Logger;
+import com.mcmasterbaja.model.AnalyzerEnum;
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.jboss.logging.Logger;
 
-// @RequestScoped
-// public class SGolayFilter extends Analyzer {
-//   private final int windowSize;
-//   private final int polynomialDegree;
-//   private final CircularBuffer dataBuffer;
-//   private final CircularBuffer timestampBuffer;
+@RequestScoped
+@AnalyzerType(AnalyzerEnum.SGOLAY)
+public class SGolayFilter extends Analyzer {
+  private int windowSize;
+  private int polynomialDegree;
+  private CircularBuffer dataBuffer;
+  private CircularBuffer timestampBuffer;
 
-//   @Inject Logger logger;
+  @Inject Logger logger;
 
-//   public SGolayFilter(
-//       String[] inputFiles,
-//       String[] inputColumns,
-//       String[] outputFiles,
-//       int windowSize,
-//       int polynomialDegree) {
-//     super(inputFiles, inputColumns, outputFiles);
-//     this.windowSize = windowSize;
-//     this.polynomialDegree = polynomialDegree;
-//     this.dataBuffer = new CircularBuffer(windowSize);
-//     // Half the size of the data buffer so that when we write data, we write it in the middle
-//     // (looking forwards and backwards)
-//     this.timestampBuffer = new CircularBuffer(windowSize / 2);
-//   }
+  class CircularBuffer {
+    private final Deque<Double> buffer;
+    private final int maxSize;
 
-//   public SGolayFilter(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
-//     super(inputFiles, inputColumns, outputFiles);
-//     this.windowSize = 300;
-//     this.polynomialDegree = 3;
-//     this.dataBuffer = new CircularBuffer(windowSize);
-//     this.timestampBuffer = new CircularBuffer(windowSize / 2);
-//   }
+    public CircularBuffer(int size) {
+      this.buffer = new ArrayDeque<>(size);
+      this.maxSize = size;
+    }
 
-//   class CircularBuffer {
-//     private final Deque<Double> buffer;
-//     private final int maxSize;
+    public void addPoint(double point) {
+      if (buffer.size() == maxSize) {
+        buffer.removeFirst();
+      }
+      buffer.addLast(point);
+    }
 
-//     public CircularBuffer(int size) {
-//       this.buffer = new ArrayDeque<>(size);
-//       this.maxSize = size;
-//     }
+    public Double[] getPoints() {
+      return buffer.toArray(new Double[0]);
+    }
 
-//     public void addPoint(double point) {
-//       if (buffer.size() == maxSize) {
-//         buffer.removeFirst();
-//       }
-//       buffer.addLast(point);
-//     }
+    public int size() {
+      return buffer.size();
+    }
 
-//     public Double[] getPoints() {
-//       return buffer.toArray(new Double[0]);
-//     }
+    public double getFirst() {
+      return buffer.getFirst();
+    }
+  }
 
-//     public int size() {
-//       return buffer.size();
-//     }
+  @Override
+  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+    extractParams(params);
+    this.windowSize = Integer.parseInt(params.getOptions()[0]);
+    this.polynomialDegree = Integer.parseInt(params.getOptions()[1]);
+    this.dataBuffer = new CircularBuffer(windowSize);
+    // Half the size of the data buffer so that when we write data, we write it in the middle
+    // (looking forwards and backwards)
+    this.timestampBuffer = new CircularBuffer(windowSize / 2);
+    
+    logger.info(
+        "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
+            + super.inputFiles[0]
+            + " to "
+            + super.outputFiles[0]
+            + " with window size "
+            + windowSize
+            + " and polynomial degree "
+            + polynomialDegree);
 
-//     public double getFirst() {
-//       return buffer.getFirst();
-//     }
-//   }
+    CSVReader reader = getReader(inputFiles[0]);
+    ICSVWriter writer = getWriter(outputFiles[0]);
 
-//   @Override
-//   public void analyze() throws IOException, CsvException {
-//     logger.info(
-//         "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
-//             + super.inputFiles[0]
-//             + " to "
-//             + super.outputFiles[0]
-//             + " with window size "
-//             + windowSize
-//             + " and polynomial degree "
-//             + polynomialDegree);
+    String[] headers = reader.readNext();
+    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+    writer.writeNext(headers);
 
-//     CSVReader reader = getReader(inputFiles[0]);
-//     ICSVWriter writer = getWriter(outputFiles[0]);
+    String[] dataPoint;
+    RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);
 
-//     String[] headers = reader.readNext();
-//     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-//     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-//     writer.writeNext(headers);
+    while ((dataPoint = reader.readNext()) != null) {
+      dataBuffer.addPoint(Double.parseDouble(dataPoint[yAxisIndex]));
+      timestampBuffer.addPoint(Double.parseDouble(dataPoint[xAxisIndex]));
 
-//     String[] dataPoint;
-//     RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);
+      // Make sure buffer is full
+      if (dataBuffer.size() < windowSize) {
+        continue;
+      }
 
-//     while ((dataPoint = reader.readNext()) != null) {
-//       dataBuffer.addPoint(Double.parseDouble(dataPoint[yAxisIndex]));
-//       timestampBuffer.addPoint(Double.parseDouble(dataPoint[xAxisIndex]));
+      double smoothedValue = 0.0;
+      Double[] dataPoints = dataBuffer.getPoints();
 
-//       // Make sure buffer is full
-//       if (dataBuffer.size() < windowSize) {
-//         continue;
-//       }
+      for (int i = 0; i < dataBuffer.size(); i++) {
+        smoothedValue += coeffMatrix.getEntry(i, 0) * dataPoints[i];
+      }
 
-//       double smoothedValue = 0.0;
-//       Double[] dataPoints = dataBuffer.getPoints();
+      String x = Double.toString(timestampBuffer.getFirst());
+      String y = Double.toString(smoothedValue);
+      writer.writeNext(new String[] {x, y});
+    }
 
-//       for (int i = 0; i < dataBuffer.size(); i++) {
-//         smoothedValue += coeffMatrix.getEntry(i, 0) * dataPoints[i];
-//       }
+    reader.close();
+    writer.close();
+  }
 
-//       String x = Double.toString(timestampBuffer.getFirst());
-//       String y = Double.toString(smoothedValue);
-//       writer.writeNext(new String[] {x, y});
-//     }
+  public RealMatrix savGolCoeff(int windowSize, int polynomialDegree) {
+    int m = (windowSize - 1) / 2;
+    RealMatrix A = MatrixUtils.createRealMatrix(windowSize, polynomialDegree + 1);
 
-//     reader.close();
-//     writer.close();
-//   }
+    for (int i = -m; i <= m; i++) {
+      for (int j = 0; j <= polynomialDegree; j++) {
+        A.setEntry(i + m, j, Math.pow(i, j));
+      }
+    }
 
-//   public RealMatrix savGolCoeff(int windowSize, int polynomialDegree) {
-//     int m = (windowSize - 1) / 2;
-//     RealMatrix A = MatrixUtils.createRealMatrix(windowSize, polynomialDegree + 1);
+    RealMatrix A_transpose = A.transpose();
+    RealMatrix A_tA_inv = MatrixUtils.inverse(A_transpose.multiply(A));
+    RealMatrix C = A_tA_inv.multiply(A_transpose);
 
-//     for (int i = -m; i <= m; i++) {
-//       for (int j = 0; j <= polynomialDegree; j++) {
-//         A.setEntry(i + m, j, Math.pow(i, j));
-//       }
-//     }
-
-//     RealMatrix A_transpose = A.transpose();
-//     RealMatrix A_tA_inv = MatrixUtils.inverse(A_transpose.multiply(A));
-//     RealMatrix C = A_tA_inv.multiply(A_transpose);
-
-//     return C.transpose();
-//   }
-// }
+    return C.transpose();
+  }
+}

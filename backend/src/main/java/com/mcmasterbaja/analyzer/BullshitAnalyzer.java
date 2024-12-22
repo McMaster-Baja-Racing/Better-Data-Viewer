@@ -1,74 +1,74 @@
-// package com.mcmasterbaja.analyzer;
+package com.mcmasterbaja.analyzer;
 
-// import com.opencsv.CSVReader;
-// import com.opencsv.ICSVWriter;
-// import com.opencsv.exceptions.CsvValidationException;
-// import jakarta.enterprise.context.RequestScoped;
-// import jakarta.inject.Inject;
-// import java.io.IOException;
-// import org.jboss.logging.Logger;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+import com.mcmasterbaja.model.AnalyzerParams;
 
-// @RequestScoped
-// public class BullshitAnalyzer extends Analyzer {
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import java.io.IOException;
+import org.jboss.logging.Logger;
 
-//   // The point of this analyzer is to add a bunch of fake points based on an input, between
-//   // different pre-existing points (input file) to make it seem like there is some fake noise
+@Dependent
+public class BullshitAnalyzer extends Analyzer {
 
-//   private final double numPoints;
-//   @Inject Logger logger;
+  // The point of this analyzer is to add a bunch of fake points based on an input, between
+  // different pre-existing points (input file) to make it seem like there is some fake noise
 
-//   public BullshitAnalyzer(
-//       String[] inputFiles, String[] inputColumns, String[] outputFiles, double numPoints) {
-//     super(inputFiles, inputColumns, outputFiles);
-//     this.numPoints = numPoints;
-//   }
+  private double numPoints;
 
-//   public void analyze() throws IOException, CsvValidationException {
-//     logger.info(
-//         "Adding "
-//             + numPoints
-//             + " fake points to "
-//             + super.inputFiles[0]
-//             + " to "
-//             + super.outputFiles[0]);
+  @Inject Logger logger;
 
-//     CSVReader reader = getReader(super.inputFiles[0]);
-//     ICSVWriter writer = getWriter(super.outputFiles[0]);
+  public void analyze(AnalyzerParams params) throws IOException, CsvValidationException {
+    numPoints = Double.parseDouble(params.getOptions()[0]);
+    extractParams(params);
 
-//     String[] headers = reader.readNext();
+    logger.info(
+        "Adding "
+            + numPoints
+            + " fake points to "
+            + super.inputFiles[0]
+            + " to "
+            + super.outputFiles[0]);
 
-//     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-//     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+    CSVReader reader = getReader(super.inputFiles[0]);
+    ICSVWriter writer = getWriter(super.outputFiles[0]);
 
-//     writer.writeNext(headers);
+    String[] headers = reader.readNext();
 
-//     String[] lastDataPoint = reader.readNext();
-//     String[] dataPoint;
+    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
 
-//     while ((dataPoint = reader.readNext()) != null) {
-//       double prevX = Double.parseDouble(lastDataPoint[xAxisIndex]);
-//       double currX = Double.parseDouble(dataPoint[xAxisIndex]);
-//       double prevY = Double.parseDouble(lastDataPoint[yAxisIndex]);
-//       double currY = Double.parseDouble(dataPoint[yAxisIndex]);
+    writer.writeNext(headers);
 
-//       double realNumPoints = Math.abs(currX - prevX) * numPoints;
+    String[] lastDataPoint = reader.readNext();
+    String[] dataPoint;
 
-//       for (int i = 0; i < realNumPoints; i++) {
-//         double xValue = prevX + ((currX - prevX) * (1.0 / realNumPoints) * i);
+    while ((dataPoint = reader.readNext()) != null) {
+      double prevX = Double.parseDouble(lastDataPoint[xAxisIndex]);
+      double currX = Double.parseDouble(dataPoint[xAxisIndex]);
+      double prevY = Double.parseDouble(lastDataPoint[yAxisIndex]);
+      double currY = Double.parseDouble(dataPoint[yAxisIndex]);
 
-//         double slope = (currY - prevY) / (currX - prevX);
-//         double yValue = prevY + (xValue - prevX) * slope;
+      double realNumPoints = Math.abs(currX - prevX) * numPoints;
 
-//         // TODO: This noise is relative to the yValue, so it will be more pronounced for larger
-//         // values. Downside is higher y-values have higher noise
-//         double noise = yValue * (0.75 + Math.random() * 0.5);
-//         writer.writeNext(new String[] {Double.toString(xValue), Double.toString(noise)});
-//       }
+      for (int i = 0; i < realNumPoints; i++) {
+        double xValue = prevX + ((currX - prevX) * (1.0 / realNumPoints) * i);
 
-//       lastDataPoint = dataPoint;
-//     }
+        double slope = (currY - prevY) / (currX - prevX);
+        double yValue = prevY + (xValue - prevX) * slope;
 
-//     reader.close();
-//     writer.close();
-//   }
-// }
+        // TODO: This noise is relative to the yValue, so it will be more pronounced for larger
+        // values. Downside is higher y-values have higher noise
+        double noise = yValue * (0.75 + Math.random() * 0.5);
+        writer.writeNext(new String[] {Double.toString(xValue), Double.toString(noise)});
+      }
+
+      lastDataPoint = dataPoint;
+    }
+
+    reader.close();
+    writer.close();
+  }
+}
