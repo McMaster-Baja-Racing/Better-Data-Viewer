@@ -1,5 +1,6 @@
 package com.mcmasterbaja;
 
+import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.services.FileMetadataService;
@@ -39,7 +40,6 @@ public class FileFetchResource {
     return fileNames;
   }
 
-  // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/{filekey}")
   public File getFile(@PathParam("filekey") String filekey) {
@@ -146,7 +146,7 @@ public class FileFetchResource {
         break;
 
       default:
-        throw new IllegalArgumentException("Invalid folder name");
+        throw new InvalidInputFileException("Invalid folder name");
     }
 
     return timespans;

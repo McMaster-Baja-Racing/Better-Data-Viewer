@@ -1,6 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
-import com.opencsv.exceptions.CsvException;
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public class AccelCurveAnalyzer extends Analyzer {
 
   // inputFiles are first primary RPM, then secondary RPM
@@ -19,7 +21,8 @@ public class AccelCurveAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze() throws IOException, CsvException {
+  @SneakyThrows
+  public void analyze() {
     System.out.println("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
     System.out.println("sGolay Averaging...");
 
