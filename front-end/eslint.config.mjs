@@ -18,6 +18,7 @@ export default tseslint.config(
       'error',
       2,  
       { 'SwitchCase': 1 }
-    ]
+    ],
+    'unused-vars': 'warn',
   }}
 );
