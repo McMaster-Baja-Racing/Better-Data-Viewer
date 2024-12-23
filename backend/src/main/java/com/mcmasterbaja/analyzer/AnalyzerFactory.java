@@ -2,78 +2,38 @@ package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.model.AnalyzerType;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Any;
+import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
+import java.util.EnumMap;
+import java.util.Map;
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class AnalyzerFactory {
-
   @Inject Logger logger;
 
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.ACCEL_CURVE)
-  Analyzer accelCurveAnalyzer;
+  @Inject @Any Instance<Analyzer> analyzers;
+
+  private Map<AnalyzerType, Analyzer> analyzerMap;
 
   @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.AVERAGE)
-  Analyzer averageAnalyzer;
-
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.CONSTANT_ADDER)
-  Analyzer constantAdderAnalyzer;
-
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.CUBIC)
-  Analyzer cubicAnalyzer;
-
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.INTERPOLATER_PRO)
-  Analyzer interpolaterProAnalyzer;
-
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.LINEAR_MULTIPLY)
-  Analyzer linearMultiplyAnalyzer;
-
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.RDP_COMPRESSION)
-  Analyzer rdpCompressionAnalyzer;
-
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.ROLL_AVG)
-  Analyzer rollAvgAnalyzer;
-
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.SGOLAY)
-  Analyzer sgolayAnalyzer;
-
-  @Inject
-  @AnalyzerTypeQualifier(AnalyzerType.SPLIT)
-  Analyzer splitAnalyzer;
-
-  public Analyzer createAnalyzer(AnalyzerType type) {
-    switch (type) {
-      case ACCEL_CURVE:
-        return accelCurveAnalyzer;
-      case AVERAGE:
-        return averageAnalyzer;
-      case CONSTANT_ADDER:
-        return constantAdderAnalyzer;
-      case CUBIC:
-        return cubicAnalyzer;
-      case INTERPOLATER_PRO:
-        return interpolaterProAnalyzer;
-      case LINEAR_MULTIPLY:
-        return linearMultiplyAnalyzer;
-      case RDP_COMPRESSION:
-        return rdpCompressionAnalyzer;
-      case ROLL_AVG:
-        return rollAvgAnalyzer;
-      case SGOLAY:
-        return sgolayAnalyzer;
-      case SPLIT:
-        return splitAnalyzer;
-      default:
-        throw new IllegalArgumentException("Invalid analyzer type");
+  public void init() {
+    analyzerMap = new EnumMap<>(AnalyzerType.class);
+    for (Analyzer analyzer : analyzers) {
+      AnalyzerQualifier qualifier = analyzer.getClass().getAnnotation(AnalyzerQualifier.class);
+      if (qualifier != null) {
+        analyzerMap.put(qualifier.value(), analyzer);
+      }
     }
+  }
+
+  public Analyzer getAnalyzer(AnalyzerType type) {
+    Analyzer analyzer = analyzerMap.get(type);
+    if (analyzer == null) {
+      logger.errorf("No Analyzer found for type: %s", type);
+      throw new IllegalArgumentException("No Analyzer found for type: " + type);
+    }
+    return analyzer;
   }
 }

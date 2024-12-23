@@ -1,7 +1,7 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
@@ -18,7 +18,7 @@ import org.jboss.logging.Logger;
 // file based on the timestamp
 
 @Dependent
-@AnalyzerTypeQualifier(AnalyzerType.INTERPOLATER_PRO)
+@AnalyzerQualifier(AnalyzerType.INTERPOLATER_PRO)
 public class InterpolaterProAnalyzer extends Analyzer {
 
   @Inject Logger logger;

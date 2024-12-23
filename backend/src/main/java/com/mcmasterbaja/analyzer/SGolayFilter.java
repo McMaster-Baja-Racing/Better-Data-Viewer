@@ -1,7 +1,7 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -15,7 +15,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.jboss.logging.Logger;
 
 @Dependent
-@AnalyzerTypeQualifier(AnalyzerType.SGOLAY)
+@AnalyzerQualifier(AnalyzerType.SGOLAY)
 public class SGolayFilter extends Analyzer {
   private int windowSize;
   private int polynomialDegree;

@@ -1,7 +1,7 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.exceptions.CsvException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
@@ -15,7 +15,7 @@ import java.util.List;
 import org.jboss.logging.Logger;
 
 @Dependent
-@AnalyzerTypeQualifier(AnalyzerType.ACCEL_CURVE)
+@AnalyzerQualifier(AnalyzerType.ACCEL_CURVE)
 public class AccelCurveAnalyzer extends Analyzer {
 
   @Inject Logger logger;

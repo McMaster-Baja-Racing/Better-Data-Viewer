@@ -1,7 +1,7 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -12,7 +12,7 @@ import java.util.List;
 import org.jboss.logging.Logger;
 
 @Dependent
-@AnalyzerTypeQualifier(AnalyzerType.AVERAGE)
+@AnalyzerQualifier(AnalyzerType.AVERAGE)
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a double
   @Inject Logger logger;

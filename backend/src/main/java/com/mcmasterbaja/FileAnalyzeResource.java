@@ -46,7 +46,7 @@ public class FileAnalyzeResource {
 
     // TODO: Can't pass in null to createAnalyzer, this if statement feels redundant
     if (params.getType() != null) {
-      Analyzer analyzer = analyzerFactory.createAnalyzer(params.getType());
+      Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
       try {
         analyzer.analyze(params); // No need to pass params; it's injected
       } catch (Exception e) {

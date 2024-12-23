@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Qualifier
 @Retention(RUNTIME)
 @Target({TYPE, METHOD, FIELD, PARAMETER})
-public @interface AnalyzerTypeQualifier {
+public @interface AnalyzerQualifier {
   AnalyzerType value();
 }
