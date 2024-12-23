@@ -1,6 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerEnum;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.jboss.logging.Logger;
 
 @Dependent
-@AnalyzerType(AnalyzerEnum.CUBIC)
+@AnalyzerTypeQualifier(AnalyzerType.CUBIC)
 public class CubicAnalyzer extends Analyzer {
   // Form of y = ax^3 + bx^2 + cx + d
   private double a;

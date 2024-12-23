@@ -1,6 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerEnum;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
@@ -13,7 +13,7 @@ import java.util.Queue;
 import org.jboss.logging.Logger;
 
 @Dependent
-@AnalyzerType(AnalyzerEnum.ROLL_AVG)
+@AnalyzerTypeQualifier(AnalyzerType.ROLL_AVG)
 public class RollingAvgAnalyzer extends Analyzer {
   private int windowSize;
   @Inject Logger logger;

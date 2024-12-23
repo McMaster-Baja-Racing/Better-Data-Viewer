@@ -25,7 +25,7 @@ public class AnalyzerParams {
   private String[] inputColumns;
 
   @QueryParam("type")
-  private AnalyzerEnum type;
+  private AnalyzerType type;
 
   @QueryParam("analyzerOptions")
   private String[] options;

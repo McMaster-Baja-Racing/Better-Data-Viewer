@@ -1,6 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerEnum;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
@@ -13,7 +13,7 @@ import java.util.List;
 import org.jboss.logging.Logger;
 
 @Dependent
-@AnalyzerType(AnalyzerEnum.RDP_COMPRESSION)
+@AnalyzerTypeQualifier(AnalyzerType.RDP_COMPRESSION)
 public class RDPCompressionAnalyzer extends Analyzer {
 
   // Epsilon is the maximum distance between a point and the line between the start and end points

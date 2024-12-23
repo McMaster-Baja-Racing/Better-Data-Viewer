@@ -1,6 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerEnum;
+import com.mcmasterbaja.model.AnalyzerType;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -11,46 +11,46 @@ public class AnalyzerFactory {
   @Inject Logger logger;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.ACCEL_CURVE)
+  @AnalyzerTypeQualifier(AnalyzerType.ACCEL_CURVE)
   Analyzer accelCurveAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.AVERAGE)
+  @AnalyzerTypeQualifier(AnalyzerType.AVERAGE)
   Analyzer averageAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.CONSTANT_ADDER)
+  @AnalyzerTypeQualifier(AnalyzerType.CONSTANT_ADDER)
   Analyzer constantAdderAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.CUBIC)
+  @AnalyzerTypeQualifier(AnalyzerType.CUBIC)
   Analyzer cubicAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.INTERPOLATER_PRO)
+  @AnalyzerTypeQualifier(AnalyzerType.INTERPOLATER_PRO)
   Analyzer interpolaterProAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.LINEAR_MULTIPLY)
+  @AnalyzerTypeQualifier(AnalyzerType.LINEAR_MULTIPLY)
   Analyzer linearMultiplyAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.RDP_COMPRESSION)
+  @AnalyzerTypeQualifier(AnalyzerType.RDP_COMPRESSION)
   Analyzer rdpCompressionAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.ROLL_AVG)
+  @AnalyzerTypeQualifier(AnalyzerType.ROLL_AVG)
   Analyzer rollAvgAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.SGOLAY)
+  @AnalyzerTypeQualifier(AnalyzerType.SGOLAY)
   Analyzer sgolayAnalyzer;
 
   @Inject
-  @AnalyzerType(AnalyzerEnum.SPLIT)
+  @AnalyzerTypeQualifier(AnalyzerType.SPLIT)
   Analyzer splitAnalyzer;
 
-  public Analyzer createAnalyzer(AnalyzerEnum type) {
+  public Analyzer createAnalyzer(AnalyzerType type) {
     switch (type) {
       case ACCEL_CURVE:
         return accelCurveAnalyzer;

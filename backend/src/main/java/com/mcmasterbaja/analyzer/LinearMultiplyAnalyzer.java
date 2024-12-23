@@ -1,6 +1,6 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.model.AnalyzerEnum;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.jboss.logging.Logger;
 
 @Dependent
-@AnalyzerType(AnalyzerEnum.LINEAR_MULTIPLY)
+@AnalyzerTypeQualifier(AnalyzerType.LINEAR_MULTIPLY)
 public class LinearMultiplyAnalyzer extends Analyzer {
   private double m;
   private double b;
