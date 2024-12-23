@@ -9,6 +9,6 @@
       "outDir": "./build",
       "resolveJsonModule": true
     },
-    "include": ["src/main.ts" ]
+    "include": ["src/main.ts"]
   }
   

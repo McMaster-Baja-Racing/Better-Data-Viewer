@@ -48,7 +48,7 @@
     "electron": "electron src/main.ts --trace-warnings"
   },
   "build": {
-    "appId": "com.dataviewer.mcmaster",
+    "appId": "com.mcmaster.data-viewer",
     "asar": true,
     "files": [
       "build/**/*"
@@ -80,7 +80,8 @@
           ]
         }
       ],
-      "artifactName": "${productName}-v${version}-win.exe"
+      "artifactName": "${productName}-v${version}-installer.exe",
+      "requestedExecutionLevel": "asInvoker"
     },
     "nsis": {
       "oneClick": false,
@@ -91,10 +92,11 @@
       "createStartMenuShortcut": false,
       "installerIcon": "public/bajacar.ico",
       "installerHeaderIcon": "public/bajacar.ico",
-      "shortcutName": "Dataviewer"
+      "shortcutName": "Data Viewer",
+      "include": "build/installer.nsh"
     },
     "extraMetadata": {
-    "productName": "Dataviewer"
+    "productName": "Data Viewer"
     }
   },
   "eslintConfig": {
