@@ -1,6 +1,7 @@
 import './Topbar.css';
 import { useState } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
+import { onIconClick } from '@lib/navigationUtils';
 import bajalogo from '@assets/bajalogo.png';
 import loadingImg from '@assets/loading.gif';
 import { MAX_VIEWS } from '@components/views/viewsConfig';
@@ -41,9 +42,10 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
     setNumViews(num);
   };
 
+
   return (
     <div className="topbar">
-      <div className="title" onClick={() => window.location.href='/'}>
+      <div className="title" onClick={() => onIconClick('')}>
         <img src={bajalogo} alt="baja_logo"/>
                 Data Visualizer
         <img src={loadingImg} alt="loading"/>
@@ -55,7 +57,7 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
             : <img className="icon" src={icons['liveOff']} alt="Live Mode Off" />}
         </button>
 
-        <button title="Go to map" className="map" onClick={() => window.location.href='/map'}>
+        <button title="Go to map" className="map" onClick={() =>onIconClick('map')}>
           <img className="icon" src={icons['map']} alt="Go to map" />
         </button>
                 
