@@ -1,26 +1,30 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.io.IOException;
+import org.jboss.logging.Logger;
 
+@Dependent
+@AnalyzerQualifier(AnalyzerType.LINEAR_MULTIPLY)
 public class LinearMultiplyAnalyzer extends Analyzer {
-  private final double m;
-  private final double b;
+  private double m;
+  private double b;
 
-  // Multiplies the y values of a file by a constant m and adds an offset b
-  public LinearMultiplyAnalyzer(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, double m, double b) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.m = m;
-    this.b = b;
-  }
+  @Inject Logger logger;
 
   @Override
-  public void analyze() throws IOException, CsvException {
+  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+    extractParams(params);
+    this.m = Double.parseDouble(params.getOptions()[0]);
+    this.b = Double.parseDouble(params.getOptions()[1]);
 
-    System.out.println(
+    logger.info(
         "Multiplyinh the file named"
             + super.inputFiles[0]
             + " to "

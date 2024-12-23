@@ -1,22 +1,24 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.io.IOException;
+import org.jboss.logging.Logger;
 
+@Dependent
 public class DeleteOutliers extends Analyzer {
-  private final double limit;
+  private double limit;
+  @Inject Logger logger;
 
-  // This class deletes all data points that are above a certain limit
-  public DeleteOutliers(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, double limit) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.limit = limit;
-  }
+  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+    this.limit = Double.parseDouble(params.getOptions()[0]);
+    extractParams(params);
 
-  public void analyze() throws IOException, CsvException {
-    System.out.println(
+    logger.info(
         "Deleting outliers from "
             + super.inputFiles[0]
             + " to "

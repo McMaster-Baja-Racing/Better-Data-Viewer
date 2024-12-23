@@ -1,25 +1,30 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.io.IOException;
+import org.jboss.logging.Logger;
 
+@Dependent
+@AnalyzerQualifier(AnalyzerType.SPLIT)
 public class SplitAnalyzer extends Analyzer {
-  private final int start;
-  private final int end;
+  private int start;
+  private int end;
 
-  public SplitAnalyzer(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, int start, int end) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.start = start;
-    this.end = end;
-  }
+  @Inject Logger logger;
 
   @Override
-  public void analyze() throws IOException, CsvException {
+  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+    extractParams(params);
+    this.start = Integer.parseInt(params.getOptions()[0]);
+    this.end = Integer.parseInt(params.getOptions()[1]);
 
-    System.out.println(
+    logger.info(
         "Spliting the file named"
             + super.inputFiles[0]
             + " to "

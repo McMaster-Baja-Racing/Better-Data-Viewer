@@ -1,40 +1,49 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.List;
+import org.jboss.logging.Logger;
 
+@Dependent
+@AnalyzerQualifier(AnalyzerType.AVERAGE)
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a double
-  private final int[] range;
+  @Inject Logger logger;
 
-  public AverageAnalyzer(String[] inputFiles, String[] outputFiles, int[] range) {
-    super(inputFiles, outputFiles);
-    // This range is the value, not the index. BinarySearch will be used to find the index
-    this.range = range;
-  }
+  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+    int[] range = new int[2];
+    range[0] = Integer.parseInt((String) params.getOptions()[0]);
+    range[1] = Integer.parseInt((String) params.getOptions()[1]);
 
-  public void analyze() throws IOException, CsvException {
-    System.out.println(
+    logger.info(
         "Taking the average of "
-            + super.inputFiles[0]
+            + params.getInputFiles()[0]
             + " to "
-            + super.outputFiles[0]
+            + params.getOutputFiles()[0]
             + " with a range of "
             + range[0]
             + " to "
             + range[1]);
 
-    CSVReader reader = getReader(super.inputFiles[0]);
-    ICSVWriter writer = getWriter(super.outputFiles[0]);
+    CSVReader reader = getReader(params.getInputFiles()[0]);
+    ICSVWriter writer = getWriter(params.getOutputFiles()[0]);
 
     String[] headers = {"TempColumn", "Average"};
     writer.writeNext(headers);
 
+    reader.readNext(); // Skip headers
     String[] dataPoint = {"0", Double.toString(average(reader.readAll(), range[0], range[1]))};
     writer.writeNext(dataPoint);
+
+    logger.info("Average: " + dataPoint[1]);
+    writer.close();
   }
 
   // Takes average at found indices of second column
