@@ -1,6 +1,7 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.model.AnalyzerType;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
@@ -17,7 +18,7 @@ public class AnalyzerFactory {
 
   private Map<AnalyzerType, Analyzer> analyzerMap;
 
-  @Inject
+  @PostConstruct
   public void init() {
     analyzerMap = new EnumMap<>(AnalyzerType.class);
     for (Analyzer analyzer : analyzers) {
