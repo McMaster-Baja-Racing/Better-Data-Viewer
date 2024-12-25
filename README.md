@@ -30,7 +30,7 @@ Setup complete!
 
 1. Ensure your Java Development Kit directory is added into the list `javaHomeLocations` in the `start.ps1` file
 2. Run the command `./start.ps1`, and leave all terminals open.
-3. Go to `localhost:3000` to begin.
+3. Go to `localhost:5173` to begin.
 
 ### Individual startup
 
@@ -40,9 +40,10 @@ For Quarkus, you can use the Quarkus CLI or Maven commands. For more information
 3. Head to `localhost:8080` to test it out!
 
 To run the front end, simply use the react scripts
+
 1. Ensure you have NodeJS and npm installed.
 2. In the `front-end/` folder, run the `npm start` command.
-3. Head to `localhost:3000` to test it out!
+3. Head to `localhost:5173` to test it out!
 
 ## Tests
 
@@ -71,8 +72,3 @@ Playwright will automatically run in the pipeline on pull requests. You can view
 - in the binary-to-csv-lib folder, run `cargo build --release`
 - once that is complete, copy the resulting dll file(windows) that is now in the `target/release/` folder
 - paste this folder in the `Better-Data-Viewer\API\src\main\java\backend\API\binary_csv\` Folder
-
-
-
-
-
