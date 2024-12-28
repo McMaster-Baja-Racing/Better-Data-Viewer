@@ -7,6 +7,9 @@
   "description": "This project is a data visualization tool for McMaster Baja Racing.",
   "author": "McMaster Baja Racing",
   "dependencies": {
+    "@react-three/drei": "^9.92.6",
+    "@react-three/fiber": "^8.15.12",
+    "@types/three": "^0.160.0",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.6",
     "@types/react-dom": "^18.3.0",
@@ -92,8 +95,7 @@
       "createStartMenuShortcut": false,
       "installerIcon": "public/bajacar.ico",
       "installerHeaderIcon": "public/bajacar.ico",
-      "shortcutName": "Data Viewer",
-      "include": "build/installer.nsh"
+      "shortcutName": "Data Viewer"
     },
     "extraMetadata": {
     "productName": "Data Viewer"

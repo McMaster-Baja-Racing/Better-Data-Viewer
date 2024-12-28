@@ -48,6 +48,14 @@ public interface StorageService {
   Stream<Path> loadAll(Path dir);
 
   /**
+   * Loads all directories in the root location.
+   *
+   * @param dir The directory to load directories from.
+   * @return A Stream of Paths representing the directories.
+   */
+  Stream<Path> loadDirectories(Path dir);
+
+  /**
    * Deletes a file.
    *
    * @param targetPath The Path of the file to delete.

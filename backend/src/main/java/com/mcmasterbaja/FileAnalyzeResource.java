@@ -28,6 +28,7 @@ public class FileAnalyzeResource {
   @Inject Logger logger;
   @Inject StorageService storageService;
   @Inject FileMetadataService fileMetadataService;
+  @Inject AnalyzerFactory analyzerFactory;
 
   // TODO: Convert to using POST body rather than path variables
   @POST
@@ -45,14 +46,12 @@ public class FileAnalyzeResource {
 
     // TODO: Can't pass in null to createAnalyzer, this if statement feels redundant
     if (params.getType() != null) {
-      Analyzer analyzer = AnalyzerFactory.createAnalyzer(params);
-      if (analyzer != null) {
-        try {
-          analyzer.analyze();
-        } catch (Exception e) {
-          logger.error("Error running analyzer", e);
-          throw new RuntimeException("Error running analyzer");
-        }
+      Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
+      try {
+        analyzer.analyze(params); // No need to pass params; it's injected
+      } catch (Exception e) {
+        logger.error("Error running analyzer", e);
+        throw new RuntimeException("Error running analyzer");
       }
     }
 

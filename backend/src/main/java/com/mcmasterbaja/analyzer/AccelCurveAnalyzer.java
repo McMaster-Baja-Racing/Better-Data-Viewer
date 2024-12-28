@@ -1,6 +1,10 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -8,46 +12,51 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.jboss.logging.Logger;
 
+@Dependent
+@AnalyzerQualifier(AnalyzerType.ACCEL_CURVE)
 public class AccelCurveAnalyzer extends Analyzer {
+
+  @Inject Logger logger;
+  @Inject AnalyzerParams params;
 
   // inputFiles are first primary RPM, then secondary RPM
   // outputFiles are first primary RPM rolling average, then secondary RPM rolling average, then
   // interpolated, then accel curve (runs)
-  public AccelCurveAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
-    super(inputFiles, inputColumns, outputFiles);
-  }
-
   @Override
-  public void analyze() throws IOException, CsvException {
-    System.out.println("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
-    System.out.println("sGolay Averaging...");
+  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+    extractParams(params);
+    logger.info("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
+    logger.info("sGolay Averaging...");
 
-    SGolayFilter s =
-        new SGolayFilter(
-            Arrays.copyOfRange(inputFiles, 0, 1),
-            new String[] {"Timestamp (ms)", inputColumns[0]},
-            Arrays.copyOfRange(outputFiles, 0, 1),
-            300,
-            3);
-    s.analyze();
-    SGolayFilter s2 =
-        new SGolayFilter(
-            Arrays.copyOfRange(inputFiles, 1, 2),
-            new String[] {"Timestamp (ms)", inputColumns[1]},
-            Arrays.copyOfRange(outputFiles, 1, 2),
-            300,
-            3);
-    s2.analyze();
+    SGolayFilter golayer = new SGolayFilter();
+    AnalyzerParams golayParams = new AnalyzerParams();
+    golayParams.setInputFiles(Arrays.copyOfRange(inputFiles, 0, 1));
+    golayParams.setInputColumns(new String[] {"Timestamp (ms)", inputColumns[0]});
+    golayParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 0, 1));
+    golayParams.setOptions(new String[] {"300", "3"});
+    golayer.analyze(golayParams);
 
-    System.out.println("Interpolating...");
+    SGolayFilter golayer2 = new SGolayFilter();
+    AnalyzerParams golayParams2 = new AnalyzerParams();
+    golayParams2.setInputFiles(Arrays.copyOfRange(inputFiles, 1, 2));
+    golayParams2.setInputColumns(new String[] {"Timestamp (ms)", inputColumns[1]});
+    golayParams2.setOutputFiles(Arrays.copyOfRange(outputFiles, 1, 2));
+    golayParams2.setOptions(new String[] {"300", "3"});
+    golayer2.analyze(golayParams2);
 
-    InterpolaterProAnalyzer linearInterpolate =
-        new InterpolaterProAnalyzer(
-            Arrays.copyOfRange(outputFiles, 0, 2),
-            new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]},
-            Arrays.copyOfRange(outputFiles, 2, 3));
-    linearInterpolate.analyze();
+    logger.info("Interpolating...");
+
+    InterpolaterProAnalyzer interpolater = new InterpolaterProAnalyzer();
+    AnalyzerParams interpolateParams = new AnalyzerParams();
+    interpolateParams.setInputFiles(Arrays.copyOfRange(outputFiles, 0, 2));
+    interpolateParams.setInputColumns(
+        new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]});
+    interpolateParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 2, 3));
+    interpolater.analyze(interpolateParams);
+
+    logger.info("Done");
   }
 
   // Gets start and end timestamps of accel runs based on GPS speed
