@@ -1,23 +1,27 @@
 package com.mcmasterbaja.services;
 
-import com.mcmasterbaja.exceptions.FileNotFoundException;
-import com.mcmasterbaja.exceptions.StorageException;
-import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.stream.Stream;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
+
+import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.StorageException;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped // Singleton I think
 public class FileSystemStorageService implements StorageService {
 
-  @Inject Logger logger;
+  @Inject
+  Logger logger;
 
   @ConfigProperty(name = "quarkus.http.body.uploads-directory")
   private Path rootLocation;
@@ -27,7 +31,7 @@ public class FileSystemStorageService implements StorageService {
     try {
       logger.info("Initializing storage service");
       Path[] directories = {
-        rootLocation, rootLocation.resolve("csv/"), rootLocation.resolve("mp4/")
+          rootLocation, rootLocation.resolve("csv/"), rootLocation.resolve("mp4/")
       };
 
       for (Path directory : directories) {
@@ -111,10 +115,3 @@ public class FileSystemStorageService implements StorageService {
     deleteAll(rootLocation);
   }
 }
-
-// catch IOException
-// a) -> throw FileNotFoundException
-// - couldn't delete directory,
-// - couldn't delete file,
-// - couldn't list files in directory,
-// - couldn't store file
