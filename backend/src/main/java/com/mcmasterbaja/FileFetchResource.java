@@ -1,6 +1,7 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.exceptions.InvalidInputFileException;
+import com.mcmasterbaja.exceptions.FileNotFoundException;
 import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.services.FileMetadataService;
@@ -11,6 +12,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -44,8 +46,10 @@ public class FileFetchResource {
   @jakarta.ws.rs.Path("/{filekey}")
   public File getFile(@PathParam("filekey") String filekey) {
     logger.info("Getting file: " + filekey);
-
     Path targetPath = addTypeFolder(filekey);
+    if (!Files.exists(targetPath)) {
+      throw new FileNotFoundException("File not found: " + filekey);
+    }
     File file = storageService.load(targetPath).toFile();
 
     return file;
@@ -105,6 +109,22 @@ public class FileFetchResource {
             .collect(Collectors.toList());
 
     return fileInformationList;
+  }
+
+  @GET
+  @jakarta.ws.rs.Path("/listBins")
+  public List<String> getFolders() {
+    logger.info("Getting all folders");
+
+    Path dir = Paths.get("csv");
+
+    List<String> folderNames =
+        storageService
+            .loadDirectories(dir)
+            .map(path -> path.toString().replace("\\", "/"))
+            .collect(Collectors.toList());
+
+    return folderNames;
   }
 
   @GET

@@ -7,11 +7,11 @@ export const ApiUtil = {
     * @param {string} fileKey - The unique identifier of the file.
     * @returns {Promise<Blob>} A promise that resolves to the fetched file in the form of a Blob.
     */
-  getFile: async (fileKey: string): Promise<Blob> => {
+  getFile: async (fileKey: string) => {
     fileKey = encodeURIComponent(fileKey);
     const response = await fetch(`http://${window.location.hostname}:8080/files/${fileKey}`);
     if (!response.ok) throw Error(response.statusText);
-    return response.blob();
+    return response.text();
   },
 
   /**
@@ -32,6 +32,16 @@ export const ApiUtil = {
      */
   getFolder: async (folderKey: string): Promise<FileInformation[]> => {
     const response = await fetch(`http://${window.location.hostname}:8080/files/information/folder/${folderKey}`);
+    if (!response.ok) throw Error(response.statusText);
+    return response.json();
+  },
+
+  /**
+   * @description Sends a GET request to the server to fetch all bins that have been uploaded.
+   * @returns {Promise<string[]>} A promise that resolves to an array of bin names.
+   */
+  getBins: async (): Promise<string[]> => {
+    const response = await fetch(`http://${window.location.hostname}:8080/files/listBins`);
     if (!response.ok) throw Error(response.statusText);
     return response.json();
   },

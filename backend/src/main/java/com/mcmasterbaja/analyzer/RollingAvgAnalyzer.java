@@ -8,29 +8,36 @@ import java.util.LinkedList;
 import java.util.Queue;
 import lombok.SneakyThrows;
 
+
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
+import org.jboss.logging.Logger;
+
+@Dependent
+@AnalyzerQualifier(AnalyzerType.ROLL_AVG)
 @OnAnalyzerException
 public class RollingAvgAnalyzer extends Analyzer {
-  private final int windowSize;
-
-  public RollingAvgAnalyzer(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, int windowSize) {
-    super(inputFiles, inputColumns, outputFiles);
-    if (windowSize <= 1) {
-      throw new IllegalArgumentException("Window size must be greater than 1");
-    }
-    this.windowSize = windowSize;
-  }
-
-  public RollingAvgAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.windowSize = 30;
-  }
+  private int windowSize;
+  @Inject Logger logger;
 
   @Override
-  @SneakyThrows
-  public void analyze() {
+  @SneakyThrows 
+  public void analyze(AnalyzerParams params) {
+    extractParams(params);
+    this.windowSize =
+        Integer.parseInt(params.getOptions()[0]) > 0
+            ? Integer.parseInt(params.getOptions()[0])
+            : 30;
 
-    System.out.println(
+    logger.info(
         "Taking the rolling average of "
             + super.inputFiles[0]
             + " to "

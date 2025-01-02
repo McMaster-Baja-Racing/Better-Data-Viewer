@@ -3,6 +3,7 @@ package com.mcmasterbaja.analyzer;
 import com.mcmasterbaja.exceptions.InvalidColumnException;
 import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.exceptions.InvalidOutputFileException;
+import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
@@ -13,27 +14,20 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 public abstract class Analyzer {
-
   protected String[] inputFiles;
   protected String[] inputColumns;
   protected String[] outputFiles;
 
-  public Analyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
-    this.inputFiles = inputFiles;
-    this.inputColumns = inputColumns;
-    this.outputFiles = outputFiles;
-  }
+  // Abstract method to be implemented by subclasses
+  public abstract void analyze(AnalyzerParams params);
 
-  public Analyzer(String[] inputFiles, String[] outputFiles) {
-    this.inputFiles = inputFiles;
-    this.inputColumns = new String[1];
-    this.outputFiles = outputFiles;
+  public void extractParams(AnalyzerParams params) {
+    this.inputFiles = params.getInputFiles();
+    this.inputColumns = params.getInputColumns();
+    this.outputFiles = params.getOutputFiles();
   }
-
-  public abstract void analyze();
 
   public CSVReader getReader(String filePath) {
     try {
@@ -58,16 +52,6 @@ public abstract class Analyzer {
     } catch (IOException e) {
       throw new InvalidOutputFileException("Failed to write to output file: " + filePath, e);
     }
-  }
-
-  public int getAnalysisColumnIndex(int fileIndex, List<String> fileHeaders) {
-    for (int i = 0; i < fileHeaders.size(); i++) {
-      if (fileHeaders.get(i).trim().equals(this.inputColumns[fileIndex])) {
-        return i;
-      }
-    }
-    throw new InvalidColumnException(
-        "No column in file exists with analysis column name " + this.inputColumns[fileIndex]);
   }
 
   public int getColumnIndex(String columnName, String[] fileHeaders) {

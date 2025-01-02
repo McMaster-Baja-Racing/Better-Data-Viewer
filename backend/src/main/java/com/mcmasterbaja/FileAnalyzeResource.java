@@ -29,12 +29,10 @@ import jakarta.ws.rs.QueryParam;
 @jakarta.ws.rs.Path("/")
 public class FileAnalyzeResource {
 
-  @Inject
-  Logger logger;
-  @Inject
-  StorageService storageService;
-  @Inject
-  FileMetadataService fileMetadataService;
+  @Inject Logger logger;
+  @Inject StorageService storageService;
+  @Inject FileMetadataService fileMetadataService;
+  @Inject AnalyzerFactory analyzerFactory;
 
   // TODO: Convert to using POST body rather than path variables
   @POST
@@ -53,10 +51,8 @@ public class FileAnalyzeResource {
 
     // TODO: Can't pass in null to createAnalyzer, this if statement feels redundant
     if (params.getType() != null) {
-      Analyzer analyzer = AnalyzerFactory.createAnalyzer(params);
-      if (analyzer != null) {
-        analyzer.analyze();
-      }
+      Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
+      analyzer.analyze(params);
     }
 
     Path targetPath = Paths.get(params.getOutputFiles()[0]);

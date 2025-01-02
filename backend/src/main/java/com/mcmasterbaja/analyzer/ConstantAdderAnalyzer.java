@@ -6,32 +6,37 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
+
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import java.io.IOException;
+import org.jboss.logging.Logger;
+
+@Dependent
+@AnalyzerQualifier(AnalyzerType.CONSTANT_ADDER)
 @OnAnalyzerException
 public class ConstantAdderAnalyzer extends Analyzer {
-  private final double a;
-  private final double b;
-  private final double c;
-  private final double d;
+  private double a;
+  private double b;
+  private double c;
+  private double d;
 
-  public ConstantAdderAnalyzer(
-      String[] inputFiles,
-      String[] inputColumns,
-      String[] outputFiles,
-      double a,
-      double b,
-      double c,
-      double d) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.a = a;
-    this.b = b;
-    this.c = c;
-    this.d = d;
-  }
+  @Inject Logger logger;
 
   @SneakyThrows
-  public void analyze() {
+  public void analyze(AnalyzerParams params) {
+    a = Double.parseDouble(params.getOptions()[0]);
+    b = Double.parseDouble(params.getOptions()[1]);
+    c = Double.parseDouble(params.getOptions()[2]);
+    d = Double.parseDouble(params.getOptions()[3]);
+    extractParams(params);
 
-    System.out.println(
+    logger.info(
         "Add a constant value to a file named"
             + super.inputFiles[0]
             + " to make "

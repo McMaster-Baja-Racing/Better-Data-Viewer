@@ -4,6 +4,14 @@ import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,12 +20,18 @@ import lombok.SneakyThrows;
 
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp
+
+import org.jboss.logging.Logger;
+
+// The goal of this analyzer is to take in any number of files, and combine them all into a single
+// file based on the timestamp
+
+@Dependent
+@AnalyzerQualifier(AnalyzerType.INTERPOLATER_PRO)
 @OnAnalyzerException
 public class InterpolaterProAnalyzer extends Analyzer {
 
-  public InterpolaterProAnalyzer(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
-    super(inputFiles, inputColumns, outputFiles);
-  }
+  @Inject Logger logger;
 
   // Class to store timestamp and file index
   class TimestampData {
@@ -32,7 +46,8 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
   @Override
   @SneakyThrows
-  public void analyze() {
+  public void analyze(AnalyzerParams params) {
+    extractParams(params);
 
     // Construct string to print message for all input files
     StringBuilder inputFilesString = new StringBuilder();
@@ -42,7 +57,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
         inputFilesString.append(", ");
       }
     }
-    System.out.println("Interpolating " + inputFilesString + " to \"" + outputFiles[0] + "\"");
+    logger.info("Interpolating " + inputFilesString + " to \"" + outputFiles[0] + "\"");
 
     // Start timer
     long startTime = System.nanoTime();
@@ -236,7 +251,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
     long endTime = System.nanoTime();
 
     // Print completed
-    System.out.println("Completed interpolation in " + (endTime - startTime) / 1000000 + "ms");
+    logger.info("Completed interpolation in " + (endTime - startTime) / 1000000 + "ms");
 
     writer.close();
     for (CSVReader reader : readers) {

@@ -6,22 +6,34 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
+
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import java.io.IOException;
+import org.jboss.logging.Logger;
+
+@Dependent
+@AnalyzerQualifier(AnalyzerType.SPLIT)
 @OnAnalyzerException
 public class SplitAnalyzer extends Analyzer {
-  private final int start;
-  private final int end;
+  private int start;
+  private int end;
 
-  public SplitAnalyzer(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, int start, int end) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.start = start;
-    this.end = end;
-  }
+  @Inject Logger logger;
 
   @Override
-  @SneakyThrows
-  public void analyze() {
-    System.out.println(
+  @SneakyThrows  
+  public void analyze(AnalyzerParams params) {
+    extractParams(params);
+    this.start = Integer.parseInt(params.getOptions()[0]);
+    this.end = Integer.parseInt(params.getOptions()[1]);
+
+    logger.info(
         "Spliting the file named"
             + super.inputFiles[0]
             + " to "

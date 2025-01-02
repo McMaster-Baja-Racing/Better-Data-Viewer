@@ -6,23 +6,29 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import lombok.SneakyThrows;
 
+
+import com.mcmasterbaja.model.AnalyzerParams;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
+
+@Dependent
 @OnAnalyzerException
 public class BullshitAnalyzer extends Analyzer {
 
   // The point of this analyzer is to add a bunch of fake points based on an input, between
   // different pre-existing points (input file) to make it seem like there is some fake noise
 
-  private final double numPoints;
+  private double numPoints;
 
-  public BullshitAnalyzer(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, double numPoints) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.numPoints = numPoints;
-  }
+  @Inject Logger logger;
 
   @SneakyThrows
-  public void analyze() {
-    System.out.println(
+  public void analyze(AnalyzerParams params) {
+    numPoints = Double.parseDouble(params.getOptions()[0]);
+    extractParams(params);
+
+    logger.info(
         "Adding "
             + numPoints
             + " fake points to "

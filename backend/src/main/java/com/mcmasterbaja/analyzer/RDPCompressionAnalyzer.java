@@ -8,26 +8,39 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.SneakyThrows;
 
+
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.jboss.logging.Logger;
+
+@Dependent
+@AnalyzerQualifier(AnalyzerType.RDP_COMPRESSION)
 @OnAnalyzerException
 public class RDPCompressionAnalyzer extends Analyzer {
 
   // Epsilon is the maximum distance between a point and the line between the start and end points
   // AKA Hausdorff distance
-  private final double epsilon;
+  private double epsilon;
   private int xAxisIndex;
   private int yAxisIndex;
 
-  public RDPCompressionAnalyzer(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, double epsilon) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.epsilon = epsilon;
-  }
+  @Inject Logger logger;
 
   @Override
   @SneakyThrows
-  public void analyze() {
+  public void analyze(AnalyzerParams params) {
+    extractParams(params);
+    this.epsilon = Double.parseDouble(params.getOptions()[0]);
 
-    System.out.println(
+    logger.info(
         "Compressing " + inputFiles[0] + " with epsilon " + epsilon + " to " + outputFiles[0]);
 
     CSVReader reader = getReader(inputFiles[0]);
