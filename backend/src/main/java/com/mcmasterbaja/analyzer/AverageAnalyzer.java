@@ -1,14 +1,14 @@
 package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-import java.util.List;
-import lombok.SneakyThrows;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+import java.util.List;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent

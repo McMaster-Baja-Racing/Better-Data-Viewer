@@ -2,23 +2,15 @@ package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-import java.util.LinkedList;
-import java.util.Queue;
-import lombok.SneakyThrows;
-
-
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent
@@ -29,7 +21,7 @@ public class RollingAvgAnalyzer extends Analyzer {
   @Inject Logger logger;
 
   @Override
-  @SneakyThrows 
+  @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
     this.windowSize =

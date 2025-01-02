@@ -2,25 +2,17 @@ package com.mcmasterbaja.analyzer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 import lombok.SneakyThrows;
-
-// The goal of this analyzer is to take in any number of files, and combine them all into a single
-// file based on the timestamp
-
 import org.jboss.logging.Logger;
 
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
