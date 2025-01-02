@@ -1,25 +1,28 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.ROLL_AVG)
+@OnAnalyzerException
 public class RollingAvgAnalyzer extends Analyzer {
   private int windowSize;
   @Inject Logger logger;
 
   @Override
-  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
     extractParams(params);
     this.windowSize =
         Integer.parseInt(params.getOptions()[0]) > 0
@@ -38,6 +41,10 @@ public class RollingAvgAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
+
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);

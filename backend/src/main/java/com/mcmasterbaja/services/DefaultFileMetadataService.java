@@ -4,6 +4,7 @@ import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.metadata.Tag;
 import com.drew.metadata.mp4.Mp4Directory;
 import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.InvalidColumnException;
 import com.mcmasterbaja.exceptions.MalformedCsvException;
 import com.mcmasterbaja.exceptions.StorageException;
 import com.mcmasterbaja.model.MinMax;
@@ -70,7 +71,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
       }
 
       if (columnIndex == -1) {
-        throw new IllegalArgumentException("Column not found in file: " + targetPath.toString());
+        throw new InvalidColumnException("Column not found in file: " + targetPath.toString());
       }
 
       // Then get the minimum and maximum values
@@ -198,7 +199,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
   // Each value will be in the format "key - value"
   private String extractMetadata(Path targetPath) {
     try {
-      // Gets all the  metadata from the file in the form of a directory
+      // Gets all the metadata from the file in the form of a directory
       Mp4Directory metadata =
           Mp4MetadataReader.readMetadata(targetPath.toFile())
               .getFirstDirectoryOfType(Mp4Directory.class);

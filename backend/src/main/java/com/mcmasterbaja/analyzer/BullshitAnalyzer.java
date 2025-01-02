@@ -1,15 +1,17 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent
+@OnAnalyzerException
 public class BullshitAnalyzer extends Analyzer {
 
   // The point of this analyzer is to add a bunch of fake points based on an input, between
@@ -19,7 +21,8 @@ public class BullshitAnalyzer extends Analyzer {
 
   @Inject Logger logger;
 
-  public void analyze(AnalyzerParams params) throws IOException, CsvValidationException {
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
     numPoints = Double.parseDouble(params.getOptions()[0]);
     extractParams(params);
 
@@ -35,6 +38,9 @@ public class BullshitAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(super.outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
 
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
@@ -71,3 +77,5 @@ public class BullshitAnalyzer extends Analyzer {
     writer.close();
   }
 }
+
+// throws IOException, CsvValidationException simultaneously
