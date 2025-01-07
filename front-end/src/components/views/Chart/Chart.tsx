@@ -46,7 +46,13 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
         ...getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
       };
     });
-        
+
+
+    console.log(chartRef.current?.yAxis[0].max, chartRef.current?.yAxis[0].min);
+    console.log(chartRef.current?.xAxis[0].max, chartRef.current?.xAxis[0].min);
+
+    console.log(chartRef.current?.options.chart?.height);
+    console.log(chartRef.current?.options.chart?.width);
   }, [parsedData, fileNames, chartInformation]);
 
   useEffect(() => {
