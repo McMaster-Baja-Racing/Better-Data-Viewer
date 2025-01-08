@@ -10,11 +10,23 @@ export const ApiUtil = {
     * @param {string} fileKey - The unique identifier of the file.
     * @returns {Promise<Blob>} A promise that resolves to the fetched file in the form of a Blob.
     */
-  getFile: async (fileKey: string) => {
+  getFileAsText: async (fileKey: string) => {
     fileKey = encodeURIComponent(fileKey);
     const response = await fetch(`${baseApiUrl}/files/${fileKey}`);
     if (!response.ok) throw Error(response.statusText);
     return response.text();
+  },
+
+  /**
+    * Sends a GET request to the server to fetch a specific file.
+    * @param {string} fileKey - The unique identifier of the file.
+    * @returns {Promise<Blob>} A promise that resolves to the fetched file in the form of a Blob.
+    */
+  getFileAsBlob: async (fileKey: string) => {
+    fileKey = encodeURIComponent(fileKey);
+    const response = await fetch(`${baseApiUrl}/files/${fileKey}`);
+    if (!response.ok) throw Error(response.statusText);
+    return response.blob();
   },
 
   /**

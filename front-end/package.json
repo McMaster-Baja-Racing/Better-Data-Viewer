@@ -1,6 +1,6 @@
 {
   "name": "dataviewer",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "main": "build/main.js",
@@ -84,7 +84,7 @@
         }
       ],
       "artifactName": "${productName}-v${version}-installer.exe",
-      "requestedExecutionLevel": "asInvoker"
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "nsis": {
       "oneClick": false,
