@@ -4,13 +4,14 @@ import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
 import { DownloadModal } from './modal/download/DownloadModal';
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Topbar from './Topbar/Topbar';
 import Views from './views/Views/Views';
 import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
+import { RouterComponent } from '@lib/navigationUtils';
 import ModelViewer from './model/ModelViewer';
 
 const App = () => {
@@ -41,8 +42,10 @@ const App = () => {
     $('div.success').slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
 
+
+
   return (
-    <BrowserRouter>
+    <RouterComponent>
       <div className="App">
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
         <header className="App-body">
@@ -79,7 +82,7 @@ const App = () => {
           </Routes>
         </header>
       </div>
-    </BrowserRouter>
+    </RouterComponent>
   );
 
 };

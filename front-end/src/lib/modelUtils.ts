@@ -28,10 +28,10 @@ const combineData = (timestamps: string[], x: string[], y: string[], z: string[]
 export const fetchData = async (bin: string) => {
   let data: quatReplayData = [];
   await Promise.all([
-    ApiUtil.getFile(`${bin}/IMU QUAT W.csv`),
-    ApiUtil.getFile(`${bin}/IMU QUAT X.csv`),
-    ApiUtil.getFile(`${bin}/IMU QUAT Y.csv`),
-    ApiUtil.getFile(`${bin}/IMU QUAT Z.csv`)
+    ApiUtil.getFileAsText(`${bin}/IMU QUAT W.csv`),
+    ApiUtil.getFileAsText(`${bin}/IMU QUAT X.csv`),
+    ApiUtil.getFileAsText(`${bin}/IMU QUAT Y.csv`),
+    ApiUtil.getFileAsText(`${bin}/IMU QUAT Z.csv`)
   ]).then(([wDataRaw, xDataRaw, yDataRaw, zDataRaw]) => {
     const wData = parseCSV(wDataRaw);
     const xData = parseCSV(xDataRaw);
