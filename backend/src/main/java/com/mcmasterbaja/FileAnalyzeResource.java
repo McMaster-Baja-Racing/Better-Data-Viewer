@@ -2,6 +2,7 @@ package com.mcmasterbaja;
 
 import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
@@ -33,6 +34,7 @@ public class FileAnalyzeResource {
   // TODO: Convert to using POST body rather than path variables
   @POST
   @jakarta.ws.rs.Path("analyze")
+  @OnAnalyzerException
   public RestResponse<File> runAnalyzer(@BeanParam AnalyzerParams params) {
     logger.info("Running analyzer with params: " + params.toString());
 
@@ -47,12 +49,7 @@ public class FileAnalyzeResource {
     // TODO: Can't pass in null to createAnalyzer, this if statement feels redundant
     if (params.getType() != null) {
       Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
-      try {
-        analyzer.analyze(params); // No need to pass params; it's injected
-      } catch (Exception e) {
-        logger.error("Error running analyzer", e);
-        throw new RuntimeException("Error running analyzer");
-      }
+      analyzer.analyze(params);
     }
 
     Path targetPath = Paths.get(params.getOutputFiles()[0]);

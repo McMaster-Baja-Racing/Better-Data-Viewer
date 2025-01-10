@@ -1,17 +1,18 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
@@ -19,6 +20,7 @@ import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.INTERPOLATER_PRO)
+@OnAnalyzerException
 public class InterpolaterProAnalyzer extends Analyzer {
 
   @Inject Logger logger;
@@ -35,7 +37,8 @@ public class InterpolaterProAnalyzer extends Analyzer {
   }
 
   @Override
-  public void analyze(AnalyzerParams params) throws IOException, CsvValidationException {
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
     extractParams(params);
 
     // Construct string to print message for all input files
@@ -76,6 +79,10 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
       CSVReader reader = readers.get(i);
       String[] headers = reader.readNext();
+      if (headers == null) {
+        throw new InvalidHeaderException(
+            "Failed to read headers from input file: " + inputFiles[0]);
+      }
 
       timestampIndices[i] = getColumnIndex("Timestamp (ms)", headers);
       dataIndices[i] = getColumnIndex(inputColumns[i], headers);

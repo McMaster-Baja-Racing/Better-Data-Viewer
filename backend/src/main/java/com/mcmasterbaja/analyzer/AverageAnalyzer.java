@@ -1,23 +1,25 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
 import java.util.List;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.AVERAGE)
+@OnAnalyzerException
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a double
   @Inject Logger logger;
 
-  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
     int[] range = new int[2];
     range[0] = Integer.parseInt((String) params.getOptions()[0]);
     range[1] = Integer.parseInt((String) params.getOptions()[1]);

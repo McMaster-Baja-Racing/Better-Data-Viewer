@@ -1,17 +1,19 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.CONSTANT_ADDER)
+@OnAnalyzerException
 public class ConstantAdderAnalyzer extends Analyzer {
   private double a;
   private double b;
@@ -20,7 +22,8 @@ public class ConstantAdderAnalyzer extends Analyzer {
 
   @Inject Logger logger;
 
-  public void analyze(AnalyzerParams params) throws IOException, CsvValidationException {
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
     a = Double.parseDouble(params.getOptions()[0]);
     b = Double.parseDouble(params.getOptions()[1]);
     c = Double.parseDouble(params.getOptions()[2]);
@@ -36,6 +39,10 @@ public class ConstantAdderAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(super.outputFiles[0]);
     if (inputColumns.length == 4) {
       String[] headers = reader.readNext();
+      if (headers == null) {
+        throw new InvalidHeaderException(
+            "Failed to read headers from input file: " + inputFiles[0]);
+      }
       int aIndex = this.getColumnIndex(inputColumns[0], headers);
       int bIndex = this.getColumnIndex(inputColumns[1], headers);
       int cIndex = this.getColumnIndex(inputColumns[2], headers);

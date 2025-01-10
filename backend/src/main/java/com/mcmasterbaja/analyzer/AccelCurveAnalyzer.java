@@ -1,8 +1,8 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
-import com.opencsv.exceptions.CsvException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.io.BufferedWriter;
@@ -12,10 +12,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.ACCEL_CURVE)
+@OnAnalyzerException
 public class AccelCurveAnalyzer extends Analyzer {
 
   @Inject Logger logger;
@@ -25,7 +27,8 @@ public class AccelCurveAnalyzer extends Analyzer {
   // outputFiles are first primary RPM rolling average, then secondary RPM rolling average, then
   // interpolated, then accel curve (runs)
   @Override
-  public void analyze(AnalyzerParams params) throws IOException, CsvException {
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
     extractParams(params);
     logger.info("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
     logger.info("sGolay Averaging...");
