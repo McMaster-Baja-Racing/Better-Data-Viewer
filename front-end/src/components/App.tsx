@@ -4,17 +4,17 @@ import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
 import { DownloadModal } from './modal/download/DownloadModal';
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Topbar from './Topbar/Topbar';
 import Views from './views/Views/Views';
 import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
-import { RouterComponent } from '@lib/navigationUtils';
 import ModelViewer from './model/ModelViewer';
 
 const App = () => {
+  const location = useLocation();
 
   // State for holding which modal should be open
   const [modal, setModal] = useState('');
@@ -42,47 +42,55 @@ const App = () => {
     $('div.success').slideDown(500).delay(2000).slideUp(1000);
   }, [successMessage]);
 
-
-
   return (
-    <RouterComponent>
-      <div className="App">
+    <div className="App">
+      {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
-        <header className="App-body">
-          <div className="success">{successMessage.message}</div>
-          {modal === 'Create' ? <CreateGraphModal 
-            setModal={setModal} 
-            setViewInformation={setViewInformation} 
-            setSuccessMessage={setSuccessMessage} 
+      )}
+      <header className="App-body">
+        <div className="success">{successMessage.message}</div>
+        {modal === 'Create' ? <CreateGraphModal 
+          setModal={setModal} 
+          setViewInformation={setViewInformation} 
+          setSuccessMessage={setSuccessMessage} 
+          viewInformation={viewInformation} 
+          buttonID={buttonID} 
+          setNumViews={setNumViews} 
+          numViews={numViews} 
+          video={video} 
+          setVideo={setVideo}
+        /> : null}
+        {modal === 'Upload' ? <UploadModal 
+          setModal={setModal} 
+          setSuccessMessage={setSuccessMessage} 
+        /> : null}
+        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
+        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
+        <Routes>
+          <Route path="*" element={<Views 
             viewInformation={viewInformation} 
-            buttonID={buttonID} 
-            setNumViews={setNumViews} 
-            numViews={numViews} 
-            video={video} 
-            setVideo={setVideo}
-          /> : null}
-          {modal === 'Upload' ? <UploadModal 
             setModal={setModal} 
-            setSuccessMessage={setSuccessMessage} 
-          /> : null}
-          {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
-          {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
-          <Routes>
-            <Route path="*" element={<Views 
-              viewInformation={viewInformation} 
-              setModal={setModal} 
-              setButtonID={setButtonID} 
-              numViews={numViews} 
-              videoTimestamp={videoTimestamp} 
-              setVideoTimestamp={setVideoTimestamp} 
-              video={video} 
-            />} />
-            <Route path="/map" element={<MapChart />} />
-            <Route path="/IMU" element={<ModelViewer />} />
-          </Routes>
-        </header>
-      </div>
-    </RouterComponent>
+            setButtonID={setButtonID} 
+            numViews={numViews} 
+            videoTimestamp={videoTimestamp} 
+            setVideoTimestamp={setVideoTimestamp} 
+            video={video} 
+          />} />
+          <Route path="/map" element={<MapChart />} />
+          <Route path="/IMU" element={<ModelViewer />} />
+          <Route path='/old' element={
+          <Views 
+            viewInformation={viewInformation} 
+            setModal={setModal} 
+            setButtonID={setButtonID} 
+            numViews={numViews} 
+            videoTimestamp={videoTimestamp} 
+            setVideoTimestamp={setVideoTimestamp} 
+            video={video} 
+          />} />
+        </Routes>
+      </header>
+    </div>
   );
 
 };
