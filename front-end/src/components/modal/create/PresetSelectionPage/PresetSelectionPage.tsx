@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import './PresetSelectionPage.css';
 import { subteamGraphPresets } from '@lib/subteamGraphPresets';
 import { DataViewerPreset } from '@types';
+/**
+ * Creates a clickable card with a title and description
+ * @param title Title of the card
+ * @param description Description of the card
+ * @param selected Whether this card is currently selected
+ * @param clickCallback Function to call when this card is clicked
+ * @returns 
+ */
 const Preset = ({
   title,
   description,
@@ -21,7 +29,10 @@ const Preset = ({
   );
 };
 
-
+/**
+ * Page to allow the user to choose an analysis preset from a list
+ * @param handleNextPage Function to be called with the DataViewerPreset the user selected 
+ */
 const PresetSelectionPage = ({ handleNextPage }: {handleNextPage: (preset: DataViewerPreset) => void}) => {
   const [selectedPreset, setSelectedPreset] = useState(0);
 

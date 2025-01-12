@@ -1,6 +1,11 @@
 import  {useState, useEffect} from 'react';
 import { ApiUtil } from '@lib/apiUtils';
 
+/**
+ * Allows the user to select a file from previously uploaded bins.
+ * Note, this is only top-level files and not the individual data series within them.
+ * @param handleNextPage Function called with the name of the selected file
+ */
 export const FileSelectionPage = ({ handleNextPage }: {handleNextPage: (file: string) => void}) => {
   const [selectedFile, setSelectedFile] = useState<string>('');
   const [fileList, setFileList] = useState<string[]>([]);

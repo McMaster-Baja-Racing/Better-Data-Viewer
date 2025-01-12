@@ -13,17 +13,20 @@ import {
   ChartAnalyzerInformation,
   Column,
   DataViewerPreset,
-  GraphPreset,
 } from '@types';
 
+/**
+ * Modal for creating a graph by choosing a filename and a graph preset
+ * @param setModal Function used to set the modal, called with '' when we close this modal
+ * @param setViewInformation Function used to set the views being shown
+ * @param viewInformation Current views being shown
+ * @param setNumViews Function used to set the number of views being shown
+ */
 export const SimpleCreateGraphModal = ({
   setModal,
   setViewInformation,
   viewInformation,
-  buttonID,
   setNumViews,
-  numViews,
-  setVideo,
 }) => {
 
   const [selectedBinFile, setSelectedBinFile] = useState<string>('182848');
@@ -48,52 +51,51 @@ export const SimpleCreateGraphModal = ({
     {
       return;
     }
-    const currGraph: GraphPreset = selectedPreset.graphs[0];
-    const columns: Column[] = [];
-    const analyze: ChartAnalyzerInformation = {
-      type: currGraph.analyser,
-      analyzerValues: [],
-    };
-    for (let i = 0; i < currGraph.axes.length; i++) {
-      columns.push({
-        header: currGraph.axes[i],
-        filename: selectedBinFile + '/' + currGraph.axisFiles[i],
-        timespan: { start: null, end: null },
+    for(const currGraph of selectedPreset.graphs)
+    {
+      const columns: Column[] = [];
+      const analyze: ChartAnalyzerInformation = {
+        type: currGraph.analyser,
+        analyzerValues: [],
+      };
+      for (let i = 0; i < currGraph.axes.length; i++) {
+        columns.push({
+          header: currGraph.axes[i],
+          filename: selectedBinFile + '/' + currGraph.axisFiles[i],
+          timespan: { start: null, end: null },
+        });
+      }
+      const chartInformationFiles: ChartFileInformation[] = [
+        {
+          columns: columns,
+          analyze: analyze,
+        },
+      ];
+  
+      const chartInformation: ChartInformation = {
+        files: chartInformationFiles,
+        live: false,
+        type: currGraph.graphType,
+        // Only true if all files have Timestamp (ms) as the first column
+        hasTimestampX: !chartInformationFiles.some(
+          (file) => file.columns[0].header !== 'Timestamp (ms)'
+        ),
+        // Only true if all files have a timespan from the GPS data
+        hasGPSTime: !chartInformationFiles.some(
+          (file) => file.columns[0].timespan.start == null
+        ),
+      };
+      
+      const updatedViewInformation = replaceViewAtIndex(viewInformation, 0, {
+        component: Chart,
+        props: { chartInformation },
       });
-    }
-    const chartInformationFiles: ChartFileInformation[] = [
-      {
-        columns: columns,
-        analyze: analyze,
-      },
-    ];
-
-    const chartInformation: ChartInformation = {
-      files: chartInformationFiles,
-      live: false,
-      type: currGraph.graphType,
-      // Only true if all files have Timestamp (ms) as the first column
-      hasTimestampX: !chartInformationFiles.some(
-        (file) => file.columns[0].header !== 'Timestamp (ms)'
-      ),
-      // Only true if all files have a timespan from the GPS data
-      hasGPSTime: !chartInformationFiles.some(
-        (file) => file.columns[0].timespan.start == null
-      ),
-    };
-
-    const updatedViewInformation = replaceViewAtIndex(viewInformation, 0, {
-      component: Chart,
-      props: { chartInformation },
-    });
-    setViewInformation(updatedViewInformation);
+      setViewInformation(updatedViewInformation);
+    }    
     setModal('');
+    setNumViews(selectedPreset.graphs.length)
   }, [
-    buttonID,
     viewInformation,
-    numViews,
-    setVideo,
-    setNumViews,
     setViewInformation,
     selectedPreset,
     selectedBinFile

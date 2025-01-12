@@ -24,5 +24,5 @@ export const subteamGraphPresets: DataViewerPreset[] = [
         graphType: 'line'
       },
     ],
-  }
+  },
 ];

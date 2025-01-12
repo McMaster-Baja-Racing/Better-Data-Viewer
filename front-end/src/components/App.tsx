@@ -62,10 +62,7 @@ const App = () => {
             setModal={setModal} 
             setViewInformation={setViewInformation} 
             viewInformation={viewInformation} 
-            buttonID={buttonID} 
             setNumViews={setNumViews} 
-            numViews={numViews} 
-            setVideo={setVideo}
           /> : null}
           {modal === 'Upload' ? <UploadModal 
             setModal={setModal} 
