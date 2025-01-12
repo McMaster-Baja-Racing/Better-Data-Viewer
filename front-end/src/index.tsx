@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './styles/index.scss';
 import App from './components/App';
 import { ThemeProvider } from './ThemeContext';
+import { RouterComponent } from '@lib/navigationUtils';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -14,7 +15,9 @@ const root = ReactDOM.createRoot(rootElement as HTMLElement);
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <App />
+      <RouterComponent>
+        <App />
+      </RouterComponent>
     </ThemeProvider>
   </React.StrictMode>
 );

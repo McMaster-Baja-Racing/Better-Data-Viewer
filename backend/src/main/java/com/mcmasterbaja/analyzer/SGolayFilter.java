@@ -1,42 +1,30 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import lombok.SneakyThrows;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
+import org.jboss.logging.Logger;
 
+@Dependent
+@AnalyzerQualifier(AnalyzerType.SGOLAY)
+@OnAnalyzerException
 public class SGolayFilter extends Analyzer {
-  private final int windowSize;
-  private final int polynomialDegree;
-  private final CircularBuffer dataBuffer;
-  private final CircularBuffer timestampBuffer;
+  private int windowSize;
+  private int polynomialDegree;
+  private CircularBuffer dataBuffer;
+  private CircularBuffer timestampBuffer;
 
-  public SGolayFilter(
-      String[] inputFiles,
-      String[] inputColumns,
-      String[] outputFiles,
-      int windowSize,
-      int polynomialDegree) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.windowSize = windowSize;
-    this.polynomialDegree = polynomialDegree;
-    this.dataBuffer = new CircularBuffer(windowSize);
-    // Half the size of the data buffer so that when we write data, we write it in the middle
-    // (looking forwards and backwards)
-    this.timestampBuffer = new CircularBuffer(windowSize / 2);
-  }
-
-  public SGolayFilter(String[] inputFiles, String[] inputColumns, String[] outputFiles) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.windowSize = 300;
-    this.polynomialDegree = 3;
-    this.dataBuffer = new CircularBuffer(windowSize);
-    this.timestampBuffer = new CircularBuffer(windowSize / 2);
-  }
+  @Inject Logger logger;
 
   class CircularBuffer {
     private final Deque<Double> buffer;
@@ -68,8 +56,17 @@ public class SGolayFilter extends Analyzer {
   }
 
   @Override
-  public void analyze() throws IOException, CsvException {
-    System.out.println(
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
+    extractParams(params);
+    this.windowSize = Integer.parseInt(params.getOptions()[0]);
+    this.polynomialDegree = Integer.parseInt(params.getOptions()[1]);
+    this.dataBuffer = new CircularBuffer(windowSize);
+    // Half the size of the data buffer so that when we write data, we write it in the middle
+    // (looking forwards and backwards)
+    this.timestampBuffer = new CircularBuffer(windowSize / 2);
+
+    logger.info(
         "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
             + super.inputFiles[0]
             + " to "
@@ -83,6 +80,10 @@ public class SGolayFilter extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
+
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);

@@ -1,36 +1,38 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import java.io.IOException;
+import org.jboss.logging.Logger;
 
+@Dependent
+@AnalyzerQualifier(AnalyzerType.CUBIC)
+@OnAnalyzerException
 public class CubicAnalyzer extends Analyzer {
   // Form of y = ax^3 + bx^2 + cx + d
-  private final double a;
-  private final double b;
-  private final double c;
-  private final double d;
+  private double a;
+  private double b;
+  private double c;
+  private double d;
 
-  public CubicAnalyzer(
-      String[] inputFiles,
-      String[] inputColumns,
-      String[] outputFiles,
-      double a,
-      double b,
-      double c,
-      double d) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.a = a;
-    this.b = b;
-    this.c = c;
-    this.d = d;
-  }
+  @Inject Logger logger;
 
   @Override
-  public void analyze() {
+  public void analyze(AnalyzerParams params) {
+    this.a = Double.parseDouble(params.getOptions()[0]);
+    this.b = Double.parseDouble(params.getOptions()[1]);
+    this.c = Double.parseDouble(params.getOptions()[2]);
+    this.d = Double.parseDouble(params.getOptions()[3]);
+    extractParams(params);
 
-    System.out.println(
+    logger.info(
         "Applying the cubic function"
             + this.a
             + "x^3 + "
@@ -46,8 +48,10 @@ public class CubicAnalyzer extends Analyzer {
       cubicMultiply(
           super.inputFiles, super.inputColumns, super.outputFiles, this.a, this.b, this.c, this.d);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e);
     }
+
+    logger.info("Finished applying the cubic function to the file " + super.inputFiles[0]);
   }
 
   public void cubicMultiply(
@@ -64,6 +68,10 @@ public class CubicAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
+
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);
