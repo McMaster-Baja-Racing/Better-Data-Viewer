@@ -31,7 +31,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
     chartInformation, 
-    chartRef, 
+    chartRef.current, 
     videoTimestamp, 
     video,
     timestamps
