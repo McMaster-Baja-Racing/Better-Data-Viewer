@@ -1,7 +1,6 @@
 $base-font-size: 16px;
 
 // Basic text sizes
-
 @mixin text-tiny {
   font-size: $base-font-size * 0.75;
   line-height: $base-font-size;
@@ -45,7 +44,6 @@ $base-font-size: 16px;
 }
 
 // Now for some titles and special sizes
-
 @mixin title-small {
   font-size: $base-font-size * 2;
   line-height: $base-font-size * 3.125;

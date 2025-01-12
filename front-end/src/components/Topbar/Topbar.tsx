@@ -5,6 +5,7 @@ import bajalogo from '@assets/bajalogo.png';
 import loadingImg from '@assets/loading.gif';
 import { MAX_VIEWS } from '@components/views/viewsConfig';
 import { icons } from '@lib/assets';
+import { useTheme } from '../../ThemeContext';
 
 interface TopbarProps {
   numViews: number;
@@ -13,6 +14,7 @@ interface TopbarProps {
 }
 
 const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
+  const { theme, toggleTheme } = useTheme();
 
   const [liveStatus, setLiveStatus] = useState(false);
   //This function notifies the backend to begin listening on a certain port for live data
@@ -45,6 +47,12 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
         <img src={loadingImg} alt="loading"/>
       </div>
       <div className={styles.buttons}>
+        <button title="Toggle Theme" onClick={toggleTheme}>
+          {theme === 'dark'
+            ? <img className={styles.icon} src={icons['sun']} alt="Light Mode" />
+            : <img className={styles.icon} src={icons['moon']} alt="Dark Mode" />}
+        </button>
+        
         <button title="Start Live Data" onClick={beginLiveData}>
           {liveStatus
             ? <img className={styles.icon} src={icons['liveOn']} alt="Live Mode On" />

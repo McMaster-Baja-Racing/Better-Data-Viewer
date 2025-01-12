@@ -5,8 +5,10 @@ import helpIcon from '../assets/icons/help.svg';
 import liveOffIcon from '../assets/icons/liveOff.svg';
 import liveOnIcon from '../assets/icons/liveOn.svg';
 import mapIcon from '../assets/icons/map.svg';
+import moonIcon from '../assets/icons/moon.svg';
 import newGraphIcon from '../assets/icons/newGraph.svg';
 import newGraph2Icon from '../assets/icons/newGraph2.svg';
+import sunIcon from '../assets/icons/sun.svg';
 import uploadIcon from '../assets/icons/upload.svg';
 
 import accelImage from '../assets/help/accel.png';
@@ -26,8 +28,10 @@ export const icons = {
   liveOff: liveOffIcon,
   liveOn: liveOnIcon,
   map: mapIcon,
+  moon: moonIcon,
   newGraph: newGraphIcon,
   newGraph2: newGraph2Icon,
+  sun: sunIcon,
   upload: uploadIcon,
 };
 
