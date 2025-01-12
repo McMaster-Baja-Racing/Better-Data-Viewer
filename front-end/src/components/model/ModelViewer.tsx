@@ -9,7 +9,7 @@ import { ApiUtil } from '@lib/apiUtils';
 import { ReplayEvent, ReplayEventType, StateType, quatReplayData } from '@types';
 
 const ModelViewer = () => {
-  const objRef = useRef<THREE.Group>();
+  const objRef = useRef<THREE.Group>(undefined);
   const [data, setData] = useState<quatReplayData>([]);
   const [objectLoaded, setObjectLoaded] = useState(false);
   const [bins, setBins] = useState<string[]>([]);
