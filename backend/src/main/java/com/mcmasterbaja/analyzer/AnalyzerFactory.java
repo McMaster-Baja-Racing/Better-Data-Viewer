@@ -22,9 +22,16 @@ public class AnalyzerFactory {
   public void init() {
     analyzerMap = new EnumMap<>(AnalyzerType.class);
     for (Analyzer analyzer : analyzers) {
-      AnalyzerQualifier qualifier = analyzer.getClass().getAnnotation(AnalyzerQualifier.class);
+      // Get the original class (not the proxy subclass caused by interceptor)
+      Class<?> originalClass = getOriginalClass(analyzer.getClass());
+      AnalyzerQualifier qualifier = originalClass.getAnnotation(AnalyzerQualifier.class);
+
       if (qualifier != null) {
+        // logger.infof("Found qualifier: %s for %s", qualifier.value(), originalClass.getName());
         analyzerMap.put(qualifier.value(), analyzer);
+      } else {
+        logger.warnf(
+            "Analyzer %s does not have an AnalyzerQualifier annotation", originalClass.getName());
       }
     }
   }
@@ -36,5 +43,12 @@ public class AnalyzerFactory {
       throw new IllegalArgumentException("No Analyzer found for type: " + type);
     }
     return analyzer;
+  }
+
+  private Class<?> getOriginalClass(Class<?> clazz) {
+    while (clazz != null && clazz.getName().contains("_Subclass")) {
+      clazz = clazz.getSuperclass();
+    }
+    return clazz;
   }
 }
