@@ -12,7 +12,7 @@ $baja-colour: #75151E;
 // Default theme (dark)
 :root {
   --primary: #{$primary};
-  --secondary: #($secondary);
+  --secondary: #{$secondary};
   --tertiary: #{$tertiary};
   --background: #{$background};
   --accent: #{$accent};
