@@ -4,12 +4,11 @@
   height: calc(100vh);
 
   .Body {
-    height: calc(100vh - 5rem);
+    height: calc(100vh);
     background-color: #3d0202;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 5rem;
     font-size: calc(10px + 2vmin);
     color: white;
 
