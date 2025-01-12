@@ -33,7 +33,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     chartInformation, 
     chartRef, 
     videoTimestamp, 
-    video, 
+    video,
     timestamps
   );
 
@@ -92,7 +92,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
         <HighchartsReact
           highcharts={Highcharts}
           options={chartOptions}
-          callback={chart => { chartRef.current = chart; }}
+          callback={(chart: ChartType) => { chartRef.current = chart; }}
         />
       </div>
       {loading && <img className={styles.loading} src={loadingImg} alt="Loading..." />}
