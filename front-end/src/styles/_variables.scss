@@ -1,0 +1,32 @@
+// Figma dark theme colours
+$primary: #FF253A;
+$secondary: #300A17;
+$tertiary: #323232;
+$background: #222222;
+$accent: #BB0808;
+$text-colour: #FFFFFF;
+
+// Baja colour
+$baja-colour: #75151E;
+
+// Default theme (dark)
+:root {
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+  --tertiary: #{$tertiary};
+  --background: #{$background};
+  --accent: #{$accent};
+  --text-colour: #{$text-colour};
+
+  --baja-colour: #{$baja-colour};
+}
+
+// Light theme
+[data-theme="light"] {
+  --primary: #FF253A;
+  --secondary: #300A17;
+  --tertiary: #323232;
+  --background: #FFFFFF;
+  --accent: #BB0808;
+  --text-colour: #000000;
+}

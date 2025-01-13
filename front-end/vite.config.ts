@@ -27,4 +27,11 @@ export default defineConfig({
       '@types': resolve(root, 'types/index.ts'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern',
+      }
+    },
+  }
 });

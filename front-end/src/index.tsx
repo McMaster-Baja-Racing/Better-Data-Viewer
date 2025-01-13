@@ -1,15 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/index.css';
+import './styles/index.scss';
 import App from './components/App';
+import { ThemeProvider } from './ThemeContext';
 import { RouterComponent } from '@lib/navigationUtils';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element not found. Make sure there is an element with id="root" in your HTML.');
+}
+
+const root = ReactDOM.createRoot(rootElement as HTMLElement);
+
 root.render(
   <React.StrictMode>
-    <RouterComponent>
-      <App />
-    </RouterComponent>
+    <ThemeProvider>
+      <RouterComponent>
+        <App />
+      </RouterComponent>
+    </ThemeProvider>
   </React.StrictMode>
 );
 

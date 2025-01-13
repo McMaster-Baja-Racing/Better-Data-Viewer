@@ -1,4 +1,4 @@
-import './App.css';
+import styles from './App.module.scss';
 import { CreateGraphModal } from './modal/create/CreateGraphModal/CreateGraphModal';
 import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Topbar from './Topbar/Topbar';
 import Views from './views/Views/Views';
-import $ from 'jquery';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
+import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
 
 const App = () => {
@@ -21,6 +21,7 @@ const App = () => {
   const [numViews, setNumViews] = useState(1);
   const [videoTimestamp, setVideoTimestamp] = useState(0);
   const [video, setVideo] = useState({ key: '', start: '', end: '' });
+  const [isVisible, setIsVisible] = useState(false);
 
   // State for holding the information for each view
   const [viewInformation, setViewInformation] = useState(
@@ -37,18 +38,20 @@ const App = () => {
   // Catches when success message is updated and displays it after removing old one
   useEffect(() => {
     if (successMessage.message == '') return;
-    // This could use some work to show that they are different messages more clearly
-    $('div.success').hide().stop(true, false); 
-    $('div.success').slideDown(500).delay(2000).slideUp(1000);
+    // TODO: This could use some work to show that they are different messages more clearly
+    setIsVisible(true);
+    const timer = setTimeout(() => setIsVisible(false), 2000);
+
+    return () => clearTimeout(timer); 
   }, [successMessage]);
 
   return (
-    <div className="App">
+    <div className={styles.App}>
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
-      <header className="App-body">
-        <div className="success">{successMessage.message}</div>
+      <header className={styles.Body}>
+        <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
         {modal === 'Create' ? <CreateGraphModal 
           setModal={setModal} 
           setViewInformation={setViewInformation} 

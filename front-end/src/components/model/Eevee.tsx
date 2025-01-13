@@ -13,7 +13,7 @@ interface EeveeProps {
 
 export function Eevee({ objRef, onLoad }: EeveeProps) {
   const { scene } = useThree();
-  const boxHelperRef = useRef<BoxHelper>();
+  const boxHelperRef = useRef<BoxHelper | null>(null);
 
   // Execute every frame
   useFrame(() => {

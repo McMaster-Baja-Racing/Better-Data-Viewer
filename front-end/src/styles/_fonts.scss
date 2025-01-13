@@ -1,0 +1,75 @@
+$base-font-size: 16px;
+
+// Basic text sizes
+@mixin text-tiny {
+  font-size: $base-font-size * 0.75;
+  line-height: $base-font-size;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+}
+
+@mixin text-small {
+  font-size: $base-font-size * 0.875;
+  line-height: $base-font-size * 1.25;
+  font-weight: 300;
+  font-family: 'Roboto', sans-serif;
+}
+
+@mixin text-medium {
+  font-size: $base-font-size;
+  line-height: $base-font-size * 1.5;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+}
+
+@mixin text-medium-reg {
+  font-size: $base-font-size;
+  line-height: $base-font-size * 1.5;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+}
+
+@mixin text-large {
+  font-size: $base-font-size * 1.125;
+  line-height: $base-font-size * 1.75;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+}
+
+@mixin text-huge {
+  font-size: $base-font-size * 1.25;
+  line-height: $base-font-size * 2;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+}
+
+// Now for some titles and special sizes
+@mixin title-small {
+  font-size: $base-font-size * 2;
+  line-height: $base-font-size * 3.125;
+  font-weight: 400;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+@mixin title-medium {
+  font-size: $base-font-size * 2.5;
+  line-height: $base-font-size * 4;
+  font-weight: 400;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+@mixin title-large {
+  font-size: $base-font-size * 3.5;
+  line-height: $base-font-size * 5.625;
+  font-weight: 400;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+@mixin title-huge {
+  font-size: $base-font-size * 4;
+  line-height: $base-font-size * 6.25;
+  font-weight: 400;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+
