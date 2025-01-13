@@ -29,39 +29,59 @@ public class Serial {
           break;
         }
       }
-      if (!setPort) {
-        setPort = true;
+      if (!setPort) { // throwing exception if port not found
+        throw new Exception("No suitable port found")
       }
     }
 
-    comPort.setBaudRate(115200);
-    boolean connected = comPort.openPort();
-    System.out.println(connected);
-    // comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 10000, 0);
-    comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
+    try {
+        comPort.setBaudRate(115200);
+        if (comPort.openPort()) {
+          System.out.println("Connected to port"); 
+          comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
+        } else {
+          System.out.println("Could not connect to port.")
+        }
+    } catch (Exception E) {
+      System.out.println("Error during port setup");
+      E.printStackTrace(); 
+    } finally {
+      if (comPort.openPort()) {
+        comPort.closePort(); 
+        System.out.println("Port closed");
+      }
+    }
 
     FileWriter fw = null;
     FileWriter fw2 = null;
     FileWriter fw42 = null;
     // define an array of file writers with 6 elements
     FileWriter[] strains = new FileWriter[6];
-    String[] strainNames = {"Force X", "Force Z", "Force Y", "Moment X", "Moment Z", "Moment Y"};
     try {
-      // print the current path
-      // TODO: Use the correct path from the application.properties file
-      fw = new FileWriter(rootLocation.toString() + "/live_F_RPM_PRIM.csv");
-      fw2 = new FileWriter(rootLocation.toString() + "/live_F_RPM_SEC.csv");
-      fw42 = new FileWriter(rootLocation.toString() + "/live_F_BELT_SPEED.csv");
+      // Using Jackson to parse YAML from application.yaml
+      AppConfig config = ConfigLoader.loadConfig("backend/src/main/java/com/mcmasterbaja/live");
+      String rootLocation = config.getRoot().getLocation(); 
+      AppConfig.Root.Files.Live files = config.getRoot().getFiles().getLive(); 
+      AppConfig.Root.Strain strainConfig = config.getRoot().getStrain(); 
+
+      fw = new FileWriter(rootLocation.toString() + "/" + files.getRpm().getPrim());
+      fw2 = new FileWriter(rootLocation.toString() + "/" + files.getRpm().getSec());
+      fw42 = new FileWriter(rootLocation.toString() + "/" + files.getBeltSpeed()); 
+
       fw.write("Timestamp (ms),F_RPM_PRIM\n");
       fw2.write("Timestamp (ms),F_RPM_SEC\n");
       fw42.write("Timestamp (ms),F_BELT_SPEED\n");
 
-      for (int i = 1; i <= 6; i++) {
+      for (int i = 0; i < 6; i++) {
         // create a new file writer for each file
-        strains[i - 1] =
-            new FileWriter(rootLocation.toString() + "/Live " + strainNames[i - 1] + ".csv");
+        String strainName = strainConfig.getNames().get(i); 
+        strains[i] = new FileWriter(rootLocation.toString() + "/Live " + strainName + ".csv");
         // write the header to the file
-        strains[i - 1].write("Timestamp (ms)" + "," + strainNames[i - 1] + "\n");
+        strains[i].write("Timestamp (ms)" + "," + strainName + "\n");
+      }
+
+      for (FileWriter strain : strains) {
+        strain.close(); 
       }
 
     } catch (Exception e) {
@@ -81,55 +101,55 @@ public class Serial {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    try {
-      while (!exit) {
-        byte[] readBuffer = new byte[8];
+      try {
+        while (!exit) {
+          byte[] readBuffer = new byte[8];
 
-        // int numRead = comPort.readBytes(readBuffer, readBuffer.length);
+          // int numRead = comPort.readBytes(readBuffer, readBuffer.length);
 
-        // System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ "
-        // Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
-        // readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", "
-        // + readBuffer[7] );
-        // make a packet object from the byte array
+          // System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ "
+          // Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
+          // readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", "
+          // + readBuffer[7] );
+          // make a packet object from the byte array
 
-        // make a new byte array that is a flipped version of readBuffer
-        Packet p = new Packet(readBuffer);
-        // System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
-        // p.getFloatData());
-        if (p.getPacketType() == 37) {
-          // write the timestamp and the float data to the file
-          fw.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-          // flush the file writer
-          fw.flush();
-        } else if (p.getPacketType() == 36) {
-          // write the timestamp and the float data to the file
-          fw2.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-          // flush the file writer
-          fw2.flush();
-
-        } else if (p.getPacketType() == 42) {
-          // write the timestamp and the float data to the file
-          fw42.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-          // flush the file writer
-          fw42.flush();
-        } else if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
-          // System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+
-          // " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
-          // readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ",
-          // " + readBuffer[7] );
+          // make a new byte array that is a flipped version of readBuffer
+          Packet p = new Packet(readBuffer);
           // System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
           // p.getFloatData());
-          // write the timestamp and the float data to the file
-          strains[p.getPacketType() - 28].write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-          // flush the file writer
-          strains[p.getPacketType() - 28].flush();
+          if (p.getPacketType() == 37) {
+            // write the timestamp and the float data to the file
+            fw.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
+            // flush the file writer
+            fw.flush();
+          } else if (p.getPacketType() == 36) {
+            // write the timestamp and the float data to the file
+            fw2.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
+            // flush the file writer
+            fw2.flush();
+
+          } else if (p.getPacketType() == 42) {
+            // write the timestamp and the float data to the file
+            fw42.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
+            // flush the file writer
+            fw42.flush();
+          } else if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
+            // System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+
+            // " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
+            // readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ",
+            // " + readBuffer[7] );
+            // System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
+            // p.getFloatData());
+            // write the timestamp and the float data to the file
+            strains[p.getPacketType() - 28].write(p.getTimestamp() + "," + p.getFloatData() + "\n");
+            // flush the file writer
+            strains[p.getPacketType() - 28].flush();
+          }
         }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    comPort.closePort();
+      comPort.closePort();
 
     // close fw and fw2
     try {
