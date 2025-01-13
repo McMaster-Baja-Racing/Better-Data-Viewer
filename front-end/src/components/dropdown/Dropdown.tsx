@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styles from './Dropdown.module.scss';
 import chevronDown from '@assets/icons/chevronDown.svg';
 
@@ -10,20 +11,42 @@ interface DropdownProps {
 
 // Use select dropdown
 export const Dropdown = ({ options, selected, setSelected, width }: DropdownProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOptionClick = (option: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSelected(option);
+    setIsOpen(false);
+  };
+
   return (
-    <div className={styles.dropdownContainer} style={{ width: `${width}` }}>
-    <select
-      className={styles.dropdown}
-      value={selected}
-      onChange={(e) => setSelected(e.target.value)}
+    <div 
+      className={styles.dropdown} 
+      style={{ width }}
+      onClick={() => setIsOpen((prev) => !prev)}
     >
-      {options.map((option, index) => (
-        <option key={index} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-    <img src={chevronDown} alt="chevronDown" className={styles.chevronDown} />
-  </div>
+      <div className={styles.dropdownContent}>
+        {selected}
+        <img src={chevronDown} alt="chevronDown" className={styles.icon} />
+      </div>
+
+      {isOpen && (
+        <div className={styles.options}>
+          {options
+            .filter(option => option !== selected) // Filter out the selected option
+            .map((option, index) => (
+              <div
+                key={index}
+                className={`${styles.option} ${
+                  option === selected ? styles.selected : ''
+                }`}
+                onClick={(e) => handleOptionClick(option, e)}
+              >
+                {option}
+              </div>
+            ))}
+        </div>
+      )}
+    </div>
   );
 };
