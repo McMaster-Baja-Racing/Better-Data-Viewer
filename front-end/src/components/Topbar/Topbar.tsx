@@ -2,7 +2,7 @@ import styles from './Topbar.module.scss';
 import { useState } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
 import { onIconClick } from '@lib/navigationUtils';
-import bajalogo from '@assets/bajalogo.png';
+import bajalogo from '@assets/baja_logo.svg';
 import loadingImg from '@assets/loading.gif';
 import { MAX_VIEWS } from '@components/views/viewsConfig';
 import { icons } from '@lib/assets';
