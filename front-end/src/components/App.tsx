@@ -12,6 +12,7 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
+import { Dropdown } from './dropdown/Dropdown';
 
 const App = () => {
   const location = useLocation();
@@ -45,11 +46,14 @@ const App = () => {
     return () => clearTimeout(timer); 
   }, [successMessage]);
 
+  const [selected, setSelected] = useState('Chart');
+
   return (
     <div className={styles.App}>
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
+      <Dropdown options={['Chart', 'Map', 'IMU']} selected={selected} setSelected={setSelected} />
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
         {modal === 'Create' ? <CreateGraphModal 

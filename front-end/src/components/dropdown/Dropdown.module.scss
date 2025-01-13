@@ -1,0 +1,36 @@
+@use '@styles/_fonts';
+
+$chevron-margin-right: 0.75rem;
+
+.dropdownContainer {
+  position: relative; /* Allows precise positioning for the chevron */
+  display: inline-block;
+  min-width: 15rem;
+  border-radius: 8px;
+  background-color: var(--light-grey);
+  color: var(--text-colour);
+  width: 240px;
+
+  .dropdown {
+    all: unset;
+    @include fonts.text-medium;
+    font-weight: bold;
+    width: calc(100%  - 2.5rem - $chevron-margin-right);
+    padding: 0.75rem 2.5rem 0.75rem $chevron-margin-right; /* Add right padding for the chevron */
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    background-color: transparent; /* Matches container background */
+  }
+
+  .chevronDown {
+    position: absolute;
+    top: 50%;
+    right: $chevron-margin-right;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-colour);
+    height: 1rem;
+    width: 1rem;
+  }
+}

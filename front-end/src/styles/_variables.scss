@@ -5,6 +5,7 @@ $tertiary: #323232;
 $background: #222222;
 $accent: #BB0808;
 $text-colour: #FFFFFF;
+$upload-stroke: #636363;
 
 // Baja colour
 $baja-colour: #75151E;
@@ -18,6 +19,7 @@ $baja-colour: #75151E;
   --accent: #{$accent};
   --text-colour: #{$text-colour};
 
+  --light-grey: #{$upload-stroke};
   --baja-colour: #{$baja-colour};
 }
 
