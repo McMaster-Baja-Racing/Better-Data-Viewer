@@ -21,7 +21,7 @@ export const Dropdown = ({ options, selected, setSelected, width }: DropdownProp
 
   return (
     <div 
-      className={styles.dropdown} 
+      className={`${styles.dropdown} ${isOpen ? styles.open : ''}`} 
       style={{ width }}
       onClick={() => setIsOpen((prev) => !prev)}
     >
@@ -30,23 +30,21 @@ export const Dropdown = ({ options, selected, setSelected, width }: DropdownProp
         <img src={chevronDown} alt="chevronDown" className={styles.icon} />
       </div>
 
-      {isOpen && (
-        <div className={styles.options}>
-          {options
-            .filter(option => option !== selected) // Filter out the selected option
-            .map((option, index) => (
-              <div
-                key={index}
-                className={`${styles.option} ${
-                  option === selected ? styles.selected : ''
-                }`}
-                onClick={(e) => handleOptionClick(option, e)}
-              >
-                {option}
-              </div>
-            ))}
-        </div>
-      )}
+      <div className={`${styles.options} ${isOpen ? styles.open : ''}`}>
+        {options
+          .filter(option => option !== selected) // Filter out the selected option
+          .map((option, index) => (
+            <div
+              key={index}
+              className={`${styles.option} ${
+                option === selected ? styles.selected : ''
+              }`}
+              onClick={(e) => handleOptionClick(option, e)}
+            >
+              {option}
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
