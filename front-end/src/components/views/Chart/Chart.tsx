@@ -78,7 +78,13 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const { width, height, ref } = useResizeDetector({
     onResize: () => {
       if (chartRef.current) {
-        chartRef.current.setSize(width, height);
+        if(width!=undefined && height!=undefined) {
+          const size = Math.min(width ,height);
+          chartRef.current.setSize(size,size);
+        }else {
+          chartRef.current.setSize(width,height);
+        }
+        
       }
     },
     refreshMode: 'debounce',
