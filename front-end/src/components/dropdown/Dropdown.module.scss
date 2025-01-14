@@ -7,7 +7,7 @@ $border-radius: 8px;
 .dropdown {
   @include fonts.text-medium;
   min-width: 15rem;
-  border-radius: 8px;
+  border-radius: $border-radius;
   background-color: var(--light-grey);
   color: var(--text-colour);
   width: 240px;
