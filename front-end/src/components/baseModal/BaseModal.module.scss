@@ -13,9 +13,9 @@
 
 .modalContent {
   background: white;
-  padding: 20px;
+  padding: 1rem;
   border-radius: 8px;
-  max-width: 500px; // Set a maximum width for the modal
+  max-width: 1200px; // Set a maximum width for the modal
   min-height: 200px;
   width: 100%; // Ensure it adapts to smaller screens
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25); // Add some depth
@@ -24,17 +24,25 @@
 }
 
 .closeButton {
+  all: unset;
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 20px;
+  top: -14px;
+  right: -14px;
   cursor: pointer;
-  color: #333;
+  background-color: red;
+  padding: 0.75rem;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     color: #f00;
+  }
+
+  .icon {
+    height: 1.5rem;
+    width: 1.6rem;
   }
 }
 
