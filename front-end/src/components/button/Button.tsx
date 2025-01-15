@@ -6,22 +6,22 @@ interface ButtonProps {
   text: string;
   icon?: string;
   primary?: boolean;
-  padding_x?: string;
-  padding_y?: string;
-  text_size?: number;
+  paddingX?: string;
+  paddingY?: string;
+  textSize?: number;
 }
 
-export const Button = ({ onClick, text, icon, primary = true, padding_x, padding_y, text_size }: ButtonProps) => {
+export const Button = ({ onClick, text, icon, primary = true, paddingX, paddingY, textSize }: ButtonProps) => {
   return (
     <button
       className={cx(styles.button, { [styles.primary]: primary })}
       onClick={onClick}
       style={{
-        paddingLeft: `${padding_x}`,
-        paddingRight: `${padding_x}`,
-        paddingTop: `${padding_y}`,
-        paddingBottom: `${padding_y}`,
-        fontSize: `${text_size}`
+        paddingLeft: `${paddingX}`,
+        paddingRight: `${paddingX}`,
+        paddingTop: `${paddingY}`,
+        paddingBottom: `${paddingY}`,
+        fontSize: `${textSize}`
       }}
     >
       {text}
