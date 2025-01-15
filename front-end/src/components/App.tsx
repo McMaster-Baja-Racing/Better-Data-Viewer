@@ -6,7 +6,6 @@ import { DownloadModal } from './modal/download/DownloadModal';
 import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Topbar from './Topbar/Topbar';
-import Footer from './Footer/Footer';
 import Views from './views/Views/Views';
 import { MAX_VIEWS } from './views/viewsConfig';
 import Chart from './views/Chart/Chart';
