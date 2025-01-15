@@ -56,7 +56,9 @@ const App = () => {
       )}
       <BaseModal isOpen={testModalOpen} onClose={() => setTestModalOpen(false)}>
         <div>
-          Yahooo
+        YahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahooo
+
+        YahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahooo
         </div>
       </BaseModal>
       <button onClick={() => setTestModalOpen(true)}>Open Test Modal</button>

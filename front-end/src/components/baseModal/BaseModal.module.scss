@@ -1,3 +1,6 @@
+@use '@styles/_variables';
+@use "sass:map";
+
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -8,7 +11,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; // TODO: Centralize this with mixins
+  z-index: map.get(variables.$z-index, modal);
 
   animation: fadeOverlayIn 0.3s ease-in-out;
 
@@ -23,7 +26,7 @@
   padding: 1rem;
   border: 2px solid var(--light-grey);
   border-radius: 8px;
-  max-width: calc(100vw - 2 * 2rem); // 2rem padding on each side
+  max-width: calc(100vw - 2 * 4rem); // 4rem padding on each side
   min-width: 12.5rem;
   min-height: 6rem;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
