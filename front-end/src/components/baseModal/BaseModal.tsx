@@ -15,11 +15,11 @@ export const BaseModal = ({ isOpen, onClose, children }: BaseModalProps) => {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = () => {
-    setIsClosing(true); // Trigger the fade-out animation
+    setIsClosing(true);
     setTimeout(() => {
-      setIsClosing(false); // Reset the closing state
+      setIsClosing(false);
       onClose();
-    }, 300); // Match the animation duration
+    }, 300);
   };
 
   return (

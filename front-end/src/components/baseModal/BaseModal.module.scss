@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1000; // TODO: Centralize this with mixins
 
   animation: fadeOverlayIn 0.3s ease-in-out;
 
@@ -23,10 +23,10 @@
   padding: 1rem;
   border: 2px solid var(--light-grey);
   border-radius: 8px;
-  max-width: 1200px; // Set a maximum width for the modal
-  min-height: 200px;
-  width: 100%; // Ensure it adapts to smaller screens
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25); // Add some depth
+  max-width: calc(100vw - 2 * 2rem); // 2rem padding on each side
+  min-width: 12.5rem;
+  min-height: 6rem;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
   position: relative; // Needed for the close button
   animation: fadeIn 0.3s ease-in-out;
 
@@ -38,8 +38,8 @@
 .closeButton {
   all: unset;
   position: absolute;
-  top: -14px;
-  right: -14px;
+  top: -1rem;
+  right: -1rem;
   cursor: pointer;
   background-color: var(--background);
   padding: 0.75rem;
