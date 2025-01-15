@@ -2,7 +2,7 @@ import styles from './Footer.module.scss';
 import bajalogo from '@assets/baja_logo.svg';
 import { icons } from '@lib/assets';
 
-const Footer = () => { 
+export function Footer() { 
 
   return (
     <div className={styles.footer}>
@@ -39,5 +39,3 @@ const Footer = () => {
     </div>
   );
 };
-
-export default Footer;
