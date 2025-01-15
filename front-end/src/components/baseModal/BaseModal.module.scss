@@ -9,11 +9,19 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+
+  animation: fadeOverlayIn 0.3s ease-in-out;
+
+  &.close {
+    animation: fadeOverlayOut 0.3s ease-in-out forwards;
+  }
 }
 
 .modalContent {
-  background: white;
+  background: var(--background);
+  color: var(--text-colour);
   padding: 1rem;
+  border: 2px solid var(--light-grey);
   border-radius: 8px;
   max-width: 1200px; // Set a maximum width for the modal
   min-height: 200px;
@@ -21,6 +29,10 @@
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25); // Add some depth
   position: relative; // Needed for the close button
   animation: fadeIn 0.3s ease-in-out;
+
+  &.close {
+    animation: fadeOut 0.3s ease-in-out forwards;
+  }
 }
 
 .closeButton {
@@ -29,15 +41,17 @@
   top: -14px;
   right: -14px;
   cursor: pointer;
-  background-color: red;
+  background-color: var(--background);
   padding: 0.75rem;
+  border: 2px solid var(--light-grey);
   border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: -6px 6px 5px rgba(0, 0, 0, 0.5);
 
   &:hover {
-    color: #f00;
+    color: var(--accent);
   }
 
   .icon {
@@ -54,5 +68,34 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes fadeOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOverlayOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }

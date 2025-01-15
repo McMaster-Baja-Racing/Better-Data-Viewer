@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import ReactModal from 'react-modal';
 import styles from './BaseModal.module.scss';
 import closeIcon from '@assets/icons/close.svg';
@@ -10,16 +11,28 @@ interface BaseModalProps {
   children: React.ReactNode;
 }
 
-export const BaseModal = ({isOpen, onClose, children}: BaseModalProps) => (
-  <ReactModal
-    isOpen={isOpen}
-    onRequestClose={onClose}
-    className={styles.modalContent}
-    overlayClassName={styles.modalOverlay}
-  >
-    <button className={styles.closeButton} onClick={onClose}>
-      <img src={closeIcon} alt="Close" className={styles.icon} />
-    </button>
-    {children}
-  </ReactModal>
-);
+export const BaseModal = ({ isOpen, onClose, children }: BaseModalProps) => {
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleClose = () => {
+    setIsClosing(true); // Trigger the fade-out animation
+    setTimeout(() => {
+      setIsClosing(false); // Reset the closing state
+      onClose();
+    }, 300); // Match the animation duration
+  };
+
+  return (
+    <ReactModal
+      isOpen={isOpen}
+      onRequestClose={handleClose}
+      className={`${styles.modalContent} ${isClosing ? styles.close : ''}`}
+      overlayClassName={`${styles.modalOverlay} ${isClosing ? styles.close : ''}`}
+    >
+      <button className={styles.closeButton} onClick={handleClose}>
+        <img src={closeIcon} alt="Close" className={styles.icon} />
+      </button>
+      {children}
+    </ReactModal>
+  );
+};

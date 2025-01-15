@@ -8,6 +8,7 @@ $text-colour: #FFFFFF;
 
 // Baja colour
 $baja-colour: #75151E;
+$upload-stroke: #636363;
 
 // Default theme (dark)
 :root {
@@ -19,6 +20,7 @@ $baja-colour: #75151E;
   --text-colour: #{$text-colour};
 
   --baja-colour: #{$baja-colour};
+  --light-grey: #{$upload-stroke};
 }
 
 // Light theme
