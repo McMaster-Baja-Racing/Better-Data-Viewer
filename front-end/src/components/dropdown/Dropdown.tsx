@@ -27,7 +27,7 @@ export const Dropdown = ({ options, selected, setSelected, width }: DropdownProp
     >
       <div className={styles.dropdownContent}>
         {selected}
-        <img src={chevronDown} alt="chevronDown" className={styles.icon} />
+        <img src={chevronDown} alt="dropdown arrow" className={styles.icon} />
       </div>
 
       <div className={`${styles.options} ${isOpen ? styles.open : ''}`}>
