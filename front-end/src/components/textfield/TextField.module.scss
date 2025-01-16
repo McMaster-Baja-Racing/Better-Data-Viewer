@@ -1,0 +1,35 @@
+@use '@styles/_fonts';
+
+.textField {
+  @include fonts.text-medium;
+  display: flex;
+  flex-direction: column;
+
+  .label {
+    color: var(--light-grey);
+    margin-bottom: 0.25rem;
+    font-size: 1rem;
+  }
+
+  .container {
+    display: flex;
+    align-items: center;
+    background-color: var(--light-grey);
+    border-radius: 8px;
+    padding: 0.5rem;
+
+    .title {
+      color: var(--text-colour);
+      font-size: 1rem;
+    }
+
+    .input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-colour);
+      flex-grow: 1;
+      font-size: 1rem;
+    }
+  }
+}
