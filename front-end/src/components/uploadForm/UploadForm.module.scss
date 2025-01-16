@@ -20,15 +20,29 @@
     gap: 1.25rem;
     padding: 1.75rem 4rem;
     width: fit-content;
+    transition: transform 0.3s ease, filter 0.3s ease;;
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.05);
+      filter: brightness(0.9);
+    }
 
     .icon {
       width: 3.125rem;
       height: 3.125rem;
-      mix-blend-mode: overlay;
+      //mix-blend-mode: overlay; // This gets fucked by the filter and transform
+      opacity: 0.8;
     }
 
     .text {
       margin: 0;
     }
+
+    .input {
+      display: none;
+    }
   }
+
+  
 }

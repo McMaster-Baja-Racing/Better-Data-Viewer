@@ -11,10 +11,11 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
 
   return (
     <div className={styles.uploadForm}>
-      <div className={styles.uploadFormContent}>
+      <label className={styles.uploadFormContent}>
         <img className={styles.icon} src={uploadIcon} alt="upload icon" />
         <p className={styles.text}><strong>Choose a file</strong> or drag it here</p>
-      {/* <input
+        <input
+        className={styles.input}
         type="file"
         accept=".csv, .bin, .mp4, .mov" 
         multiple={true}
@@ -24,8 +25,10 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
             setFiles(Array.from(files));
           }
         }}
-      /> */}
-      </div>
+      />
+      </label>
+
+      
     </div>
   )
 }
