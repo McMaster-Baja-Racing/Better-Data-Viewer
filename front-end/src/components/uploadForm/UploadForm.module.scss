@@ -1,0 +1,34 @@
+@use '@styles/_fonts';
+
+.uploadForm {
+  @include fonts.text-medium;
+  min-width: 15rem;
+  min-height: 15rem;
+  background: radial-gradient(83.97% 212.16% at 78.03% -26.16%, #441B6F 0%, #FFCA41 100%);
+  color: var(--text-colour);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 40rem;
+
+  .uploadFormContent {
+    border: 2px dashed var(--text-colour);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.75rem 4rem;
+    width: fit-content;
+
+    .icon {
+      width: 3.125rem;
+      height: 3.125rem;
+      mix-blend-mode: overlay;
+    }
+
+    .text {
+      margin: 0;
+    }
+  }
+}
