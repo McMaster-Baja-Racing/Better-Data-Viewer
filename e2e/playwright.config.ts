@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-export const WEB_SERVER_URL = 'http://localhost:5173';
+export const WEB_SERVER_URL = 'http://localhost:5173/old';
 
 /**
  * Read environment variables from file.
@@ -22,7 +22,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 1 : 0,
   /* Opt out of parallel tests on CI. Set to 1 to opt out */
-  workers: process.env.CI ? undefined : undefined,
+  workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   timeout: 30000,

@@ -6,7 +6,7 @@ import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} f
 
 export const useVideoSyncLines = (
   chartInformation: ChartInformation,
-  chartRef: React.RefObject<Chart>,
+  chartRef: Chart | null,
   videoTimestamp: number,
   videoTimespan: FileTimespan,
   timestamps: number[][]
@@ -42,19 +42,19 @@ export const useVideoSyncLines = (
 
   // Calculates the next vertical line 
   const lineXUpdate = (videoTimestamp: number) => {
-    if (chartRef.current === null || chartRef.current.series.length === 0) return;
+    if (chartRef === null || chartRef.series.length === 0) return;
 
     // TODO: Find a better base value for fileTimestamp
     let fileTimestamp = -Infinity;
   
     // TODO: This ExtSeries is yucky
-    const visibleSeries = chartRef.current.series.filter(series => series.visible) as ExtSeries[];
+    const visibleSeries = chartRef.series.filter(series => series.visible) as ExtSeries[];
     if (visibleSeries.length === 0) return;
 
     // Gets the first file timestamp that is not undefined
     visibleSeries.some(series => {
-      if (chartRef.current === null) return;
-      const seriesIndex = chartRef.current.series.indexOf(series);
+      if (chartRef === null) return;
+      const seriesIndex = chartRef.series.indexOf(series);
       fileTimestamp = getFileTimestamp(videoTimestamp, offsets[seriesIndex], timestamps[seriesIndex]);
       return fileTimestamp !== undefined;
     });
@@ -73,7 +73,7 @@ export const useVideoSyncLines = (
 
     // Updates the value box with the found values
     const tempValueLines = ['Timestamp: ' + new Date(newLineX).toUTCString()];
-    chartRef.current.series.forEach(series => {
+    chartRef.series.forEach(series => {
       const value = values.find(value => value.name === series.name);
       if (value === undefined) return;
       tempValueLines.push(`${series.name}: ${value.y}`);
@@ -84,12 +84,12 @@ export const useVideoSyncLines = (
   // Calculates the next vertical and horizontal lines
   const linePointUpdate = (videoTimestamp: number) => {
     // Finds the matching point index for the first visible series using the video timestamp
-    if (chartRef.current === null || chartRef.current.series.length === 0) return;
+    if (chartRef === null || chartRef.series.length === 0) return;
     //TODO: Update this null check to be inline and return the right case
-    const visibleSeries = chartRef.current.series.filter(series => series.visible) as ExtSeries[];
+    const visibleSeries = chartRef.series.filter(series => series.visible) as ExtSeries[];
     if (visibleSeries.length === 0) return;
     const firstVisibleSeries = visibleSeries[0];
-    const seriesIndex = chartRef.current.series.indexOf(firstVisibleSeries);
+    const seriesIndex = chartRef.series.indexOf(firstVisibleSeries);
     const pointIndex = getPointIndex(
       firstVisibleSeries,
       videoTimestamp,
@@ -108,10 +108,10 @@ export const useVideoSyncLines = (
         x: firstVisibleSeries.xData[pointIndex], 
         y: firstVisibleSeries.yData[pointIndex] 
       }, ...visibleSeries.slice(1).map(series => {
-        if (chartRef.current === null || chartRef.current.series.length === 0) {
+        if (chartRef === null || chartRef.series.length === 0) {
           throw new Error('Chart is not initialized');
         }
-        const seriesIndex = chartRef.current.series.indexOf(series);
+        const seriesIndex = chartRef.series.indexOf(series);
         const pointIndex = getPointIndex(
           series,
           videoTimestamp,
@@ -126,7 +126,7 @@ export const useVideoSyncLines = (
 
     // Updates the value box with the found values
     const tempValueLines: string[] = [];
-    chartRef.current.series.forEach(series => {
+    chartRef.series.forEach(series => {
       const value = values.find(value => value?.name === series.name);
       if (value === undefined) return;
       tempValueLines.push(`${series.name}: (${value.x.toFixed(5)}, ${value.y.toFixed(5)})`);

@@ -1,18 +1,29 @@
 {
   "name": "dataviewer",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
+  "type": "module",
+  "main": "build/main.js",
+  "description": "This project is a data visualization tool for McMaster Baja Racing.",
+  "author": "McMaster Baja Racing",
   "dependencies": {
+    "@react-three/drei": "^9.92.6",
+    "@react-three/fiber": "^8.15.12",
+    "@rollup/rollup-linux-x64-gnu": "^4.30.1",
     "@types/node": "^22.5.5",
-    "@types/react": "^18.3.6",
-    "@types/react-dom": "^18.3.0",
+    "@types/three": "^0.160.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "child-process": "^1.0.2",
+    "classnames": "^2.5.1",
+    "concurrently": "^9.0.1",
+    "electron-devtools-installer": "^3.2.0",
+    "electron-is-dev": "^3.0.1",
+    "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "font-awesome": "^4.7.0",
     "highcharts": "^11.4.8",
     "highcharts-multicolor-series": "^2.4.1",
     "highcharts-react-official": "^3.2.1",
-    "jquery": "^3.7.1",
     "jszip": "^3.10.1",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
@@ -24,15 +35,71 @@
     "react-player": "^2.15.1",
     "react-resize-detector": "^10.0.1",
     "react-router-dom": "^6.22.3",
+    "sass": "^1.82.0",
+    "tree-kill": "^1.2.2",
     "vite": "^5.4.3",
     "vite-plugin-commonjs": "^0.10.1",
     "vitest": "^2.1.1"
   },
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
+    "build:frontend": "tsc && vite build",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build:electron": "electron-builder",
     "serve": "vite preview",
-    "lint": "npx eslint . --fix"
+    "lint": "npx eslint . --fix",
+    "electron": "electron src/main.ts --trace-warnings"
+  },
+  "build": {
+    "appId": "com.mcmaster.data-viewer",
+    "asar": true,
+    "files": [
+      "build/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend/target",
+        "to": "backend",
+        "filter": [
+          "jre/**/*",
+          "backend-1.2.0-runner.jar"
+        ]
+      },
+      {
+        "from": "../binary-to-csv-lib/target/release",
+        "to": "backend",
+        "filter": [
+          "binary_to_csv_lib.dll"
+        ]
+      }
+    ],
+    "win": {
+      "icon": "public/bajacar.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-v${version}-installer.exe",
+      "requestedExecutionLevel": "requireAdministrator"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "runAfterFinish": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": false,
+      "installerIcon": "public/bajacar.ico",
+      "installerHeaderIcon": "public/bajacar.ico",
+      "shortcutName": "Data Viewer"
+    },
+    "extraMetadata": {
+      "productName": "Data Viewer"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -57,6 +124,10 @@
     "@eslint/js": "^9.11.1",
     "@svgr/webpack": "^8.0.0",
     "@types/eslint__js": "^8.42.3",
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.2",
+    "electron": "^32.1.2",
+    "electron-builder": "^25.0.5",
     "eslint": "^9.11.1",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.8.0"

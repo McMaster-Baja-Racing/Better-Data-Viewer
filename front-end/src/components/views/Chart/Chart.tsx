@@ -1,4 +1,4 @@
-import './Chart.css';
+import styles from './Chart.module.scss';
 import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions';
 import { LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils';
 import { useState, useEffect, useRef } from 'react';
@@ -31,9 +31,9 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
     chartInformation, 
-    chartRef, 
+    chartRef.current, 
     videoTimestamp, 
-    video, 
+    video,
     timestamps
   );
 
@@ -86,16 +86,16 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   });
 
   return (
-    <div className="chartContainer" ref={ref}>
-      {syncedDataPoints.length > 0 ? (<div className='valueBox'>{syncedDataPoints.join('\n')}</div>) : null}
-      <div className='chart'>
+    <div className={styles.chartContainer} ref={ref}>
+      {syncedDataPoints.length > 0 ? (<div className={styles.valueBox}>{syncedDataPoints.join('\n')}</div>) : null}
+      <div className={styles.chart}>
         <HighchartsReact
           highcharts={Highcharts}
           options={chartOptions}
-          callback={chart => { chartRef.current = chart; }}
+          callback={(chart: ChartType) => { chartRef.current = chart; }}
         />
       </div>
-      {loading && <img className="loading" src={loadingImg} alt="Loading..." />}
+      {loading && <img className={styles.loading} src={loadingImg} alt="Loading..." />}
     </div>
   );
 };

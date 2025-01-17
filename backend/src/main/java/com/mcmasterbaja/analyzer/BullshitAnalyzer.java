@@ -1,25 +1,32 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
+import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
-import java.io.IOException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
+@Dependent
+@OnAnalyzerException
 public class BullshitAnalyzer extends Analyzer {
 
   // The point of this analyzer is to add a bunch of fake points based on an input, between
   // different pre-existing points (input file) to make it seem like there is some fake noise
 
-  private final double numPoints;
+  private double numPoints;
 
-  public BullshitAnalyzer(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, double numPoints) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.numPoints = numPoints;
-  }
+  @Inject Logger logger;
 
-  public void analyze() throws IOException, CsvValidationException {
-    System.out.println(
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
+    numPoints = Double.parseDouble(params.getOptions()[0]);
+    extractParams(params);
+
+    logger.info(
         "Adding "
             + numPoints
             + " fake points to "
@@ -31,6 +38,9 @@ public class BullshitAnalyzer extends Analyzer {
     ICSVWriter writer = getWriter(super.outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
 
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
@@ -67,3 +77,5 @@ public class BullshitAnalyzer extends Analyzer {
     writer.close();
   }
 }
+
+// throws IOException, CsvValidationException simultaneously

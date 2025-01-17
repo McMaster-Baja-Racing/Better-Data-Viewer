@@ -18,6 +18,9 @@ public class AnalyzerParams {
   @QueryParam("inputFiles")
   private String[] inputFiles;
 
+  @QueryParam("outputFiles")
+  private String[] outputFiles;
+
   @QueryParam("inputColumns")
   private String[] inputColumns;
 

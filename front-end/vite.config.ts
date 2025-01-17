@@ -6,10 +6,11 @@ import commonjs from 'vite-plugin-commonjs';
 const root = resolve(__dirname, 'src');
 
 export default defineConfig({
-  assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp', '**/*.avif'],
+  assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp', '**/*.avif', '**/*.obj'],
   server: {
     strictPort: true,
   },
+  base: './',
   build: {
     outDir: 'build',
   },
@@ -26,4 +27,11 @@ export default defineConfig({
       '@types': resolve(root, 'types/index.ts'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern',
+      }
+    },
+  }
 });

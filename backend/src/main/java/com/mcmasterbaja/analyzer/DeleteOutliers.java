@@ -1,22 +1,27 @@
 package com.mcmasterbaja.analyzer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidHeaderException;
+import com.mcmasterbaja.model.AnalyzerParams;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvException;
-import java.io.IOException;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
+import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
+@Dependent
+@OnAnalyzerException
 public class DeleteOutliers extends Analyzer {
-  private final double limit;
+  private double limit;
+  @Inject Logger logger;
 
-  // This class deletes all data points that are above a certain limit
-  public DeleteOutliers(
-      String[] inputFiles, String[] inputColumns, String[] outputFiles, double limit) {
-    super(inputFiles, inputColumns, outputFiles);
-    this.limit = limit;
-  }
+  @SneakyThrows
+  public void analyze(AnalyzerParams params) {
+    this.limit = Double.parseDouble(params.getOptions()[0]);
+    extractParams(params);
 
-  public void analyze() throws IOException, CsvException {
-    System.out.println(
+    logger.info(
         "Deleting outliers from "
             + super.inputFiles[0]
             + " to "
@@ -28,6 +33,10 @@ public class DeleteOutliers extends Analyzer {
     ICSVWriter writer = getWriter(outputFiles[0]);
 
     String[] headers = reader.readNext();
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
+
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     writer.writeNext(headers);
 

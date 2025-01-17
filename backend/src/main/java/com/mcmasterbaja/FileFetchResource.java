@@ -1,5 +1,7 @@
 package com.mcmasterbaja;
 
+import com.mcmasterbaja.exceptions.FileNotFoundException;
+import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.model.FileInformation;
 import com.mcmasterbaja.model.FileTimespan;
 import com.mcmasterbaja.services.FileMetadataService;
@@ -10,6 +12,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -39,13 +42,14 @@ public class FileFetchResource {
     return fileNames;
   }
 
-  // TODO: What exception is thrown when it can't find the file?
   @GET
   @jakarta.ws.rs.Path("/{filekey}")
   public File getFile(@PathParam("filekey") String filekey) {
     logger.info("Getting file: " + filekey);
-
     Path targetPath = addTypeFolder(filekey);
+    if (!Files.exists(targetPath)) {
+      throw new FileNotFoundException("File not found: " + filekey);
+    }
     File file = storageService.load(targetPath).toFile();
 
     return file;
@@ -108,6 +112,22 @@ public class FileFetchResource {
   }
 
   @GET
+  @jakarta.ws.rs.Path("/listBins")
+  public List<String> getFolders() {
+    logger.info("Getting all folders");
+
+    Path dir = Paths.get("csv");
+
+    List<String> folderNames =
+        storageService
+            .loadDirectories(dir)
+            .map(path -> path.toString().replace("\\", "/"))
+            .collect(Collectors.toList());
+
+    return folderNames;
+  }
+
+  @GET
   @jakarta.ws.rs.Path("/timespan/folder/{folderkey}")
   public List<FileTimespan> getTimespan(@PathParam("folderkey") String folderkey) {
     logger.info("Getting timespan for folder: " + folderkey);
@@ -146,7 +166,7 @@ public class FileFetchResource {
         break;
 
       default:
-        throw new IllegalArgumentException("Invalid folder name");
+        throw new InvalidInputFileException("Invalid folder name");
     }
 
     return timespans;

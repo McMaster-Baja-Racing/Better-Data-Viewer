@@ -12,16 +12,20 @@ public class BinaryToCSV {
   private static final String relativePath = "/src/main/java/com/mcmasterbaja/binary_csv/";
 
   static {
-    String path = System.getProperty("user.dir");
+    String resourcePath = System.getenv("RESOURCE_PATH");
+
+    // Use environment variable if given or default to hardcoded path
+    String path = (System.getProperty("user.dir") + relativePath);
+    if (resourcePath != null) path = resourcePath;
 
     // Determine the appropriate library extension based on the OS
     String osName = System.getProperty("os.name").toLowerCase();
     if (osName.contains("mac")) {
-      path += relativePath + "libbinary_to_csv_lib.dylib";
+      path += "libbinary_to_csv_lib.dylib";
     } else if (osName.contains("linux")) {
-      path += relativePath + "libbinary_to_csv_lib.so";
+      path += "libbinary_to_csv_lib.so";
     } else { // Default to Windows
-      path += relativePath + "binary_to_csv_lib.dll";
+      path += "binary_to_csv_lib.dll";
     }
 
     System.load(path);
