@@ -13,8 +13,6 @@ import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
 
-import { BaseModal } from './baseModal/BaseModal';
-
 const App = () => {
   const location = useLocation();
 
@@ -47,21 +45,11 @@ const App = () => {
     return () => clearTimeout(timer); 
   }, [successMessage]);
 
-  const [testModalOpen, setTestModalOpen] = useState(false);
-
   return (
     <div className={styles.App}>
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
-      <BaseModal isOpen={testModalOpen} onClose={() => setTestModalOpen(false)}>
-        <div>
-        YahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahooo
-
-        YahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahoooYahooo
-        </div>
-      </BaseModal>
-      <button onClick={() => setTestModalOpen(true)}>Open Test Modal</button>
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
         {modal === 'Create' ? <CreateGraphModal 
