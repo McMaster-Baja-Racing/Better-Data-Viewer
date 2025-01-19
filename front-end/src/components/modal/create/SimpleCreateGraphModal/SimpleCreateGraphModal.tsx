@@ -33,7 +33,7 @@ export const SimpleCreateGraphModal = ({
   const [selectedPreset, setSelectedPreset] = useState<DataViewerPreset | null>(null);
   const [displayPage, setDisplayPage] = useState(0);
 
-  const modalRef: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
+  const modalRef: React.RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null);
   
   const closeModal = (e) => {
     if (e.target === modalRef.current) {

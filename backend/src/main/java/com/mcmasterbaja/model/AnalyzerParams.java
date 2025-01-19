@@ -62,7 +62,6 @@ public class AnalyzerParams {
     }
   }
 
-  
   /** If output files are empty, auto-populates them with the format: inputFile_type.csv */
   public void generateOutputFileNames() {
     if (outputFiles == null || outputFiles.length == 0) {

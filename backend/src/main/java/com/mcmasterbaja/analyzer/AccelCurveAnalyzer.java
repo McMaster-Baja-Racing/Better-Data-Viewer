@@ -31,7 +31,8 @@ public class AccelCurveAnalyzer extends Analyzer {
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
-    // We don't want to use the default output filenames because we call other analyzers inside this one
+    // We don't want to use the default output filenames because we call other analyzers inside this
+    // one
     this.outputFiles = new String[3];
     logger.info("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
     logger.info("sGolay Averaging...");
@@ -64,8 +65,7 @@ public class AccelCurveAnalyzer extends Analyzer {
     AnalyzerParams interpolateParams = new AnalyzerParams();
     interpolateParams.setType(AnalyzerType.INTERPOLATER_PRO);
     interpolateParams.setInputFiles(Arrays.copyOfRange(outputFiles, 0, 2));
-    interpolateParams.setInputColumns(
-        new String[] {inputColumns[0], inputColumns[1]});
+    interpolateParams.setInputColumns(new String[] {inputColumns[0], inputColumns[1]});
     // interpolateParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 2, 3));
     interpolateParams.generateOutputFileNames();
     // The final output of the accel curve analyzer is the interpolater output
@@ -75,13 +75,11 @@ public class AccelCurveAnalyzer extends Analyzer {
     logger.info("Done");
   }
 
-  /**
-   * We run two intermediate analyzers so we want to send back the last output file
-   */
+  /** We run two intermediate analyzers so we want to send back the last output file */
   @Override
   public String getOutputFilename() {
     return outputFiles[2];
-  } 
+  }
 
   // Gets start and end timestamps of accel runs based on GPS speed
   @Deprecated
