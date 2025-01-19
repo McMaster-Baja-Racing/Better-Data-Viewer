@@ -8,7 +8,6 @@
   .label {
     color: var(--light-grey);
     margin-bottom: 0.25rem;
-    font-size: 1rem;
   }
 
   .container {
@@ -20,16 +19,18 @@
 
     .title {
       color: var(--text-colour);
-      font-size: 1rem;
+      
     }
 
     .input {
+      @include fonts.text-medium;
       background: none;
       border: none;
       outline: none;
       color: var(--text-colour);
       flex-grow: 1;
-      font-size: 1rem;
+      padding: 0;
+      padding-left: 1rem;
     }
   }
 }

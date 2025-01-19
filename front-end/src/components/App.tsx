@@ -13,6 +13,8 @@ import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
 
+import TextField from './textfield/TextField';
+
 const App = () => {
   const location = useLocation();
 
@@ -45,11 +47,14 @@ const App = () => {
     return () => clearTimeout(timer); 
   }, [successMessage]);
 
+  const [value, setValue] = useState('Hi');
+
   return (
     <div className={styles.App}>
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
+      <TextField title="Title" label="Title" placeholder="Title" value={value} onChange={setValue}/>
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
         {modal === 'Create' ? <CreateGraphModal 

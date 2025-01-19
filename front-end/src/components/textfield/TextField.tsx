@@ -5,9 +5,9 @@ interface TextFieldProps {
   title: string;
   label?: string;
   placeholder?: string;
-  textSize?: number;
+  textSize?: number; //get rid of this
   value?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (event: string) => void;
 }
 
 const TextField = ({
@@ -29,7 +29,7 @@ const TextField = ({
           type="text"
           placeholder={placeholder}
           value={value}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.value)}
         />
       </div>
     </div>
