@@ -22,6 +22,7 @@ public class AccelCurveAnalyzer extends Analyzer {
 
   @Inject Logger logger;
   @Inject AnalyzerParams params;
+  @Inject AnalyzerFactory analyzerFactory;
 
   // inputFiles are first primary RPM, then secondary RPM
   // outputFiles are first primary RPM rolling average, then secondary RPM rolling average, then
@@ -30,33 +31,45 @@ public class AccelCurveAnalyzer extends Analyzer {
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
+    // We don't want to use the default output filenames because we call other analyzers inside this one
+    this.outputFiles = new String[3];
     logger.info("Combining \"" + inputFiles[0] + "\" and \"" + inputFiles[1] + "\"");
     logger.info("sGolay Averaging...");
 
-    SGolayFilter golayer = new SGolayFilter();
+    Analyzer golayer = analyzerFactory.getAnalyzer(AnalyzerType.SGOLAY);
     AnalyzerParams golayParams = new AnalyzerParams();
+    golayParams.setType(AnalyzerType.SGOLAY);
     golayParams.setInputFiles(Arrays.copyOfRange(inputFiles, 0, 1));
     golayParams.setInputColumns(new String[] {"Timestamp (ms)", inputColumns[0]});
-    golayParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 0, 1));
+    // golayParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 0, 1));
+    golayParams.generateOutputFileNames();
+    this.outputFiles[0] = golayParams.getOutputFiles()[0];
     golayParams.setOptions(new String[] {"300", "3"});
     golayer.analyze(golayParams);
 
-    SGolayFilter golayer2 = new SGolayFilter();
+    Analyzer golayer2 = analyzerFactory.getAnalyzer(AnalyzerType.SGOLAY);
     AnalyzerParams golayParams2 = new AnalyzerParams();
+    golayParams2.setType(AnalyzerType.SGOLAY);
     golayParams2.setInputFiles(Arrays.copyOfRange(inputFiles, 1, 2));
     golayParams2.setInputColumns(new String[] {"Timestamp (ms)", inputColumns[1]});
-    golayParams2.setOutputFiles(Arrays.copyOfRange(outputFiles, 1, 2));
+    // golayParams2.setOutputFiles(Arrays.copyOfRange(outputFiles, 1, 2));
+    golayParams2.generateOutputFileNames();
+    this.outputFiles[1] = golayParams2.getOutputFiles()[0];
     golayParams2.setOptions(new String[] {"300", "3"});
     golayer2.analyze(golayParams2);
 
     logger.info("Interpolating...");
 
-    InterpolaterProAnalyzer interpolater = new InterpolaterProAnalyzer();
+    Analyzer interpolater = analyzerFactory.getAnalyzer(AnalyzerType.INTERPOLATER_PRO);
     AnalyzerParams interpolateParams = new AnalyzerParams();
+    interpolateParams.setType(AnalyzerType.INTERPOLATER_PRO);
     interpolateParams.setInputFiles(Arrays.copyOfRange(outputFiles, 0, 2));
     interpolateParams.setInputColumns(
-        new String[] {"Timestamp (ms)", inputColumns[0], inputColumns[1]});
-    interpolateParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 2, 3));
+        new String[] {inputColumns[0], inputColumns[1]});
+    // interpolateParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 2, 3));
+    interpolateParams.generateOutputFileNames();
+    // The final output of the accel curve analyzer is the interpolater output
+    this.outputFiles[2] = interpolateParams.getOutputFiles()[0];
     interpolater.analyze(interpolateParams);
 
     logger.info("Done");

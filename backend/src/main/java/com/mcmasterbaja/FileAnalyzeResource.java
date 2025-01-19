@@ -44,6 +44,7 @@ public class FileAnalyzeResource {
 
     // Update input files with rootLocation/csv
     params.updateInputFiles(storageService.getRootLocation());
+    params.generateOutputFileNames();
     // Default to returning the input file, will be overwritten if an analyzer is found later
     Path targetPath = Path.of(params.getInputFiles()[0]);
     
