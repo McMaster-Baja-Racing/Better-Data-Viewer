@@ -36,25 +36,6 @@ public class AnalyzerFactory {
     }
   }
 
-    /**
-   * Default output file names, inputfile_type.csv. As many output files as input files.
-   * 
-   * @param inputFiles Array of input file names
-   * @param type Analyzer type
-   * @return Array of output file names
-   */
-  public static String[] defaultOutputFileNames(String[] inputFiles, AnalyzerType type) {
-    String[] outputFiles = new String[inputFiles.length];
-    for (int i = 0; i < inputFiles.length; i++) {
-      if (type == null) {
-        outputFiles[i] = inputFiles[i];
-      } else {
-        outputFiles[i] = inputFiles[i].replace(".csv", "_" + type.toString() + ".csv");
-      }
-    }
-    return outputFiles;
-  }
-
   public Analyzer getAnalyzer(AnalyzerType type) {
     Analyzer analyzer = analyzerMap.get(type);
     if (analyzer == null) {
