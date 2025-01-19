@@ -9,6 +9,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
         axisFiles: ['RPM SEC.csv', 'RPM PRIM.csv'],
         axes: ['RPM SEC', 'RPM PRIM'],
         analyser: AnalyzerType.ACCEL_CURVE,
+        analyserOptions: [],
         graphType: 'line'
       },
     ],
@@ -21,6 +22,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
         axisFiles: ['GPS SPEED.csv', 'GPS SPEED.csv'],
         axes: ['Timestamp (ms)', 'GPS SPEED'],
         analyser: AnalyzerType.SGOLAY,
+        analyserOptions: ["300", "3"],
         graphType: 'line'
       },
     ],

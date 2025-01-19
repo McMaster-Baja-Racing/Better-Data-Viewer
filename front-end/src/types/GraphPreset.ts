@@ -7,6 +7,7 @@ export interface GraphPreset {
     axisFiles: string[],
     axes: string[],
     analyser: AnalyzerType | null,
+    analyserOptions: string[],
     graphType: string
 }
 

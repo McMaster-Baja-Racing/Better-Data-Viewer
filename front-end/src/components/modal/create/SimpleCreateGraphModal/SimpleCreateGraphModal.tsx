@@ -56,7 +56,7 @@ export const SimpleCreateGraphModal = ({
       const columns: Column[] = [];
       const analyze: ChartAnalyzerInformation = {
         type: currGraph.analyser,
-        analyzerValues: [],
+        analyzerValues: currGraph.analyserOptions,
       };
       for (let i = 0; i < currGraph.axes.length; i++) {
         columns.push({
