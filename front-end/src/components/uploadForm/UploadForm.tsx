@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from './UploadForm.module.scss';
 import uploadIcon from '@assets/icons/upload.svg';
 import deleteIcon from '@assets/icons/close.svg';
@@ -9,8 +10,11 @@ interface uploadFormProps {
 }
 
 export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
+  const [isDragging, setIsDragging] = React.useState(false);
+
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
+    setIsDragging(true);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
@@ -19,6 +23,7 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
     if (files) {
       setFiles(Array.from(files));
     }
+    setIsDragging(false);
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,8 +41,11 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
     <label 
       className={styles.uploadForm}
       onDragOver={(e) => handleDragOver(e)}
+      onDragLeave={() => setIsDragging(false)}
       onDrop={(e) => handleDrop(e)}
     >
+      <div className={cx(styles.daytime, {[styles.dragover]: isDragging})}/>
+      <div className={cx(styles.nighttime, {[styles.dragover]: isDragging})}/>
       <div className={cx(styles.uploadFormContent, {[styles.disabled]: files.length > 0})}>
         <img className={styles.icon} src={uploadIcon} alt="upload icon" />
         <p className={styles.text}><strong>Choose a file</strong> or drag it here</p>
