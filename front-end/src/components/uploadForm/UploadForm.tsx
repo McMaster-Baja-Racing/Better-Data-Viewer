@@ -6,12 +6,12 @@ import cx from 'classnames';
 import daytime from '@assets/upload_form_daytime.png';
 import nighttime from '@assets/upload_form_nighttime.png';
 
-interface uploadFormProps {
+interface UploadFormProps {
   files: File[];
   setFiles: (files: File[]) => void;
 }
 
-export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
+export const UploadForm = ({ files, setFiles }: UploadFormProps) => {
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
@@ -33,7 +33,7 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
     }
   }
 
-  const removeFile = (index: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleRemoveFile = (index: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setFiles(files.filter((_, i) => i !== index));
   }
@@ -69,7 +69,7 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
         <ul className={styles.fileList}>
           {files.map((file, index) => (
             <li key={index} className={styles.fileItem}>
-              <button onClick={(e) => removeFile(index, e)}>
+              <button onClick={(e) => handleRemoveFile(index, e)}>
                 <img src={deleteIcon} alt="delete icon" />
               </button>
               <span>{file.name}</span>
