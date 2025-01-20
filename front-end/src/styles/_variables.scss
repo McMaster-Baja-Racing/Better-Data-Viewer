@@ -9,6 +9,7 @@ $upload-stroke: #636363;
 
 // Baja colour
 $baja-colour: #75151E;
+$upload-stroke: #636363;
 
 // Default theme (dark)
 :root {
@@ -21,6 +22,7 @@ $baja-colour: #75151E;
 
   --light-grey: #{$upload-stroke};
   --baja-colour: #{$baja-colour};
+  --light-grey: #{$upload-stroke};
 }
 
 // Light theme
@@ -32,3 +34,12 @@ $baja-colour: #75151E;
   --accent: #BB0808;
   --text-colour: #000000;
 }
+
+// A map of z-index values for different components
+$z-index: (
+  dropdown: 1,
+  sidebar: 2,
+  success: 3,
+  tooltip: 4,
+  modal: 5,
+);
