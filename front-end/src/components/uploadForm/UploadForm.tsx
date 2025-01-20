@@ -3,6 +3,8 @@ import styles from './UploadForm.module.scss';
 import uploadIcon from '@assets/icons/upload.svg';
 import deleteIcon from '@assets/icons/close.svg';
 import cx from 'classnames';
+import daytime from '@assets/upload_form_daytime.png';
+import nighttime from '@assets/upload_form_nighttime.png';
 
 interface uploadFormProps {
   files: File[];
@@ -19,9 +21,8 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
 
   const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files) {
-      setFiles(Array.from(files));
+    if (e.dataTransfer.files) {
+      setFiles([...files, ...Array.from(e.dataTransfer.files)]);
     }
     setIsDragging(false);
   }
@@ -39,13 +40,16 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
 
   return (
     <label 
-      className={styles.uploadForm}
+      className={cx(styles.uploadForm, {[styles.dragover]: isDragging})}
       onDragOver={(e) => handleDragOver(e)}
       onDragLeave={() => setIsDragging(false)}
       onDrop={(e) => handleDrop(e)}
     >
-      <div className={cx(styles.daytime, {[styles.dragover]: isDragging})}/>
-      <div className={cx(styles.nighttime, {[styles.dragover]: isDragging})}/>
+      <div className={styles.daytimeBg}/>
+      <div className={styles.nighttimeBg}/>
+      <img className={styles.nighttimeImage} src={nighttime} alt="nighttime"/>
+      <img className={styles.daytimeImage} src={daytime} alt="daytime"/>
+
       <div className={cx(styles.uploadFormContent, {[styles.disabled]: files.length > 0})}>
         <img className={styles.icon} src={uploadIcon} alt="upload icon" />
         <p className={styles.text}><strong>Choose a file</strong> or drag it here</p>

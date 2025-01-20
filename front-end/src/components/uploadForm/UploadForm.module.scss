@@ -20,36 +20,43 @@
     }
   }
 
-  .daytime {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    background: radial-gradient(83.97% 212.16% at 78.03% -26.16%, #441B6F 0%, #FFCA41 100%);
-    transition: opacity 1s ease;
-
-    &.dragover {
+  &.dragover {
+    .daytimeBg, .daytimeImage {
       opacity: 0;
+    }
+
+    .nighttimeBg, .nighttimeImage {
+      opacity: 1;
     }
   }
 
-  .nighttime {
+  .daytimeBg, .nighttimeBg {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    background: radial-gradient(83.97% 212.16% at 78.03% -26.16%, #441B6F 0%, rgba(23, 23, 66, 0) 100%);
     transition: opacity 1s ease;
-    opacity: 0;
-    
+  }
 
-    &.dragover {
-      opacity: 1;
-    }
+  .daytimeBg {
+    background: radial-gradient(83.97% 212.16% at 78.03% -26.16%, #441B6F 0%, #FFCA41 100%);
+  }
+
+  .nighttimeBg {
+    background: radial-gradient(83.97% 212.16% at 78.03% -26.16%, #441B6F 0%, rgba(23, 23, 66, 0) 100%);
+    opacity: 0;
+  }
+
+  .daytimeImage, .nighttimeImage {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 15rem;
+    height: 10rem;
+    transition: opacity 1s ease;
+    pointer-events: none;
   }
 
   .uploadFormContent {
