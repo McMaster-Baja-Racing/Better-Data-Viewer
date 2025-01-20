@@ -6,8 +6,8 @@
   flex-direction: column;
 
   .label {
-    color: var(--light-grey);
-    margin-bottom: 0.25rem;
+    color: var(--tertiary-default);
+    text-align: left;
   }
 
   .container {
@@ -19,7 +19,6 @@
 
     .title {
       color: var(--text-colour);
-      
     }
 
     .input {
@@ -29,8 +28,12 @@
       outline: none;
       color: var(--text-colour);
       flex-grow: 1;
-      padding: 0;
-      padding-left: 1rem;
+      padding-left: 0.5rem;
+      text-align: center;
+
+      &::placeholder {
+        color: var(--placeholder-text);
+      }
     }
   }
 }
