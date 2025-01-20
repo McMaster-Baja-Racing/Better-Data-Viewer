@@ -13,8 +13,6 @@ import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
 
-import TextField from './textfield/TextField';
-
 const App = () => {
   const location = useLocation();
 
@@ -46,8 +44,6 @@ const App = () => {
 
     return () => clearTimeout(timer); 
   }, [successMessage]);
-
-  const [value, setValue] = useState('');
 
   return (
     <div className={styles.App}>

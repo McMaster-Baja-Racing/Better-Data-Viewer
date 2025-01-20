@@ -2,24 +2,19 @@ import styles from './TextField.module.scss';
 
 interface TextFieldProps {
   title: string;
+  value: string;
+  setValue: (value: string) => void;
   label?: string;
   placeholder?: string;
-  defaultValue?: string;
-  value?: string;
-  onChange?: (value: string) => void;
 }
 
 const TextField = ({
   title,
+  value,
+  setValue,
   label,
   placeholder,
-  value,
-  onChange,
 }: TextFieldProps) => {
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (onChange) onChange(e.target.value);
-  };
-
   return (
     <div className={styles.textField}>
       {label && <div className={styles.label}>{label}</div>}
@@ -32,7 +27,7 @@ const TextField = ({
           type="text"
           placeholder={placeholder}
           value={value}
-          onChange={handleOnChange}
+          onChange={(e) => setValue(e.target.value)}
         />
       </div>
     </div>
