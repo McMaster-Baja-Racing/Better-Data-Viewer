@@ -50,9 +50,13 @@ export const UploadForm = ({ files, setFiles }: uploadFormProps) => {
       <img className={styles.nighttimeImage} src={nighttime} alt="nighttime"/>
       <img className={styles.daytimeImage} src={daytime} alt="daytime"/>
 
-      <div className={cx(styles.uploadFormContent, {[styles.disabled]: files.length > 0})}>
+      <div className={cx(styles.uploadFormContent, {
+        [styles.disabled]: files.length > 0,
+        [styles.dragover]: isDragging
+      })}>
         <img className={styles.icon} src={uploadIcon} alt="upload icon" />
         <p className={styles.text}><strong>Choose a file</strong> or drag it here</p>
+        <p className={styles.textHover}><strong>Drop the file</strong></p>
         <input
         className={styles.input}
         type="file"
