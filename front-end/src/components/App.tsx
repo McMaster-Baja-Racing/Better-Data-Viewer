@@ -54,7 +54,6 @@ const App = () => {
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
-      <TextField title="Title" label="Label" placeholder="Placeholder" value={value} onChange={setValue}/>
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
         {modal === 'Create' ? <CreateGraphModal 

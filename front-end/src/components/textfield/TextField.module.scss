@@ -6,7 +6,7 @@
   flex-direction: column;
 
   .label {
-    color: var(--tertiary-default);
+    color: var(--alt-text);
     text-align: left;
   }
 
@@ -32,7 +32,7 @@
       text-align: center;
 
       &::placeholder {
-        color: var(--placeholder-text);
+        color: var(--alt-text);
       }
     }
   }
