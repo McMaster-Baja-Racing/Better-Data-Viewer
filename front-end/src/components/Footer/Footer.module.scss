@@ -8,7 +8,7 @@
     padding: 1rem;
     color: var(--text-colour);
     position: sticky;
-    z-index: 1;
+    z-index: map.get($z-index, footer);
     width: 100%;
     height: 3rem;
 

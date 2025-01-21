@@ -3,7 +3,6 @@ import bajalogo from '@assets/baja_logo.svg';
 import { icons } from '@lib/assets';
 
 export function Footer() { 
-
   return (
     <div className={styles.footer}>
 
@@ -35,7 +34,6 @@ export function Footer() {
           <img className={styles.icon} src={icons['twitter']} alt="Twitter" />
         </a>
       </div>
- 
     </div>
   );
 };
