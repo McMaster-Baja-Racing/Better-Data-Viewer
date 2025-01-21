@@ -1,0 +1,19 @@
+root:
+  location: "backend/src/main/java/com/mcmasterbaja/live"
+
+files: 
+  live:
+    rpm:
+      prim: "live_F_RPM_PRIM.csv"
+      sec: "live_F_RPM_SEC.csv"
+    belt_speed: "live_F_BELT_SPEED.csv"
+
+strain: 
+  names:
+    - Force X
+    - Force Z
+    - Force Y
+    - Moment X
+    - Moment Z
+    - Moment Y
+    
