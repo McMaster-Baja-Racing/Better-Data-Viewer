@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import styles from './optionSquare.module.scss';
+import graphImage from '../../assets/graph_image.png';
 
 interface OptionSquareProps {
-  label: string;
+  label?: string;
   illustration?: string;
   isClicked?: boolean;
 }
 
-export const OptionSquare: React.FC<OptionSquareProps> = ({ label, illustration, isClicked}) => {
+export const OptionSquare: React.FC<OptionSquareProps> = ({ label = "Option Title", illustration = graphImage, isClicked}) => {
     const [clicked, setClicked] = useState(isClicked);  // To track the click state
 
     const handleClick = () => {

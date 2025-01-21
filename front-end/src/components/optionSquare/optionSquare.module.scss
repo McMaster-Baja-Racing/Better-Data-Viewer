@@ -21,7 +21,7 @@ $border-radius: 8px;
    }
 
    &.active {
-    border: 1px solid blue; /* Set border to blue on click */
+    border: 3px solid var(--primary);
   }
 
     .illustration {
