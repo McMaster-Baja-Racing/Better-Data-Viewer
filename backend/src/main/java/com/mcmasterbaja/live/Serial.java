@@ -6,13 +6,18 @@ import com.mcmasterbaja.binary_csv.Packet;
 import java.io.FileWriter;
 
 public class Serial {
-  public static volatile boolean exit = true;
+  private SerialPort comPort; // converted comPort to a variable
+  private boolean isLive = true; 
 
-  public static void readLive() {
+  public Serial(String port) {
+    this.comPort =  SerialPort.getCommPort(port);
+  }
+
+  public void readLive() { // made readLive method non-static
     String rootLocation = "./uploads"; // To be replaced with a path
     exit = false;
     String port = "COM4";
-    SerialPort comPort = SerialPort.getCommPort(port);
+    
     boolean setPort = false;
 
     while (!setPort) {
@@ -152,63 +157,6 @@ public class Serial {
       e.printStackTrace();
     }
   }
-  public static void readLive() { // processes data from COM5 and safely shuts down
-    String port = "COM5";
-    SerialPort comPort = SerialPort.getCommPort(port);
-    comPort.openPort();
-    comPort.closePort();
-    comPort.openPort();
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {comPort.closePort();}));
-
-    try {
-        Thread.sleep(1000);
-        while (true)
-        {
-        //print the number of bytes available
-        System.out.println(comPort.bytesAvailable() + " bytes available");
-        Thread.sleep(2000);
-            while (comPort.bytesAvailable() == 0)
-              Thread.sleep(20);
-
-            if (comPort.bytesAvailable() >=8) {
-                byte[] readBuffer = new byte[8];
-                int numRead = comPort.readBytes(readBuffer, 8);
-                System.out.println("Read " + numRead + " bytes.");
-                System.out.println(bytesToHex(readBuffer));
-                Packet p = new Packet(readBuffer);
-                System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
-
-            }
-        }
-    } catch (Exception e) { e.printStackTrace(); };
-  }
-
-  public static void readLive() {
-    SerialPort comPort = SerialPort.getCommPort("COM5");
-    comPort.setBaudRate(115200);
-    comPort.openPort();
-    comPort.addDataListener(new SerialPortPacketListener() {
-        @Override
-        public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_RECEIVED; }
-
-        @Override
-        public int getPacketSize() {
-            return 8;
-        }
-
-        @Override
-        public void serialEvent(SerialPortEvent event)
-        {
-            byte[] newData = event.getReceivedData();
-            System.out.println("Received data of size: " + newData.length);
-            for (int i = 0; i < newData.length; ++i)
-                System.out.print((char)newData[i]);
-            System.out.println("\n");
-            Packet p = new Packet(newData);
-            System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
-        }
-    });
-}
 
   public static byte[] readSerial() {
     return null;
