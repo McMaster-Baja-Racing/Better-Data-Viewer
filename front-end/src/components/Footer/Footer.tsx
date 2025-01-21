@@ -27,7 +27,7 @@ export function Footer() {
         </a>
 
         <a href="https://www.linkedin.com/company/mcmasterbaja/" title="LinkedIn" target="_blank" rel="noopener noreferrer" className={styles.iconLink}>
-          <img className={styles.icon} src={icons['linkedin']} alt="Linkedin" />
+          <img className={styles.icon} src={icons['linkedin']} alt="LinkedIn" />
         </a>
 
         <a href="https://x.com/mcmaster_baja" title="Twitter" target="_blank" rel="noopener noreferrer" className={styles.iconLink}>
