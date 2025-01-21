@@ -13,7 +13,7 @@ const TextField = ({
   value,
   setValue,
   label,
-  placeholder,
+  placeholder = 'Value',
 }: TextFieldProps) => {
   return (
     <div className={styles.textField}>

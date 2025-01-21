@@ -2,8 +2,6 @@
 
 .textField {
   @include fonts.text-medium;
-  display: flex;
-  flex-direction: column;
 
   .label {
     color: var(--alt-text);
@@ -16,6 +14,7 @@
     background-color: var(--light-grey);
     border-radius: 8px;
     padding: 0.5rem;
+   
 
     .title {
       color: var(--text-colour);
@@ -29,7 +28,8 @@
       color: var(--text-colour);
       flex-grow: 1;
       padding-left: 0.5rem;
-      text-align: center;
+      text-align: left;
+      width: 100%;
 
       &::placeholder {
         color: var(--alt-text);
