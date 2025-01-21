@@ -1,0 +1,45 @@
+@use '@styles/_fonts';
+@use '@styles/_variables';
+
+$border-radius: 8px;
+
+.optionSquare {
+    @include fonts.text-large;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: $border-radius;
+    border: 1px solid var(--background);
+    background-color: var(--tertiary);
+    color: var(--text-color);
+    width: 215px;
+    height: 180px;
+
+    &:hover {
+      background-color: var(--hover-colour);
+   }
+
+   &.active {
+    border: 1px solid blue; /* Set border to blue on click */
+  }
+
+    .illustration {
+        width: 195px;
+        height: 127px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit:fill;
+        }
+    }
+      .label {
+        text-align: center;
+        color: var(--text-colour);
+        padding-top: 5px;
+      }
+}
