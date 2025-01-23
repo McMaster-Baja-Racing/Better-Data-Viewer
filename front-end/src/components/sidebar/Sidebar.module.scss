@@ -1,14 +1,13 @@
 .sidebar {
 
     height: 100%;
-    width: 5rem;
+    width: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background-color: var(--background);
 
-    &:hover {
-        width: 16rem;
+    &.open {
 
         .header {
             .title {
@@ -17,7 +16,7 @@
         }
 
         .section {
-            padding-top: 0;
+            padding-top: 0.5rem;
 
             .sectionTitle {
                 display: inline;
@@ -36,15 +35,19 @@
     .header {
         display: flex;
         width: 100%;
+        padding: 0.5rem;
+        align-items: center;
 
         .logo {
-            width: 2rem;
-            height: 2rem;
+            width: 4rem;
+            height: fit-content;
             color: var(--text-colour);
         }
 
         .title {
             font-size: 1.5rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
             color: var(--text-colour);
             display: none;
         }
@@ -61,16 +64,15 @@
     }
 
     .section {
-        align-items: left;
-        padding-top: 1.5rem;
+        text-align: left;
+        padding-top: 2rem;
+        padding-left: 1.5rem;
 
         .sectionTitle {
             font-size: 1.2rem;
             font-weight: 600;
             color: var(--text-colour);
-            margin-bottom: 1rem;
             display: none;
-            text-align: left;
         }
     }
 
@@ -83,16 +85,26 @@
         justify-content: center;
         align-items: center;
 
-        .icon {
+        .iconContainer {
             height: 2rem;
             width: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .icon {
+                height: 100%;
+                width: fit-content;
+                fill: var(--text-colour);
+                object-fit: cover;
+            }
         }
 
         .text {
             font-size: 1rem;
             font-weight: 500;
             color: var(--text-colour);
-            margin-left: 1rem;
+            padding-left: 1.5rem;
             display: none;
         }
 
