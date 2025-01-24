@@ -18,9 +18,6 @@ import {
 /**
  * Modal for creating a graph by choosing a filename and a graph preset
  * @param setModal Function used to set the modal, called with '' when we close this modal
- * @param setViewInformation Function used to set the views being shown
- * @param viewInformation Current views being shown
- * @param setNumViews Function used to set the number of views being shown
  */
 export const SimpleCreateGraphModal = ({
   setModal,
@@ -55,13 +52,13 @@ export const SimpleCreateGraphModal = ({
     {
       const columns: Column[] = [];
       const analyze: ChartAnalyzerInformation = {
-        type: currGraph.analyser,
-        analyzerValues: currGraph.analyserOptions,
+        type: currGraph.analyzer,
+        analyzerValues: currGraph.analyzerOptions,
       };
       for (let i = 0; i < currGraph.axes.length; i++) {
         columns.push({
-          header: currGraph.axes[i],
-          filename: selectedBinFile + '/' + currGraph.axisFiles[i],
+          header: currGraph.axes[i].axis,
+          filename: selectedBinFile + '/' + currGraph.axes[i].file,
           timespan: { start: null, end: null },
         });
       }

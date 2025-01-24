@@ -8,7 +8,9 @@ export const computeOffsets = (chartInformation: ChartInformation, videoTimespan
   chartInformation.files.forEach(file => {
     if(file.columns[0].timespan.start == null)
       {
-        throw new Error('File has no timespan start')
+        // TODO: Decide when should a file require a timespan and when it's okay to be missing
+        // throw new Error('File has no timespan start')
+        return;
       }
     const fileStart = new Date(file.columns[0].timespan.start).getTime(); // Unix date of first timestamp in file
     tempOffsets.push(videoStart - fileStart);

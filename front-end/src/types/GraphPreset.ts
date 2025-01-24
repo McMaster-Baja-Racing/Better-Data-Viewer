@@ -4,10 +4,9 @@ import { AnalyzerType } from './ApiTypes';
  * axes[i] is the name of a data series inside axisFiles[i]
  */
 export interface GraphPreset {
-    axisFiles: string[],
-    axes: string[],
-    analyser: AnalyzerType | null,
-    analyserOptions: string[],
+    axes: {file: string, axis: string}[],
+    analyzer: AnalyzerType | null,
+    analyzerOptions: string[],
     graphType: string
 }
 
