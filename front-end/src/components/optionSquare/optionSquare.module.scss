@@ -1,32 +1,30 @@
 @use '@styles/_fonts';
 @use '@styles/_variables';
 
-$border-radius: 8px;
-
 .optionSquare {
     @include fonts.text-large;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: $border-radius;
-    border: 1px solid var(--background);
+    border-radius: 0.5rem;
+    border: 0.065rem solid var(--background);
     background-color: var(--tertiary);
     color: var(--text-color);
-    width: 215px;
-    height: 180px;
+    width: 13.435rem;
+    height: 11.25rem;
 
     &:hover {
-      background-color: var(--hover-colour);
+      filter: brightness(1.1);
    }
 
    &.active {
-    border: 3px solid var(--primary);
+    border: 0.185rem solid var(--primary);
   }
 
     .illustration {
-        width: 195px;
-        height: 127px;
+        width: 12.185rem;
+        height: 7.935rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -40,6 +38,6 @@ $border-radius: 8px;
       .label {
         text-align: center;
         color: var(--text-colour);
-        padding-top: 5px;
+        padding-top: .315rem;
       }
 }
