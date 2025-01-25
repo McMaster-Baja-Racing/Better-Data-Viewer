@@ -1,0 +1,39 @@
+@use '@styles/_fonts';
+
+.textField {
+  @include fonts.text-medium;
+
+  .label {
+    color: var(--alt-text);
+    text-align: left;
+  }
+
+  .container {
+    display: flex;
+    align-items: center;
+    background-color: var(--light-grey);
+    border-radius: 8px;
+    padding: 0.5rem;
+   
+
+    .title {
+      color: var(--text-colour);
+    }
+
+    .input {
+      @include fonts.text-medium;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-colour);
+      flex-grow: 1;
+      padding-left: 1rem;
+      text-align: left;
+      width: 100%;
+
+      &::placeholder {
+        color: var(--alt-text);
+      }
+    }
+  }
+}
