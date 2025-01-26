@@ -2,7 +2,7 @@ import './Chart.css';
 import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions';
 import { LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils';
 import { useState, useEffect, useRef } from 'react';
-import Highcharts from 'highcharts';
+import Highcharts, { color } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
@@ -46,7 +46,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
         ...getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
       };
     });
-        
+
   }, [parsedData, fileNames, chartInformation]);
 
   useEffect(() => {
@@ -74,14 +74,31 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     return () => clearInterval(intervalId);
   }, [chartInformation, refetch]);
 
-  
   const { width, height, ref } = useResizeDetector({
     onResize: () => {
-      if (chartRef.current) {
-        if(width!=undefined && height!=undefined) {
-          const size = Math.min(width ,height);
-          chartRef.current.setSize(size,size);
-        }else {
+      if (chartRef.current ) {
+        console.log(chartRef.current.userOptions.xAxis);
+        console.log(chartRef.current.yAxis);
+        if (width != undefined && height != undefined) {
+          if ((chartRef.current.userOptions.xAxis?.[0].title.text == "GPS LATITUDE" && chartRef.current.userOptions.yAxis?.[0].title.text == "GPS LONGITUDE") || (chartRef.current.userOptions.xAxis?.[0].title.text == "GPS LONGITUDE" && chartRef.current.userOptions.yAxis?.[0].title.text == "GPS LATITUDE")) {
+            const aspectRatioB=width/height;
+            const aspectRatio = chartRef.current.chartWidth / chartRef.current.chartHeight;
+            const newWidth = width;
+            const newHeight = newWidth / aspectRatio;
+            if(Math.abs(chartRef.current.chartWidth - newWidth)>1 || Math.abs(chartRef.current.chartHeight-height) > 1) {
+              chartRef.current.setSize(newWidth, newHeight);
+            }
+            else{
+              if (Math.abs(chartRef.current.chartWidth - width) > 1 || Math.abs(chartRef.current.chartHeight - height) > 1 ) {
+                chartRef.current.setSize(width, height);
+              }
+            }
+          
+          }else {
+            chartRef.current.setSize(width,height);
+          }
+        }
+        else{
           chartRef.current.setSize(width,height);
         }
         
