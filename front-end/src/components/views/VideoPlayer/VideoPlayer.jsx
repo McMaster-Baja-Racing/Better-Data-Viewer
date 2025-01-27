@@ -9,7 +9,7 @@ const VideoPlayer = ({ video, setVideoTimestamp }) => {
 
   useEffect(() => {
     // Fetch data when the component mounts
-    ApiUtil.getFile(video.key)
+    ApiUtil.getFileAsBlob(video.key)
       .then((blob) => {
         const url = URL.createObjectURL(blob); 
         setVideoURL(url);
