@@ -30,15 +30,15 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const [chartOptions, setChartOptions] = useState(defaultChartOptions);
   const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
-    chartInformation, 
-    chartRef, 
-    videoTimestamp, 
-    video, 
+    chartInformation,
+    chartRef,
+    videoTimestamp,
+    video,
     timestamps
   );
 
   useEffect(() => {
-    if(!validateChartInformation(chartInformation)) return;
+    if (!validateChartInformation(chartInformation)) return;
 
     setChartOptions((prevState) => {
       return {
@@ -61,7 +61,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
 
   // This function loops when live is true, and updates the chart every 500ms
   useEffect(() => {
-    if(!validateChartInformation(chartInformation)) return;
+    if (!validateChartInformation(chartInformation)) return;
 
     let intervalId;
 
@@ -76,32 +76,32 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
 
   const { width, height, ref } = useResizeDetector({
     onResize: () => {
-      if (chartRef.current ) {
-        console.log(chartRef.current.userOptions.xAxis);
-        console.log(chartRef.current.yAxis);
+      if (chartRef.current) {
+        //console.log(chartRef.current.userOptions.xAxis);
+        //console.log(chartRef.current.yAxis);
         if (width != undefined && height != undefined) {
           if ((chartRef.current.userOptions.xAxis?.[0].title.text == "GPS LATITUDE" && chartRef.current.userOptions.yAxis?.[0].title.text == "GPS LONGITUDE") || (chartRef.current.userOptions.xAxis?.[0].title.text == "GPS LONGITUDE" && chartRef.current.userOptions.yAxis?.[0].title.text == "GPS LATITUDE")) {
-            const aspectRatioB=width/height;
+            const aspectRatioB = width / height;
             const aspectRatio = chartRef.current.chartWidth / chartRef.current.chartHeight;
             const newWidth = width;
             const newHeight = newWidth / aspectRatio;
-            if(Math.abs(chartRef.current.chartWidth - newWidth)>1 || Math.abs(chartRef.current.chartHeight-height) > 1) {
+            if (Math.abs(chartRef.current.chartWidth - newWidth) > 1 || Math.abs(chartRef.current.chartHeight - height) > 1) {
               chartRef.current.setSize(newWidth, newHeight);
             }
-            else{
-              if (Math.abs(chartRef.current.chartWidth - width) > 1 || Math.abs(chartRef.current.chartHeight - height) > 1 ) {
+            else {
+              if (Math.abs(chartRef.current.chartWidth - width) > 1 || Math.abs(chartRef.current.chartHeight - height) > 1) {
                 chartRef.current.setSize(width, height);
               }
             }
-          
-          }else {
-            chartRef.current.setSize(width,height);
+
+          } else {
+            chartRef.current.setSize(width, height);
           }
         }
-        else{
-          chartRef.current.setSize(width,height);
+        else {
+          chartRef.current.setSize(width, height);
         }
-        
+
       }
     },
     refreshMode: 'debounce',
