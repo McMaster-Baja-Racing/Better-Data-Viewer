@@ -45,9 +45,9 @@ const Sidebar = () => {
                 </div>
                 <SidebarItem icon={homeIcon} text="Home" onClick={() => console.log('home')} />
                 <SidebarItem icon={bookmarkIcon} text="Bookmarked" onClick={() => console.log('bookmarked')}/>
+                <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => console.log('upload data')}/>
                 <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => console.log('download data')}/>
                 <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/>
-                <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => console.log('upload data')}/>
             </div>
             <div className={styles.footer}>
             <div className={styles.section}>
