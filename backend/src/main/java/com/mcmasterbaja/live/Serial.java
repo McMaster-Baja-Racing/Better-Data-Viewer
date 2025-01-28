@@ -4,13 +4,66 @@ package com.mcmasterbaja.live;
 import com.fazecast.jSerialComm.*;
 import com.mcmasterbaja.binary_csv.Packet;
 import java.io.FileWriter;
+import java.io.Serializable;
 
-public class Serial {
+public enum PacketType {
+  F_IMU_ABS_X = 0,
+  F_IMU_ABS_Y,
+  F_IMU_ABS_Z,
+  F_IMU_ACCEL_X,
+  F_IMU_ACCEL_Y,
+  F_IMU_ACCEL_Z,
+  F_IMU_GRAVITY_X,
+  F_IMU_GRAVITY_Z,
+  F_IMU_GRAVITY_Y,
+  F_IMU_GYRO_X,
+  F_IMU_GYRO_Y,
+  F_IMU_GYRO_Z,
+  F_IMU_TEMP,
+  F_GPS_LATITUDE,
+  INT_GPS_LAT,
+  F_GPS_LONGITUDE,
+  INT_GPS_LON,
+  F_GPS_ANGLE,
+  F_GPS_SPEED,
+  INT_GPS_TIME,
+  INT_GPS_DAYMONTHYEAR,
+  INT_GPS_SECONDMINUTEHOUR,
+  INT_PRIM_TEMP,
+  F_SEC_TEMP,
+  INT_SUS_TRAV_FR,
+  INT_SUS_TRAV_FL,
+  INT_SUS_TRAV_RR,
+  INT_SUS_TRAV_RL,
+  INT_STRAIN1,
+  INT_STRAIN2,
+  INT_STRAIN3,
+  INT_STRAIN4,
+  INT_STRAIN5,
+  INT_STRAIN6,
+  F_RPM_FR,
+  F_RPM_FL,
+  F_RPM_SEC,
+  F_RPM_PRIM, 
+  INT_BATT_PERC,
+  F_BATT_VOLT,
+  F_BRAKE_PRESS,
+  IMU_QUAT_W,
+  IMU_QUAT_X,
+  IMU_QUAT_Y,
+  IMU_QUAT_Z,
+}
+
+public class Serial implements Serializable {
   private SerialPort comPort; // converted comPort to a variable
   private boolean isLive = true; 
+  private FileWriter fw = null; 
+  private FileWriter fw2 = null; 
+  private FileWriter fw42 = null; 
+  private Map<PacketType, FileWriter> fileWriters = new HashMap<>(); 
 
-  public Serial(String port) {
-    this.comPort =  SerialPort.getCommPort(port);
+  public Serial(SerialPort port) {
+    this.comPort = port;  
   }
 
   public void readLive() { // made readLive method non-static
@@ -56,19 +109,19 @@ public class Serial {
       System.out.println("Port closed");
     }
   }
-
-    FileWriter fw = null;
-    FileWriter fw2 = null;
-    FileWriter fw42 = null;
     // define an array of file writers with 6 elements
     FileWriter[] strains = new FileWriter[6];
     String[] strainNames = {"Force X", "Force Z", "Force Y", "Moment X", "Moment Z", "Moment Y"};
     try {
       // print the current path
       // TODO: Use the correct path from the application.properties file
+      // creat a writer for each thing in the enum
       fw = new FileWriter(rootLocation.toString() + "/live_F_RPM_PRIM.csv");
       fw2 = new FileWriter(rootLocation.toString() + "/live_F_RPM_SEC.csv");
       fw42 = new FileWriter(rootLocation.toString() + "/live_F_BELT_SPEED.csv");
+      fileWriters.put(PacketType.F_RPM_PRIM, fw); 
+      fileWriters.put(PacketType.F_RPM_SEC, fw2); 
+      fileWriters.put(PacketType.F_BELT_SPEED, fw42); 
       fw.write("Timestamp (ms),F_RPM_PRIM\n");
       fw2.write("Timestamp (ms),F_RPM_SEC\n");
       fw42.write("Timestamp (ms),F_BELT_SPEED\n");
@@ -111,47 +164,30 @@ public class Serial {
         Packet p = new Packet(readBuffer);
         System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
 
-        switch (p.getPacketType()) {
-          case 37: 
-            fw.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-            fw.flush();
-            break;
-
-          case 36: 
-            fw2.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-            fw2.flush();  
-            break; 
-
-          case 42: 
-            fw42.write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-            fw42.flush();
-            break; 
-          
-          default: 
+        try {
+          fileWriters.get(p.getPacketType()).write(p.getTimestamp() + "," + p.getFloatData() + "\n");
+          fileWriters.get(p.getPacketType()).flush();
+        } catch (Exception e) {
             if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
-              System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+
+                System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+
               " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
               readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ",
               " + readBuffer[7] );
               System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
               p.getFloatData());
               strains[p.getPacketType() - 28].write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-              strains[p.getPacketType() - 28].flush();
+              strains[p.getPacketType() - 28].flush();   
             }
-        }
+        }  
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
     comPort.closePort();
-
-    // close fw and fw2
     try {
-      fw.close();
-      fw2.close();
-      fw42.close();
+      fileWriters.values().forEach((p, f) -> f.close()); 
       for (FileWriter f : strains) {
-        f.close();
+        f.flush();
       }
     } catch (Exception e) {
       e.printStackTrace();
