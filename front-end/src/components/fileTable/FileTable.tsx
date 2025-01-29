@@ -3,22 +3,7 @@ import styles from './FileTable.module.scss';
 import cx from 'classnames';
 import folderIcon from '@assets/icons/folder.svg';
 import folderOpenIcon from '@assets/icons/folderOpen.svg';
-
-interface file {
-    key: string;
-    name: string;
-    size: number;
-    date: string;
-    extension: string;
-}
-
-interface folder {
-    key: string;
-    name: string;
-    size: number;
-    date: string;
-    children: (file | folder)[];
-}
+import { file, folder } from '@types';
 
 const formatSize = (size: number) => {
     if (size === 0) return '0 B';
@@ -35,6 +20,75 @@ const depthPadding = (depth: number) => {
     };
 }
 
+const buildHierarchy = (files: file[]): folder => {
+    const root: folder = {
+        key: '',
+        name: 'Root',
+        size: 0,
+        date: '',
+        children: [],
+    };
+
+    const dateMap: Record<string, string[]> = {};
+    const sizeMap: Record<string, number> = {};
+
+    files.forEach((file) => {
+        const pathParts = file.key.split('/');
+        let currentFolder = root;
+
+        pathParts.forEach((part, index) => {
+            const folderKey = pathParts.slice(0, index + 1).join('/');
+
+            if (index === pathParts.length - 1) {
+                // Add file at the final level
+                currentFolder.children.push(file);
+            } else {
+                // Add or find the folder
+                let folder = currentFolder.children.find(
+                    (child) => 'children' in child && child.key === folderKey
+                ) as folder;
+
+                if (!folder) {
+                    folder = {
+                        key: folderKey,
+                        name: part,
+                        size: 0,
+                        date: '',
+                        children: [],
+                    };
+                    currentFolder.children.push(folder);
+                }
+
+                currentFolder = folder;
+            }
+
+            // Store the file size and date for later computation
+            if (!sizeMap[folderKey]) sizeMap[folderKey] = 0;
+            if (!dateMap[folderKey]) dateMap[folderKey] = [];
+
+            sizeMap[folderKey] += file.size;
+            dateMap[folderKey].push(file.date);
+        });
+    });
+
+    // Function to assign computed date and size to folders
+    const assignComputedValues = (folder: folder) => {
+        folder.children.forEach((child) => {
+            if ('children' in child) {
+                assignComputedValues(child);
+            }
+        });
+
+        if (folder.key) {
+            folder.size = sizeMap[folder.key] || 0;
+            folder.date = dateMap[folder.key]?.sort()[0] || ''; // Earliest date
+        }
+    };
+
+    assignComputedValues(root);
+    return root;
+};
+
 interface FileTableProps {
     files: file[];
     selectedFiles: file[];
@@ -42,75 +96,6 @@ interface FileTableProps {
 }
 
 export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableProps) => {
-    const buildHierarchy = (files: file[]): folder => {
-        const root: folder = {
-            key: '',
-            name: 'Root',
-            size: 0,
-            date: '',
-            children: [],
-        };
-
-        const dateMap: Record<string, string[]> = {};
-        const sizeMap: Record<string, number> = {};
-
-        files.forEach((file) => {
-            const pathParts = file.key.split('/');
-            let currentFolder = root;
-
-            pathParts.forEach((part, index) => {
-                const folderKey = pathParts.slice(0, index + 1).join('/');
-
-                if (index === pathParts.length - 1) {
-                    // Add file at the final level
-                    currentFolder.children.push(file);
-                } else {
-                    // Add or find the folder
-                    let folder = currentFolder.children.find(
-                        (child) => 'children' in child && child.key === folderKey
-                    ) as folder;
-
-                    if (!folder) {
-                        folder = {
-                            key: folderKey,
-                            name: part,
-                            size: 0,
-                            date: '',
-                            children: [],
-                        };
-                        currentFolder.children.push(folder);
-                    }
-
-                    currentFolder = folder;
-                }
-
-                // Store the file size and date for later computation
-                if (!sizeMap[folderKey]) sizeMap[folderKey] = 0;
-                if (!dateMap[folderKey]) dateMap[folderKey] = [];
-
-                sizeMap[folderKey] += file.size;
-                dateMap[folderKey].push(file.date);
-            });
-        });
-
-        // Function to assign computed date and size to folders
-        const assignComputedValues = (folder: folder) => {
-            folder.children.forEach((child) => {
-                if ('children' in child) {
-                    assignComputedValues(child);
-                }
-            });
-
-            if (folder.key) {
-                folder.size = sizeMap[folder.key] || 0;
-                folder.date = dateMap[folder.key]?.sort()[0] || ''; // Earliest date
-            }
-        };
-
-        assignComputedValues(root);
-        return root;
-    };
-
     const [folderTree, setFolderTree] = useState<folder | null>(null);
 
     useEffect(() => {
