@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import styles from './RightSidebar.module.scss';
 import cx from 'classnames';
+import closeIcon from '@assets/icons/close.svg';
 
 interface RightSidebarProps {
   isOpen: boolean;
@@ -39,10 +40,16 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
         {mainContent}
       </div>
       <div 
-        className={cx(styles.rightSidebar, { [styles.collapsed]: !isOpen })}
+        className={cx(styles.rightSidebar, { 
+          [styles.collapsed]: !isOpen,
+          [styles.isResizing]: isResizing.current
+        })}
         style={{ width: `${isOpen ? width : 0}px` }}
       >
         <div className={styles.resizer} onMouseDown={handleMouseDown} />
+        <button className={styles.closeButton} onClick={() => setIsOpen(false)}>
+          <img src={closeIcon} alt="Close sidebar" />
+        </button>
         {sidebarContent}
       </div>
     </div>
