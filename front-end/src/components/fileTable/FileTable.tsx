@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styles from './FileTable.module.scss';
-import React from 'react';
+import cx from 'classnames';
 
 interface file {
     key: string;
@@ -126,7 +126,7 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
                 </tr>
             </thead>
             <tbody>
-            {folderTree && <FolderRenderer folder={folderTree} />}
+            {folderTree && <FolderRenderer folder={folderTree} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />}
             </tbody>
         </table>
     );
@@ -135,54 +135,73 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
 interface FolderRendererProps {
     folder: folder;
     depth?: number;
+    selectedFiles: file[];
+    setSelectedFiles: (files: file[]) => void;
 }
 
-const FolderRenderer = ({ folder, depth = 0 }: FolderRendererProps) => {
-    const handleClickFolder = (folder: folder) => {
-        console.log('Folder selected:', folder);
+const FolderRenderer = ({ folder, depth = 0, selectedFiles, setSelectedFiles }: FolderRendererProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleFolder = () => {
+        setIsOpen(!isOpen);
     };
 
     return (
         <>
             {depth > 0 && 
-            <tr className={styles.folder} onClick={() => handleClickFolder(folder)}>
+            <tr className={styles.folder} onClick={toggleFolder}>
                 <td className={styles.folderName} style={depthPadding(depth)}>
-                    <i className={`${false ? 'fa fa-folder-open-o' : 'fa fa-folder-o'}`} aria-hidden="true" />
+                    <i className={`${isOpen ? 'fa fa-folder-open-o' : 'fa fa-folder-o'}`} aria-hidden="true" />
                     {folder.name}
                 </td>
                 <td className={styles.folderSize}>{formatSize(folder.size)}</td>
                 <td className={styles.folderDate}>{folder.date}</td>
             </tr>}
-            {folder.children.map((child) =>
-                'children' in child ? (
-                    <FolderRenderer key={child.key} folder={child as folder} depth={depth + 1} />
-                ) : (
-                    <FileRenderer key={child.key} file={child as file} depth={depth + 1}/>
-                )
-            )}
+            {(isOpen || depth == 0) &&
+                folder.children.map((child) =>
+                    'children' in child ? (
+                        <FolderRenderer 
+                            key={child.key}
+                            folder={child}
+                            depth={depth + 1}
+                            selectedFiles={selectedFiles}
+                            setSelectedFiles={setSelectedFiles}
+                        />
+                    ) : (
+                        <FileRenderer 
+                            key={child.key}
+                            file={child}
+                            depth={depth + 1}
+                            selectedFiles={selectedFiles}
+                            setSelectedFiles={setSelectedFiles}
+                        />
+                    )
+                )}
         </>
     );
 }
 
-
 interface FileRendererProps {
     file: file;
     depth: number;
+    selectedFiles: file[];
+    setSelectedFiles: (files: file[]) => void;
 }
 
-const FileRenderer = ({ file, depth }: FileRendererProps) => {
-
+const FileRenderer = ({ file, depth, selectedFiles, setSelectedFiles }: FileRendererProps) => {
+    const isSelected = selectedFiles.some(selected => selected.key === file.key);
 
     const handleSelectFile = () => {
-        console.log('File selected:', file);
-    };
-
-    // Add depth padding for folders
-    // Add selected logic
+        setSelectedFiles(
+          isSelected 
+            ? selectedFiles.filter(selected => selected.key !== file.key) 
+            : [...selectedFiles, file]
+        );
+      };
 
     return (
         <tr 
-            className={styles.file}
+            className={cx(styles.file, { [styles.selected]: isSelected })}
             onClick={handleSelectFile}
             >
             <td className={styles.fileName} style={depthPadding(depth)}>{file.name}</td>

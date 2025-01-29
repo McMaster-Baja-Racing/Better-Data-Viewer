@@ -9,7 +9,7 @@
   background: var(--tertiary);
   color: var(--text-colour);
   text-align: left;
-  
+  border-collapse: collapse;
 
   thead {
     tr {
@@ -34,6 +34,11 @@
         i {
           padding-right: 0.5rem;
         }
+      }
+
+      &.selected {
+        background: var(--accent);
+        font-weight: bold;
       }
     }
   }
