@@ -31,7 +31,11 @@
       }
 
       .folderName {
-        i {
+        align-items: center;
+        display: flex;
+
+        img {
+          height: 1.5rem;
           padding-right: 0.5rem;
         }
       }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import styles from './FileTable.module.scss';
 import cx from 'classnames';
+import folderIcon from '@assets/icons/folder.svg';
+import folderOpenIcon from '@assets/icons/folderOpen.svg';
 
 interface file {
     key: string;
@@ -151,7 +153,11 @@ const FolderRenderer = ({ folder, depth = 0, selectedFiles, setSelectedFiles }: 
             {depth > 0 && 
             <tr className={styles.folder} onClick={toggleFolder}>
                 <td className={styles.folderName} style={depthPadding(depth)}>
-                    <i className={`${isOpen ? 'fa fa-folder-open-o' : 'fa fa-folder-o'}`} aria-hidden="true" />
+                    <img 
+                        src={isOpen ? folderOpenIcon : folderIcon} 
+                        alt={isOpen ? 'Open folder icon' : 'Folder icon'} 
+                        aria-hidden="true" 
+                    />
                     {folder.name}
                 </td>
                 <td className={styles.folderSize}>{formatSize(folder.size)}</td>
