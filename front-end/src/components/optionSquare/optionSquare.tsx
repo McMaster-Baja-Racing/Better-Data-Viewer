@@ -5,16 +5,16 @@ import cx from 'classnames';
 interface OptionSquareProps {
   label: string;
   illustration: string;
-  isClicked: boolean;
+  clicked: boolean;
+  setClicked: (clicked: boolean) => void;
 }
 
-export const OptionSquare = ({ label, illustration, isClicked}: OptionSquareProps) => {
-    const [clicked, setClicked] = useState(isClicked); 
-
-    const handleClick = () => {
-        setClicked(prev => !prev);
-    };
+export const OptionSquare = ({ label, illustration, clicked, setClicked}: OptionSquareProps) => {
     
+    const handleClick = () => {
+        setClicked(!clicked);
+    };
+
     return (
         <div className={cx(styles.optionSquare, { [styles.clicked]: clicked })} onClick={handleClick}>
         <div className={styles.illustration}>

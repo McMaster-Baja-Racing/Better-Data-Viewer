@@ -7,8 +7,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 0.5rem;
-    border: 0.065rem solid var(--background);
+    //use px for border
+    border-radius: 8px;
+    border: 1px solid var(--background);
     background-color: var(--tertiary);
     color: var(--text-color);
     width: 13.435rem;
@@ -18,8 +19,8 @@
       filter: brightness(1.1);
    }
 
-   &.active {
-    border: 0.185rem solid var(--primary);
+   &.clicked {
+    border: 3px solid var(--primary);
   }
 
     .illustration {
