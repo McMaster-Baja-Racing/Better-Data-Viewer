@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './FileTable.module.scss';
+import React from 'react';
 
 interface file {
     key: string;
@@ -7,10 +8,17 @@ interface file {
     size: number;
     date: string;
     extension: string;
-    disabled: boolean;
 }
 
-const formatSize = (size) => {
+interface folder {
+    key: string;
+    name: string;
+    size: number;
+    date: string;
+    children: (file | folder)[];
+}
+
+const formatSize = (size: number) => {
     if (size === 0) return '0 B';
 
     const magnitude = Math.floor(Math.log(size) / Math.log(1024));
@@ -26,26 +34,53 @@ interface FileTableProps {
 }
 
 export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableProps) => {
-    const toggleFolder = (folder: file) => {
-        const updatedFiles = selectedFiles.map((file) => {
-            if (file.key.startsWith(folder.key)) {
-                return { ...file, disabled: !file.disabled };
-            }
-            return file;
-        });
-        
-        setSelectedFiles(updatedFiles);
-    }
+    const buildHierarchy = (files: file[]): folder => {
+        const root: folder = {
+            key: '',
+            name: 'Root',
+            size: 0,
+            date: '',
+            children: [],
+        };
 
-    const generateFolders = (files: file[]) => {
-        const folders = new Set<string>();
         files.forEach((file) => {
-            const folder = file.key.split('/').slice(0, -1).join('/');
-            folders.add(folder);
+            const pathParts = file.key.split('/');
+            let currentFolder = root;
+
+            pathParts.forEach((part, index) => {
+                if (index === pathParts.length - 1) {
+                    // Add file at the final level
+                    currentFolder.children.push(file);
+                } else {
+                    // Add or find the folder
+                    let folder = currentFolder.children.find(
+                        (child) => 'key' in child && child.key === pathParts.slice(0, index + 1).join('/')
+                    ) as folder;
+
+                    if (!folder) {
+                        folder = {
+                            key: pathParts.slice(0, index + 1).join('/'),
+                            name: part,
+                            size: 0,
+                            date: '',
+                            children: [],
+                        };
+                        currentFolder.children.push(folder);
+                    }
+
+                    currentFolder = folder;
+                }
+            });
         });
 
-        return Array.from(folders);
-    }
+        return root;
+    };
+
+    const [folderTree, setFolderTree] = useState<folder | null>(null);
+
+    useEffect(() => {
+        setFolderTree(buildHierarchy(files));
+    }, [files]);
 
     
     return (
@@ -58,40 +93,51 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
                 </tr>
             </thead>
             <tbody>
-                {files.map((file) => {
-                    return <FileRenderer key={file.key} file={file} />;
-                })}
+            {folderTree && <FolderRenderer folder={folderTree} />}
             </tbody>
         </table>
     );
 }
 
 interface FolderRendererProps {
-    folder: file;
-    toggleFolder: (folder: file) => void;
+    folder: folder;
+    depth?: number;
 }
 
-const FolderRenderer = ({ folder, toggleFolder }: FolderRendererProps) => {
-    // if folder is disabled it is closed, icon changes
+const FolderRenderer = ({ folder, depth = 0 }: FolderRendererProps) => {
+    const handleClickFolder = (folder: folder) => {
+        console.log('Folder selected:', folder);
+    };
+
     return (
-        <tr className={styles.folder} onClick={() => toggleFolder(folder)}>
-            <td className={styles.folderName}>
-                <img src={folderClosed} className={styles.folderIcon} alt="Folder Icon" />
-                <img src={folderOpen} className={styles.folderIcon} alt="Folder Icon" />
-                {folder.name}
-            </td>
-            <td className={styles.folderSize}>{formatSize(folder.size)}</td>
-            <td className={styles.folderDate}>{folder.date}</td>
-        </tr>
+        <>
+            {depth > 0 && 
+            <tr className={styles.folder} onClick={() => handleClickFolder(folder)}>
+                <td className={styles.folderName}>
+                    <i className={`${false ? 'fa fa-folder-open-o' : 'fa fa-folder-o'}`} aria-hidden="true" />
+                    {folder.name}
+                </td>
+                <td className={styles.folderSize}>{formatSize(folder.size)}</td>
+                <td className={styles.folderDate}>{folder.date}</td>
+            </tr>}
+            {folder.children.map((child) =>
+                'children' in child ? (
+                    <FolderRenderer key={child.key} folder={child as folder} depth={depth + 1} />
+                ) : (
+                    <FileRenderer key={child.key} file={child as file} depth={depth + 1}/>
+                )
+            )}
+        </>
     );
 }
 
 
 interface FileRendererProps {
     file: file;
+    depth: number;
 }
 
-const FileRenderer = ({ file }: FileRendererProps) => {
+const FileRenderer = ({ file, depth }: FileRendererProps) => {
 
 
     const handleSelectFile = () => {
@@ -100,10 +146,6 @@ const FileRenderer = ({ file }: FileRendererProps) => {
 
     // Add depth padding for folders
     // Add selected logic
-
-    if (file.disabled) {
-        return null;
-    }
 
     return (
         <tr 
@@ -125,7 +167,6 @@ export const TestFileTable = () => {
             size: 1000,
             date: '2021-10-01',
             extension: 'txt',
-            disabled: false,
         },
         {
             key: 'Folder 1/File 2',
@@ -133,7 +174,6 @@ export const TestFileTable = () => {
             size: 2000,
             date: '2021-10-01',
             extension: 'txt',
-            disabled: false,
         },
         {
             key: 'Folder 2/File 3',
@@ -141,7 +181,6 @@ export const TestFileTable = () => {
             size: 3000,
             date: '2021-10-01',
             extension: 'txt',
-            disabled: false,
         },
         {
             key: 'Folder 2/Folder 3/File 4',
@@ -149,7 +188,6 @@ export const TestFileTable = () => {
             size: 4000,
             date: '2021-10-01',
             extension: 'txt',
-            disabled: false,
         },
         {
             key: 'File 5',
@@ -157,7 +195,6 @@ export const TestFileTable = () => {
             size: 5000,
             date: '2021-10-01',
             extension: 'txt',
-            disabled: false,
         }
     ];
 
