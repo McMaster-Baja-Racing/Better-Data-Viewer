@@ -27,6 +27,12 @@ const formatSize = (size: number) => {
     return `${Math.round(size / (1024 ** magnitude))} ${units[magnitude]}`;
 };
 
+const depthPadding = (depth: number) => {
+    return {
+        paddingLeft: `${0.75 + (depth - 1) * 1}rem`
+    };
+}
+
 interface FileTableProps {
     files: file[];
     selectedFiles: file[];
@@ -43,23 +49,28 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
             children: [],
         };
 
+        const dateMap: Record<string, string[]> = {};
+        const sizeMap: Record<string, number> = {};
+
         files.forEach((file) => {
             const pathParts = file.key.split('/');
             let currentFolder = root;
 
             pathParts.forEach((part, index) => {
+                const folderKey = pathParts.slice(0, index + 1).join('/');
+
                 if (index === pathParts.length - 1) {
                     // Add file at the final level
                     currentFolder.children.push(file);
                 } else {
                     // Add or find the folder
                     let folder = currentFolder.children.find(
-                        (child) => 'key' in child && child.key === pathParts.slice(0, index + 1).join('/')
+                        (child) => 'children' in child && child.key === folderKey
                     ) as folder;
 
                     if (!folder) {
                         folder = {
-                            key: pathParts.slice(0, index + 1).join('/'),
+                            key: folderKey,
                             name: part,
                             size: 0,
                             date: '',
@@ -70,9 +81,31 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
 
                     currentFolder = folder;
                 }
+
+                // Store the file size and date for later computation
+                if (!sizeMap[folderKey]) sizeMap[folderKey] = 0;
+                if (!dateMap[folderKey]) dateMap[folderKey] = [];
+
+                sizeMap[folderKey] += file.size;
+                dateMap[folderKey].push(file.date);
             });
         });
 
+        // Function to assign computed date and size to folders
+        const assignComputedValues = (folder: folder) => {
+            folder.children.forEach((child) => {
+                if ('children' in child) {
+                    assignComputedValues(child);
+                }
+            });
+
+            if (folder.key) {
+                folder.size = sizeMap[folder.key] || 0;
+                folder.date = dateMap[folder.key]?.sort()[0] || ''; // Earliest date
+            }
+        };
+
+        assignComputedValues(root);
         return root;
     };
 
@@ -113,7 +146,7 @@ const FolderRenderer = ({ folder, depth = 0 }: FolderRendererProps) => {
         <>
             {depth > 0 && 
             <tr className={styles.folder} onClick={() => handleClickFolder(folder)}>
-                <td className={styles.folderName}>
+                <td className={styles.folderName} style={depthPadding(depth)}>
                     <i className={`${false ? 'fa fa-folder-open-o' : 'fa fa-folder-o'}`} aria-hidden="true" />
                     {folder.name}
                 </td>
@@ -152,7 +185,7 @@ const FileRenderer = ({ file, depth }: FileRendererProps) => {
             className={styles.file}
             onClick={handleSelectFile}
             >
-            <td className={styles.fileName}>{file.name}</td>
+            <td className={styles.fileName} style={depthPadding(depth)}>{file.name}</td>
             <td className={styles.fileSize}>{formatSize(file.size)}</td>
             <td className={styles.fileDate}>{file.date}</td>
         </tr>
@@ -162,8 +195,8 @@ const FileRenderer = ({ file, depth }: FileRendererProps) => {
 export const TestFileTable = () => {
     const files: file[] = [
         {
-            key: 'Folder 1/File 1',
-            name: 'File 1',
+            key: 'Folder 1/File 1 AAAAAAAAAAAAAAA',
+            name: 'File 1 AAAAAAAAAAAAAAAA',
             size: 1000,
             date: '2021-10-01',
             extension: 'txt',
