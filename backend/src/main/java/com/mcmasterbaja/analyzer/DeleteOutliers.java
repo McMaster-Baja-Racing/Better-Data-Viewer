@@ -3,6 +3,7 @@ package com.mcmasterbaja.analyzer;
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import jakarta.enterprise.context.Dependent;
@@ -11,6 +12,7 @@ import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent
+@AnalyzerQualifier(AnalyzerType.DELETE_OUTLIER)
 @OnAnalyzerException
 public class DeleteOutliers extends Analyzer {
   private double limit;
@@ -37,7 +39,8 @@ public class DeleteOutliers extends Analyzer {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
     }
 
-    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    logger.debug(inputColumns[0]);
+    int xAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);
 
     String[] dataPoint;
