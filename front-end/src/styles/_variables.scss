@@ -3,6 +3,7 @@ $primary: #FF253A;
 $secondary: #300A17;
 $tertiary: #323232;
 $background: #222222;
+$background-sec: #2E2E2E;
 $accent: #BB0808;
 $text-colour: #FFFFFF;
 $upload-stroke: #636363;
@@ -18,6 +19,7 @@ $upload-stroke: #636363;
   --secondary: #{$secondary};
   --tertiary: #{$tertiary};
   --background: #{$background};
+  --background-sec: #{$background-sec};
   --accent: #{$accent};
   --text-colour: #{$text-colour};
 
@@ -41,7 +43,7 @@ $upload-stroke: #636363;
 // A map of z-index values for different components
 $z-index: (
   dropdown: 1,
-   footer: 1,
+  footer: 1,
   sidebar: 2,
   success: 3,
   tooltip: 4,

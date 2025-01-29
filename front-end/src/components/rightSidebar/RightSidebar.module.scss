@@ -1,0 +1,32 @@
+@use '@styles/_variables';
+@use "sass:map";
+
+.rightSidebarContainer {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  .children {
+    flex-grow: 1;
+  }
+
+  .rightSidebar {
+    background-color: var(--background-sec);
+    color: var(--text-colour);
+    position: relative;
+  
+    &.collapsed {
+      width: 0;
+    }
+  
+    .resizer {
+      width: 0.4rem;
+      cursor: ew-resize;
+      position: absolute;
+      left: -0.125rem;
+      height: 100%;
+      background: gray;
+    }
+  }
+
+}
