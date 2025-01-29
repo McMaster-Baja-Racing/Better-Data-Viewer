@@ -1,4 +1,4 @@
-export interface file {
+export interface File {
   key: string;
   name: string;
   size: number;
@@ -6,10 +6,10 @@ export interface file {
   extension: string;
 }
 
-export interface folder {
+export interface Folder {
   key: string;
   name: string;
   size: number;
   date: string;
-  children: (file | folder)[];
+  children: (File | Folder)[];
 }

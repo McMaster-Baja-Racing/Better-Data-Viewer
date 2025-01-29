@@ -3,7 +3,7 @@ import styles from './FileTable.module.scss';
 import cx from 'classnames';
 import folderIcon from '@assets/icons/folder.svg';
 import folderOpenIcon from '@assets/icons/folderOpen.svg';
-import { file, folder } from '@types';
+import { File, Folder } from '@types';
 
 const formatSize = (size: number) => {
     if (size === 0) return '0 B';
@@ -20,8 +20,8 @@ const depthPadding = (depth: number) => {
     };
 }
 
-const buildHierarchy = (files: file[]): folder => {
-    const root: folder = {
+const buildHierarchy = (files: File[]): Folder => {
+    const root: Folder = {
         key: '',
         name: 'Root',
         size: 0,
@@ -46,7 +46,7 @@ const buildHierarchy = (files: file[]): folder => {
                 // Add or find the folder
                 let folder = currentFolder.children.find(
                     (child) => 'children' in child && child.key === folderKey
-                ) as folder;
+                ) as Folder;
 
                 if (!folder) {
                     folder = {
@@ -72,7 +72,7 @@ const buildHierarchy = (files: file[]): folder => {
     });
 
     // Function to assign computed date and size to folders
-    const assignComputedValues = (folder: folder) => {
+    const assignComputedValues = (folder: Folder) => {
         folder.children.forEach((child) => {
             if ('children' in child) {
                 assignComputedValues(child);
@@ -90,13 +90,13 @@ const buildHierarchy = (files: file[]): folder => {
 };
 
 interface FileTableProps {
-    files: file[];
-    selectedFiles: file[];
-    setSelectedFiles: (files: file[]) => void;
+    files: File[];
+    selectedFiles: File[];
+    setSelectedFiles: (files: File[]) => void;
 }
 
 export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableProps) => {
-    const [folderTree, setFolderTree] = useState<folder | null>(null);
+    const [folderTree, setFolderTree] = useState<Folder | null>(null);
 
     useEffect(() => {
         setFolderTree(buildHierarchy(files));
@@ -120,10 +120,10 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
 }
 
 interface FolderRendererProps {
-    folder: folder;
+    folder: Folder;
     depth?: number;
-    selectedFiles: file[];
-    setSelectedFiles: (files: file[]) => void;
+    selectedFiles: File[];
+    setSelectedFiles: (files: File[]) => void;
 }
 
 const FolderRenderer = ({ folder, depth = 0, selectedFiles, setSelectedFiles }: FolderRendererProps) => {
@@ -173,10 +173,10 @@ const FolderRenderer = ({ folder, depth = 0, selectedFiles, setSelectedFiles }: 
 }
 
 interface FileRendererProps {
-    file: file;
+    file: File;
     depth: number;
-    selectedFiles: file[];
-    setSelectedFiles: (files: file[]) => void;
+    selectedFiles: File[];
+    setSelectedFiles: (files: File[]) => void;
 }
 
 const FileRenderer = ({ file, depth, selectedFiles, setSelectedFiles }: FileRendererProps) => {
@@ -203,7 +203,7 @@ const FileRenderer = ({ file, depth, selectedFiles, setSelectedFiles }: FileRend
 }
 
 export const TestFileTable = () => {
-    const files: file[] = [
+    const files: File[] = [
         {
             key: 'Folder 1/File 1 AAAAAAAAAAAAAAA',
             name: 'File 1 AAAAAAAAAAAAAAAA',
@@ -241,7 +241,7 @@ export const TestFileTable = () => {
         }
     ];
 
-    const [selectedFiles, setSelectedFiles] = useState<file[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     
     return (
         <FileTable files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}/>
