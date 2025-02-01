@@ -18,7 +18,7 @@ export const OptionSquare = ({ label, illustration, clicked, setClicked}: Option
     return (
         <div className={cx(styles.optionSquare, { [styles.clicked]: clicked })} onClick={handleClick}>
         <div className={styles.illustration}>
-                {illustration ? <img src={illustration} alt="Illustration" /> : null}
+                <img src={illustration} alt="Illustration" />
             </div>
             <div className={styles.label}>
                    {label}
