@@ -14,7 +14,7 @@
     color: var(--text-color);
     width: 13.435rem;
     height: 11.25rem;
-
+transition: filter 0.1s ease-in-out;
     &:hover {
       filter: brightness(1.1);
    }
