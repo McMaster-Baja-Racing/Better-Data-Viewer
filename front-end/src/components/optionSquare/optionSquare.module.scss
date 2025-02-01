@@ -14,13 +14,17 @@
     color: var(--text-color);
     width: 13.435rem;
     height: 11.25rem;
-transition: filter 0.1s ease-in-out;
+    transition: filter 0.1s ease-in-out;
     &:hover {
       filter: brightness(1.1);
    }
 
    &.clicked {
-    border: 3px solid var(--primary);
+    background-color: var(--baja-colour);
+    border: 1px solid var(--baja-colour);
+    &.hover {
+      filter: brightness(1);
+    }
   }
 
     .illustration {
@@ -36,9 +40,21 @@ transition: filter 0.1s ease-in-out;
             object-fit:fill;
         }
     }
-      .label {
-        text-align: center;
-        color: var(--text-colour);
-        padding-top: .315rem;
-      }
+    .labelContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.315rem;
+  }
+
+  .label {
+      text-align: center;
+      color: var(--text-colour);
+  }
+
+  .checkMark {
+      width: 1rem;
+      height: 1rem;
+  }
 }
