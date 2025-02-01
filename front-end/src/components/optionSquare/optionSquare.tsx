@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './optionSquare.module.scss';
 import cx from 'classnames';
-import checkMark from '../../assets/icons/checkmark.svg';
+import checkMark from '@assets/icons/checkmark.svg';
 
 interface OptionSquareProps {
   label: string;
