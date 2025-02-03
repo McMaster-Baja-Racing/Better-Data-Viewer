@@ -39,6 +39,16 @@ public abstract class Analyzer {
     }
   }
 
+  /**
+   * Default behaviour is to use the 0th output file, will need to be overridden in some special
+   * cases
+   *
+   * @return Filename of the analyzer output
+   */
+  public String getOutputFilename() {
+    return this.outputFiles[0];
+  }
+
   public ICSVWriter getWriter(String filePath) {
     try {
       FileWriter fileWriter = new FileWriter(filePath);

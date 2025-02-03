@@ -64,7 +64,9 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
         <button title="Go to map" onClick={() =>onIconClick('map')}>
           <img className={styles.icon} src={icons['map']} alt="Go to map" />
         </button>
-                
+        <button title="Choose Preset" className="choosePreset" onClick={() => setModal('ChoosePreset')}>
+          <img className="icon"src={icons['newGraph']} alt="Choose Preset" />
+        </button>
         <button title="Upload Files" onClick={() => setModal('Upload')}>
           <img className={styles.icon} src={icons['upload']} alt="Upload" />
         </button>

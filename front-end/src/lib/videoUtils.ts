@@ -3,9 +3,15 @@ import { FileInformation, FileTimespan, ChartInformation, ExtSeries } from '@typ
 // Computs the offsets between the videoStart and the fileStart for all series
 export const computeOffsets = (chartInformation: ChartInformation, videoTimespan: FileTimespan) => {
   const videoStart = new Date(videoTimespan.start).getTime();
-  
+
   const tempOffsets: number[] = [];
   chartInformation.files.forEach(file => {
+    if(file.columns[0].timespan.start == null)
+      {
+        // TODO: Decide when should a file require a timespan and when it's okay to be missing
+        // throw new Error('File has no timespan start')
+        return;
+      }
     const fileStart = new Date(file.columns[0].timespan.start).getTime(); // Unix date of first timestamp in file
     tempOffsets.push(videoStart - fileStart);
   });
