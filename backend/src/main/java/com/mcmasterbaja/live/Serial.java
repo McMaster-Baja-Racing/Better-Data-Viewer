@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.Serializable;
 
 public enum PacketType {
-  F_IMU_ABS_X = 0,
+  F_IMU_ABS_X,
   F_IMU_ABS_Y,
   F_IMU_ABS_Z,
   F_IMU_ACCEL_X,
@@ -51,7 +51,7 @@ public enum PacketType {
   IMU_QUAT_W,
   IMU_QUAT_X,
   IMU_QUAT_Y,
-  IMU_QUAT_Z,
+  IMU_QUAT_Z; 
 }
 
 public class Serial implements Serializable {
@@ -88,7 +88,7 @@ public class Serial implements Serializable {
         }
       }
       if (!setPort) { // throwing exception if port not found
-        throw new Exception("No suitable port found")
+        throw new Exception("No suitable port found"); 
       }
     }
 
@@ -98,7 +98,7 @@ public class Serial implements Serializable {
         System.out.println("Connected to port"); 
         comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
       } else {
-        System.out.println("Could not connect to port.")
+        System.out.println("Could not connect to port."); 
       }
   } catch (Exception E) {
     System.out.println("Error during port setup");
@@ -156,10 +156,14 @@ public class Serial implements Serializable {
         byte[] readBuffer = new byte[8];
         int numRead = comPort.readBytes(readBuffer, readBuffer.length);
 
-        System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ "
-        Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
-        readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ", "
-        + readBuffer[7] );
+        String s = ""; 
+        for (int i = 0; i < 7; i++) {
+          s += readBuffer[i] + ", "; 
+        }
+        s += readBuffer[7]; 
+
+
+        System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ "Bytes: " + s);
 
         Packet p = new Packet(readBuffer);
         System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
@@ -169,12 +173,13 @@ public class Serial implements Serializable {
           fileWriters.get(p.getPacketType()).flush();
         } catch (Exception e) {
             if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
-                System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+
-              " Bytes: " + readBuffer[0] + ", " + readBuffer[1] + ", " + readBuffer[2] + ", " +
-              readBuffer[3] + ", " + readBuffer[4] + ", " + readBuffer[5] + ", " + readBuffer[6] + ",
-              " + readBuffer[7] );
-              System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " +
-              p.getFloatData());
+              String s = ""; 
+              for (int i = 0; i < 7; i++) {
+                s += readBuffer[i] + ", "; 
+              }
+              s += readBuffer[7]; 
+              System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length + " Bytes: " + s);
+              System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
               strains[p.getPacketType() - 28].write(p.getTimestamp() + "," + p.getFloatData() + "\n");
               strains[p.getPacketType() - 28].flush();   
             }
