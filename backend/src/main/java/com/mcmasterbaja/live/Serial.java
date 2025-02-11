@@ -16,6 +16,7 @@ public class Serial implements Serializable {
   private SerialPort comPort; // converted comPort to a variable
   private FileWriter fw = null; 
   private FileWriter fw2 = null; 
+  public boolean exit = false;
   private FileWriter fw42 = null; 
   private Map<PacketType, FileWriter> fileWriters = new HashMap<>(); 
 
@@ -31,10 +32,8 @@ public class Serial implements Serializable {
   public void readLive() throws Exception { // made readLive method non-static
     String rootLocation = "./uploads"; // To be replaced with a path
     String port = "COM4";
-    boolean exit = false; 
-    boolean setPort = false;
 
-    while (!setPort) {
+    while (!exit) {
       SerialPort[] portList = SerialPort.getCommPorts();
       for (SerialPort serialPort : portList) {
         // check if the comport desciption contains the word arduino
@@ -44,11 +43,11 @@ public class Serial implements Serializable {
           // if it does, set the comport to the current port
           comPort = serialPort;
           // break out of the loop
-          setPort = true;
+          exit = true;
           break;
         }
       }
-      if (!setPort) { // throwing exception if port not found
+      if (!exit) { // throwing exception if port not found
         throw new Exception("No suitable port found"); 
       }
     }

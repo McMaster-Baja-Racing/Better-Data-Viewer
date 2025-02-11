@@ -78,15 +78,20 @@ public class FileAnalyzeResource {
   @PATCH
   @jakarta.ws.rs.Path("togglelive")
   public Boolean toggleLive() {
-    logger.info("Toggling live data to: " + Serial.exit);
-    Boolean exit = Serial.exit;
+    Serial serial = new Serial(); 
+    logger.info("Toggling live data to: " + serial.exit);
+    Boolean exit = serial.exit;
 
-    if (!Serial.exit) {
-      Serial.exit = true;
+    if (!serial.exit) {
+      serial.exit = true;
     } else {
       new Thread(
               () -> {
-                Serial.readLive();
+                try {
+                  serial.readLive();
+                } catch (Exception e) {
+                  e.printStackTrace(); 
+                }
               })
           .start();
     }
