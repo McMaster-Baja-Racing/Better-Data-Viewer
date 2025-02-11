@@ -4,73 +4,32 @@ package com.mcmasterbaja.live;
 import com.fazecast.jSerialComm.*;
 import com.mcmasterbaja.binary_csv.Packet;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
-
-public enum PacketType {
-  F_IMU_ABS_X,
-  F_IMU_ABS_Y,
-  F_IMU_ABS_Z,
-  F_IMU_ACCEL_X,
-  F_IMU_ACCEL_Y,
-  F_IMU_ACCEL_Z,
-  F_IMU_GRAVITY_X,
-  F_IMU_GRAVITY_Z,
-  F_IMU_GRAVITY_Y,
-  F_IMU_GYRO_X,
-  F_IMU_GYRO_Y,
-  F_IMU_GYRO_Z,
-  F_IMU_TEMP,
-  F_GPS_LATITUDE,
-  INT_GPS_LAT,
-  F_GPS_LONGITUDE,
-  INT_GPS_LON,
-  F_GPS_ANGLE,
-  F_GPS_SPEED,
-  INT_GPS_TIME,
-  INT_GPS_DAYMONTHYEAR,
-  INT_GPS_SECONDMINUTEHOUR,
-  INT_PRIM_TEMP,
-  F_SEC_TEMP,
-  INT_SUS_TRAV_FR,
-  INT_SUS_TRAV_FL,
-  INT_SUS_TRAV_RR,
-  INT_SUS_TRAV_RL,
-  INT_STRAIN1,
-  INT_STRAIN2,
-  INT_STRAIN3,
-  INT_STRAIN4,
-  INT_STRAIN5,
-  INT_STRAIN6,
-  F_RPM_FR,
-  F_RPM_FL,
-  F_RPM_SEC,
-  F_RPM_PRIM, 
-  INT_BATT_PERC,
-  F_BATT_VOLT,
-  F_BRAKE_PRESS,
-  IMU_QUAT_W,
-  IMU_QUAT_X,
-  IMU_QUAT_Y,
-  IMU_QUAT_Z; 
-}
+import com.mcmasterbaja.live.PacketType; 
+import java.util.HashMap; 
+import java.util.Map; 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import java.nio.file.Path;
 
 public class Serial implements Serializable {
   private SerialPort comPort; // converted comPort to a variable
-  private boolean isLive = true; 
   private FileWriter fw = null; 
   private FileWriter fw2 = null; 
   private FileWriter fw42 = null; 
   private Map<PacketType, FileWriter> fileWriters = new HashMap<>(); 
 
+  @ConfigProperty(name = "quarkus.http.body.uploads-directory")
+  private Path rootLocation;
+
   public Serial(SerialPort port) {
     this.comPort = port;  
   }
 
-  public void readLive() { // made readLive method non-static
+  public void readLive() throws Exception { // made readLive method non-static
     String rootLocation = "./uploads"; // To be replaced with a path
-    exit = false;
     String port = "COM4";
-    
+    boolean exit = false; 
     boolean setPort = false;
 
     while (!setPort) {
@@ -152,7 +111,7 @@ public class Serial implements Serializable {
       e.printStackTrace();
     }
     try {
-      while (!exit) {
+      while (true) {
         byte[] readBuffer = new byte[8];
         int numRead = comPort.readBytes(readBuffer, readBuffer.length);
 
@@ -173,7 +132,7 @@ public class Serial implements Serializable {
           fileWriters.get(p.getPacketType()).flush();
         } catch (Exception e) {
             if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
-              String s = ""; 
+              s = ""; 
               for (int i = 0; i < 7; i++) {
                 s += readBuffer[i] + ", "; 
               }
@@ -190,7 +149,10 @@ public class Serial implements Serializable {
     }
     comPort.closePort();
     try {
-      fileWriters.values().forEach((p, f) -> f.close()); 
+      for (int i = 0; i < fileWriters.values().size(); i++) {
+        FileWriter f = fileWriters.values().get(i);
+        f.close(); 
+      }
       for (FileWriter f : strains) {
         f.flush();
       }
@@ -205,6 +167,8 @@ public class Serial implements Serializable {
 
   // write a main to test this
   public static void main(String[] args) {
-    readLive();
+    SerialPort sp = new SerialPort(); 
+    Serial serial = new Serial(sp); 
+    serial.readLive();
   }
 }
