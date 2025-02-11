@@ -22,6 +22,8 @@ public class Serial implements Serializable {
   @ConfigProperty(name = "quarkus.http.body.uploads-directory")
   private Path rootLocation;
 
+  public Serial() {}
+
   public Serial(SerialPort port) {
     this.comPort = port;  
   }
@@ -149,9 +151,8 @@ public class Serial implements Serializable {
     }
     comPort.closePort();
     try {
-      for (int i = 0; i < fileWriters.values().size(); i++) {
-        FileWriter f = fileWriters.values().get(i);
-        f.close(); 
+      for (FileWriter f : fileWriters.values()) {
+        f.close();
       }
       for (FileWriter f : strains) {
         f.flush();
@@ -167,8 +168,12 @@ public class Serial implements Serializable {
 
   // write a main to test this
   public static void main(String[] args) {
-    SerialPort sp = new SerialPort(); 
+    SerialPort sp = SerialPort.getCommPorts()[0]; 
     Serial serial = new Serial(sp); 
-    serial.readLive();
+    try {
+      serial.readLive();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }
