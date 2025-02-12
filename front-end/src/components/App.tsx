@@ -12,6 +12,8 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
+import { GraphHeader } from './graphHeader/graphHeader';
+import { Footer } from './Footer/Footer';
 
 const App = () => {
   const location = useLocation();
@@ -93,6 +95,7 @@ const App = () => {
           />} />
         </Routes>
       </header>
+      <Footer />
     </div>
   );
 
