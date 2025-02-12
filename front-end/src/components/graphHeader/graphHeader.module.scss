@@ -12,39 +12,29 @@
     z-index: map.get(variables.$z-index, graphHeader);
     width: 100%;
     height: 4rem;
+    align-items: center;
 
     > * {
         margin: 0 2rem;  
     }
 
-    .title-group {
+    .title {
         @include fonts.title-large;
         display: flex;
         justify-content: start;
-        align-items: center;
-        
-        .copyright {
-            @include fonts.text-huge; 
-            color: var(--tertiary);  
-            filter: brightness(2);
-        }
-
-        .title {
-            @include fonts.nav-title;  
-            margin-left: 0.5rem;
-        }
     }
 
     .buttons {
         display: flex;
-        @include fonts.title-small; 
+        gap: 1rem;
 
         > * {
+            @include fonts.title-tiny; 
             background: var(--baja-colour);
+            height: 3rem;
             border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
+            border-radius: 0.5rem;
+            padding: 0.2rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
