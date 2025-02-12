@@ -49,6 +49,7 @@ const App = () => {
 
   return (
     <div className={styles.App}>
+      <GraphHeader />
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
@@ -95,7 +96,6 @@ const App = () => {
           />} />
         </Routes>
       </header>
-      <Footer />
     </div>
   );
 

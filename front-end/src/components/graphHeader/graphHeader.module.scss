@@ -3,8 +3,8 @@
 @use "sass:map"; 
 
 .graphHeader {
-    @include fonts.nav-title;
-    background: var(--background);
+    @include fonts.title-large;
+    background: linear-gradient( var(--tertiary), var(--background)); 
     display: flex;
     justify-content: space-between;
     padding: 1rem;
