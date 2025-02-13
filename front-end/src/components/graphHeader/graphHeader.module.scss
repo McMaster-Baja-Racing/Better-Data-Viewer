@@ -20,7 +20,6 @@
     .title {
         @include fonts.title-large;
         display: flex;
-        justify-content: start;
     }
 
     .buttons {
