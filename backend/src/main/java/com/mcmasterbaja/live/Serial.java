@@ -4,21 +4,19 @@ package com.mcmasterbaja.live;
 import com.fazecast.jSerialComm.*;
 import com.mcmasterbaja.binary_csv.Packet;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Serializable;
-import com.mcmasterbaja.live.PacketType; 
-import java.util.HashMap; 
-import java.util.Map; 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 public class Serial implements Serializable {
   private SerialPort comPort; // converted comPort to a variable
-  private FileWriter fw = null; 
-  private FileWriter fw2 = null; 
+  private FileWriter fw = null;
+  private FileWriter fw2 = null;
   public boolean exit = false;
-  private FileWriter fw42 = null; 
-  private Map<PacketType, FileWriter> fileWriters = new HashMap<>(); 
+  private FileWriter fw42 = null;
+  private Map<PacketType, FileWriter> fileWriters = new HashMap<>();
 
   @ConfigProperty(name = "quarkus.http.body.uploads-directory")
   private Path rootLocation;
@@ -26,7 +24,7 @@ public class Serial implements Serializable {
   public Serial() {}
 
   public Serial(SerialPort port) {
-    this.comPort = port;  
+    this.comPort = port;
   }
 
   public void readLive() throws Exception { // made readLive method non-static
@@ -48,27 +46,27 @@ public class Serial implements Serializable {
         }
       }
       if (!exit) { // throwing exception if port not found
-        throw new Exception("No suitable port found"); 
+        throw new Exception("No suitable port found");
       }
     }
 
-  try {
+    try {
       comPort.setBaudRate(115200);
       if (comPort.openPort()) {
-        System.out.println("Connected to port"); 
+        System.out.println("Connected to port");
         comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
       } else {
-        System.out.println("Could not connect to port."); 
+        System.out.println("Could not connect to port.");
       }
-  } catch (Exception E) {
-    System.out.println("Error during port setup");
-    E.printStackTrace(); 
-  } finally {
-    if (comPort.openPort()) {
-      comPort.closePort(); 
-      System.out.println("Port closed");
+    } catch (Exception E) {
+      System.out.println("Error during port setup");
+      E.printStackTrace();
+    } finally {
+      if (comPort.openPort()) {
+        comPort.closePort();
+        System.out.println("Port closed");
+      }
     }
-  }
     // define an array of file writers with 6 elements
     FileWriter[] strains = new FileWriter[6];
     String[] strainNames = {"Force X", "Force Z", "Force Y", "Moment X", "Moment Z", "Moment Y"};
@@ -79,9 +77,9 @@ public class Serial implements Serializable {
       fw = new FileWriter(rootLocation.toString() + "/live_F_RPM_PRIM.csv");
       fw2 = new FileWriter(rootLocation.toString() + "/live_F_RPM_SEC.csv");
       fw42 = new FileWriter(rootLocation.toString() + "/live_F_BELT_SPEED.csv");
-      fileWriters.put(PacketType.F_RPM_PRIM, fw); 
-      fileWriters.put(PacketType.F_RPM_SEC, fw2); 
-      fileWriters.put(PacketType.F_BELT_SPEED, fw42); 
+      fileWriters.put(PacketType.F_RPM_PRIM, fw);
+      fileWriters.put(PacketType.F_RPM_SEC, fw2);
+      fileWriters.put(PacketType.F_BELT_SPEED, fw42);
       fw.write("Timestamp (ms),F_RPM_PRIM\n");
       fw2.write("Timestamp (ms),F_RPM_SEC\n");
       fw42.write("Timestamp (ms),F_BELT_SPEED\n");
@@ -116,34 +114,43 @@ public class Serial implements Serializable {
         byte[] readBuffer = new byte[8];
         int numRead = comPort.readBytes(readBuffer, readBuffer.length);
 
-        String s = ""; 
+        String s = "";
         for (int i = 0; i < 7; i++) {
-          s += readBuffer[i] + ", "; 
+          s += readBuffer[i] + ", ";
         }
-        s += readBuffer[7]; 
+        s += readBuffer[7];
 
-
-        System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length+ "Bytes: " + s);
+        System.out.println(
+            "Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length + "Bytes: " + s);
 
         Packet p = new Packet(readBuffer);
         System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
 
         try {
-          fileWriters.get(p.getPacketType()).write(p.getTimestamp() + "," + p.getFloatData() + "\n");
+          fileWriters
+              .get(p.getPacketType())
+              .write(p.getTimestamp() + "," + p.getFloatData() + "\n");
           fileWriters.get(p.getPacketType()).flush();
         } catch (Exception e) {
-            if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
-              s = ""; 
-              for (int i = 0; i < 7; i++) {
-                s += readBuffer[i] + ", "; 
-              }
-              s += readBuffer[7]; 
-              System.out.println("Read " + numRead + " bytes. Number of Bytes: " + readBuffer.length + " Bytes: " + s);
-              System.out.println(p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
-              strains[p.getPacketType() - 28].write(p.getTimestamp() + "," + p.getFloatData() + "\n");
-              strains[p.getPacketType() - 28].flush();   
+          if (p.getPacketType() >= 28 && p.getPacketType() <= 33) {
+            s = "";
+            for (int i = 0; i < 7; i++) {
+              s += readBuffer[i] + ", ";
             }
-        }  
+            s += readBuffer[7];
+            System.out.println(
+                "Read "
+                    + numRead
+                    + " bytes. Number of Bytes: "
+                    + readBuffer.length
+                    + " Bytes: "
+                    + s);
+            System.out.println(
+                p.getTimestamp() + ", " + p.getPacketType() + ", " + p.getFloatData());
+            strains[p.getPacketType() - 28].write(p.getTimestamp() + "," + p.getFloatData() + "\n");
+            strains[p.getPacketType() - 28].flush();
+          }
+        }
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -167,8 +174,8 @@ public class Serial implements Serializable {
 
   // write a main to test this
   public static void main(String[] args) {
-    SerialPort sp = SerialPort.getCommPorts()[0]; 
-    Serial serial = new Serial(sp); 
+    SerialPort sp = SerialPort.getCommPorts()[0];
+    Serial serial = new Serial(sp);
     try {
       serial.readLive();
     } catch (Exception e) {

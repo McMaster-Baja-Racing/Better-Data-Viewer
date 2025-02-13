@@ -78,7 +78,7 @@ public class FileAnalyzeResource {
   @PATCH
   @jakarta.ws.rs.Path("togglelive")
   public Boolean toggleLive() {
-    Serial serial = new Serial(); 
+    Serial serial = new Serial();
     logger.info("Toggling live data to: " + serial.exit);
     Boolean exit = serial.exit;
 
@@ -90,7 +90,7 @@ public class FileAnalyzeResource {
                 try {
                   serial.readLive();
                 } catch (Exception e) {
-                  e.printStackTrace(); 
+                  e.printStackTrace();
                 }
               })
           .start();
