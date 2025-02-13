@@ -3,7 +3,7 @@
 @use "sass:map"; 
 
 .graphHeader {
-    background: linear-gradient( var(--tertiary), var(--background)); 
+    background: linear-gradient( var(--tertiary), var(--dark-background)); 
     display: flex;
     justify-content: space-between;
     padding: 1rem;
@@ -15,7 +15,7 @@
     align-items: center;
 
     > * {
-        margin: 0 2rem;  
+        margin: 0 3rem;  
     }
 
     .title {
@@ -26,13 +26,12 @@
 
     .buttons {
         display: flex;
-        gap: 1rem;
+        gap: 1.5rem;
 
         > * {
             @include fonts.title-tiny; 
             background: var(--baja-colour);
             height: 3rem;
-            border: none;
             border-radius: 0.5rem;
             padding: 0.2rem 1.5rem;
             display: flex;

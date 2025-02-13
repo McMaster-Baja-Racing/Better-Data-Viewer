@@ -8,23 +8,15 @@ interface GraphHeaderProps {
 export function GraphHeader({ title }: GraphHeaderProps) {
   return (
     <div className={styles.graphHeader}>
-      <div className={styles["title"]}>Drivetrain Preset</div>
+      <div className={styles["title"]}>Drivetrain Preset</div> {/* Replace with title prop */}
       <div className={styles.buttons}>
         <button>
           Configure
-          <img
-                src={icons.settings} 
-                alt="Settings Icon" 
-                className={styles.icon} 
-            />
+          <img className={styles.icon} src={icons['sun']} alt="Settings" /> {/* Settings icon won't work lol */}
         </button>
         <button>
           Share Dashboard
-            <img
-                src={icons.upload} 
-                alt="Upload Icon" 
-                className={styles.icon} 
-            />
+          <img className={styles.icon} src={icons['upload']} alt="Upload" />
         </button>
       </div>
     </div>
