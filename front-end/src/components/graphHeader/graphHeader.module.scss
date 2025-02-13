@@ -26,34 +26,5 @@
     .buttons {
         display: flex;
         gap: 1.5rem;
-
-        > * {
-            @include fonts.title-tiny; 
-            background: var(--baja-colour);
-            height: 3rem;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: filter 0.3s, box-shadow 0.3s;
-
-            &:hover {
-                filter: brightness(0.8);
-            }
-
-            &:active {
-                box-shadow: 0px 0px 3px #000000;
-                transition: box-shadow 1s;
-                transition-delay: -0.5s;
-            }
-
-            .icon {
-                width: 1.5rem;
-                height: 1.5rem;
-                margin-left: 0.5rem;
-            }
-        }
     }
 }

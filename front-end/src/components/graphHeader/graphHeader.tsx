@@ -1,5 +1,6 @@
-import styles from "./graphHeader.module.scss";
-import { icons } from "@lib/assets";
+import styles from './graphHeader.module.scss';
+import { icons } from '@lib/assets';
+import { Button } from '../button/Button';
 
 interface GraphHeaderProps {
   title: string;
@@ -8,16 +9,26 @@ interface GraphHeaderProps {
 export function GraphHeader({ title }: GraphHeaderProps) {
   return (
     <div className={styles.graphHeader}>
-      <div className={styles["title"]}>{title}</div> 
+      <div className={styles.title}>{title}</div>
       <div className={styles.buttons}>
-        <button>
-          Configure
-          <img className={styles.icon} src={icons['settings']} alt="Settings" /> 
-        </button>
-        <button>
-          Share Dashboard
-          <img className={styles.icon} src={icons['upload']} alt="Upload" />
-        </button>
+        <Button
+          text="Configure"
+          icon={icons['settings']}
+          onClick={() => {}}
+          primary={true}
+          paddingX="1.5rem"
+          paddingY="0.3rem"
+          textSize={16}
+        />
+        <Button
+          text="Share Dashboard"
+          icon={icons['upload']}
+          onClick={() => {}}
+          primary={true}
+          paddingX="1.5rem"
+          paddingY="0.3rem"
+          textSize={16}
+        />
       </div>
     </div>
   );
