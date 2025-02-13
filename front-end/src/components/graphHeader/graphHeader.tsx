@@ -12,7 +12,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
       <div className={styles.buttons}>
         <button>
           Configure
-          <img className={styles.icon} src={icons['settings']} alt="Settings" /> {/* Settings icon won't work lol */}
+          <img className={styles.icon} src={icons['settings']} alt="Settings" /> 
         </button>
         <button>
           Share Dashboard

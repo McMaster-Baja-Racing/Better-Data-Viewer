@@ -8,14 +8,13 @@
     justify-content: space-between;
     padding: 1rem;
     color: var(--text-colour);
-    position: sticky;
     z-index: map.get(variables.$z-index, graphHeader);
     width: 100%;
-    height: 4rem;
+    height: 4rem;   
     align-items: center;
 
     > * {
-        margin: 0 3rem;  
+        margin: 3rem;  
     }
 
     .title {
@@ -33,7 +32,7 @@
             background: var(--baja-colour);
             height: 3rem;
             border-radius: 0.5rem;
-            padding: 0.2rem 1.5rem;
+            padding: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
