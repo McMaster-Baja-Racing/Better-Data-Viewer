@@ -3,7 +3,7 @@ import { icons } from '@lib/assets';
 import { Button } from '../button/Button';
 
 interface GraphHeaderProps {
-  title: string;
+  readonly title: string;
 }
 
 export function GraphHeader({ title }: GraphHeaderProps) {
