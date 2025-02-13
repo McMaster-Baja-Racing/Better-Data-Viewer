@@ -14,7 +14,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
         <Button
           text="Configure"
           icon={icons['settings']}
-          onClick={() => {}}
+          onClick={() => {}} //TODO: fill this in when functionality is added
           primary={true}
           paddingX="1.5rem"
           paddingY="0.3rem"
@@ -23,7 +23,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
         <Button
           text="Share Dashboard"
           icon={icons['upload']}
-          onClick={() => {}}
+          onClick={() => {}} //TODO: fill this in when functionality is added
           primary={true}
           paddingX="1.5rem"
           paddingY="0.3rem"
