@@ -43,7 +43,7 @@ export const icons = {
   linkedin: linkedinIcon,
   twitter: twitterIcon,
   youtube: youtubeIcon,
-  settings: settiingsIcon,
+  settings: settingsIcon,
 };
 
 export const images = {
