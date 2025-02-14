@@ -8,7 +8,7 @@ interface PresetCardProps {
     fileCount: number;
 }
 
-export function PresetCard({ image,title,description,fileCount }: GraphHeaderProps) {
+export function PresetCard({ image,title,description,fileCount }: PresetCardProps) {
     return (
     <div className={styles.presetCard}>
         <img src={image || defaultImage} alt={title} className={styles.image} />
