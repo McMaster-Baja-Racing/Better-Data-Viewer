@@ -10,9 +10,11 @@ interface PresetCardProps {
 
 export function PresetCard({ image,title,description,fileCount }: PresetCardProps) {
     return (
-    <div className={styles.presetCard}>
-        <img src={image || defaultImage} alt={title} className={styles.image} />
-    </div>
+        <div className={styles.presetCard}>
+        <img src={image || defaultImage} alt="Preset" className={styles.image} />
+        <div className={styles.content}>
+        </div>
+      </div>
     );
 };
 
