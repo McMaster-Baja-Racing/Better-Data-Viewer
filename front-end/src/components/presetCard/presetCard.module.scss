@@ -8,9 +8,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 20rem;
-    height: 15rem;
-    padding: 1.1rem;
+    width: 22rem;
+    height: 16rem;
+    padding: 1.3rem;
     cursor: pointer;
     overflow: hidden;
     
@@ -25,6 +25,11 @@
         border-radius: 0.75rem;
     }
 
+    &:hover .image {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        filter: brightness(0.8);
+    }
+
     .content {
         display: flex;
         flex-direction:column;
@@ -35,8 +40,9 @@
     }
     
     .title {
-        @include fonts.text-large;
+        @include fonts.text-medium;
         color: var(--text-colour);
+        padding-bottom: 0.6rem;
     }
 
     .description {

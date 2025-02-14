@@ -1,5 +1,6 @@
 import styles from './presetCard.module.scss';
 import defaultImage from '@assets/preset_thumbnail.png';
+import { icons } from '@lib/assets';
 
 interface PresetCardProps {
     image?: string;
