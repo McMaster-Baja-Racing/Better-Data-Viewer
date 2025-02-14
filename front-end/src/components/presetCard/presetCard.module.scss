@@ -58,6 +58,11 @@
         @include fonts.text-small;
         color: var(--alt-text);
         text-align: left;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
 }

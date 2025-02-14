@@ -15,13 +15,13 @@ export function PresetCard({ image,title,description,fileCount }: PresetCardProp
         <img src={image || defaultImage} alt="Preset" className={styles.image} />
         <div className={styles.content}>
             <div className={styles['title-container']}>
-                <div>Shift Curve and Speed vs Time</div>
+                <div>{title}</div>
                 <div className={styles.fileCount}>
-                    <span>3 x</span>
+                    <span>{fileCount} x</span>
                 <img src={icons['newGraph']} alt="New Graph" />
             </div>
             </div>
-            <div className={styles.description}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad...</div>
+            <div className={styles.description}>{description}</div>
         </div>
       </div>
     );
