@@ -1,3 +1,28 @@
 @use '@styles/_fonts';
 @use '@styles/_variables';
-@use "sass:map"; 
+@use "sass:map";
+
+.presetCard {
+    background-color: var(--tertiary);
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 12rem;
+    height: 12rem;
+    padding: 1rem;
+    cursor: pointer;
+    overflow: hidden;
+    
+    &:hover {
+        filter: brightness(1.2);
+    }
+    
+    .image {
+        width: 6rem;
+        height: rem;
+        object-fit: contain;
+        border-radius: 0.75rem;
+    }
+}
