@@ -51,7 +51,7 @@ const App = () => {
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
-      <PresetCard title={"Shift Curve and Speed vs Time"} fileCount = {3} description = {"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad ewuhirhtr huithe te hut ute uihet etrer ehui er huier huire  ewhui ew huiew gre hiurer huier huire rte ihuer hier huier uhre ert uiret hui huie ihur "}/>
+      <PresetCard title={"Shift Curve and Speed vs Time"} fileCount = {3} description = {"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad ewuhirhtr huithe te hut ute uihet etrer ehui er huier huire  ewhui ew huiew gre hiurer huier huire rte ihuer hier huier uhre ert uiret hui huie ihur MEOW MEOW MEOW MEOW EMOW EMWOEM Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad ewuhirhtr huithe te hut ute uihet etrer ehui er huier huire  ewhui ew huiew gre hiurer huier huire rte ihuer hier huier uhre ert uiret hui huie ihur X "}/>
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
     
