@@ -38,11 +38,26 @@
         width:100%;
         height:50%;
     }
-    
-    .title {
-        @include fonts.text-medium;
-        color: var(--text-colour);
+
+    .title-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; 
+        width: 100%;
         padding-bottom: 0.6rem;
+        color: var(--text-colour);
+        @include fonts.text-medium;
+
+    }
+    
+    .fileCount {
+        display: flex;
+    }
+
+    .fileCount img {
+        margin-left: 0.3rem;
+        width: 1.5rem;
+        height: 1.5rem;
     }
 
     .description {
@@ -50,4 +65,5 @@
         color: var(--alt-text);
         text-align: left;
     }
+    
 }
