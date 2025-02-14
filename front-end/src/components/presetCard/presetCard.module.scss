@@ -6,13 +6,10 @@
     border-radius: 0.75rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     width: 22rem;
     height: 16rem;
     padding: 1.3rem;
     cursor: pointer;
-    overflow: hidden;
     
     &:hover {
         filter: brightness(1.3);
@@ -33,21 +30,18 @@
     .content {
         display: flex;
         flex-direction:column;
-        align-items:flex-start;
         justify-content:center;
         width:100%;
         height:50%;
     }
 
     .title-container {
+        @include fonts.text-medium;
         display: flex;
-        align-items: center;
         justify-content: space-between; 
         width: 100%;
         padding-bottom: 0.6rem;
         color: var(--text-colour);
-        @include fonts.text-medium;
-
     }
     
     .fileCount {
