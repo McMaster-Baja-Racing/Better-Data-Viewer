@@ -22,7 +22,7 @@
         height: 8rem;
         object-fit: cover;
         border-radius: 0.75rem;
-        transition: box-shadow 0.3s, filter 0.3s;
+        box-shadow: 0 0 0 transparent; 
     }
 
     &:hover .image {
