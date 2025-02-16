@@ -105,6 +105,11 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
     
     return (
         <table className={styles.fileTable}>
+        <colgroup>
+            <col style={{ width: '65%' }} />
+            <col style={{ width: '17.5%' }} />
+            <col style={{ width: '17.5%' }} />
+        </colgroup>
             <thead>
                 <tr>
                     <th className={styles.fileName}>Name</th>

@@ -10,6 +10,8 @@
   color: var(--text-colour);
   text-align: left;
   border-collapse: collapse;
+  table-layout: fixed;
+  word-break: break-all;
 
   thead {
     tr {
