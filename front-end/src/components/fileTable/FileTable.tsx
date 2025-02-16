@@ -81,7 +81,7 @@ const buildHierarchy = (files: File[]): Folder => {
 
         if (folder.key) {
             folder.size = sizeMap[folder.key] || 0;
-            folder.date = dateMap[folder.key]?.sort()[0] || ''; // Earliest date
+            folder.date = [...dateMap[folder.key]].sort()[0] || ''; // Earliest date
         }
     };
 
