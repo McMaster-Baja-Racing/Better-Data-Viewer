@@ -3,16 +3,16 @@ import defaultImage from '@assets/preset_thumbnail.png';
 import { icons } from '@lib/assets';
 
 interface PresetCardProps {
-    image?: string;
-    title: string;
-    description: string;
-    fileCount: number;
+    readonly image?: string;
+    readonly title: string;
+    readonly description: string;
+    readonly fileCount: number;
 }
 
-export function PresetCard({ image,title,description,fileCount }: PresetCardProps) {
+export function PresetCard({ image, title, description, fileCount }: Readonly<PresetCardProps>) {
     return (
         <div className={styles.presetCard}>
-        <img src={image || defaultImage} alt="Preset" className={styles.image} />
+        <img src={image ?? defaultImage} alt="Preset" className={styles.image} />
         <div className={styles.content}>
             <div className={styles['title-container']}>
                 <div>{title}</div>
