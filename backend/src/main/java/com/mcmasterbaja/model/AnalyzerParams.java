@@ -14,8 +14,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class AnalyzerParams {
-  // Input and output files defined as strings in order for serialization in
-  // quarkus
+  // Input and output files defined as strings in order for serialization in quarkus
+  
   @QueryParam("inputFiles")
   private String[] inputFiles;
 
