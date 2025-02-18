@@ -97,20 +97,7 @@ public class ExceptionMappers {
   // Handles invalid input file exceptions
   @ServerExceptionMapper
   public Response invalidInputFile(InvalidInputFileException e) {
-    String errorId = UUID.randomUUID().toString();
-    logger.error("errorId[{}]", errorId, e);
-
-    ErrorResponse errorResponse = new ErrorResponse(
-        errorId,
-        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-        "An invalid input file was specified.",
-        "INVALID_INPUT_FILE",
-        e.getMessage());
-
-    return Response.status(Response.Status.BAD_REQUEST)
-        .entity(errorResponse)
-        .type(MediaType.APPLICATION_JSON)
-        .build();
+    return mapBajaException(e);
   }
 
   // Handles invalid output file exceptions
