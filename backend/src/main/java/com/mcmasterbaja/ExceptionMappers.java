@@ -135,17 +135,7 @@ public class ExceptionMappers {
   // Handles general storage exceptions
   @ServerExceptionMapper
   public Response mapStorageException(StorageException e) {
-    String errorId = UUID.randomUUID().toString();
-    logger.error("errorId[{}]", errorId, e);
-
-    ErrorResponse errorResponse = new ErrorResponse(
-        errorId,
-        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-        "Something went wrong. It's probably your fault.",
-        "STORAGE_EXCEPTION",
-        e.getMessage());
-
-    return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
+    return mapBajaException(e);
   }
 
   // Handles analyzer exceptions
