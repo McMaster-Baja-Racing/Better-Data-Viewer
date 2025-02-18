@@ -115,21 +115,8 @@ public class ExceptionMappers {
 
   // Handles invalid output file exceptions
   @ServerExceptionMapper
-  public Response invalidOutputFile(InvalidOutputFileException e) {
-    String errorId = UUID.randomUUID().toString();
-    logger.error("errorId[{}]", errorId, e);
-
-    ErrorResponse errorResponse = new ErrorResponse(
-        errorId,
-        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-        "An invalid output file was specified.",
-        "INVALID_OUTPUT_FILE",
-        e.getMessage());
-
-    return Response.status(Response.Status.BAD_REQUEST)
-        .entity(errorResponse)
-        .type(MediaType.APPLICATION_JSON)
-        .build();
+  public Response mapInvalidOutputFileException(InvalidOutputFileException e) {
+    return mapBajaException(e);
   }
 
   // Handles general storage exceptions
