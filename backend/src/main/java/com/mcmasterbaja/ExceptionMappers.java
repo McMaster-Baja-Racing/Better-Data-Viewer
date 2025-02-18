@@ -78,20 +78,7 @@ public class ExceptionMappers {
   // Handles invalid header exceptions
   @ServerExceptionMapper
   public Response headerException(InvalidHeaderException e) {
-    String errorId = UUID.randomUUID().toString();
-    logger.error("errorId[{}]", errorId, e);
-
-    ErrorResponse errorResponse = new ErrorResponse(
-        errorId,
-        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-        "Failed to read headers from input file.",
-        "HEADER_ERROR",
-        e.getMessage());
-
-    return Response.status(Response.Status.BAD_REQUEST)
-        .entity(errorResponse)
-        .type(MediaType.APPLICATION_JSON)
-        .build();
+    return mapBajaException(e);
   }
 
   // Handles invalid input file exceptions
