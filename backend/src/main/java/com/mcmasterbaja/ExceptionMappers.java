@@ -7,6 +7,7 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import com.mcmasterbaja.exceptions.AnalyzerException;
 import com.mcmasterbaja.exceptions.BajaException;
+import com.mcmasterbaja.exceptions.FileNotFoundException;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.exceptions.InvalidColumnException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
@@ -54,6 +55,12 @@ public class ExceptionMappers {
         .entity(errorResponse)
         .type(MediaType.APPLICATION_JSON)
         .build();
+  }
+
+  // Handles file not found exceptions
+  @ServerExceptionMapper
+  public Response mapFileNotFoundException(FileNotFoundException e) {
+    return mapBajaException(e);
   }
 
   // Handles invalid column exceptions
