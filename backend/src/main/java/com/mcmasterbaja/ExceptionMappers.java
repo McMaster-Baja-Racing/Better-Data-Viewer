@@ -58,21 +58,8 @@ public class ExceptionMappers {
 
   // Handles invalid column exceptions
   @ServerExceptionMapper
-  public Response invalidColumn(InvalidColumnException e) {
-    String errorId = UUID.randomUUID().toString();
-    logger.error("errorId[{}]", errorId, e);
-
-    ErrorResponse errorResponse = new ErrorResponse(
-        errorId,
-        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-        "An invalid column was specified.",
-        "INVALID_COLUMN",
-        e.getMessage());
-
-    return Response.status(Response.Status.BAD_REQUEST)
-        .entity(errorResponse)
-        .type(MediaType.APPLICATION_JSON)
-        .build();
+  public Response mapInvalidColumnException(InvalidColumnException e) {
+    return mapBajaException(e);
   }
 
   // Handles invalid header exceptions
@@ -83,7 +70,7 @@ public class ExceptionMappers {
 
   // Handles invalid input file exceptions
   @ServerExceptionMapper
-  public Response mapInvalidInputFileException(InvalidInputFileException e) {
+  public Response mapInvalidInputFile(InvalidInputFileException e) {
     return mapBajaException(e);
   }
 
