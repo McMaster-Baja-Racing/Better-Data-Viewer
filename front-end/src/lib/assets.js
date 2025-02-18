@@ -10,7 +10,12 @@ import newGraphIcon from '../assets/icons/newGraph.svg';
 import newGraph2Icon from '../assets/icons/newGraph2.svg';
 import sunIcon from '../assets/icons/sun.svg';
 import uploadIcon from '../assets/icons/upload.svg';
-
+import facebookIcon from '../assets/icons/facebook.svg';
+import instagramIcon from '../assets/icons/instagram.svg';
+import linkedinIcon from '../assets/icons/linkedin.svg';
+import twitterIcon from '../assets/icons/twitter.svg';
+import youtubeIcon from '../assets/icons/youtube.svg';
+import settingsIcon from '../assets/icons/settings.svg';
 import accelImage from '../assets/help/accel.png';
 import interpolateImage from '../assets/help/interpolate.png';
 import linearMultiplier from '../assets/help/linMult.png';
@@ -33,6 +38,12 @@ export const icons = {
   newGraph2: newGraph2Icon,
   sun: sunIcon,
   upload: uploadIcon,
+  facebook: facebookIcon,
+  instagram: instagramIcon,
+  linkedin: linkedinIcon,
+  twitter: twitterIcon,
+  youtube: youtubeIcon,
+  settings: settingsIcon,
 };
 
 export const images = {

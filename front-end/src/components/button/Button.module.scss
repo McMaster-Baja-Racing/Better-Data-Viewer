@@ -1,0 +1,31 @@
+@use '@styles/_fonts';
+
+.button {
+  all: unset;
+  @include fonts.title-tiny;
+  padding: 0.75rem 1.5rem; 
+  border-radius: 8px;
+  color: var(--text-colour);
+  background-color: var(--light-grey);
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: var(--tertiary);
+    cursor: pointer;
+  }
+
+  &.primary {
+    background-color: var(--baja-colour);
+
+    &:hover {
+      background-color: var(--accent);
+    }
+  }
+
+  img {
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-left: 0.5rem;
+  }
+}

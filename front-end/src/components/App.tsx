@@ -53,6 +53,7 @@ const App = () => {
       )}
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
+    
         {modal === 'Create' ? <CreateGraphModal 
           setModal={setModal} 
           setViewInformation={setViewInformation} 
