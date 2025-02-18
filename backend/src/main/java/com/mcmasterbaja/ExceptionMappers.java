@@ -77,13 +77,13 @@ public class ExceptionMappers {
 
   // Handles invalid header exceptions
   @ServerExceptionMapper
-  public Response headerException(InvalidHeaderException e) {
+  public Response mapInvalidHeaderException(InvalidHeaderException e) {
     return mapBajaException(e);
   }
 
   // Handles invalid input file exceptions
   @ServerExceptionMapper
-  public Response invalidInputFile(InvalidInputFileException e) {
+  public Response mapInvalidInputFileException(InvalidInputFileException e) {
     return mapBajaException(e);
   }
 
