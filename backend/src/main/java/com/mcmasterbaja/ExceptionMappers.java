@@ -39,22 +39,9 @@ public class ExceptionMappers {
   }
 
   // Handles invalid arguments
-  @ServerExceptionMapper(value = { InvalidArgumentException.class })
-  public Response invalidArgument(RuntimeException e) {
-    String errorId = UUID.randomUUID().toString();
-    logger.error("errorId[{}]", errorId, e);
-
-    ErrorResponse errorResponse = new ErrorResponse(
-        errorId,
-        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-        "An invalid argument was passed.",
-        "INVALID_ARGUMENT",
-        e.getMessage());
-
-    return Response.status(Response.Status.BAD_REQUEST)
-        .entity(errorResponse)
-        .type(MediaType.APPLICATION_JSON)
-        .build();
+  @ServerExceptionMapper
+  public Response mapInvalidArgumentException(InvalidArgumentException e) {
+    return mapBajaException(e);
   }
 
   // Handles file not found exceptions
