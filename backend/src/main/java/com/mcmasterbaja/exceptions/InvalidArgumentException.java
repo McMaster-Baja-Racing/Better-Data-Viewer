@@ -6,7 +6,10 @@ public class InvalidArgumentException extends BajaException {
   private final List<String> errors;
 
   public InvalidArgumentException(List<String> errors) {
-    super(String.join(", ", errors), "INVALID_ARGUMENT", "One or more invalid arguments were passed.");
+    super(
+        String.join(", ", errors),
+        "INVALID_ARGUMENT",
+        "One or more invalid arguments were passed.");
     this.errors = errors;
   }
 
@@ -16,7 +19,11 @@ public class InvalidArgumentException extends BajaException {
   }
 
   public InvalidArgumentException(List<String> errors, Throwable cause) {
-    super(String.join(", ", errors), cause, "INVALID_ARGUMENT", "One or more invalid arguments were passed.");
+    super(
+        String.join(", ", errors),
+        cause,
+        "INVALID_ARGUMENT",
+        "One or more invalid arguments were passed.");
     this.errors = errors;
   }
 
