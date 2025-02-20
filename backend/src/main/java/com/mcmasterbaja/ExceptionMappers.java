@@ -5,15 +5,7 @@ import java.util.UUID;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
-import com.mcmasterbaja.exceptions.AnalyzerException;
 import com.mcmasterbaja.exceptions.BajaException;
-import com.mcmasterbaja.exceptions.FileNotFoundException;
-import com.mcmasterbaja.exceptions.InvalidArgumentException;
-import com.mcmasterbaja.exceptions.InvalidColumnException;
-import com.mcmasterbaja.exceptions.InvalidHeaderException;
-import com.mcmasterbaja.exceptions.InvalidInputFileException;
-import com.mcmasterbaja.exceptions.InvalidOutputFileException;
-import com.mcmasterbaja.exceptions.StorageException;
 import com.mcmasterbaja.model.ErrorResponse;
 
 import jakarta.inject.Inject;
@@ -38,82 +30,38 @@ public class ExceptionMappers {
         .build();
   }
 
-  // Handles invalid arguments
-  @ServerExceptionMapper
-  public Response mapInvalidArgumentException(InvalidArgumentException e) {
-    return mapBajaException(e);
-  }
-
-  // Handles file not found exceptions
-  @ServerExceptionMapper
-  public Response mapFileNotFoundException(FileNotFoundException e) {
-    return mapBajaException(e);
-  }
-
-  // Handles invalid column exceptions
-  @ServerExceptionMapper
-  public Response mapInvalidColumnException(InvalidColumnException e) {
-    return mapBajaException(e);
-  }
-
-  // Handles invalid header exceptions
-  @ServerExceptionMapper
-  public Response mapInvalidHeaderException(InvalidHeaderException e) {
-    return mapBajaException(e);
-  }
-
-  // Handles invalid input file exceptions
-  @ServerExceptionMapper
-  public Response mapInvalidInputFile(InvalidInputFileException e) {
-    return mapBajaException(e);
-  }
-
-  // Handles invalid output file exceptions
-  @ServerExceptionMapper
-  public Response mapInvalidOutputFileException(InvalidOutputFileException e) {
-    return mapBajaException(e);
-  }
-
-  // Handles general storage exceptions
-  @ServerExceptionMapper
-  public Response mapStorageException(StorageException e) {
-    return mapBajaException(e);
-  }
-
-  // Handles analyzer exceptions
-  @ServerExceptionMapper
-  public Response mapAnalyzerException(AnalyzerException e) {
-    return mapBajaException(e);
-  }
-
-  @ServerExceptionMapper
-  public Response mapUnsatisfiedLink(UnsatisfiedLinkError e) {
-    String errorId = UUID.randomUUID().toString();
-    logger.error("errorId[{}]", errorId, e);
-
-    ErrorResponse errorResponse = new ErrorResponse(
-        errorId,
-        e.getStackTrace()[6].getClassName() + "." + e.getStackTrace()[6].getMethodName(),
-        "Failed to link to parser library. Might need to restart the backend.",
-        "UNSATISFIED_LINK_ERROR",
-        e.getMessage());
-
-    return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
-  }
-
-  @ServerExceptionMapper
-  public Response mapUnsatisfiedLink(NoClassDefFoundError e) {
+  private Response mapSystemError(Throwable e, String errorCode, String message) {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
     ErrorResponse errorResponse = new ErrorResponse(
         errorId,
         e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-        "Failed to link to parser library. Probably need to restart your backend, live reload"
-            + " for the parser does not work.",
-        "UNSATISFIED_LINK_ERROR",
+        message,
+        errorCode,
         e.getMessage());
 
-    return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
+    return Response.status(500)
+        .entity(errorResponse)
+        .type(MediaType.APPLICATION_JSON)
+        .build();
+  }
+
+  @ServerExceptionMapper
+  public Response mapBajaExceptionHandler(BajaException e) {
+    return mapBajaException(e);
+  }
+
+  @ServerExceptionMapper
+  public Response mapUnsatisfiedLink(UnsatisfiedLinkError e) {
+    return mapSystemError(e, "UNSATISFIED_LINK_ERROR",
+        "Failed to link to parser library. Might need to restart the backend.");
+  }
+
+  @ServerExceptionMapper
+  public Response mapUnsatisfiedLink(NoClassDefFoundError e) {
+    return mapSystemError(e, "UNSATISFIED_LINK_ERROR",
+        "Failed to link to parser library. Probably need to restart your backend, "
+            + "live reload for the parser does not work.");
   }
 }
