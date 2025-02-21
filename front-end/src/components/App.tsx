@@ -12,6 +12,7 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
+import { UploadModal as UploadModal2 } from './uploadModal/uploadModal';
 
 const App = () => {
   const location = useLocation();
@@ -50,6 +51,7 @@ const App = () => {
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
+      <UploadModal2 setModal={true}/>
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
     

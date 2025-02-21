@@ -1,0 +1,19 @@
+@use '@styles/_fonts';
+
+.uploadModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45rem;
+  height: 37rem;
+  padding: 0 2rem;
+
+  .title {
+    all: unset;
+    @include fonts.title-large;
+  }
+
+  .submitButton {
+    margin-top: 1.25rem;
+  }
+}

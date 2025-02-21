@@ -4,12 +4,13 @@
   @include fonts.text-medium;
   min-width: 35rem;
   min-height: 20rem;
+  height: 100%;
+  width: 100%;
   background: black;
   color: var(--text-colour);
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 40rem;
   position: relative;
   border-radius: 10px;
   overflow: hidden;

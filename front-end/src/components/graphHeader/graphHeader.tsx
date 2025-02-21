@@ -12,23 +12,23 @@ export function GraphHeader({ title }: GraphHeaderProps) {
       <div className={styles.title}>{title}</div>
       <div className={styles.buttons}>
         <Button
-          text="Configure"
-          icon={icons['settings']}
           onClick={() => {}} //TODO: fill this in when functionality is added
           primary={true}
           paddingX="1.5rem"
           paddingY="0.3rem"
-          textSize={16}
-        />
+        >
+          Configure
+          <img src={icons['settings']} alt="settings" />
+        </Button>
         <Button
-          text="Share Dashboard"
-          icon={icons['upload']}
           onClick={() => {}} //TODO: fill this in when functionality is added
           primary={true}
           paddingX="1.5rem"
           paddingY="0.3rem"
-          textSize={16}
-        />
+        >
+          Share Dashboard
+          <img src={icons['upload']} alt="upload" />
+        </Button>
       </div>
     </div>
   );
