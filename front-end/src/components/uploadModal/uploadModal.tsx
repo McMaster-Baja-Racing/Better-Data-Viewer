@@ -4,21 +4,30 @@ import { UploadForm } from '@components/uploadForm/UploadForm';
 import { Button } from '@components/button/Button';
 import { useState } from 'react';
 import rightArrow from '@assets/icons/arrow.svg';
+import { ApiUtil } from '@lib/apiUtils';
 
 interface UploadModalProps {
-  setModal: (modal: string) => void;
+  setIsOpen: (modal: boolean) => void;
+  isOpen: boolean;
 }
 
-export const UploadModal = ({ setModal }: UploadModalProps) => {
+export const UploadModal = ({ setIsOpen, isOpen }: UploadModalProps) => {
   const [files, setFiles] = useState<File[]>([]);
 
+  const submitFiles = async () => {
+    files.forEach(async (file) => {
+      ApiUtil.uploadFile(file);
+    });
+    setIsOpen(false);
+  }
+
   return (
-    <BaseModal isOpen={true} onClose={() => setModal('')}>
+    <BaseModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
       <div className={styles.uploadModal}>
         <h2 className={styles.title}>Upload your file</h2>
         <UploadForm files={files} setFiles={setFiles} />
         <Button 
-          onClick={() => setModal('')} 
+          onClick={submitFiles} 
           textSize={'2rem'}
           className={styles.submitButton}
         >
