@@ -1,0 +1,23 @@
+@use '@styles/_fonts';
+
+.downloadModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 2rem;
+  width: 70rem;
+
+  .title {
+    all: unset;
+    @include fonts.title-large;
+  }
+
+  .tableWrapper {
+    overflow-y: scroll;
+    height: 35rem;
+  }
+
+  .submitButton {
+    margin-top: 1.25rem;
+  }
+}
