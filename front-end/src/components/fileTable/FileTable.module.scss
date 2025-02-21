@@ -12,6 +12,7 @@
   border-collapse: collapse;
   table-layout: fixed;
   word-break: break-all;
+  height: 100%;
 
   thead {
     tr {
@@ -30,6 +31,7 @@
     tr {
       td {
         padding: 0.75rem 0.5rem 0.75rem 0.5rem;
+        vertical-align: top;
       }
 
       .folderName {

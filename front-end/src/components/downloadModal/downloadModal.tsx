@@ -36,7 +36,8 @@ export const DownloadModal = ({ setIsOpen, isOpen }: DownloadModalProps) => {
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
-  
+
+      setIsOpen(false);
     } catch (error) {
       console.error('Error downloading files:', error); // TODO: Handle error properly
     }

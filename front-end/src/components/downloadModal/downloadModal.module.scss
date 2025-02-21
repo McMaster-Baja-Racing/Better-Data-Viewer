@@ -15,6 +15,21 @@
   .tableWrapper {
     overflow-y: scroll;
     height: 35rem;
+
+    &::-webkit-scrollbar {
+      width: 0.75rem;
+    }
+    &::-webkit-scrollbar-track {
+      background: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--light-grey);
+      border-radius: 4px;
+      border: 1px solid var(--tertiary);
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #999; // TODO: Remove this colour
+    }
   }
 
   .submitButton {
