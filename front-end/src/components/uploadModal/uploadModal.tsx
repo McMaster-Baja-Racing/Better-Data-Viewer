@@ -31,7 +31,7 @@ export const UploadModal = ({ setIsOpen, isOpen }: UploadModalProps) => {
           className={styles.submitButton}
         >
           Submit
-          <img src={rightArrow}/>
+          <img src={rightArrow} alt="right arrow"/>
         </Button>
       </div>
     </BaseModal>
