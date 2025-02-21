@@ -14,7 +14,7 @@
     background-color: var(--background-sec);
     color: var(--text-colour);
     position: relative;
-    transition: width 0.3s ease-in-out;
+    transition: width 0.75s ease-in-out;
   
     &.collapsed {
       width: 0;
@@ -53,14 +53,39 @@
         height: 2rem;
       }
     }
+
+    $resizerWidth: 1.5rem;
   
     .resizer {
-      width: 0.4rem;
-      cursor: ew-resize;
       position: absolute;
-      left: -0.125rem;
-      height: 100%;
-      background: gray;
+      left: -0.5 * $resizerWidth;
+      top: 50%;
+      transform: translateY(-50%);
+      width: $resizerWidth;
+      height: 4rem;
+      border-radius: 20px;
+      background-color: var(--background-sec);
+      cursor: ew-resize;
+      position: relative;
+    
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    
+        // Dot size & color
+        width: 0.5rem;
+        height: 0.5rem;
+        background-color: #fff;
+        border-radius: 50%;
+    
+        // The top and bottom dots are created with box-shadow offsets
+        box-shadow:
+          0 -0.85rem 0 0 #fff,
+          0 0.85rem 0 0 #fff;
+      }
     }
   }
 
