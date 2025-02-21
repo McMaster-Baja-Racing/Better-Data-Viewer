@@ -15,9 +15,8 @@ export const UploadModal = ({ setIsOpen, isOpen }: UploadModalProps) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const submitFiles = async () => {
-    files.forEach(async (file) => {
-      ApiUtil.uploadFile(file);
-    });
+    const uploadPromises = files.map((file) => ApiUtil.uploadFile(file));
+    await Promise.all(uploadPromises);
     setIsOpen(false);
   }
 
