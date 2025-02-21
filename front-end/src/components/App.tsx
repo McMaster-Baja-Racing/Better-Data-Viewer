@@ -56,6 +56,7 @@ const App = () => {
       <RightSidebar isOpen={isOpen} setIsOpen={setIsOpen} sidebarContent={<div> Hello </div>} mainContent={
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
+    
         {modal === 'Create' ? <CreateGraphModal 
           setModal={setModal} 
           setViewInformation={setViewInformation} 
