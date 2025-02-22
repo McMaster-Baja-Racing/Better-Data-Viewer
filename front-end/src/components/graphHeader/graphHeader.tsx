@@ -17,7 +17,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
           paddingX="1.5rem"
           paddingY="0.3rem"
         >
-          Configure
+          <span>Configure</span>
           <img src={icons['settings']} alt="settings" />
         </Button>
         <Button
@@ -26,7 +26,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
           paddingX="1.5rem"
           paddingY="0.3rem"
         >
-          Share Dashboard
+          <span>Share Dashboard</span>
           <img src={icons['upload']} alt="upload" />
         </Button>
       </div>

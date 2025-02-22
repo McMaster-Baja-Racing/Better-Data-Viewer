@@ -30,7 +30,7 @@ export const UploadModal = ({ setIsOpen, isOpen }: UploadModalProps) => {
           textSize={'2rem'}
           className={styles.submitButton}
         >
-          Submit
+          <span>Submit</span>
           <img src={rightArrow} alt="right arrow"/>
         </Button>
       </div>
