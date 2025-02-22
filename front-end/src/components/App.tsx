@@ -12,6 +12,10 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
+import { Accordion } from './accordion/Accordion';
+import { OptionSquare } from './optionSquare/OptionSquare';
+import defaultImage from '@assets/preset_thumbnail.png';
+
 
 const App = () => {
   const location = useLocation();
@@ -46,54 +50,27 @@ const App = () => {
   }, [successMessage]);
 
   return (
+    // I'll put it back!!! I swear it's just for testing on a dark bg don't kill me!!!!!!
     <div className={styles.App}>
-      {location.pathname !== '/' && (
-        <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
+      {location.pathname !== "/" && (
+        <Topbar
+          setModal={setModal}
+          numViews={numViews}
+          setNumViews={setNumViews}
+        />
       )}
-      <header className={styles.Body}>
-        <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
-    
-        {modal === 'Create' ? <CreateGraphModal 
-          setModal={setModal} 
-          setViewInformation={setViewInformation} 
-          setSuccessMessage={setSuccessMessage} 
-          viewInformation={viewInformation} 
-          buttonID={buttonID} 
-          setNumViews={setNumViews} 
-          numViews={numViews} 
-          video={video} 
-          setVideo={setVideo}
-        /> : null}
-        {modal === 'Upload' ? <UploadModal 
-          setModal={setModal} 
-          setSuccessMessage={setSuccessMessage} 
-        /> : null}
-        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
-        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
-        <Routes>
-          <Route path="*" element={<Views 
-            viewInformation={viewInformation} 
-            setModal={setModal} 
-            setButtonID={setButtonID} 
-            numViews={numViews} 
-            videoTimestamp={videoTimestamp} 
-            setVideoTimestamp={setVideoTimestamp} 
-            video={video} 
-          />} />
-          <Route path="/map" element={<MapChart />} />
-          <Route path="/IMU" element={<ModelViewer />} />
-          <Route path='/old' element={
-          <Views 
-            viewInformation={viewInformation} 
-            setModal={setModal} 
-            setButtonID={setButtonID} 
-            numViews={numViews} 
-            videoTimestamp={videoTimestamp} 
-            setVideoTimestamp={setVideoTimestamp} 
-            video={video} 
-          />} />
-        </Routes>
-      </header>
+      <Accordion title="Label">
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+        <OptionSquare label="Label" illustration={defaultImage} />
+      </Accordion>
     </div>
   );
 
