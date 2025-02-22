@@ -61,24 +61,16 @@ const App = () => {
         />
       )}
       <Accordion title="Label">
-        <OptionSquare
-          label="Label"
-          illustration={defaultImage}
-          clicked={clicked} 
-          setClicked={setClicked} 
-        />
-        <OptionSquare
-          label="Label"
-          illustration={defaultImage}
-          clicked={clicked}
-          setClicked={setClicked}
-        />
-        <OptionSquare
-          label="Label"
-          illustration={defaultImage}
-          clicked={clicked}
-          setClicked={setClicked}
-        />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
+        <OptionSquare label="Label" illustration={defaultImage} clicked={false} setClicked={() => {}} />
       </Accordion>
     </div>
   );
