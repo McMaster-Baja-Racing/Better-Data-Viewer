@@ -8,7 +8,7 @@ export const ApiUtil = {
   /**
     * Sends a GET request to the server to fetch a specific file.
     * @param {string} fileKey - The unique identifier of the file.
-    * @returns {Promise<String>} A promise that resolves to the fetched file in the form of a string.
+    * @returns {Promise<string>} A promise that resolves to the fetched file in the form of a string.
     */
   getFileAsText: async (fileKey: string) => {
     fileKey = encodeURIComponent(fileKey);
