@@ -23,6 +23,7 @@
         width: 100%;
         height: 0.1rem;
         background-color: white;
+        animation: slideUpDown 0.5s ease-in-out forwards; 
     }
 
     .content {
@@ -34,6 +35,7 @@
             padding-bottom: 1rem;
             gap: 1rem;
             flex-wrap: wrap;
+            animation: slideContent 0.2s ease-out forwards; 
         }
 
         > * {
@@ -58,5 +60,24 @@
         .arrow {
             margin-right: 0.5rem;
         }
+    }
+}
+
+@keyframes slideUpDown {
+    0% {
+        transform: translateY(100%); 
+    }
+    100% {
+        transform: translateY(0); 
+    }
+}
+
+@keyframes slideContent {
+    0% {
+        transform: translateY(0.5rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); 
     }
 }
