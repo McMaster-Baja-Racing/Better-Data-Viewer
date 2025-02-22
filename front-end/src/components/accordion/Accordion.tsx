@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./Accordion.module.scss";
 import { icons } from "@lib/assets";
+import cx from "classnames";
 
 interface AccordionProps {
   readonly title: string;
@@ -18,7 +19,7 @@ export function Accordion({ title, children }: AccordionProps) {
         <img
           src={icons.chevronDown}
           alt="Toggle"
-          className={`${styles.arrow} ${isOpen ? styles.open : ""}`}
+          className={cx(styles.arrow, { [styles.open]: isOpen })}
         />
         <span className={styles.title}>{title}</span>
       </button>
