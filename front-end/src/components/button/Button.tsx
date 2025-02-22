@@ -3,18 +3,18 @@ import cx from 'classnames';
 
 interface ButtonProps {
   onClick: () => void;
-  text: string;
-  icon?: string;
+  children?: React.ReactNode;
   primary?: boolean;
   paddingX?: string;
   paddingY?: string;
-  textSize?: number;
+  textSize?: string;
+  className?: string;
 }
 
-export const Button = ({ onClick, text, icon, primary = true, paddingX, paddingY, textSize }: ButtonProps) => {
+export const Button = ({ onClick, children, primary = true, paddingX, paddingY, textSize, className }: ButtonProps) => {
   return (
     <button
-      className={cx(styles.button, { [styles.primary]: primary })}
+      className={cx(styles.button, { [styles.primary]: primary }, className)}
       onClick={onClick}
       style={{
         paddingLeft: `${paddingX}`,
@@ -24,8 +24,7 @@ export const Button = ({ onClick, text, icon, primary = true, paddingX, paddingY
         fontSize: `${textSize}`
       }}
     >
-      {text}
-      {icon && <img src={icon} alt="icon" />}
+      {children}
     </button>
   );
 };
