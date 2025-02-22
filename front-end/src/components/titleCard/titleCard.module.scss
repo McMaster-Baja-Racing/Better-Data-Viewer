@@ -8,7 +8,7 @@
     align-items: center;
     width: 85.94rem;
     height: 21.69rem;
-    background-color: var(--tertiary);
+    background: linear-gradient(0deg, #222222 0%, #525252 98.5%);
 
     .textContainer {
         display: flex;
@@ -27,6 +27,11 @@
             width: 90%;
             color: white;
             border: 1px solid var(--background);
+            .highlight1, .highlight2 {
+                background: linear-gradient(270.17deg, #B3FFAD 35%, #D28407 62.95%, #DD2F2F 84.06%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
         }
 
         .description {
@@ -45,7 +50,7 @@
         align-items: center;
         width: 40.19rem;
         height: 16.47rem;
-        background-color: var(--secondary);
         margin-right: 5rem;
+        border: 1px solid var(--background);
     }
 }
