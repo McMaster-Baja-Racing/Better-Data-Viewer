@@ -18,7 +18,6 @@
         opacity: 100%;
         width: 27.83rem;
         height: 12.63rem;
-        border: 1px solid var(--background);
         margin-left: 3rem;
 
         .title {
@@ -26,7 +25,6 @@
             text-align: center;
             width: 90%;
             color: white;
-            border: 1px solid var(--background);
             .highlight1, .highlight2 {
                 background: linear-gradient(270.17deg, #B3FFAD 35%, #D28407 62.95%, #DD2F2F 84.06%);
                 -webkit-background-clip: text;
@@ -39,7 +37,6 @@
             text-align: center;
             width: 80%;
             color: white;
-            border: 1px solid var(--background);
             margin-top: 10px;
         }
     }
@@ -51,6 +48,5 @@
         width: 40.19rem;
         height: 16.47rem;
         margin-right: 5rem;
-        border: 1px solid var(--background);
     }
 }
