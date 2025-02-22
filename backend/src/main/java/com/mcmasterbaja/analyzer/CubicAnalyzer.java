@@ -1,5 +1,9 @@
 package com.mcmasterbaja.analyzer;
 
+import java.io.IOException;
+
+import org.jboss.logging.Logger;
+
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
@@ -7,10 +11,9 @@ import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
-import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.CUBIC)
@@ -22,7 +25,8 @@ public class CubicAnalyzer extends Analyzer {
   private double c;
   private double d;
 
-  @Inject Logger logger;
+  @Inject
+  Logger logger;
 
   @Override
   public void analyze(AnalyzerParams params) {
@@ -81,7 +85,7 @@ public class CubicAnalyzer extends Analyzer {
       double timestamp = Double.parseDouble(nextLine[xAxisIndex]);
       double data = Double.parseDouble(nextLine[yAxisIndex]);
       double newValue = cubicFunction(data);
-      writer.writeNext(new String[] {Double.toString(timestamp), Double.toString(newValue)});
+      writer.writeNext(new String[] { Double.toString(timestamp), Double.toString(newValue) });
     }
 
     reader.close();
