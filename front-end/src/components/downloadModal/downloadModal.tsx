@@ -9,7 +9,7 @@ import { File, FileInformation } from '@types';
 import JSZip from 'jszip';
 
 interface DownloadModalProps {
-  setIsOpen: (modal: boolean) => void;
+  setIsOpen: (isOpen: boolean) => void;
   isOpen: boolean;
 }
 
@@ -85,7 +85,7 @@ const apiToFiles = (apiFiles: FileInformation[]): File[] => {
       key: file.key,
       name,
       size: file.size,
-      date: '2021-01-01',
+      date: '2021-01-01', // TODO: Make this dynamic
       extension
     };
   });
