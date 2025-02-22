@@ -75,7 +75,7 @@ $base-font-size: 16px;
 
 @mixin title-huge {
   font-size: $base-font-size * 4;
-  line-height: $base-font-size * 6.25;
+  line-height: 1;
   font-weight: 400;
   font-family: 'Bebas Neue', sans-serif;
 }

@@ -1,0 +1,51 @@
+@use '@styles/_fonts';
+@use '@styles/_variables';
+
+.titleCard {
+    display: flex;
+    justify-content: space-between;
+    gap: 7rem;
+    align-items: center;
+    width: 85.94rem;
+    height: 21.69rem;
+    background-color: var(--tertiary);
+
+    .textContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 100%;
+        width: 27.83rem;
+        height: 12.63rem;
+        border: 1px solid var(--background);
+        margin-left: 3rem;
+
+        .title {
+            @include fonts.title-huge;
+            text-align: center;
+            width: 90%;
+            color: white;
+            border: 1px solid var(--background);
+        }
+
+        .description {
+            @include fonts.text-large;
+            text-align: center;
+            width: 80%;
+            color: white;
+            border: 1px solid var(--background);
+            margin-top: 10px;
+        }
+    }
+
+    .graph {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40.19rem;
+        height: 16.47rem;
+        background-color: var(--secondary);
+        margin-right: 5rem;
+    }
+}
