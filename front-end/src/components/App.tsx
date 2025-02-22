@@ -13,7 +13,7 @@ import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
 import { Accordion } from './accordion/Accordion';
-import { OptionSquare } from './optionSquare/OptionSquare';
+import { OptionSquare } from './optionSquare/optionSquare';
 import defaultImage from '@assets/preset_thumbnail.png';
 
 
