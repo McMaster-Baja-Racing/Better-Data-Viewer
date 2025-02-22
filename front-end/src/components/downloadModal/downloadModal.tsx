@@ -22,8 +22,8 @@ export const DownloadModal = ({ setIsOpen, isOpen }: DownloadModalProps) => {
       const zip = new JSZip();
       
       for (const file of selectedFiles) {
-        const blob = await ApiUtil.getFileAsText(file.key);
-        zip.file(file.key, blob);
+        const fileContent = await ApiUtil.getFileAsText(file.key);
+        zip.file(file.key, fileContent);
       }
   
       // Here we generate the zip, then create a link and click it to download the zip
