@@ -55,7 +55,7 @@ export const DownloadModal = ({ setIsOpen, isOpen }: DownloadModalProps) => {
   return (
     <BaseModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
       <div className={styles.downloadModal}>
-        <h2 className={styles.title}>Upload your file</h2>
+        <h2 className={styles.title}>Download Data</h2>
         <div className={styles.tableWrapper}>
           <FileTable files={files} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
         </div>
