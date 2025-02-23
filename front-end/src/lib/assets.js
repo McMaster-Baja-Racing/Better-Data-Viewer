@@ -24,6 +24,7 @@ import RdpImage from '../assets/help/rdp.png';
 import rollAvgImage from '../assets/help/rollAvg.png';
 import savitzkyGolayGif from '../assets/help/sgolay.gif';
 import splitImage from '../assets/help/split.png';
+import chevronDownIcon from '../assets/icons/chevronDown.svg';
 
 export const icons = {
   delete: deleteIcon,
@@ -44,6 +45,7 @@ export const icons = {
   twitter: twitterIcon,
   youtube: youtubeIcon,
   settings: settingsIcon,
+  chevronDown: chevronDownIcon,
 };
 
 export const images = {
