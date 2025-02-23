@@ -40,7 +40,6 @@ export function Accordion({ title, children }: AccordionProps) {
         className={cx(styles.content, { [styles.expanded]: isOpen })}
         style={{
           maxHeight: contentHeight,
-          transition: "max-height 0.3s ease-in-out",
         }}
       >
         {children}
