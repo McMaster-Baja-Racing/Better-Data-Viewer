@@ -4,18 +4,18 @@ import { icons } from '@lib/assets';
 
 interface PresetCardProps {
     readonly image?: string;
-    readonly title: string;
+    readonly name: string;
     readonly description: string;
     readonly fileCount: number;
 }
 
-export function PresetCard({ image, title, description, fileCount }: Readonly<PresetCardProps>) {
+export function PresetCard({ image, name, description, fileCount }: Readonly<PresetCardProps>) {
     return (
-        <div className={styles.presetCard}>
+      <div className={styles.presetCard}>
         <img src={image ?? defaultImage} alt="Preset" className={styles.image} />
         <div className={styles.content}>
             <div className={styles['title-container']}>
-                <div>{title}</div>
+                <div>{name}</div>
                 <div className={styles.fileCount}>
                     <span>{fileCount} x</span>
                 <img src={icons['newGraph']} alt="New Graph" />
