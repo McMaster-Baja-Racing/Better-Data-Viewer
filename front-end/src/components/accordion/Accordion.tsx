@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./Accordion.module.scss";
 import { icons } from "@lib/assets";
 import cx from "classnames";
@@ -10,11 +10,23 @@ interface AccordionProps {
 
 export function Accordion({ title, children }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState("0px");
+
+  useEffect(() => {
+    if (isOpen && contentRef.current) {
+      setContentHeight(`${contentRef.current.scrollHeight}px`);
+    } else {
+      setContentHeight("0px");
+    }
+  }, [isOpen]);
+
   return (
     <div className={styles.accordion}>
       <button
         className={styles.header}
         onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
       >
         <img
           src={icons.chevronDown}
@@ -23,7 +35,14 @@ export function Accordion({ title, children }: AccordionProps) {
         />
         <span className={styles.title}>{title}</span>
       </button>
-      <div className={`${styles.content} ${isOpen ? styles.expanded : ""}`}>
+      <div
+        ref={contentRef}
+        className={cx(styles.content, { [styles.expanded]: isOpen })}
+        style={{
+          maxHeight: contentHeight,
+          transition: "max-height 0.3s ease-in-out",
+        }}
+      >
         {children}
       </div>
     </div>

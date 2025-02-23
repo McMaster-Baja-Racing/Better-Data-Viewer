@@ -13,7 +13,6 @@
 
 .accordion {
     position: relative;
-    overflow: hidden;
 
     &::before {
         content: '';
@@ -23,22 +22,22 @@
         width: 100%;
         height: 0.1rem;
         background-color: white;
-        animation: slideUpDown 0.5s ease-in-out forwards; 
     }
 
     .content {
-        display: none;
+        max-height: 0;
+        overflow: hidden;
         padding-left: 1rem;
+        transition: max-height 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
 
         &.expanded {
-            display: flex;
             padding-bottom: 1rem;
-            gap: 1rem;
-            flex-wrap: wrap;
-            animation: slideContent 0.2s ease-out forwards; 
         }
 
-        > * {
+        >* {
             flex: 0 1 auto;
         }
     }
@@ -60,23 +59,5 @@
         .arrow {
             margin-right: 0.5rem;
         }
-    }
-}
-
-@keyframes slideUpDown {
-    0% {
-        transform: translateY(100%); 
-    }
-    100% {
-        transform: translateY(0); 
-    }
-}
-
-@keyframes slideContent {
-    0% {
-        transform: translateY(0.5rem);
-    }
-    100% {
-        transform: translateY(0); 
     }
 }
