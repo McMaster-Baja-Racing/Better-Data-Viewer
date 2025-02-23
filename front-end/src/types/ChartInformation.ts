@@ -2,26 +2,30 @@ import { AnalyzerType } from '@types';
 import { Series } from 'highcharts';
 
 export interface ChartInformation {
-  files: {
-    columns: Column[];
-    analyze: {
-      type: AnalyzerType;
-      analyzerValues: string[];
-    }
-  }[];
+  files: ChartFileInformation[];
   live: boolean;
   type: string;
   hasGPSTime: boolean;
   hasTimestampX: boolean;
 }
 
+export interface ChartFileInformation {
+  columns: Column[];
+  analyze: ChartAnalyzerInformation;
+}
+
+export interface ChartAnalyzerInformation {
+  type: AnalyzerType | null;
+  analyzerValues: string[];
+}
+
 export interface Column {
   header: string;
   filename: string;
   timespan: {
-    start: Date;
-    end: Date;
-  }
+    start: Date | null;
+    end: Date | null;
+  };
 }
 
 export interface ColourSeriesData {
