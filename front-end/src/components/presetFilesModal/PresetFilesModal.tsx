@@ -30,7 +30,7 @@ export const PresetFilesModal = ({ onClose, isOpen, setBins }: PresetFilesModalP
 
   const handleSubmit = async () => {
     if (selectedFiles.length === 0 && uploadedFiles.length === 0) {
-      // TODO: Replace with alert popup
+      // TODO: Replace alert with popup or toast notification
       alert('Please select or upload at least one file');
       return;
     }
