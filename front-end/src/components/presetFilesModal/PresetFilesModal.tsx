@@ -9,11 +9,12 @@ import { ApiUtil } from '@lib/apiUtils';
 import { File as CustomFile, FileInformation } from '@types';
 
 interface PresetFilesModalProps {
-  setIsOpen: (isOpen: boolean) => void;
+  onClose: () => void;
   isOpen: boolean;
+  setBins: (fileKeys: string[]) => void;
 }
 
-export const PresetFilesModal = ({ setIsOpen, isOpen }: PresetFilesModalProps) => {
+export const PresetFilesModal = ({ onClose, isOpen, setBins }: PresetFilesModalProps) => {
   const [existingFiles, setExistingFiles] = useState<CustomFile[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<CustomFile[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -27,14 +28,32 @@ export const PresetFilesModal = ({ setIsOpen, isOpen }: PresetFilesModalProps) =
     fetchFiles();
   }, []);
 
+  const handleSubmit = async () => {
+    if (selectedFiles.length === 0 && uploadedFiles.length === 0) {
+      // TODO: Replace with alert popup
+      alert('Please select or upload at least one file');
+      return;
+    }
+
+    const uploadPromises = uploadedFiles.map((file) => ApiUtil.uploadFile(file));
+    await Promise.all(uploadPromises);
+
+    // TODO: Clean up this mess of file types
+    const fileKeys = selectedFiles.map((file) => file.key);
+    fileKeys.push(...uploadedFiles.map((file) => file.name));
+
+    setBins(fileKeys);
+    onClose();
+  }
+
   return (
-    <BaseModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+    <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className={styles.presetFilesModal}>
 
         <div className={styles.formWrapper}>
           <div className={styles.uploadForm}>
             <h2 className={styles.title}>Upload your files</h2>
-            <UploadForm files={uploadedFiles} setFiles={setUploadedFiles} />
+            <UploadForm files={uploadedFiles} setFiles={setUploadedFiles} accept={'.bin'}/>
           </div>
 
           <div className={styles.selectFiles}>
@@ -46,7 +65,7 @@ export const PresetFilesModal = ({ setIsOpen, isOpen }: PresetFilesModalProps) =
         </div>
 
         <Button 
-          onClick={() => {}}
+          onClick={handleSubmit}
           textSize={'2rem'}
           className={styles.submitButton}
         >

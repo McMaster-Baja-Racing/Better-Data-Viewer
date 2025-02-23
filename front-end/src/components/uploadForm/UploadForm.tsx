@@ -9,9 +9,10 @@ import nighttime from '@assets/upload_form_nighttime.png';
 interface UploadFormProps {
   files: File[];
   setFiles: (files: File[]) => void;
+  accept?: string;
 }
 
-export const UploadForm = ({ files, setFiles }: UploadFormProps) => {
+export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov' }: UploadFormProps) => {
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
@@ -60,7 +61,7 @@ export const UploadForm = ({ files, setFiles }: UploadFormProps) => {
         <input
         className={styles.input}
         type="file"
-        accept=".csv, .bin, .mp4, .mov" 
+        accept={accept}
         multiple={true}
         onChange={(e) => {handleFileChange(e)}}
       />
