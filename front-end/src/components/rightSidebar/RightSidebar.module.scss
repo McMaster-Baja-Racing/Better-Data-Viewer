@@ -57,7 +57,7 @@
     $resizerWidth: 1.5rem;
   
     .resizer {
-      position: absolute;
+      position: relative;
       left: -0.5 * $resizerWidth;
       top: 50%;
       transform: translateY(-50%);
@@ -66,7 +66,6 @@
       border-radius: 20px;
       background-color: var(--background-sec);
       cursor: ew-resize;
-      position: relative;
     
       &::before {
         content: "";
