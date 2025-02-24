@@ -13,6 +13,7 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
+import { PresetFilesModal } from './presetFilesModal/PresetFilesModal';
 
 const App = () => {
   const location = useLocation();
@@ -46,11 +47,14 @@ const App = () => {
     return () => clearTimeout(timer); 
   }, [successMessage]);
 
+  const [isOpen, setIsOpen] = useState(true);
+
   return (
     <div className={styles.App}>
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
+      <PresetFilesModal onClose={() => setIsOpen(false)} isOpen={isOpen} setBins={() => {}}/>
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
     

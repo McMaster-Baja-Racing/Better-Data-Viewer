@@ -1,53 +1,61 @@
 @use '@styles/_variables';
 @use '@styles/_fonts';
 
-.fileTable {
-  @include fonts.text-large;
-  width: 100%;
-  border: 2px solid var(--light-grey);
-  border-radius: 10px;
+$border-thickness: 10px;
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
   background: var(--tertiary);
-  color: var(--text-colour);
-  text-align: left;
-  border-collapse: collapse;
-  table-layout: fixed;
-  word-break: break-all;
-  height: 100%;
+  min-height: calc(100% - $border-thickness / 2);
+  border: 2px solid var(--light-grey);
+  border-radius: $border-thickness;
 
-  thead {
-    tr {
-      th {
-        padding: 0.75rem 0.5rem 0.75rem 0.5rem;
-        border-bottom: 2px solid var(--light-grey);
-      }
-
-      .fileDate {
-        text-align: right;
-      }
-    }
-  }
-
-  tbody {
-    tr {
-      td {
-        padding: 0.75rem 0.5rem 0.75rem 0.5rem;
-        vertical-align: top;
-      }
-
-      .folderName {
-        align-items: center;
-        display: flex;
-
-        img {
-          height: 1.5rem;
-          padding-right: 0.5rem;
+  .fileTable {
+    @include fonts.text-large;
+    width: 100%;
+    color: var(--text-colour);
+    text-align: left;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-break: break-all;
+  
+    thead {
+      tr {
+        th {
+          padding: 0.75rem 0.5rem 0.75rem 0.5rem;
+          border-bottom: 2px solid var(--light-grey);
+        }
+  
+        .fileDate {
+          text-align: right;
         }
       }
-
-      &.selected {
-        background: var(--accent);
-        font-weight: bold;
+    }
+  
+    tbody {
+      tr {
+        td {
+          padding: 0.75rem 0.5rem 0.75rem 0.5rem;
+          vertical-align: top;
+        }
+  
+        .folderName {
+          align-items: center;
+          display: flex;
+  
+          img {
+            height: 1.5rem;
+            padding-right: 0.5rem;
+          }
+        }
+  
+        &.selected {
+          background: var(--accent);
+          font-weight: bold;
+        }
       }
     }
   }
 }
+
