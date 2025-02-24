@@ -1,0 +1,26 @@
+@use '@styles/_fonts';
+
+
+.presetListWrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background);
+  width: 100%;
+  padding-bottom: 4rem;
+
+  .title {
+    all: unset;
+    @include fonts.title-large;
+    color: var(--text-colour);
+    margin-right: 70%;
+  }
+  
+  .presetList {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 1.5rem;
+    width: max-content;
+    margin: 0 auto;
+  }
+
+}
