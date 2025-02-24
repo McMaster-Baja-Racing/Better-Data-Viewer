@@ -3,6 +3,9 @@ import styles from './RightSidebar.module.scss';
 import cx from 'classnames';
 import closeIcon from '@assets/icons/close.svg';
 
+const MAX_WIDTH = 1250;
+const MIN_WIDTH = 300;
+
 interface RightSidebarProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -21,7 +24,7 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
     const handleMouseMove = (event: MouseEvent) => {
       if (!isResizing.current) return;
       const newWidth = window.innerWidth - event.clientX;
-      if (newWidth > 300 && newWidth < 1250) setWidth(newWidth); // Limit resize range
+      if (newWidth > MIN_WIDTH && newWidth < MAX_WIDTH) setWidth(newWidth); // Limit resize range
     };
 
     const handleMouseUp = () => {
