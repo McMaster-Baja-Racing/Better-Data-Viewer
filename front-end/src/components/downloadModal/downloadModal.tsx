@@ -9,11 +9,11 @@ import { File, FileInformation } from '@types';
 import JSZip from 'jszip';
 
 interface DownloadModalProps {
-  setIsOpen: (isOpen: boolean) => void;
+  onClose: () => void;
   isOpen: boolean;
 }
 
-export const DownloadModal = ({ setIsOpen, isOpen }: DownloadModalProps) => {
+export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -37,7 +37,7 @@ export const DownloadModal = ({ setIsOpen, isOpen }: DownloadModalProps) => {
       downloadLink.click();
       document.body.removeChild(downloadLink);
 
-      setIsOpen(false);
+      onClose();
     } catch (error) {
       console.error('Error downloading files:', error); // TODO: Handle error properly
     }
@@ -53,7 +53,7 @@ export const DownloadModal = ({ setIsOpen, isOpen }: DownloadModalProps) => {
   }, []);
 
   return (
-    <BaseModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+    <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className={styles.downloadModal}>
         <h2 className={styles.title}>Download Data</h2>
         <div className={styles.tableWrapper}>
