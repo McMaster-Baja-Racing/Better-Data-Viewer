@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.mcmasterbaja.exceptions.InvalidColumnException;
@@ -16,6 +17,8 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
+
+import lombok.SneakyThrows;
 
 public abstract class Analyzer {
   protected String[] inputFiles;
@@ -67,6 +70,18 @@ public abstract class Analyzer {
     } catch (IOException e) {
       throw new InvalidOutputFileException("Failed to write to output file: " + filePath, e);
     }
+  }
+
+  // safe readers so that the interceptor can handle it properly, even from in a
+  // lambda function
+  @SneakyThrows
+  protected String[] safeReadNext(CSVReader reader) {
+    return reader.readNext();
+  }
+
+  @SneakyThrows
+  protected List<String[]> safeReadAll(CSVReader reader) {
+    return reader.readAll();
   }
 
   public int getColumnIndex(String columnName, String[] fileHeaders) {

@@ -1,22 +1,25 @@
 package com.mcmasterbaja.analyzer;
 
+import java.util.List;
+
+import org.jboss.logging.Logger;
+
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.util.List;
 import lombok.SneakyThrows;
-import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.AVERAGE)
 @OnAnalyzerException
 public class AverageAnalyzer extends Analyzer {
-  // This class takes the average of a range of a column and returns it as a double
-  @Inject Logger logger;
+  // This class takes the average of a range of a column and returns it as a
+  // double
+  @Inject
+  Logger logger;
 
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
@@ -34,18 +37,18 @@ public class AverageAnalyzer extends Analyzer {
             + " to "
             + range[1]);
 
-    CSVReader reader = getReader(params.getInputFiles()[0]);
-    ICSVWriter writer = getWriter(params.getOutputFiles()[0]);
+    getReader(params.getInputFiles()[0], reader -> {
+      getWriter(params.getOutputFiles()[0], writer -> {
+        String[] headers = { "TempColumn", "Average" };
+        writer.writeNext(headers);
 
-    String[] headers = {"TempColumn", "Average"};
-    writer.writeNext(headers);
+        safeReadNext(reader); // Skip headers
+        String[] dataPoint = { "0", Double.toString(average(safeReadAll(reader), range[0], range[1])) };
+        writer.writeNext(dataPoint);
 
-    reader.readNext(); // Skip headers
-    String[] dataPoint = {"0", Double.toString(average(reader.readAll(), range[0], range[1]))};
-    writer.writeNext(dataPoint);
-
-    logger.info("Average: " + dataPoint[1]);
-    writer.close();
+        logger.info("Average: " + dataPoint[1]);
+      });
+    });
   }
 
   // Takes average at found indices of second column
@@ -60,7 +63,8 @@ public class AverageAnalyzer extends Analyzer {
     return sum / (endIndex - startIndex + 1);
   }
 
-  // Binary search finds index relative to first column. It should find the closest value
+  // Binary search finds index relative to first column. It should find the
+  // closest value
   public int binarySearch(List<String[]> data, int target) {
     int low = 0;
     int high = data.size() - 1;
