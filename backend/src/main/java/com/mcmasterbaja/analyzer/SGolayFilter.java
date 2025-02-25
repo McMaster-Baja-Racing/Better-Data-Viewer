@@ -4,8 +4,6 @@ import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import java.util.ArrayDeque;
@@ -62,7 +60,8 @@ public class SGolayFilter extends Analyzer {
     this.windowSize = Integer.parseInt(params.getOptions()[0]);
     this.polynomialDegree = Integer.parseInt(params.getOptions()[1]);
     this.dataBuffer = new CircularBuffer(windowSize);
-    // Half the size of the data buffer so that when we write data, we write it in the middle
+    // Half the size of the data buffer so that when we write data, we write it in
+    // the middle
     // (looking forwards and backwards)
     this.timestampBuffer = new CircularBuffer(windowSize / 2);
 
@@ -76,44 +75,47 @@ public class SGolayFilter extends Analyzer {
             + " and polynomial degree "
             + polynomialDegree);
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                String[] headers = safeReadNext(reader);
+                if (headers == null) {
+                  throw new InvalidHeaderException(
+                      "Failed to read headers from input file: " + inputFiles[0]);
+                }
 
-    String[] headers = reader.readNext();
-    if (headers == null) {
-      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
-    }
+                int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+                int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+                writer.writeNext(headers);
 
-    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-    int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-    writer.writeNext(headers);
+                String[] dataPoint;
+                RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);
 
-    String[] dataPoint;
-    RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);
+                while ((dataPoint = safeReadNext(reader)) != null) {
+                  dataBuffer.addPoint(Double.parseDouble(dataPoint[yAxisIndex]));
+                  timestampBuffer.addPoint(Double.parseDouble(dataPoint[xAxisIndex]));
 
-    while ((dataPoint = reader.readNext()) != null) {
-      dataBuffer.addPoint(Double.parseDouble(dataPoint[yAxisIndex]));
-      timestampBuffer.addPoint(Double.parseDouble(dataPoint[xAxisIndex]));
+                  // Make sure buffer is full
+                  if (dataBuffer.size() < windowSize) {
+                    continue;
+                  }
 
-      // Make sure buffer is full
-      if (dataBuffer.size() < windowSize) {
-        continue;
-      }
+                  double smoothedValue = 0.0;
+                  Double[] dataPoints = dataBuffer.getPoints();
 
-      double smoothedValue = 0.0;
-      Double[] dataPoints = dataBuffer.getPoints();
+                  for (int i = 0; i < dataBuffer.size(); i++) {
+                    smoothedValue += coeffMatrix.getEntry(i, 0) * dataPoints[i];
+                  }
 
-      for (int i = 0; i < dataBuffer.size(); i++) {
-        smoothedValue += coeffMatrix.getEntry(i, 0) * dataPoints[i];
-      }
-
-      String x = Double.toString(timestampBuffer.getFirst());
-      String y = Double.toString(smoothedValue);
-      writer.writeNext(new String[] {x, y});
-    }
-
-    reader.close();
-    writer.close();
+                  String x = Double.toString(timestampBuffer.getFirst());
+                  String y = Double.toString(smoothedValue);
+                  writer.writeNext(new String[] {x, y});
+                }
+              });
+        });
   }
 
   public RealMatrix savGolCoeff(int windowSize, int polynomialDegree) {

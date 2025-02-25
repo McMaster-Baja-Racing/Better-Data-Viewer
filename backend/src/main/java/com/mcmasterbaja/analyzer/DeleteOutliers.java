@@ -4,8 +4,6 @@ import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import lombok.SneakyThrows;
@@ -31,27 +29,30 @@ public class DeleteOutliers extends Analyzer {
             + " with a limit of "
             + this.limit);
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                String[] headers = safeReadNext(reader);
+                if (headers == null) {
+                  throw new InvalidHeaderException(
+                      "Failed to read headers from input file: " + inputFiles[0]);
+                }
 
-    String[] headers = reader.readNext();
-    if (headers == null) {
-      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
-    }
+                logger.debug(inputColumns[0]);
+                int xAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+                writer.writeNext(headers);
 
-    logger.debug(inputColumns[0]);
-    int xAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-    writer.writeNext(headers);
+                String[] dataPoint;
 
-    String[] dataPoint;
-
-    while ((dataPoint = reader.readNext()) != null) {
-      if (Double.parseDouble(dataPoint[xAxisIndex]) <= this.limit) {
-        writer.writeNext(dataPoint);
-      }
-    }
-
-    reader.close();
-    writer.close();
+                while ((dataPoint = safeReadNext(reader)) != null) {
+                  if (Double.parseDouble(dataPoint[xAxisIndex]) <= this.limit) {
+                    writer.writeNext(dataPoint);
+                  }
+                }
+              });
+        });
   }
 }
