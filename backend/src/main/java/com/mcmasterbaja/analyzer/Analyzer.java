@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidColumnException;
 import com.mcmasterbaja.exceptions.InvalidInputFileException;
 import com.mcmasterbaja.exceptions.InvalidOutputFileException;
@@ -20,6 +21,7 @@ import com.opencsv.ICSVWriter;
 
 import lombok.SneakyThrows;
 
+@OnAnalyzerException
 public abstract class Analyzer {
   protected String[] inputFiles;
   protected String[] inputColumns;
