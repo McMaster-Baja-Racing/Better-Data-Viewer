@@ -22,7 +22,8 @@ import org.jboss.logging.Logger;
 @OnAnalyzerException
 public class InterpolaterProAnalyzer extends Analyzer {
 
-  @Inject Logger logger;
+  @Inject
+  Logger logger;
 
   // Class to store timestamp and file index
   class TimestampData {
@@ -80,7 +81,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
 
                 for (int i = 0; i < readers.size(); i++) {
                   CSVReader reader = readers.get(i);
-                  String[] headers = safeReadNext(reader);
+                  String[] headers = reader.readNext();
                   if (headers == null) {
                     throw new InvalidHeaderException(
                         "Failed to read headers from input file: " + inputFiles[0]);
@@ -96,7 +97,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
                 headers.add("Timestamp (ms)");
                 Collections.addAll(headers, inputColumns);
                 writer.writeNext(headers.toArray(new String[0]));
-                safeFlush(writer);
+                writer.flush();
 
                 // Now we need to start reading the files and writing them to the output file
                 // Ideally, our final file should have a set of timestamps that is the union of
@@ -111,9 +112,8 @@ public class InterpolaterProAnalyzer extends Analyzer {
                 // each file
 
                 // Priority queue here tells us the next smallest timestamp
-                PriorityQueue<TimestampData> queue =
-                    new PriorityQueue<TimestampData>(
-                        (a, b) -> Double.compare(a.timestamp, b.timestamp));
+                PriorityQueue<TimestampData> queue = new PriorityQueue<TimestampData>(
+                    (a, b) -> Double.compare(a.timestamp, b.timestamp));
 
                 // We need to keep track of the previous and current data points for each file
                 double[] previousData = new double[readers.size()];
@@ -133,7 +133,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
                 int maxTimestampIndex = -1;
 
                 for (int i = 0; i < readers.size(); i++) {
-                  String[] line = safeReadNext(readers.get(i));
+                  String[] line = readers.get(i).readNext();
 
                   double timestamp = Double.parseDouble(line[timestampIndices[i]]);
                   double data = Double.parseDouble(line[dataIndices[i]]);
@@ -142,7 +142,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
                   previousTimestamp[i] = timestamp;
 
                   // Do it again
-                  line = safeReadNext(readers.get(i));
+                  line = readers.get(i).readNext();
 
                   timestamp = Double.parseDouble(line[timestampIndices[i]]);
                   data = Double.parseDouble(line[dataIndices[i]]);
@@ -165,7 +165,7 @@ public class InterpolaterProAnalyzer extends Analyzer {
                   }
 
                   while (currentTimestamp[i] < maxTimestamp) {
-                    String[] line = safeReadNext(readers.get(i));
+                    String[] line = readers.get(i).readNext();
 
                     double timestamp = Double.parseDouble(line[timestampIndices[i]]);
                     double data = Double.parseDouble(line[dataIndices[i]]);
@@ -219,19 +219,18 @@ public class InterpolaterProAnalyzer extends Analyzer {
                         dataPoint.add(Double.toString(currentData[i]));
                       } else {
                         // Otherwise, we need to interpolate
-                        double interpolatedData =
-                            interpolate(
-                                previousTimestamp[i],
-                                previousData[i],
-                                currentTimestamp[i],
-                                currentData[i],
-                                queueData.timestamp);
+                        double interpolatedData = interpolate(
+                            previousTimestamp[i],
+                            previousData[i],
+                            currentTimestamp[i],
+                            currentData[i],
+                            queueData.timestamp);
                         dataPoint.add(Double.toString(interpolatedData));
                       }
                     }
                     // Now we can write the data point
                     writer.writeNext(dataPoint.toArray(new String[0]));
-                    safeFlush(writer);
+                    writer.flush();
                   }
 
                   // Now we need to read the next line from the file that we just used
@@ -245,10 +244,9 @@ public class InterpolaterProAnalyzer extends Analyzer {
                   previousData[queueData.fileIndex] = currentData[queueData.fileIndex];
                   previousTimestamp[queueData.fileIndex] = currentTimestamp[queueData.fileIndex];
 
-                  currentData[queueData.fileIndex] =
-                      Double.parseDouble(line[dataIndices[queueData.fileIndex]]);
-                  currentTimestamp[queueData.fileIndex] =
-                      Double.parseDouble(line[timestampIndices[queueData.fileIndex]]);
+                  currentData[queueData.fileIndex] = Double.parseDouble(line[dataIndices[queueData.fileIndex]]);
+                  currentTimestamp[queueData.fileIndex] = Double
+                      .parseDouble(line[timestampIndices[queueData.fileIndex]]);
 
                   // Now we need to add the new timestamp to the queue
                   queue.add(
