@@ -18,13 +18,15 @@ import org.jboss.logging.Logger;
 @OnAnalyzerException
 public class RDPCompressionAnalyzer extends Analyzer {
 
-  // Epsilon is the maximum distance between a point and the line between the start and end points
+  // Epsilon is the maximum distance between a point and the line between the
+  // start and end points
   // AKA Hausdorff distance
   private double epsilon;
   private int xAxisIndex;
   private int yAxisIndex;
 
-  @Inject Logger logger;
+  @Inject
+  Logger logger;
 
   @Override
   @SneakyThrows
@@ -35,32 +37,31 @@ public class RDPCompressionAnalyzer extends Analyzer {
     logger.info(
         "Compressing " + inputFiles[0] + " with epsilon " + epsilon + " to " + outputFiles[0]);
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(inputFiles[0], reader -> {
+      getWriter(outputFiles[0], writer -> {
+        String[] headers = safeReadNext(reader);
+        if (headers == null) {
+          throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+        }
 
-    String[] headers = reader.readNext();
-    if (headers == null) {
-      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
-    }
+        xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+        yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+        writer.writeNext(headers);
 
-    xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-    yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-    writer.writeNext(headers);
+        List<String[]> data = safeReadAll(reader);
+        data = RamerDouglasPeucker(data, epsilon);
 
-    List<String[]> data = reader.readAll();
-    data = RamerDouglasPeucker(data, epsilon);
-
-    for (String[] point : data) {
-      writer.writeNext(point);
-    }
-
-    reader.close();
-    writer.close();
+        for (String[] point : data) {
+          writer.writeNext(point);
+        }
+      });
+    });
   }
 
   public List<String[]> RamerDouglasPeucker(List<String[]> data, double epsilon) {
 
-    // Find the point with the maximum distance from the line between the first and last point
+    // Find the point with the maximum distance from the line between the first and
+    // last point
     double maxDistance = 0;
     int maxIndex = 0;
     for (int i = 1; i < data.size() - 1; i++) {
