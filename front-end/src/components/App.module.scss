@@ -2,8 +2,7 @@
   text-align: center;
   font-family: "HelveticaNeueW01-77BdCnObl";
   height: calc(100vh);
-  display: flex;
-  flex-direction: row;
+  background-color: black; // will change this back!!!! just for testing the accordion on dark bg!!!!
 
   .Body {
     height: calc(100vh - 5rem);

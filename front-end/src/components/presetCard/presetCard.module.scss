@@ -1,0 +1,79 @@
+@use '@styles/_fonts';
+@use '@styles/_variables';
+
+.presetCard {
+    background: var(--tertiary);
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    width: 22rem;
+    min-height: 16rem;
+    padding: 1.3rem;
+    cursor: pointer;
+
+    &:hover {
+        filter: brightness(1.3);
+    }
+    
+    .image {
+        width: 100%;
+        height: 8rem;
+        object-fit: cover;
+        border-radius: 0.75rem;
+        box-shadow: 0 0 0 transparent; 
+    }
+
+    &:hover .image {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        filter: brightness(0.8);
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+        padding-top: 1.3rem;
+    }
+
+    .title-container {
+        @include fonts.text-medium;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding-bottom: 0.6rem;
+        color: var(--text-colour);
+    }
+
+    .fileCount {
+        display: flex;
+        img {
+            margin-left: 0.3rem;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+    }
+
+    .description {
+        @include fonts.text-small;
+        color: var(--alt-text);
+        text-align: left;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        transition: max-height 1s ease-in-out;
+        transition-delay: 1s;
+    }
+
+    &:hover .description {
+        max-height: 30rem;
+        -webkit-line-clamp: 10;
+    }
+
+    &:not(:hover) .description {
+        max-height: 3.6rem;
+        transition-delay: 0s;
+        -webkit-line-clamp: 3;
+    }
+
+}

@@ -15,7 +15,7 @@ import instagramIcon from '../assets/icons/instagram.svg';
 import linkedinIcon from '../assets/icons/linkedin.svg';
 import twitterIcon from '../assets/icons/twitter.svg';
 import youtubeIcon from '../assets/icons/youtube.svg';
-
+import settingsIcon from '../assets/icons/settings.svg';
 import accelImage from '../assets/help/accel.png';
 import interpolateImage from '../assets/help/interpolate.png';
 import linearMultiplier from '../assets/help/linMult.png';
@@ -24,6 +24,7 @@ import RdpImage from '../assets/help/rdp.png';
 import rollAvgImage from '../assets/help/rollAvg.png';
 import savitzkyGolayGif from '../assets/help/sgolay.gif';
 import splitImage from '../assets/help/split.png';
+import chevronDownIcon from '../assets/icons/chevronDown.svg';
 
 export const icons = {
   delete: deleteIcon,
@@ -43,6 +44,8 @@ export const icons = {
   linkedin: linkedinIcon,
   twitter: twitterIcon,
   youtube: youtubeIcon,
+  settings: settingsIcon,
+  chevronDown: chevronDownIcon,
 };
 
 export const images = {

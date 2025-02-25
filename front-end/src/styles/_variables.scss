@@ -3,9 +3,12 @@ $primary: #FF253A;
 $secondary: #300A17;
 $tertiary: #323232;
 $background: #222222;
+$background-sec: #2E2E2E;
+$dark-background: #0E0E0E;
 $accent: #BB0808;
 $text-colour: #FFFFFF;
 $upload-stroke: #636363;
+$alt-text: #B3B3B3;
 
 // Baja colour
 $baja-colour: #75151E;
@@ -17,10 +20,11 @@ $upload-stroke: #636363;
   --secondary: #{$secondary};
   --tertiary: #{$tertiary};
   --background: #{$background};
+  --background-sec: #{$background-sec};
+  --dark-background: #{$dark-background};
   --accent: #{$accent};
   --text-colour: #{$text-colour};
-
-  --light-grey: #{$upload-stroke};
+  --alt-text: #{$alt-text};
   --baja-colour: #{$baja-colour};
   --light-grey: #{$upload-stroke};
 }
@@ -33,14 +37,16 @@ $upload-stroke: #636363;
   --background: #FFFFFF;
   --accent: #BB0808;
   --text-colour: #000000;
+  --alt-text: #B3B3B3;
 }
 
 // A map of z-index values for different components
 $z-index: (
   dropdown: 1,
+  footer: 1,
   sidebar: 2,
   success: 3,
   tooltip: 4,
   modal: 5,
-  footer: 1,
+  graphHeader: 1,
 );

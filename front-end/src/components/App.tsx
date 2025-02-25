@@ -1,5 +1,6 @@
 import styles from './App.module.scss';
 import { CreateGraphModal } from './modal/create/CreateGraphModal/CreateGraphModal';
+import { SimpleCreateGraphModal } from './modal/create/SimpleCreateGraphModal/SimpleCreateGraphModal.jsx';
 import { UploadModal } from './modal/upload/UploadModal';
 import { HelpModal } from './modal/help/helpModal';
 import { DownloadModal } from './modal/download/DownloadModal';
@@ -54,6 +55,7 @@ const App = () => {
       <Sidebar />
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
+    
         {modal === 'Create' ? <CreateGraphModal 
           setModal={setModal} 
           setViewInformation={setViewInformation} 
@@ -65,6 +67,12 @@ const App = () => {
           video={video} 
           setVideo={setVideo}
         /> : null}
+        {modal === 'ChoosePreset' ? <SimpleCreateGraphModal 
+            setModal={setModal} 
+            setViewInformation={setViewInformation} 
+            viewInformation={viewInformation} 
+            setNumViews={setNumViews} 
+          /> : null}
         {modal === 'Upload' ? <UploadModal 
           setModal={setModal} 
           setSuccessMessage={setSuccessMessage} 

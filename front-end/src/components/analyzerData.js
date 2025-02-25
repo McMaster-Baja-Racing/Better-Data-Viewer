@@ -165,7 +165,24 @@ const analyzerData = [
         link: 'https://en.wikipedia.org/wiki/Cubic_function',
       },
     ]
-  }
+  },
+  {
+    title: 'Delete Outliers',
+    code: 'DELETE_OUTLIER',
+    parameters: [{ name: 'Threshold', default: '1' }],
+    description: 'Given a threshold, this will remove any points that are outside of the threshold.',
+    image: {
+      link: 'deleteOutliers.png',
+      alt: 'Delete Outliers Image',
+      src: images['deleteOutliers'],
+    },
+    links: [
+      {
+        title: 'Outlier',
+        link: 'https://en.wikipedia.org/wiki/Outlier',
+      },
+    ]
+  },
 ];
 
 export default analyzerData;
