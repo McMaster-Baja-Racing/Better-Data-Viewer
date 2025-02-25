@@ -1,13 +1,18 @@
 package com.mcmasterbaja.analyzer;
 
+import java.util.List;
+
+import org.jboss.logging.Logger;
+
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.util.List;
 import lombok.SneakyThrows;
-import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.AVERAGE)
@@ -15,7 +20,8 @@ import org.jboss.logging.Logger;
 public class AverageAnalyzer extends Analyzer {
   // This class takes the average of a range of a column and returns it as a
   // double
-  @Inject Logger logger;
+  @Inject
+  Logger logger;
 
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
@@ -39,18 +45,21 @@ public class AverageAnalyzer extends Analyzer {
           getWriter(
               params.getOutputFiles()[0],
               writer -> {
-                String[] headers = {"TempColumn", "Average"};
-                writer.writeNext(headers);
-
-                safeReadNext(reader); // Skip headers
-                String[] dataPoint = {
-                  "0", Double.toString(average(safeReadAll(reader), range[0], range[1]))
-                };
-                writer.writeNext(dataPoint);
-
-                logger.info("Average: " + dataPoint[1]);
+                average(writer, reader, range);
               });
         });
+  }
+
+  @SneakyThrows
+  public void average(ICSVWriter writer, CSVReader reader, int[] range) {
+    String[] headers = { "TempColumn", "Average" };
+    writer.writeNext(headers);
+
+    reader.readNext(); // Skip headers
+    String[] dataPoint = { "0", Double.toString(average(reader.readAll(), range[0], range[1])) };
+    writer.writeNext(dataPoint);
+
+    logger.info("Average: " + dataPoint[1]);
   }
 
   // Takes average at found indices of second column
