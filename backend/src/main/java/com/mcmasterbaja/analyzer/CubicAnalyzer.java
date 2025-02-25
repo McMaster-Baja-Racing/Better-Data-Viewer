@@ -61,6 +61,7 @@ public class CubicAnalyzer extends Analyzer {
       double b,
       double c,
       double d) {
+
     getReader(inputFiles[0], reader -> {
       getWriter(outputFiles[0], writer -> {
         String[] headers = safeReadNext(reader);
