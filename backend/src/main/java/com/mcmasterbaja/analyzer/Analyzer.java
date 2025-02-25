@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -48,17 +49,26 @@ public abstract class Analyzer {
     }
   }
 
-  public void getReaders(Map<String, Consumer<CSVReader>> fileActions) {
-    for (Map.Entry<String, Consumer<CSVReader>> entry : fileActions.entrySet()) {
-      String filePath = entry.getKey();
-      Consumer<CSVReader> action = entry.getValue();
-      try (
-          FileReader fileReader = new FileReader(filePath);
-          BufferedReader bufferedReader = new BufferedReader(fileReader);
-          CSVReader reader = new CSVReaderBuilder(bufferedReader).withSkipLines(0).build()) {
-        action.accept(reader);
-      } catch (IOException e) {
-        throw new InvalidInputFileException("Failed to read input file: " + filePath, e);
+  public void getReaders(String[] filePaths, Consumer<Map<String, CSVReader>> action) {
+    Map<String, CSVReader> readersMap = new HashMap<>();
+    try {
+      for (String filePath : filePaths) {
+        FileReader fileReader = new FileReader(filePath);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        CSVReader reader = new CSVReaderBuilder(bufferedReader).withSkipLines(0).build();
+        readersMap.put(filePath, reader);
+      }
+
+      action.accept(readersMap);
+    } catch (IOException e) {
+      throw new InvalidInputFileException("Failed to read input files", e);
+    } finally {
+      for (CSVReader reader : readersMap.values()) {
+        try {
+          reader.close();
+        } catch (IOException e) {
+          throw new InvalidInputFileException("Failed to close CSV reader", e);
+        }
       }
     }
   }
@@ -100,6 +110,11 @@ public abstract class Analyzer {
   @SneakyThrows
   protected List<String[]> safeReadAll(CSVReader reader) {
     return reader.readAll();
+  }
+
+  @SneakyThrows
+  protected void safeFlush(ICSVWriter writer) {
+    writer.flush();
   }
 
   public int getColumnIndex(String columnName, String[] fileHeaders) {
