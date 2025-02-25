@@ -1,15 +1,13 @@
 package com.mcmasterbaja.analyzer;
 
-import org.jboss.logging.Logger;
-
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
-
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.LINEAR_MULTIPLY)
@@ -18,8 +16,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
   private double m;
   private double b;
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
   @Override
   @SneakyThrows
@@ -38,27 +35,32 @@ public class LinearMultiplyAnalyzer extends Analyzer {
             + " and an offset value of "
             + b);
 
-    getReader(inputFiles[0], reader -> {
-      getWriter(outputFiles[0], writer -> {
-        String[] headers = safeReadNext(reader);
-        if (headers == null) {
-          throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
-        }
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                String[] headers = safeReadNext(reader);
+                if (headers == null) {
+                  throw new InvalidHeaderException(
+                      "Failed to read headers from input file: " + inputFiles[0]);
+                }
 
-        int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-        int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-        writer.writeNext(headers);
+                int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+                int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+                writer.writeNext(headers);
 
-        String[] dataPoint;
+                String[] dataPoint;
 
-        while ((dataPoint = safeReadNext(reader)) != null) {
-          String x = dataPoint[xAxisIndex];
-          double oldY = Double.parseDouble(dataPoint[yAxisIndex]);
-          String newY = Double.toString(linearFunction(oldY));
-          writer.writeNext(new String[] { x, newY });
-        }
-      });
-    });
+                while ((dataPoint = safeReadNext(reader)) != null) {
+                  String x = dataPoint[xAxisIndex];
+                  double oldY = Double.parseDouble(dataPoint[yAxisIndex]);
+                  String newY = Double.toString(linearFunction(oldY));
+                  writer.writeNext(new String[] {x, newY});
+                }
+              });
+        });
   }
 
   private double linearFunction(double x) {

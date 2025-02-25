@@ -1,20 +1,17 @@
 package com.mcmasterbaja.analyzer;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
-import org.apache.commons.math3.linear.MatrixUtils;
-import org.apache.commons.math3.linear.RealMatrix;
-import org.jboss.logging.Logger;
-
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
-
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import lombok.SneakyThrows;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.SGOLAY)
@@ -25,8 +22,7 @@ public class SGolayFilter extends Analyzer {
   private CircularBuffer dataBuffer;
   private CircularBuffer timestampBuffer;
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
   class CircularBuffer {
     private final Deque<Double> buffer;
@@ -79,42 +75,47 @@ public class SGolayFilter extends Analyzer {
             + " and polynomial degree "
             + polynomialDegree);
 
-    getReader(inputFiles[0], reader -> {
-      getWriter(outputFiles[0], writer -> {
-        String[] headers = safeReadNext(reader);
-        if (headers == null) {
-          throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
-        }
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                String[] headers = safeReadNext(reader);
+                if (headers == null) {
+                  throw new InvalidHeaderException(
+                      "Failed to read headers from input file: " + inputFiles[0]);
+                }
 
-        int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-        int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-        writer.writeNext(headers);
+                int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+                int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+                writer.writeNext(headers);
 
-        String[] dataPoint;
-        RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);
+                String[] dataPoint;
+                RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);
 
-        while ((dataPoint = safeReadNext(reader)) != null) {
-          dataBuffer.addPoint(Double.parseDouble(dataPoint[yAxisIndex]));
-          timestampBuffer.addPoint(Double.parseDouble(dataPoint[xAxisIndex]));
+                while ((dataPoint = safeReadNext(reader)) != null) {
+                  dataBuffer.addPoint(Double.parseDouble(dataPoint[yAxisIndex]));
+                  timestampBuffer.addPoint(Double.parseDouble(dataPoint[xAxisIndex]));
 
-          // Make sure buffer is full
-          if (dataBuffer.size() < windowSize) {
-            continue;
-          }
+                  // Make sure buffer is full
+                  if (dataBuffer.size() < windowSize) {
+                    continue;
+                  }
 
-          double smoothedValue = 0.0;
-          Double[] dataPoints = dataBuffer.getPoints();
+                  double smoothedValue = 0.0;
+                  Double[] dataPoints = dataBuffer.getPoints();
 
-          for (int i = 0; i < dataBuffer.size(); i++) {
-            smoothedValue += coeffMatrix.getEntry(i, 0) * dataPoints[i];
-          }
+                  for (int i = 0; i < dataBuffer.size(); i++) {
+                    smoothedValue += coeffMatrix.getEntry(i, 0) * dataPoints[i];
+                  }
 
-          String x = Double.toString(timestampBuffer.getFirst());
-          String y = Double.toString(smoothedValue);
-          writer.writeNext(new String[] { x, y });
-        }
-      });
-    });
+                  String x = Double.toString(timestampBuffer.getFirst());
+                  String y = Double.toString(smoothedValue);
+                  writer.writeNext(new String[] {x, y});
+                }
+              });
+        });
   }
 
   public RealMatrix savGolCoeff(int windowSize, int polynomialDegree) {

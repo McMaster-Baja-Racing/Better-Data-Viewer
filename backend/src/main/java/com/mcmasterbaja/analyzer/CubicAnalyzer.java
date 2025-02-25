@@ -1,14 +1,12 @@
 package com.mcmasterbaja.analyzer;
 
-import org.jboss.logging.Logger;
-
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
-
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.CUBIC)
@@ -20,8 +18,7 @@ public class CubicAnalyzer extends Analyzer {
   private double c;
   private double d;
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
   @Override
   public void analyze(AnalyzerParams params) {
@@ -62,26 +59,32 @@ public class CubicAnalyzer extends Analyzer {
       double c,
       double d) {
 
-    getReader(inputFiles[0], reader -> {
-      getWriter(outputFiles[0], writer -> {
-        String[] headers = safeReadNext(reader);
-        if (headers == null) {
-          throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
-        }
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                String[] headers = safeReadNext(reader);
+                if (headers == null) {
+                  throw new InvalidHeaderException(
+                      "Failed to read headers from input file: " + inputFiles[0]);
+                }
 
-        int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-        int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-        writer.writeNext(headers);
+                int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+                int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+                writer.writeNext(headers);
 
-        String[] nextLine;
-        while ((nextLine = safeReadNext(reader)) != null && nextLine.length > 1) {
-          double timestamp = Double.parseDouble(nextLine[xAxisIndex]);
-          double data = Double.parseDouble(nextLine[yAxisIndex]);
-          double newValue = cubicFunction(data);
-          writer.writeNext(new String[] { Double.toString(timestamp), Double.toString(newValue) });
-        }
-      });
-    });
+                String[] nextLine;
+                while ((nextLine = safeReadNext(reader)) != null && nextLine.length > 1) {
+                  double timestamp = Double.parseDouble(nextLine[xAxisIndex]);
+                  double data = Double.parseDouble(nextLine[yAxisIndex]);
+                  double newValue = cubicFunction(data);
+                  writer.writeNext(
+                      new String[] {Double.toString(timestamp), Double.toString(newValue)});
+                }
+              });
+        });
   }
 
   private double cubicFunction(double x) {
