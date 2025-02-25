@@ -74,8 +74,8 @@ public abstract class Analyzer {
     }
   }
 
-  // safe readers so that the interceptor can handle it properly, even from in a
-  // lambda function
+  // safe readers so that the interceptor can handle IOExceptions properly, even
+  // from in a lambda function
   @SneakyThrows
   protected String[] safeReadNext(CSVReader reader) {
     return reader.readNext();
