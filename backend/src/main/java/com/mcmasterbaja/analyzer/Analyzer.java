@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import com.mcmasterbaja.annotations.OnAnalyzerException;
@@ -44,6 +45,21 @@ public abstract class Analyzer {
       action.accept(reader);
     } catch (IOException e) {
       throw new InvalidInputFileException("Failed to read input file: " + filePath, e);
+    }
+  }
+
+  public void getReaders(Map<String, Consumer<CSVReader>> fileActions) {
+    for (Map.Entry<String, Consumer<CSVReader>> entry : fileActions.entrySet()) {
+      String filePath = entry.getKey();
+      Consumer<CSVReader> action = entry.getValue();
+      try (
+          FileReader fileReader = new FileReader(filePath);
+          BufferedReader bufferedReader = new BufferedReader(fileReader);
+          CSVReader reader = new CSVReaderBuilder(bufferedReader).withSkipLines(0).build()) {
+        action.accept(reader);
+      } catch (IOException e) {
+        throw new InvalidInputFileException("Failed to read input file: " + filePath, e);
+      }
     }
   }
 
