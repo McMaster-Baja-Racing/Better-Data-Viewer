@@ -4,12 +4,19 @@ import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.SneakyThrows;
+
 import org.jboss.logging.Logger;
+
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.RDP_COMPRESSION)
@@ -23,7 +30,8 @@ public class RDPCompressionAnalyzer extends Analyzer {
   private int xAxisIndex;
   private int yAxisIndex;
 
-  @Inject Logger logger;
+  @Inject
+  Logger logger;
 
   @Override
   @SneakyThrows
@@ -34,30 +42,29 @@ public class RDPCompressionAnalyzer extends Analyzer {
     logger.info(
         "Compressing " + inputFiles[0] + " with epsilon " + epsilon + " to " + outputFiles[0]);
 
-    getReader(
-        inputFiles[0],
-        reader -> {
-          getWriter(
-              outputFiles[0],
-              writer -> {
-                String[] headers = safeReadNext(reader);
-                if (headers == null) {
-                  throw new InvalidHeaderException(
-                      "Failed to read headers from input file: " + inputFiles[0]);
-                }
+    getReader(inputFiles[0], reader -> {
+      getWriter(outputFiles[0], writer -> {
+        String[] headers = reader.readNext();
+        if (headers == null) {
+          throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+        }
 
-                xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-                yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-                writer.writeNext(headers);
+        xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+        yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+        writer.writeNext(headers);
 
-                List<String[]> data = safeReadAll(reader);
-                data = RamerDouglasPeucker(data, epsilon);
+        List<String[]> data = reader.readAll();
+        data = RamerDouglasPeucker(data, epsilon);
 
-                for (String[] point : data) {
-                  writer.writeNext(point);
-                }
-              });
-        });
+        for (String[] point : data) {
+          writer.writeNext(point);
+        }
+      });
+    });
+  }
+
+  public void rdpIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
+
   }
 
   public List<String[]> RamerDouglasPeucker(List<String[]> data, double epsilon) {
