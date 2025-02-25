@@ -45,13 +45,13 @@ public class AverageAnalyzer extends Analyzer {
           getWriter(
               params.getOutputFiles()[0],
               writer -> {
-                average(writer, reader, range);
+                averageIO(writer, reader, range);
               });
         });
   }
 
   @SneakyThrows
-  public void average(ICSVWriter writer, CSVReader reader, int[] range) {
+  public void averageIO(ICSVWriter writer, CSVReader reader, int[] range) {
     String[] headers = { "TempColumn", "Average" };
     writer.writeNext(headers);
 
