@@ -35,7 +35,10 @@ const Sidebar = () => {
 
     return (
         <div className={cx(styles.sidebar, { [styles.open]: isOpen })}>
-            <div className={styles.sidebarHeader} onClick={toggleSidebar}>
+            <div className={styles.toggle} onClick={toggleSidebar}>
+                <div className={styles.arrow}></div>
+            </div>
+            <div className={styles.sidebarHeader}>
                 <img className={styles.logo} src={bajaLogo} alt="Logo"/>
                 <span className={styles.title}>Data Viewer</span>
             </div>
@@ -56,7 +59,7 @@ const Sidebar = () => {
                 <SidebarItem icon={settingsIcon} text="Settings" onClick={() => console.log('settings')}/>
                 <SidebarItem icon={accountIcon} text="My Account" onClick={() => console.log('my account')}/>
             </div>
-            <div className={styles.toggle} onClick={toggleSidebar} />
+            
         </div>
     );
 }

@@ -12,13 +12,25 @@ $rightSidebarWidth: 10rem;
     "bodyItems bodyItems"
     "footerHeader footerHeader"
     "footerItems footerItems";
-    transition: grid-template-columns 0.3s ease-in-out;
+    transition: grid-template-columns 0.4s ease-in-out;
 
     &.open {
         grid-template-columns: $leftSidebarWidth $rightSidebarWidth;
 
         .sectionTitle {
             color: var(--text-colour);
+            transition: color 0.3s ease-out;
+        }
+
+        .toggle {
+            background-color: var(--background);
+
+            clip-path: polygon(100% 0%, 0% 20%, 0% 80%, 100% 100%);
+            left: calc(100% - 2rem);
+
+            .arrow {
+                clip-path: polygon(100% 0%, 0% 50%, 100% 100%, 50% 50%);
+            }
         }
     }
 
@@ -26,8 +38,7 @@ $rightSidebarWidth: 10rem;
         font-size: 1.2rem;
         font-weight: bold;
         justify-self: center;
-        transition: color 0.3s ease-in-out;
-        transition-delay: 0.15s;
+        transition: color 0.3s ease-in;
     }
 
     .sectionHeader {
@@ -156,9 +167,25 @@ $rightSidebarWidth: 10rem;
         background-color: var(--tertiary);
         position: absolute;
         top: 50%;
+        transform: translateY(-50%);
         left: 99.9%;
-        z-index: 10;
+        z-index: 100;
         clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%);
+        transition: all 0.5s ease-in-out;
+        
+
+        .arrow {
+            height: 3rem;
+            width: 1rem;
+            background-color: #8d8d8d;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: calc((100% - 1rem)/2);
+            right: 0%;
+            clip-path: polygon(0% 0%, 100% 50%, 0% 100%, 50% 50%);
+            transition: all 0.5s ease-in-out;
+        }
     }
 }
 
