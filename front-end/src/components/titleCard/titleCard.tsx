@@ -1,13 +1,74 @@
-import { useState } from 'react';
+import { useState, useEffect, use } from 'react';
 import styles from './titleCard.module.scss';
-import cx from 'classnames';
-import Chart from '../views/Chart/Chart';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { defaultChartOptions } from '@lib/chartOptions';
+import titleCardData from './titleCardData.csv?raw';
+import { getHeadersIndex, getTimestampOffset } from '@lib/chartUtils';
+import { seriesData } from '@types';
 
 interface TitleCardProps {
     description: string;   
 }
 
+const parseData = (csvData: string): number[][] => {
+    const lines = csvData.trim().split('\n').map(line => line.split(','));
+    const headers = lines[0];
+    const columns = [
+        { header: headers[0], filename: '', timespan: { start: new Date(), end: null } },
+        { header: headers[1], filename: '', timespan: { start: new Date(), end: null } }
+    ];
+    const headerIndices = getHeadersIndex(headers, columns);
+    const timestampOffset = getTimestampOffset(columns, lines.slice(1), headerIndices);
+    console.log(headerIndices);
+    console.log(headers);
+    console.log(timestampOffset);
+    const series: seriesData = lines.slice(1).map((line) => {  
+        return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
+    });
+    return series;
+}
+
 export const TitleCard = ({ description }: TitleCardProps) => {
+    const [chartData, setChartData] = useState<number[][]>([]);
+        
+    useEffect(() => {
+        setChartData(parseData(titleCardData));
+    }, []);
+
+    const options: Highcharts.Options = {
+        ...defaultChartOptions, 
+        chart: {
+            ...defaultChartOptions.chart,
+            backgroundColor: 'transparent',
+            height: 250
+        },
+        xAxis: {
+            ...defaultChartOptions.xAxis,
+            gridLineColor: 'transparent',
+            labels: { enabled: false },
+            type: 'datetime',
+        },
+        yAxis: {
+            ...defaultChartOptions.xAxis,
+            title: {text: ''},
+            gridLineColor: 'transparent',
+            labels: {
+                style: {
+                    color: 'grey'
+                }
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        series: [
+            {
+                type: 'line',
+                data: chartData
+            }
+        ]
+    };
     return (
         <div className={styles.titleCard}>
            <div className={styles.textContainer}>
@@ -17,14 +78,11 @@ export const TitleCard = ({ description }: TitleCardProps) => {
             </div>
             <div className={styles.description}>{description}</div>
             </div>
-            <div className={styles.graph}>
-                <Chart 
-                    data={[]}
-                    options={{}}
-                    type="line"
-                    height={200}
-                    width={200}
-                />
+            <div className={styles.graphContainer}>
+            <HighchartsReact
+                highcharts={Highcharts}
+                options={options}
+            />
             </div>
         </div>
     );
