@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './titleCard.module.scss';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -6,10 +6,6 @@ import { defaultChartOptions } from '@lib/chartOptions';
 import titleCardData from './titleCardData.csv?raw';
 import { getHeadersIndex, getTimestampOffset } from '@lib/chartUtils';
 import { seriesData } from '@types';
-
-interface TitleCardProps {
-    description: string;   
-}
 
 const parseData = (csvData: string): number[][] => {
     const lines = csvData.trim().split('\n').map(line => line.split(','));
@@ -29,7 +25,7 @@ const parseData = (csvData: string): number[][] => {
     return series;
 }
 
-export const TitleCard = ({ description }: TitleCardProps) => {
+export const TitleCard = () => {
     const [chartData, setChartData] = useState<number[][]>([]);
         
     useEffect(() => {
@@ -76,7 +72,7 @@ export const TitleCard = ({ description }: TitleCardProps) => {
             <span className={styles.highlight1}>VISUALIZE</span> YOUR <br/>
             DATA, <span className={styles.highlight2}>YOUR WAY </span>
             </div>
-            <div className={styles.description}>{description}</div>
+            <div className={styles.description}>Transform raw data into compelling visuals effortlessly. Dive deep, discover patterns, and let your data tell its story.</div>
             </div>
             <div className={styles.graphContainer}>
             <HighchartsReact
