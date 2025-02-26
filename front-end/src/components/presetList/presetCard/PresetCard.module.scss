@@ -2,6 +2,7 @@
 @use '@styles/_variables';
 
 .presetCard {
+    all: unset;
     background: var(--tertiary);
     border-radius: 0.75rem;
     display: flex;
@@ -12,7 +13,13 @@
     cursor: pointer;
 
     &:hover {
+        background: var(--tertiary);
         filter: brightness(1.3);
+
+        .image {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            filter: brightness(0.8);
+        }
     }
     
     .image {
@@ -21,11 +28,6 @@
         object-fit: cover;
         border-radius: 0.75rem;
         box-shadow: 0 0 0 transparent; 
-    }
-
-    &:hover .image {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        filter: brightness(0.8);
     }
 
     .content {

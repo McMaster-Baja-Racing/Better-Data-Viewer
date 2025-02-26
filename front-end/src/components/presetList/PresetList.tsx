@@ -1,4 +1,4 @@
-import { PresetCard } from "./presetCard/presetCard";
+import { PresetCard } from "./presetCard/PresetCard";
 import { subteamGraphPresets } from "@lib/subteamGraphPresets";
 import styles from './PresetList.module.scss';
 import { DataViewerPreset } from "@types";
@@ -15,16 +15,7 @@ export const PresetList = ({ handleClick }: PresetListProps) => {
       <h2 className={styles.title}>Presets</h2>
       <div className={styles.presetList}>
         {subteamGraphPresets.map((preset) => (
-          <PresetCard key={preset.name} {...preset} fileCount={1}/>
-        ))}
-        {subteamGraphPresets.map((preset) => (
-          <PresetCard key={preset.name} {...preset} fileCount={1}/>
-        ))}
-        {subteamGraphPresets.map((preset) => (
-          <PresetCard key={preset.name} {...preset} fileCount={1}/>
-        ))}
-        {subteamGraphPresets.map((preset) => (
-          <PresetCard key={preset.name} {...preset} fileCount={1}/>
+          <PresetCard key={preset.name} {...preset} fileCount={1} onClick={() => {handleClick(preset)}}/>
         ))}
       </div>
     </div>
