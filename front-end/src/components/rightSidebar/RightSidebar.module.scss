@@ -1,0 +1,91 @@
+@use '@styles/_variables';
+@use 'sass:map';
+
+.rightSidebarContainer {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  .children {
+    flex-grow: 1;
+  }
+
+  .rightSidebar {
+    background-color: var(--background-sec);
+    color: var(--text-colour);
+    position: relative;
+    transition: width 0.75s ease-in-out;
+  
+    &.collapsed {
+      width: 0;
+
+      .closeButton,
+      .resizer {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    &.isResizing {
+      transition: none !important;
+    }
+
+    .closeButton {
+      all: unset;
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      cursor: pointer;
+      padding: 0.75rem;
+      border-radius: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        cursor: pointer;
+        filter: brightness(0.8);
+        box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.75);
+      }
+
+      img {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+
+    $resizerWidth: 1.5rem;
+  
+    .resizer {
+      position: relative;
+      left: -0.5 * $resizerWidth;
+      top: 50%;
+      transform: translateY(-50%);
+      width: $resizerWidth;
+      height: 4rem;
+      border-radius: 20px;
+      background-color: var(--background-sec);
+      cursor: ew-resize;
+    
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    
+        // Dot size & color
+        width: 0.5rem;
+        height: 0.5rem;
+        background-color: #fff;
+        border-radius: 50%;
+    
+        // The top and bottom dots are created with box-shadow offsets
+        box-shadow:
+          0 -0.85rem 0 0 #fff,
+          0 0.85rem 0 0 #fff;
+      }
+    }
+  }
+
+}
