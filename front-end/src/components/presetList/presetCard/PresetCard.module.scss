@@ -70,12 +70,14 @@
     &:hover .description {
         max-height: 30rem;
         -webkit-line-clamp: 10;
+        line-clamp: 10;
     }
 
     &:not(:hover) .description {
         max-height: 3.6rem;
         transition-delay: 0s;
         -webkit-line-clamp: 3;
+        line-clamp: 3;
     }
 
 }
