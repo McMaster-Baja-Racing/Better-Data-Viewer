@@ -87,13 +87,13 @@ public class SGolayFilter extends Analyzer {
           getWriter(
               outputFiles[0],
               writer -> {
-                smoothIO(reader, writer, inputColumns);
+                savGolIO(reader, writer, inputColumns);
               });
         });
   }
 
   @SneakyThrows
-  public void smoothIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
+  public void savGolIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException(
