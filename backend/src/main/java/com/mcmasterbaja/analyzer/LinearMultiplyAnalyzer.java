@@ -1,17 +1,15 @@
 package com.mcmasterbaja.analyzer;
 
-import org.jboss.logging.Logger;
-
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.LINEAR_MULTIPLY)
@@ -20,8 +18,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
   private double m;
   private double b;
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
   @Override
   @SneakyThrows
@@ -55,8 +52,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
   private void linearIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     String[] headers = reader.readNext();
     if (headers == null) {
-      throw new InvalidHeaderException(
-          "Failed to read headers from input file: " + inputFiles[0]);
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
     }
 
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
@@ -69,7 +65,7 @@ public class LinearMultiplyAnalyzer extends Analyzer {
       String x = dataPoint[xAxisIndex];
       double oldY = Double.parseDouble(dataPoint[yAxisIndex]);
       String newY = Double.toString(linearFunction(oldY));
-      writer.writeNext(new String[] { x, newY });
+      writer.writeNext(new String[] {x, newY});
     }
   }
 

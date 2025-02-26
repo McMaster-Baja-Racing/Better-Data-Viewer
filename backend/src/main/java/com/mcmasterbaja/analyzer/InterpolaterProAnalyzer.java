@@ -4,23 +4,17 @@ import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
-
+import com.opencsv.CSVReader;
+import com.opencsv.ICSVWriter;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
-
-import lombok.SneakyThrows;
-
-import org.jboss.logging.Logger;
-
-import com.opencsv.CSVReader;
-import com.opencsv.ICSVWriter;
-
 import java.util.Map;
+import java.util.PriorityQueue;
+import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
 // The goal of this analyzer is to take in any number of files, and combine them all into a single
 // file based on the timestamp
@@ -30,8 +24,7 @@ import java.util.Map;
 @OnAnalyzerException
 public class InterpolaterProAnalyzer extends Analyzer {
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
   // Class to store timestamp and file index
   class TimestampData {
@@ -79,7 +72,8 @@ public class InterpolaterProAnalyzer extends Analyzer {
   }
 
   @SneakyThrows
-  public void interpolatorIO(Map<String, CSVReader> readersMap, ICSVWriter writer, String[] inputColumns) {
+  public void interpolatorIO(
+      Map<String, CSVReader> readersMap, ICSVWriter writer, String[] inputColumns) {
     // Start timer
     long startTime = System.nanoTime();
 
@@ -127,8 +121,8 @@ public class InterpolaterProAnalyzer extends Analyzer {
     // each file
 
     // Priority queue here tells us the next smallest timestamp
-    PriorityQueue<TimestampData> queue = new PriorityQueue<TimestampData>(
-        (a, b) -> Double.compare(a.timestamp, b.timestamp));
+    PriorityQueue<TimestampData> queue =
+        new PriorityQueue<TimestampData>((a, b) -> Double.compare(a.timestamp, b.timestamp));
 
     // We need to keep track of the previous and current data points for each file
     double[] previousData = new double[readers.size()];
@@ -234,12 +228,13 @@ public class InterpolaterProAnalyzer extends Analyzer {
             dataPoint.add(Double.toString(currentData[i]));
           } else {
             // Otherwise, we need to interpolate
-            double interpolatedData = interpolate(
-                previousTimestamp[i],
-                previousData[i],
-                currentTimestamp[i],
-                currentData[i],
-                queueData.timestamp);
+            double interpolatedData =
+                interpolate(
+                    previousTimestamp[i],
+                    previousData[i],
+                    currentTimestamp[i],
+                    currentData[i],
+                    queueData.timestamp);
             dataPoint.add(Double.toString(interpolatedData));
           }
         }
@@ -260,13 +255,11 @@ public class InterpolaterProAnalyzer extends Analyzer {
       previousTimestamp[queueData.fileIndex] = currentTimestamp[queueData.fileIndex];
 
       currentData[queueData.fileIndex] = Double.parseDouble(line[dataIndices[queueData.fileIndex]]);
-      currentTimestamp[queueData.fileIndex] = Double
-          .parseDouble(line[timestampIndices[queueData.fileIndex]]);
+      currentTimestamp[queueData.fileIndex] =
+          Double.parseDouble(line[timestampIndices[queueData.fileIndex]]);
 
       // Now we need to add the new timestamp to the queue
-      queue.add(
-          new TimestampData(
-              currentTimestamp[queueData.fileIndex], queueData.fileIndex));
+      queue.add(new TimestampData(currentTimestamp[queueData.fileIndex], queueData.fileIndex));
     }
 
     // End time

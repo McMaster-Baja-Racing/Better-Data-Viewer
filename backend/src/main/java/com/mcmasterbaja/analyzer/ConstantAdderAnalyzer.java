@@ -1,17 +1,15 @@
 package com.mcmasterbaja.analyzer;
 
-import org.jboss.logging.Logger;
-
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidHeaderException;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.CONSTANT_ADDER)
@@ -22,8 +20,7 @@ public class ConstantAdderAnalyzer extends Analyzer {
   private double c;
   private double d;
 
-  @Inject
-  Logger logger;
+  @Inject Logger logger;
 
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
@@ -74,7 +71,7 @@ public class ConstantAdderAnalyzer extends Analyzer {
         String newC = Double.toString(oldC + c);
         double oldD = Double.parseDouble(dataPoint[dIndex]);
         String newD = Double.toString(oldD + d);
-        writer.writeNext(new String[] { newA, newB, newC, newD });
+        writer.writeNext(new String[] {newA, newB, newC, newD});
       }
     }
   }
