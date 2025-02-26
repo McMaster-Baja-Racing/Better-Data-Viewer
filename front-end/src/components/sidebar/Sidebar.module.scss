@@ -1,5 +1,9 @@
+@use '@styles/_variables';
+@use "sass:map";
+
 $leftSidebarWidth: 6rem;
 $rightSidebarWidth: 10rem;
+
 .sidebar {
     position: relative;
     display: grid;
@@ -36,6 +40,7 @@ $rightSidebarWidth: 10rem;
 
     .sectionTitle {
         font-size: 1.2rem;
+        height: 100%;
         font-weight: bold;
         justify-self: center;
         transition: color 0.3s ease-in;
@@ -44,7 +49,7 @@ $rightSidebarWidth: 10rem;
     .sectionHeader {
         display: grid;
         grid-template-columns: inherit;
-        padding: 1rem 0rem 1.25rem 0rem;
+        padding: 1.5rem 0rem 2.25rem 0.25rem;
         text-transform: uppercase;
         height: 1rem;
     }
@@ -53,7 +58,7 @@ $rightSidebarWidth: 10rem;
         display: grid;
         grid-template-columns: inherit;
         grid-auto-rows: min-content;
-        gap: 2rem 0rem;
+        gap: 3rem 0rem;
         align-items: center;
     }
 
@@ -108,8 +113,8 @@ $rightSidebarWidth: 10rem;
 
     .iconContainer {
         justify-self: center;
-        height: 2rem;
-        width: 2rem;
+        height: 2.5rem;
+        width: 2.5rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -125,10 +130,12 @@ $rightSidebarWidth: 10rem;
 
     .text {
         grid-column: 2;
+        font-size: 1.2rem;
         white-space: nowrap;
         overflow: hidden;
         color: var(--text-colour);
         text-align: start;
+        align-self: center;
     }
 
     .footerTitle {
@@ -169,7 +176,7 @@ $rightSidebarWidth: 10rem;
         top: 50%;
         transform: translateY(-50%);
         left: 99.9%;
-        z-index: 100;
+        z-index: map.get(variables.$z-index, sidebarToggle);
         clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%);
         transition: all 0.5s ease-in-out;
         
@@ -177,7 +184,7 @@ $rightSidebarWidth: 10rem;
         .arrow {
             height: 3rem;
             width: 1rem;
-            background-color: #8d8d8d;
+            background-color: var(--mid-grey);
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
