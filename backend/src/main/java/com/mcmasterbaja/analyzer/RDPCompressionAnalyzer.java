@@ -44,27 +44,28 @@ public class RDPCompressionAnalyzer extends Analyzer {
 
     getReader(inputFiles[0], reader -> {
       getWriter(outputFiles[0], writer -> {
-        String[] headers = reader.readNext();
-        if (headers == null) {
-          throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
-        }
-
-        xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
-        yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-        writer.writeNext(headers);
-
-        List<String[]> data = reader.readAll();
-        data = RamerDouglasPeucker(data, epsilon);
-
-        for (String[] point : data) {
-          writer.writeNext(point);
-        }
+        rdpIO(reader, writer, inputColumns);
       });
     });
   }
 
+  @SneakyThrows
   public void rdpIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
+    String[] headers = reader.readNext();
+    if (headers == null) {
+      throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
+    }
 
+    xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+    writer.writeNext(headers);
+
+    List<String[]> data = reader.readAll();
+    data = RamerDouglasPeucker(data, epsilon);
+
+    for (String[] point : data) {
+      writer.writeNext(point);
+    }
   }
 
   public List<String[]> RamerDouglasPeucker(List<String[]> data, double epsilon) {
