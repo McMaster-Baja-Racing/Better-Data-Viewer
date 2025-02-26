@@ -13,7 +13,6 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
-import { PresetList } from './presetList/PresetList';
 
 const App = () => {
   const location = useLocation();
@@ -82,7 +81,6 @@ const App = () => {
         <Routes>
           <Route path="*" element={
           <>
-            <PresetList/>
             <Views
               viewInformation={viewInformation} 
               setModal={setModal} 
