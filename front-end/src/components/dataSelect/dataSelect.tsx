@@ -7,6 +7,11 @@ interface dataSelectProps {
     dataTypes: string[];
 }
 
-export function dataSelect({ sources, dataTypes }: Readonly<dataSelectProps>) {
+export function DataSelect({ sources, dataTypes }: Readonly<dataSelectProps>) {
+    return (
+        <div className={styles.dataSelect}>
+            <Dropdown title="Sources" options={sources} icon={icons.source} />
+        </div>
+    );
 
 };
