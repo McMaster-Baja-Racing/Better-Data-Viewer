@@ -7,6 +7,6 @@ interface dataSelectProps {
     dataTypes: string[];
 }
 
-export function PresetCard({ sources, dataTypes }: Readonly<dataSelectProps>) {
+export function dataSelect({ sources, dataTypes }: Readonly<dataSelectProps>) {
 
 };
