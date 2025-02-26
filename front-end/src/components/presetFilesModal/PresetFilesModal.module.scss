@@ -1,0 +1,49 @@
+@use '@styles/_fonts';
+@use '@styles/_mixins';
+
+.presetFilesModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1rem;
+  max-width: 90rem;
+
+  .formWrapper {
+    display: flex;
+    gap: 2rem;
+
+    .uploadForm {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 50%;
+
+      .title {
+        all: unset;
+        @include fonts.title-large;
+      }
+    }
+
+    .selectFiles {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 50%;
+
+      .title {
+        all: unset;
+        @include fonts.title-large;
+      }
+
+      .tableWrapper {
+        height: 35rem;
+        @include mixins.scrollbar-dark;
+      }
+    }
+  }
+
+  .submitButton {
+    margin-top: 1.25rem;
+  }
+
+}

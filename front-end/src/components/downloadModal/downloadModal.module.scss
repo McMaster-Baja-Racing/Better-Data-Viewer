@@ -1,0 +1,24 @@
+@use '@styles/_fonts';
+@use '@styles/_mixins';
+
+.downloadModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 2rem;
+  width: 70rem;
+
+  .title {
+    all: unset;
+    @include fonts.title-large;
+  }
+
+  .tableWrapper {
+    height: 35rem;
+    @include mixins.scrollbar-dark;
+  }
+
+  .submitButton {
+    margin-top: 1.25rem;
+  }
+}

@@ -104,23 +104,25 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
 
     
     return (
-        <table className={styles.fileTable}>
-        <colgroup>
-            <col style={{ width: '65%' }} />
-            <col style={{ width: '17.5%' }} />
-            <col style={{ width: '17.5%' }} />
-        </colgroup>
-            <thead>
-                <tr>
-                    <th className={styles.fileName}>Name</th>
-                    <th className={styles.fileSize}>Size</th>
-                    <th className={styles.fileDate}>Upload Date</th>
-                </tr>
-            </thead>
-            <tbody>
-            {folderTree && <FolderRenderer folder={folderTree} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />}
-            </tbody>
-        </table>
+        <div className={styles.tableContainer}>
+            <table className={styles.fileTable}>
+            <colgroup>
+                <col style={{ width: '60%' }} />
+                <col style={{ width: '17.5%' }} />
+                <col style={{ width: '22.5%' }} />
+            </colgroup>
+                <thead>
+                    <tr>
+                        <th className={styles.fileName}>Name</th>
+                        <th className={styles.fileSize}>Size</th>
+                        <th className={styles.fileDate}>Upload Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {folderTree && <FolderRenderer folder={folderTree} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />}
+                </tbody>
+            </table>
+        </div>
     );
 }
 
