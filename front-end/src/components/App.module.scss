@@ -3,95 +3,101 @@
   font-family: "HelveticaNeueW01-77BdCnObl";
   height: calc(100vh);
   background-color: black; // will change this back!!!! just for testing the accordion on dark bg!!!!
+  display: flex;
 
-  .Body {
-    height: calc(100vh - 5rem);
-    background-color: #3d0202;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+  .BodyContainer {
+    width: 100%;
 
-    > * {
-      padding: 0rem;
+      .Body {
+        height: calc(100vh - 5rem);
+        background-color: #3d0202;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: calc(10px + 2vmin);
+        color: white;
+    
+        > * {
+          padding: 0rem;
+        }
+    
+        .success {
+          padding: 15px;
+          align-self: center;
+          border: 2px solid #161616;
+          border-radius: 4px;
+          position: absolute;
+          z-index: 1;
+          color: #161616;
+          background-color: #dff0d8;
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+          top: 20%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          max-height: 0;
+          transition: all 0.5s ease-in-out;
+          opacity: 0;
+    
+          &.visible {
+            opacity: 1;
+            max-height: 200px;
+          }
+        }
+      }
     }
-
-    .success {
-      padding: 15px;
-      align-self: center;
-      border: 2px solid #161616;
-      border-radius: 4px;
-      position: absolute;
-      z-index: 1;
-      color: #161616;
-      background-color: #dff0d8;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-height: 0;
-      transition: all 0.5s ease-in-out;
-      opacity: 0;
-
-      &.visible {
-        opacity: 1;
-        max-height: 200px;
+    
+    input[type="checkbox"] {
+      appearance: none;
+    
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid crimson;
+        border-radius: 3px;
+        margin-right: 8px;
+      }
+    
+      &:checked::before {
+        content: '\2713';
+        display: block;
+        text-align: center;
+        font-size: 16px;
+        line-height: 16px;
+        color: white;
+        background-color: crimson;
+      }
+    
+      &:hover::before {
+        border-color: #555;
+      }
+    
+      &:focus::before {
+        box-shadow: 0 0 3px #555;
+      }
+    }
+    
+    button {
+      padding: 7px 7px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      background: crimson;
+      color: white;
+      cursor: pointer;
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+    
+      &:hover {
+        background-color: rgb(238, 48, 86);
       }
     }
   }
-}
-
-input[type="checkbox"] {
-  appearance: none;
-
-  &::before {
-    content: "";
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid crimson;
-    border-radius: 3px;
-    margin-right: 8px;
-  }
-
-  &:checked::before {
-    content: '\2713';
-    display: block;
-    text-align: center;
-    font-size: 16px;
-    line-height: 16px;
-    color: white;
-    background-color: crimson;
-  }
-
-  &:hover::before {
-    border-color: #555;
-  }
-
-  &:focus::before {
-    box-shadow: 0 0 3px #555;
-  }
-}
-
-button {
-  padding: 7px 7px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-  background: crimson;
-  color: white;
-  cursor: pointer;
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-
-  &:hover {
-    background-color: rgb(238, 48, 86);
-  }
-}
+  
 
 
 

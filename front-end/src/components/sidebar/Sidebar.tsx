@@ -1,7 +1,5 @@
-import styles from './Sidebar.module.scss';
-import cx from 'classnames';
 import { useState } from 'react';
-import bajaLogo from '@assets/baja_logo.svg'
+import bajaLogo from '@assets/baja_logo.svg';
 import homeIcon from '@assets/icons/home.svg';
 import bookmarkIcon from '@assets/icons/bookmark.svg';
 import downloadIcon from '@assets/icons/download.svg';
@@ -9,55 +7,58 @@ import uploadIcon from '@assets/icons/upload.svg';
 import folderIcon from '@assets/icons/folder.svg';
 import settingsIcon from '@assets/icons/settings.svg';
 import accountIcon from '@assets/icons/account.svg';
+import styles from './Sidebar.module.scss'; 
+import cx from 'classnames';
+
+// Sidebar item definition
+interface SidebarItemProps {
+    icon: string;
+    text: string;
+    onClick?: () => void;
+}
+
+// Sidebar item component
+const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
+    return (
+        <div className={styles.sidebarItem} onClick={onClick}>
+            <div className={styles.iconContainer}>
+                <img className={styles.icon} src={icon} alt="Icon" />
+            </div>
+            <span className={styles.text}>{text}</span>
+        </div>
+    )
+}
 
 const Sidebar = () => {
-    // Defines the image, text and linked path for a sidebar item
-    interface SidebarItemProps {
-        icon: string;
-        text: string;
-        onClick?: () => void;
-    }
-
-    // Defines the sidebar item component function and styling
-    const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
-        return (
-            <button className={styles.item} onClick={onClick}>
-                <div className={styles.iconContainer}>
-                    <img className={styles.icon} src={icon} />
-                </div>
-                <span className={styles.text}>{text}</span>
-            </button>
-        )
-    }
-
     const [isOpen, setIsOpen] = useState(false);
     const toggleSidebar = () => setIsOpen(!isOpen);
 
     return (
         <div className={cx(styles.sidebar, { [styles.open]: isOpen })}>
-            <div className={styles.header} onClick={toggleSidebar}>
-                <img className={styles.logo} src={bajaLogo} />
-                <span className={styles.title}>DATA VIEWER</span>
+            <div className={styles.sidebarHeader} onClick={toggleSidebar}>
+                <img className={styles.logo} src={bajaLogo} alt="Logo"/>
+                <span className={styles.title}>Data Viewer</span>
             </div>
-            <div className={styles.body}>
-                <div className={styles.section}>
-                    <span className={styles.sectionTitle}>OVERVIEW</span>
-                </div>
-                <SidebarItem icon={homeIcon} text="Home" onClick={() => console.log('home')} />
+            <div className={styles.bodyHeader}>
+                <span className={styles.bodyTitle}>Overview</span>
+            </div>
+            <div className={styles.bodyItems}>
+                <SidebarItem icon={homeIcon} text="Home" onClick={() => console.log('home')}/>
                 <SidebarItem icon={bookmarkIcon} text="Bookmarked" onClick={() => console.log('bookmarked')}/>
                 <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => console.log('upload data')}/>
                 <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => console.log('download data')}/>
                 <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/>
             </div>
-            <div className={styles.footer}>
-            <div className={styles.section}>
-                    <span className={styles.sectionTitle}>ACCOUNT</span>
-                </div>
+            <div className={styles.footerHeader}>
+                <span className={styles.footerTitle}>Settings</span>
+            </div>
+            <div className={styles.footerItems}>
                 <SidebarItem icon={settingsIcon} text="Settings" onClick={() => console.log('settings')}/>
                 <SidebarItem icon={accountIcon} text="My Account" onClick={() => console.log('my account')}/>
             </div>
+            <div className={styles.toggle} onClick={toggleSidebar} />
         </div>
-    )
+    );
 }
 
 export default Sidebar;
