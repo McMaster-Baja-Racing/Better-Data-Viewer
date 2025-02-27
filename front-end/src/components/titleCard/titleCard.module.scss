@@ -29,11 +29,13 @@
                 .highlight1 {
                     background: linear-gradient(270.17deg, #B3FFAD -20%, #D28407 62.95%, #DD2F2F 95.06%);
                     -webkit-background-clip: text;
+                    background-clip: text;
                     -webkit-text-fill-color: transparent;
                 }
                 .highlight2 {
                     background: linear-gradient(270.17deg, #B3FFAD 0%, #D28407 110.95%);
                     -webkit-background-clip: text;
+                    background-clip: text;
                     -webkit-text-fill-color: transparent;
                 }
             }
@@ -53,11 +55,8 @@
         justify-content: center;
         background: 'transparent';
         align-items: center;
-        width: 40.19rem;
-        height: 16.47rem;
         margin-right: 5rem;
+        margin-bottom: 1.5rem; // Subtle shift up
         border-bottom: 1px solid grey;
-        overflow: hidden;
-        resize: both;
     }
 }
