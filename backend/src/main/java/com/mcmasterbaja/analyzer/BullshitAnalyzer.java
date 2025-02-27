@@ -14,8 +14,10 @@ import org.jboss.logging.Logger;
 @OnAnalyzerException
 public class BullshitAnalyzer extends Analyzer {
 
-  // The point of this analyzer is to add a bunch of fake points based on an input, between
-  // different pre-existing points (input file) to make it seem like there is some fake noise
+  // The point of this analyzer is to add a bunch of fake points based on an
+  // input, between
+  // different pre-existing points (input file) to make it seem like there is some
+  // fake noise
 
   private double numPoints;
 
@@ -34,9 +36,19 @@ public class BullshitAnalyzer extends Analyzer {
             + " to "
             + super.outputFiles[0]);
 
-    CSVReader reader = getReader(super.inputFiles[0]);
-    ICSVWriter writer = getWriter(super.outputFiles[0]);
+    getReader(
+        super.inputFiles[0],
+        reader -> {
+          getWriter(
+              super.outputFiles[0],
+              writer -> {
+                bullshitIO(reader, writer);
+              });
+        });
+  }
 
+  @SneakyThrows
+  public void bullshitIO(CSVReader reader, ICSVWriter writer) {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
@@ -64,7 +76,8 @@ public class BullshitAnalyzer extends Analyzer {
         double slope = (currY - prevY) / (currX - prevX);
         double yValue = prevY + (xValue - prevX) * slope;
 
-        // TODO: This noise is relative to the yValue, so it will be more pronounced for larger
+        // TODO: This noise is relative to the yValue, so it will be more pronounced for
+        // larger
         // values. Downside is higher y-values have higher noise
         double noise = yValue * (0.75 + Math.random() * 0.5);
         writer.writeNext(new String[] {Double.toString(xValue), Double.toString(noise)});
@@ -72,10 +85,5 @@ public class BullshitAnalyzer extends Analyzer {
 
       lastDataPoint = dataPoint;
     }
-
-    reader.close();
-    writer.close();
   }
 }
-
-// throws IOException, CsvValidationException simultaneously

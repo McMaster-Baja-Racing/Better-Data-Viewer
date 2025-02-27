@@ -37,9 +37,19 @@ public class RollingAvgAnalyzer extends Analyzer {
             + " with a window size of "
             + windowSize);
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                rollingAvgIO(reader, writer, inputColumns);
+              });
+        });
+  }
 
+  @SneakyThrows
+  public void rollingAvgIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
@@ -49,8 +59,10 @@ public class RollingAvgAnalyzer extends Analyzer {
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);
 
-    // Queues are used here to keep track of the window of data as we read line by line
-    // Timestamps only track half of the window so that when we write data, we write it in the
+    // Queues are used here to keep track of the window of data as we read line by
+    // line
+    // Timestamps only track half of the window so that when we write data, we write
+    // it in the
     // middle (looking forward and backwards)
     Queue<Double> window = new LinkedList<Double>();
     Queue<String> timestamps = new LinkedList<String>();
@@ -74,8 +86,5 @@ public class RollingAvgAnalyzer extends Analyzer {
         timestamps.remove();
       }
     }
-
-    reader.close();
-    writer.close();
   }
 }

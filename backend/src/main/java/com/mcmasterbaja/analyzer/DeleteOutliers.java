@@ -31,9 +31,19 @@ public class DeleteOutliers extends Analyzer {
             + " with a limit of "
             + this.limit);
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                deleteIO(reader, writer, inputColumns);
+              });
+        });
+  }
 
+  @SneakyThrows
+  public void deleteIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
@@ -50,8 +60,5 @@ public class DeleteOutliers extends Analyzer {
         writer.writeNext(dataPoint);
       }
     }
-
-    reader.close();
-    writer.close();
   }
 }
