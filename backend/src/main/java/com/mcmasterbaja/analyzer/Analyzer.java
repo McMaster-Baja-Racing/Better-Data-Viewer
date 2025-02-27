@@ -1,15 +1,5 @@
 package com.mcmasterbaja.analyzer;
 
-import com.mcmasterbaja.annotations.OnAnalyzerException;
-import com.mcmasterbaja.exceptions.InvalidColumnException;
-import com.mcmasterbaja.exceptions.InvalidInputFileException;
-import com.mcmasterbaja.exceptions.InvalidOutputFileException;
-import com.mcmasterbaja.model.AnalyzerParams;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
-import com.opencsv.ICSVWriter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -20,6 +10,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import com.mcmasterbaja.annotations.OnAnalyzerException;
+import com.mcmasterbaja.exceptions.InvalidColumnException;
+import com.mcmasterbaja.exceptions.InvalidInputFileException;
+import com.mcmasterbaja.exceptions.InvalidOutputFileException;
+import com.mcmasterbaja.model.AnalyzerParams;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 
 @OnAnalyzerException
 public abstract class Analyzer {
@@ -48,24 +49,21 @@ public abstract class Analyzer {
 
   public void getReaders(String[] filePaths, Consumer<Map<String, CSVReader>> action) {
     Map<String, CSVReader> readersMap = new HashMap<>();
-    List<Exception> exceptions = new ArrayList<>();
 
     try {
       for (String filePath : filePaths) {
-        try {
-          FileReader fileReader = new FileReader(filePath);
-          BufferedReader bufferedReader = new BufferedReader(fileReader);
-          CSVReader reader = new CSVReaderBuilder(bufferedReader).withSkipLines(0).build();
-          readersMap.put(filePath, reader);
-        } catch (IOException e) {
-          exceptions.add(
-              new InvalidInputFileException("Failed to read input file: " + filePath, e));
-        }
+        FileReader fileReader = new FileReader(filePath);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        CSVReader reader = new CSVReaderBuilder(bufferedReader).withSkipLines(0).build();
+        readersMap.put(filePath, reader);
       }
+
       action.accept(readersMap);
-    } catch (Exception e) {
-      exceptions.add(e);
+    } catch (IOException e) {
+      throw new InvalidInputFileException("Failed to read input files", e);
     } finally {
+      List<Exception> exceptions = new ArrayList<>();
+
       for (Map.Entry<String, CSVReader> entry : readersMap.entrySet()) {
         String filePath = entry.getKey();
         CSVReader reader = entry.getValue();
@@ -73,15 +71,14 @@ public abstract class Analyzer {
           try {
             reader.close();
           } catch (IOException e) {
-            exceptions.add(
-                new InvalidInputFileException(
-                    "Failed to close CSV reader for file: " + filePath, e));
+            exceptions.add(new InvalidInputFileException(
+                "Failed to close CSV reader for file: " + filePath, e));
           }
         }
       }
+
       if (!exceptions.isEmpty()) {
-        InvalidInputFileException combo =
-            new InvalidInputFileException("Multiple exceptions occurred.");
+        InvalidInputFileException combo = new InvalidInputFileException("Multiple exceptions occurred.");
         for (Exception e : exceptions) {
           combo.addSuppressed(e);
         }
@@ -91,7 +88,8 @@ public abstract class Analyzer {
   }
 
   /**
-   * Default behaviour is to use the 0th output file, will need to be overridden in some special
+   * Default behaviour is to use the 0th output file, will need to be overridden
+   * in some special
    * cases
    *
    * @return Filename of the analyzer output
@@ -103,13 +101,12 @@ public abstract class Analyzer {
   public void getWriter(String filePath, Consumer<ICSVWriter> action) {
     try (FileWriter fileWriter = new FileWriter(filePath);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        ICSVWriter writer =
-            new CSVWriterBuilder(bufferedWriter)
-                .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
-                .withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
-                .withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
-                .withLineEnd(CSVWriter.DEFAULT_LINE_END)
-                .build()) {
+        ICSVWriter writer = new CSVWriterBuilder(bufferedWriter)
+            .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
+            .withQuoteChar(CSVWriter.NO_QUOTE_CHARACTER)
+            .withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
+            .withLineEnd(CSVWriter.DEFAULT_LINE_END)
+            .build()) {
       action.accept(writer);
     } catch (IOException e) {
       throw new InvalidOutputFileException("Failed to write to output file: " + filePath, e);
