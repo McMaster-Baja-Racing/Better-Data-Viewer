@@ -15,6 +15,8 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -117,6 +119,11 @@ public abstract class Analyzer {
                 .build()) {
       action.accept(writer);
     } catch (IOException e) {
+      try {
+        Files.deleteIfExists(Paths.get(filePath));
+      } catch (IOException delException) {
+        e.addSuppressed(delException);
+      }
       throw new InvalidOutputFileException("Failed to write to output file: " + filePath, e);
     }
   }
