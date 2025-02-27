@@ -119,12 +119,14 @@ public abstract class Analyzer {
                 .build()) {
       action.accept(writer);
     } catch (IOException e) {
+      throw new InvalidOutputFileException("Failed to write to output file: " + filePath, e);
+    } catch (Exception e) {
       try {
         Files.deleteIfExists(Paths.get(filePath));
       } catch (IOException delException) {
         e.addSuppressed(delException);
       }
-      throw new InvalidOutputFileException("Failed to write to output file: " + filePath, e);
+      throw e;
     }
   }
 
