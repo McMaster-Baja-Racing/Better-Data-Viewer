@@ -3,7 +3,10 @@ import styles from './titleCard.module.scss';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { defaultChartOptions } from '@lib/chartOptions';
-import titleCardData from './titleCardData.csv?raw';
+import titleCardDataX from './accel_x.csv?raw';
+import titleCardDataY from './accel_y.csv?raw';
+import titleCardDataZ from './accel_z.csv?raw';
+
 import { getHeadersIndex, getTimestampOffset } from '@lib/chartUtils';
 import { seriesData } from '@types';
 
@@ -26,10 +29,11 @@ const parseData = (csvData: string): number[][] => {
 }
 
 export const TitleCard = () => {
-    const [chartData, setChartData] = useState<number[][]>([]);
+    const [chartData, setChartData] = useState<number[][][]>([]);
         
     useEffect(() => {
-        setChartData(parseData(titleCardData));
+        setChartData([parseData(titleCardDataX), parseData(titleCardDataY), parseData(titleCardDataZ)]);
+
     }, []);
 
     const options: Highcharts.Options = {
@@ -37,7 +41,10 @@ export const TitleCard = () => {
         chart: {
             ...defaultChartOptions.chart,
             backgroundColor: 'transparent',
-            height: 250
+            height: 275,
+        },
+        subtitle: {
+            text: ''
         },
         xAxis: {
             ...defaultChartOptions.xAxis,
@@ -49,21 +56,15 @@ export const TitleCard = () => {
             ...defaultChartOptions.xAxis,
             title: {text: ''},
             gridLineColor: 'transparent',
-            labels: {
-                style: {
-                    color: 'grey'
-                }
-            }
+            tickPositions: [-2.3, 2], // Needed to allow custom sizing
         },
         legend: {
             enabled: false
         },
-        series: [
-            {
-                type: 'line',
-                data: chartData
-            }
-        ]
+        series: chartData.map((data) => ({
+            type: 'spline',
+            data,
+        })),
     };
     return (
         <div className={styles.titleCard}>
