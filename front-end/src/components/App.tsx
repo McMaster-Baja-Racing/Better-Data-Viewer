@@ -57,8 +57,8 @@ const App = () => {
         />
       )}
       <DataSelect
-        sources={["Source A", "Source B", "Source C"]}
-        dataTypes={["Type 1", "Type 2", "Type 3"]}
+        sources={["All", "Meow", "Woof"]}
+        dataTypes={["Speed", "Mrreow", "MEw"]}
       />{" "}
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>
