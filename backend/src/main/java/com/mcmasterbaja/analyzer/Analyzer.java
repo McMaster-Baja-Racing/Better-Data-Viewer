@@ -47,7 +47,8 @@ public abstract class Analyzer {
   }
 
   public void getReaders(String[] filePaths, Consumer<Map<String, CSVReader>> action) {
-    Map<String, CSVReader> readersMap = new LinkedHashMap<>();
+    Map<String, CSVReader> readersMap =
+        new LinkedHashMap<>(); // LinkedHashMap to preserve insertion order
 
     try {
       for (String filePath : filePaths) {
@@ -61,6 +62,8 @@ public abstract class Analyzer {
     } catch (IOException e) {
       throw new InvalidInputFileException("Failed to read input files", e);
 
+      // Finally block always executes, so readers will always close even if an
+      // exception occurred in the try block.
     } finally {
       List<Exception> exceptions = new ArrayList<>();
 
@@ -78,6 +81,8 @@ public abstract class Analyzer {
         }
       }
 
+      // If any exceptions occurred while closing readers, combine them and throw as a
+      // single exception
       if (!exceptions.isEmpty()) {
         InvalidInputFileException combo =
             new InvalidInputFileException("Multiple exceptions occurred.");
