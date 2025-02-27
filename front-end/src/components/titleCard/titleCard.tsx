@@ -16,9 +16,6 @@ const parseData = (csvData: string): number[][] => {
     ];
     const headerIndices = getHeadersIndex(headers, columns);
     const timestampOffset = getTimestampOffset(columns, lines.slice(1), headerIndices);
-    console.log(headerIndices);
-    console.log(headers);
-    console.log(timestampOffset);
     const series: seriesData = lines.slice(1).map((line) => {  
         return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
     });
@@ -70,7 +67,7 @@ export const TitleCard = () => {
            <div className={styles.textContainer}>
             <div className={styles.title}>
             <span className={styles.highlight1}>VISUALIZE</span> YOUR <br/>
-            DATA, <span className={styles.highlight2}>YOUR WAY </span>
+            DATA, YOUR <span className={styles.highlight2}>WAY </span>
             </div>
             <div className={styles.description}>Transform raw data into compelling visuals effortlessly. Dive deep, discover patterns, and let your data tell its story.</div>
             </div>
