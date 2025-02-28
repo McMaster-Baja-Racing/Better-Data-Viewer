@@ -1,8 +1,15 @@
 @use '@styles/_variables';
+@use '@styles/_fonts';
 @use "sass:map";
 
-$leftSidebarWidth: 6rem;
-$rightSidebarWidth: 10rem;
+$leftSidebarWidth: 4rem;
+$rightSidebarWidth: 20rem;
+$logoWidth: 3rem;
+$iconSize: 2rem;
+$toggleHeight: 6rem;
+$toggleWidth: 1rem;
+$arrowsHeight: 0.6rem;
+$arrowsWidth: 0.3rem;
 
 .sidebar {
     position: relative;
@@ -30,7 +37,7 @@ $rightSidebarWidth: 10rem;
             background-color: var(--background);
 
             clip-path: polygon(100% 0%, 0% 20%, 0% 80%, 100% 100%);
-            left: calc(100% - 2rem);
+            left: calc(100% - #{$toggleWidth});
 
             .arrow {
                 clip-path: polygon(100% 0%, 0% 50%, 100% 100%, 50% 50%);
@@ -39,9 +46,7 @@ $rightSidebarWidth: 10rem;
     }
 
     .sectionTitle {
-        font-size: 1.2rem;
         height: 100%;
-        font-weight: bold;
         justify-self: center;
         transition: color 0.3s ease-in;
     }
@@ -58,7 +63,7 @@ $rightSidebarWidth: 10rem;
         display: grid;
         grid-template-columns: inherit;
         grid-auto-rows: min-content;
-        gap: 3rem 0rem;
+        gap: 2rem 2rem;
         align-items: center;
     }
 
@@ -66,29 +71,28 @@ $rightSidebarWidth: 10rem;
         grid-area: sidebarHeader;
         grid-row: 1;
         grid-column: 1;
-        width: 5rem;
+        width: $logoWidth;
         height: auto;
         justify-self: center;
+        align-self: center;
     }
 
     .title {
+        @include fonts.nav-title;
         grid-area: sidebarHeader;
         grid-row: 1;
         grid-column: 2;
-        font-size: 1.5rem;
         color: var(--text-colour);
         white-space: nowrap;
-        align-self: center;
-        text-align: start;
+        text-align: center;
         text-transform: uppercase;
-        padding: 0 0.5rem;
+        margin-right: $logoWidth;
     }
 
     .sidebarHeader {
         display: grid;
         grid-area: sidebarHeader;
         grid-template-columns: inherit;
-        padding: 0.5rem 0;
     }
 
     .bodyTitle {
@@ -103,6 +107,7 @@ $rightSidebarWidth: 10rem;
         @extend .sectionHeader;
         grid-area: bodyHeader;
         background-color: var(--tertiary);
+        padding-left: 1rem;
     }
 
     .bodyItems {
@@ -113,8 +118,8 @@ $rightSidebarWidth: 10rem;
 
     .iconContainer {
         justify-self: center;
-        height: 2.5rem;
-        width: 2.5rem;
+        height: $iconSize;
+        width: $iconSize;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -129,8 +134,8 @@ $rightSidebarWidth: 10rem;
     }
 
     .text {
+        @include fonts.text-medium;
         grid-column: 2;
-        font-size: 1.2rem;
         white-space: nowrap;
         overflow: hidden;
         color: var(--text-colour);
@@ -169,26 +174,26 @@ $rightSidebarWidth: 10rem;
     }
 
     .toggle {
-        height: 6rem;
-        width: 2rem;
+        height: $toggleHeight;
+        width: $toggleWidth;
         background-color: var(--tertiary);
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        left: 99.9%;
+        left: 99%;
         z-index: map.get(variables.$z-index, sidebarToggle);
         clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%);
         transition: all 0.5s ease-in-out;
         
 
         .arrow {
-            height: 3rem;
-            width: 1rem;
+            height: 0.6rem;
+            width: 0.3rem;
             background-color: var(--mid-grey);
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            left: calc((100% - 1rem)/2);
+            left: calc((100% - #{$arrowsWidth})/2);
             right: 0%;
             clip-path: polygon(0% 0%, 100% 50%, 0% 100%, 50% 50%);
             transition: all 0.5s ease-in-out;
