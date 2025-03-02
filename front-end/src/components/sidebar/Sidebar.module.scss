@@ -1,0 +1,185 @@
+@use '@styles/_variables';
+@use '@styles/_fonts';
+@use "sass:map";
+
+$leftSidebarWidth: 4rem;
+$rightSidebarWidth: 16rem;
+$logoWidth: 3rem;
+$iconSize: 2rem;
+$toggleLongHeight: 5.5rem;
+$toggleShortHeight: 4rem;
+$toggleWidth: 1.25rem;
+$arrowsHeight: 0.6rem;
+$arrowsWidth: 0.3rem;
+
+// Compute the position of the clip-path for the short side of the toggle
+$toggleHeightPercentage: (($toggleLongHeight - $toggleShortHeight) / (2 * $toggleLongHeight)) * 100%;
+
+.sidebar {
+    position: relative;
+    display: grid;
+    grid-template-columns: $leftSidebarWidth 0rem; // 0 unit has to match rhs width
+    grid-template-rows: auto auto 1fr auto auto;
+    background-color: var(--background);
+    grid-template-areas: 
+    "sidebarHeader sidebarHeader"
+    "bodyHeader bodyHeader"
+    "bodyItems bodyItems"
+    "footerHeader footerHeader"
+    "footerItems footerItems";
+    transition: grid-template-columns 0.4s ease-in-out;
+
+    &.open {
+        grid-template-columns: $leftSidebarWidth $rightSidebarWidth;
+
+        .sectionTitle {
+            color: var(--text-colour);
+            transition: color 0.3s ease-out;
+        }
+
+        .toggle {
+            left: calc(100% - #{$toggleWidth});
+        }
+    }
+
+    .sectionTitle {
+        @include fonts.title-mini;
+        justify-self: center;
+        transition: color 0.3s ease-in;
+        padding-left: 1rem;
+    }
+
+    .sectionHeader {
+        display: grid;
+        grid-template-columns: inherit;
+        padding: 1.5rem 0rem 2.25rem 0.25rem;
+        text-transform: uppercase;
+        height: 1rem;
+    }
+
+    .sectionItems {
+        display: grid;
+        grid-template-columns: inherit;
+        grid-auto-rows: min-content;
+        gap: 2rem 2rem;
+        align-items: center;
+    }
+
+    .logo {
+        grid-area: sidebarHeader;
+        grid-row: 1;
+        grid-column: 1;
+        width: $logoWidth;
+        height: auto;
+        justify-self: center;
+        align-self: center;
+    }
+
+    .title {
+        @include fonts.nav-title;
+        grid-area: sidebarHeader;
+        grid-row: 1;
+        grid-column: 2;
+        color: var(--text-colour);
+        white-space: nowrap;
+        text-align: center;
+        text-transform: uppercase;
+        margin-right: $logoWidth;
+    }
+
+    .sidebarHeader {
+        display: grid;
+        grid-area: sidebarHeader;
+        grid-template-columns: inherit;
+    }
+
+    .bodyTitle {
+        @extend .sectionTitle;
+        grid-area: bodyHeader;
+        grid-row: 2;
+        grid-column: 1;
+        color: var(--tertiary);
+    }
+
+    .bodyHeader {
+        @extend .sectionHeader;
+        grid-area: bodyHeader;
+        background-color: var(--tertiary);
+    }
+
+    .bodyItems {
+        @extend .sectionItems;
+        grid-area: bodyItems;
+        background-color: var(--tertiary);
+    }
+
+    .iconContainer {
+        justify-self: center;
+        height: $iconSize;
+        width: $iconSize;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .icon {
+            grid-column: 1;
+            height: 100%;
+            width: fit-content;
+            fill: var(--text-colour);
+            object-fit: cover;
+        }
+    }
+
+    .text {
+        @include fonts.text-medium;
+        grid-column: 2;
+        white-space: nowrap;
+        overflow: hidden;
+        color: var(--text-colour);
+        text-align: start;
+        align-self: center;
+    }
+
+    .footerTitle {
+        @extend .sectionTitle;
+        grid-area: footerHeader;
+        grid-column: 1;
+        color: var(--background);
+    }
+
+    .footerHeader {
+        @extend .sectionHeader;
+        grid-area: footerHeader;
+    }
+
+    .footerItems {
+        @extend .sectionItems;
+        grid-area: footerItems;
+        padding-bottom: 2rem;
+    }
+
+    .sidebarItem {
+        display: contents;
+
+        .icon {
+            grid-column: 1;
+        }
+
+        .text {
+            grid-column: 2;
+        }
+    }
+
+    .toggle {
+        height: $toggleLongHeight;
+        width: $toggleWidth;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 99%;
+        z-index: map.get(variables.$z-index, sidebarToggle);
+        transition: left 0.01s ease-in-out;
+    }
+}
+
+
