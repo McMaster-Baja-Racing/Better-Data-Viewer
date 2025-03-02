@@ -7,6 +7,8 @@ import uploadIcon from '@assets/icons/upload.svg';
 import folderIcon from '@assets/icons/folder.svg';
 import settingsIcon from '@assets/icons/settings.svg';
 import accountIcon from '@assets/icons/account.svg';
+import sidebarToggleOpen from '@assets/icons/sidebarToggleOpen.svg';
+import sidebarToggleClosed from '@assets/icons/sidebarToggleClosed.svg';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
 
@@ -35,9 +37,7 @@ const Sidebar = () => {
 
     return (
         <div className={cx(styles.sidebar, { [styles.open]: isOpen })}>
-            <div className={styles.toggle} onClick={toggleSidebar}>
-                <div className={styles.arrow}></div>
-            </div>
+            <img className={styles.toggle} onClick={toggleSidebar} src={isOpen ? sidebarToggleOpen : sidebarToggleClosed} />
             <div className={styles.sidebarHeader}>
                 <img className={styles.logo} src={bajaLogo} alt="Logo"/>
                 <span className={styles.title}>Data Viewer</span>

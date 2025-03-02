@@ -3,13 +3,17 @@
 @use "sass:map";
 
 $leftSidebarWidth: 4rem;
-$rightSidebarWidth: 20rem;
+$rightSidebarWidth: 16rem;
 $logoWidth: 3rem;
 $iconSize: 2rem;
-$toggleHeight: 6rem;
-$toggleWidth: 1rem;
+$toggleLongHeight: 5.5rem;
+$toggleShortHeight: 4rem;
+$toggleWidth: 1.25rem;
 $arrowsHeight: 0.6rem;
 $arrowsWidth: 0.3rem;
+
+// Compute the position of the clip-path for the short side of the toggle
+$toggleHeightPercentage: (($toggleLongHeight - $toggleShortHeight) / (2 * $toggleLongHeight)) * 100%;
 
 .sidebar {
     position: relative;
@@ -34,21 +38,15 @@ $arrowsWidth: 0.3rem;
         }
 
         .toggle {
-            background-color: var(--background);
-
-            clip-path: polygon(100% 0%, 0% 20%, 0% 80%, 100% 100%);
             left: calc(100% - #{$toggleWidth});
-
-            .arrow {
-                clip-path: polygon(100% 0%, 0% 50%, 100% 100%, 50% 50%);
-            }
         }
     }
 
     .sectionTitle {
-        height: 100%;
+        @include fonts.title-mini;
         justify-self: center;
         transition: color 0.3s ease-in;
+        padding-left: 1rem;
     }
 
     .sectionHeader {
@@ -107,7 +105,6 @@ $arrowsWidth: 0.3rem;
         @extend .sectionHeader;
         grid-area: bodyHeader;
         background-color: var(--tertiary);
-        padding-left: 1rem;
     }
 
     .bodyItems {
@@ -174,30 +171,14 @@ $arrowsWidth: 0.3rem;
     }
 
     .toggle {
-        height: $toggleHeight;
+        height: $toggleLongHeight;
         width: $toggleWidth;
-        background-color: var(--tertiary);
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         left: 99%;
         z-index: map.get(variables.$z-index, sidebarToggle);
-        clip-path: polygon(0% 0%, 100% 20%, 100% 80%, 0% 100%);
-        transition: all 0.5s ease-in-out;
-        
-
-        .arrow {
-            height: 0.6rem;
-            width: 0.3rem;
-            background-color: var(--mid-grey);
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            left: calc((100% - #{$arrowsWidth})/2);
-            right: 0%;
-            clip-path: polygon(0% 0%, 100% 50%, 0% 100%, 50% 50%);
-            transition: all 0.5s ease-in-out;
-        }
+        transition: left 0.01s ease-in-out;
     }
 }
 
