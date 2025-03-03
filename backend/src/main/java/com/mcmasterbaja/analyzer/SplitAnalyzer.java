@@ -37,9 +37,19 @@ public class SplitAnalyzer extends Analyzer {
             + " and an ending timestamp of "
             + end);
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                splitIO(null, null, inputColumns);
+              });
+        });
+  }
 
+  @SneakyThrows
+  public void splitIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
@@ -57,8 +67,5 @@ public class SplitAnalyzer extends Analyzer {
         writer.writeNext(dataPoint);
       }
     }
-
-    reader.close();
-    writer.close();
   }
 }

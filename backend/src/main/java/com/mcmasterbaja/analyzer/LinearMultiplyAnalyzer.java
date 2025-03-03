@@ -37,9 +37,19 @@ public class LinearMultiplyAnalyzer extends Analyzer {
             + " and an offset value of "
             + b);
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                linearIO(reader, writer, inputColumns);
+              });
+        });
+  }
 
+  @SneakyThrows
+  private void linearIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
@@ -57,9 +67,6 @@ public class LinearMultiplyAnalyzer extends Analyzer {
       String newY = Double.toString(linearFunction(oldY));
       writer.writeNext(new String[] {x, newY});
     }
-
-    reader.close();
-    writer.close();
   }
 
   private double linearFunction(double x) {
