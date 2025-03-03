@@ -51,6 +51,7 @@ const App = () => {
       {location.pathname !== '/' && (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
+      
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
     
@@ -78,15 +79,19 @@ const App = () => {
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
         <Routes>
-          <Route path="*" element={<Views 
-            viewInformation={viewInformation} 
-            setModal={setModal} 
-            setButtonID={setButtonID} 
-            numViews={numViews} 
-            videoTimestamp={videoTimestamp} 
-            setVideoTimestamp={setVideoTimestamp} 
-            video={video} 
-          />} />
+          <Route path="*" element={
+          <>
+            <Views
+              viewInformation={viewInformation} 
+              setModal={setModal} 
+              setButtonID={setButtonID} 
+              numViews={numViews} 
+              videoTimestamp={videoTimestamp} 
+              setVideoTimestamp={setVideoTimestamp} 
+              video={video} 
+            />
+          </>
+          }/>
           <Route path="/map" element={<MapChart />} />
           <Route path="/IMU" element={<ModelViewer />} />
           <Route path='/old' element={

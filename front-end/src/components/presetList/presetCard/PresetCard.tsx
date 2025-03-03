@@ -3,19 +3,20 @@ import defaultImage from '@assets/preset_thumbnail.png';
 import { icons } from '@lib/assets';
 
 interface PresetCardProps {
-    readonly image?: string;
-    readonly title: string;
-    readonly description: string;
-    readonly fileCount: number;
+    image?: string;
+    name: string;
+    description: string;
+    fileCount: number;
+    onClick: () => void;
 }
 
-export function PresetCard({ image, title, description, fileCount }: Readonly<PresetCardProps>) {
+export const PresetCard = ({ image, name, description, fileCount, onClick }: PresetCardProps) => {
     return (
-        <div className={styles.presetCard}>
+      <button className={styles.presetCard} onClick={onClick}>
         <img src={image ?? defaultImage} alt="Preset" className={styles.image} />
         <div className={styles.content}>
             <div className={styles['title-container']}>
-                <div>{title}</div>
+                <div>{name}</div>
                 <div className={styles.fileCount}>
                     <span>{fileCount} x</span>
                 <img src={icons['newGraph']} alt="New Graph" />
@@ -23,7 +24,7 @@ export function PresetCard({ image, title, description, fileCount }: Readonly<Pr
             </div>
             <div className={styles.description}>{description}</div>
         </div>
-      </div>
+      </button>
     );
 };
 
