@@ -1,4 +1,4 @@
-import styles from './presetFilesModal.module.scss';
+import styles from './PresetFilesModal.module.scss';
 import { BaseModal } from '@components/baseModal/BaseModal';
 import { FileTable } from '@components/fileTable/FileTable';
 import { UploadForm } from '@components/uploadForm/UploadForm';
