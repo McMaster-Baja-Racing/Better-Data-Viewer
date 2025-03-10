@@ -49,62 +49,64 @@ const App = () => {
 
   return (
     <div className={styles.App}>
-      {location.pathname !== '/' && (
+      {location.pathname == '/' ? <Sidebar /> : (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
-      <Sidebar />
-      <div className={styles.BodyContainer}>
-        <header className={styles.Body}>
-          <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
       
-          {modal === 'Create' ? <CreateGraphModal 
+      <header className={styles.Body}>
+        <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
+    
+        {modal === 'Create' ? <CreateGraphModal 
+          setModal={setModal} 
+          setViewInformation={setViewInformation} 
+          setSuccessMessage={setSuccessMessage} 
+          viewInformation={viewInformation} 
+          buttonID={buttonID} 
+          setNumViews={setNumViews} 
+          numViews={numViews} 
+          video={video} 
+          setVideo={setVideo}
+        /> : null}
+        {modal === 'ChoosePreset' ? <SimpleCreateGraphModal 
             setModal={setModal} 
             setViewInformation={setViewInformation} 
-            setSuccessMessage={setSuccessMessage} 
             viewInformation={viewInformation} 
-            buttonID={buttonID} 
             setNumViews={setNumViews} 
-            numViews={numViews} 
-            video={video} 
-            setVideo={setVideo}
           /> : null}
-          {modal === 'ChoosePreset' ? <SimpleCreateGraphModal 
-              setModal={setModal} 
-              setViewInformation={setViewInformation} 
+        {modal === 'Upload' ? <UploadModal 
+          setModal={setModal} 
+          setSuccessMessage={setSuccessMessage} 
+        /> : null}
+        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
+        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
+        <Routes>
+          <Route path="*" element={
+          <>
+            <Views
               viewInformation={viewInformation} 
-              setNumViews={setNumViews} 
-            /> : null}
-          {modal === 'Upload' ? <UploadModal 
+              setModal={setModal} 
+              setButtonID={setButtonID} 
+              numViews={numViews} 
+              videoTimestamp={videoTimestamp} 
+              setVideoTimestamp={setVideoTimestamp} 
+              video={video} 
+            />
+          </>
+          }/>
+          <Route path="/map" element={<MapChart />} />
+          <Route path="/IMU" element={<ModelViewer />} />
+          <Route path='/old' element={
+          <Views 
+            viewInformation={viewInformation} 
             setModal={setModal} 
-            setSuccessMessage={setSuccessMessage} 
-          /> : null}
-          {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
-          {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
-          <Routes>
-            <Route path="*" element={<Views 
-              viewInformation={viewInformation} 
-              setModal={setModal} 
-              setButtonID={setButtonID} 
-              numViews={numViews} 
-              videoTimestamp={videoTimestamp} 
-              setVideoTimestamp={setVideoTimestamp} 
-              video={video} 
-            />} />
-            <Route path="/map" element={<MapChart />} />
-            <Route path="/IMU" element={<ModelViewer />} />
-            <Route path='/old' element={
-            <Views 
-              viewInformation={viewInformation} 
-              setModal={setModal} 
-              setButtonID={setButtonID} 
-              numViews={numViews} 
-              videoTimestamp={videoTimestamp} 
-              setVideoTimestamp={setVideoTimestamp} 
-              video={video} 
-            />} />
-          </Routes>
-        </header>
-      </div>
+            setButtonID={setButtonID} 
+            numViews={numViews} 
+            videoTimestamp={videoTimestamp} 
+            setVideoTimestamp={setVideoTimestamp} 
+            video={video} 
+          />} />
+        </Routes>
+      </header>
     </div>
   );
 

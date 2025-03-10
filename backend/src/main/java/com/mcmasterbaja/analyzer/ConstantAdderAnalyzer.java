@@ -35,8 +35,20 @@ public class ConstantAdderAnalyzer extends Analyzer {
             + super.inputFiles[0]
             + " to make "
             + super.outputFiles[0]);
-    CSVReader reader = getReader(super.inputFiles[0]);
-    ICSVWriter writer = getWriter(super.outputFiles[0]);
+
+    getReader(
+        super.inputFiles[0],
+        reader -> {
+          getWriter(
+              super.outputFiles[0],
+              writer -> {
+                constantIO(reader, writer, super.inputColumns);
+              });
+        });
+  }
+
+  @SneakyThrows
+  public void constantIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     if (inputColumns.length == 4) {
       String[] headers = reader.readNext();
       if (headers == null) {
@@ -61,8 +73,6 @@ public class ConstantAdderAnalyzer extends Analyzer {
         String newD = Double.toString(oldD + d);
         writer.writeNext(new String[] {newA, newB, newC, newD});
       }
-      reader.close();
-      writer.close();
     }
   }
 }

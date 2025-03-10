@@ -6,10 +6,9 @@ import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import java.io.IOException;
+import lombok.SneakyThrows;
 import org.jboss.logging.Logger;
 
 @Dependent
@@ -61,12 +60,21 @@ public class CubicAnalyzer extends Analyzer {
       double a,
       double b,
       double c,
-      double d)
-      throws CsvValidationException, IOException {
+      double d) {
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                cubicIO(reader, writer, inputColumns);
+              });
+        });
+  }
 
+  @SneakyThrows
+  private void cubicIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
@@ -83,9 +91,6 @@ public class CubicAnalyzer extends Analyzer {
       double newValue = cubicFunction(data);
       writer.writeNext(new String[] {Double.toString(timestamp), Double.toString(newValue)});
     }
-
-    reader.close();
-    writer.close();
   }
 
   private double cubicFunction(double x) {

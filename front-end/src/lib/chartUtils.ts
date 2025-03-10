@@ -25,7 +25,7 @@ export const getHeadersIndex = (headers: string[], columns: Column[]): HeadersIn
   const h: HeadersIndex = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {
-      if (columns[i].header === headers[j].trim()) {
+      if (columns[i].header.trim() === headers[j].trim()) {
         if (i === 0) {
           h.x = j;
         } else if (i === 1) {

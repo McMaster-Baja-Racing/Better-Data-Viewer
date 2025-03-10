@@ -62,7 +62,8 @@ public class SGolayFilter extends Analyzer {
     this.windowSize = Integer.parseInt(params.getOptions()[0]);
     this.polynomialDegree = Integer.parseInt(params.getOptions()[1]);
     this.dataBuffer = new CircularBuffer(windowSize);
-    // Half the size of the data buffer so that when we write data, we write it in the middle
+    // Half the size of the data buffer so that when we write data, we write it in
+    // the middle
     // (looking forwards and backwards)
     this.timestampBuffer = new CircularBuffer(windowSize / 2);
 
@@ -76,9 +77,19 @@ public class SGolayFilter extends Analyzer {
             + " and polynomial degree "
             + polynomialDegree);
 
-    CSVReader reader = getReader(inputFiles[0]);
-    ICSVWriter writer = getWriter(outputFiles[0]);
+    getReader(
+        inputFiles[0],
+        reader -> {
+          getWriter(
+              outputFiles[0],
+              writer -> {
+                savGolIO(reader, writer, inputColumns);
+              });
+        });
+  }
 
+  @SneakyThrows
+  public void savGolIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
@@ -111,9 +122,6 @@ public class SGolayFilter extends Analyzer {
       String y = Double.toString(smoothedValue);
       writer.writeNext(new String[] {x, y});
     }
-
-    reader.close();
-    writer.close();
   }
 
   public RealMatrix savGolCoeff(int windowSize, int polynomialDegree) {
