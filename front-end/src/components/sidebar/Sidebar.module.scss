@@ -37,8 +37,12 @@ $toggleHeightPercentage: (($toggleLongHeight - $toggleShortHeight) / (2 * $toggl
             transition: color 0.3s ease-out;
         }
 
-        .toggle {
-            left: calc(100% - #{$toggleWidth});
+        .toggleOpen {
+            opacity: 1;
+        }
+
+        .toggleClosed {
+            opacity: 0;
         }
     }
 
@@ -162,11 +166,18 @@ $toggleHeightPercentage: (($toggleLongHeight - $toggleShortHeight) / (2 * $toggl
         grid-column: span 2;
         cursor: pointer;
         gap: 2rem;
-        background-color: inherit;
         padding: 1rem 0rem;
 
         &:hover {
-            filter: brightness(0.75);
+            backdrop-filter: brightness(0.75);
+
+            .text {
+                filter: brightness(0.9);
+            }
+
+            .icon {
+                filter: brightness(0.9);
+            }
         }
 
         .icon {
@@ -184,9 +195,19 @@ $toggleHeightPercentage: (($toggleLongHeight - $toggleShortHeight) / (2 * $toggl
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        left: 99%;
         z-index: map.get(variables.$z-index, sidebarToggle);
         cursor: pointer;
+    }
+
+    .toggleOpen {
+        @extend .toggle;
+        left: calc(100% - #{$toggleWidth});
+        opacity: 0;
+    }
+
+    .toggleClosed {
+        @extend .toggle;
+        left: 99%;
     }
 }
 

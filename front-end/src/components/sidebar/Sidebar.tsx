@@ -37,7 +37,8 @@ const Sidebar = () => {
 
     return (
         <div className={cx(styles.sidebar, { [styles.open]: isOpen })}>
-            <img className={styles.toggle} onClick={toggleSidebar} src={isOpen ? sidebarToggleOpen : sidebarToggleClosed} />
+            <img className={styles.toggleOpen} onClick={toggleSidebar} src={sidebarToggleOpen} />
+            <img className={styles.toggleClosed} onClick={toggleSidebar} src={sidebarToggleClosed} />
             <div className={styles.sidebarHeader}>
                 <img className={styles.logo} src={bajaLogo} alt="Logo"/>
                 <span className={styles.title}>Data Viewer</span>
