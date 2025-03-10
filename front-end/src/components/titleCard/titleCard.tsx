@@ -61,6 +61,7 @@ export const TitleCard = () => {
         series: chartData.map((data) => ({
             type: 'spline',
             data,
+            name: ['X', 'Y', 'Z'][chartData.indexOf(data)],
         })),
     };
     return (
