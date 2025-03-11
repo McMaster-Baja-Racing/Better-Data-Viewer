@@ -29,7 +29,7 @@ $toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $t
     "footerItems footerItems";
     transition: grid-template-columns 0.4s ease-in-out;
 
-    &.open {
+    &.expanded {
         grid-template-columns: $leftSidebarWidth $rightSidebarWidth;
 
         .sectionTitle {
@@ -37,11 +37,11 @@ $toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $t
             transition: color 0.3s ease-out;
         }
 
-        .toggleOpen {
+        .toggleExpanded {
             opacity: 1;
         }
 
-        .toggleClosed {
+        .toggleCollapsed {
             opacity: 0;
         }
     }
@@ -203,13 +203,13 @@ $toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $t
         cursor: pointer;
     }
 
-    .toggleOpen {
+    .toggleExpanded {
         @extend .toggle;
         left: calc(100% - #{$toggleWidth});
         opacity: 0;
     }
 
-    .toggleClosed {
+    .toggleCollapsed {
         @extend .toggle;
         left: 99%;
     }

@@ -7,10 +7,10 @@ import uploadIcon from '@assets/icons/upload.svg';
 import folderIcon from '@assets/icons/folder.svg';
 import settingsIcon from '@assets/icons/settings.svg';
 import accountIcon from '@assets/icons/account.svg';
-import sidebarToggleOpen from '@assets/icons/sidebarToggleOpen.svg';
-import sidebarToggleClosed from '@assets/icons/sidebarToggleClosed.svg';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
+import sidebarToggleCollapsed from '@assets/icons/sidebarToggleCollapsed.svg';
+import sidebarToggleExpanded from '@assets/icons/sidebarToggleExpanded.svg';
 
 // Sidebar item definition
 interface SidebarItemProps {
@@ -32,13 +32,13 @@ const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
 }
 
 const Sidebar = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleSidebar = () => setIsOpen(!isOpen);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const toggleSidebar = () => setIsExpanded(!isExpanded);
 
     return (
-        <div className={cx(styles.sidebar, { [styles.open]: isOpen })}>
-            <img className={styles.toggleOpen} onClick={toggleSidebar} src={sidebarToggleOpen} />
-            <img className={styles.toggleClosed} onClick={toggleSidebar} src={sidebarToggleClosed} />
+        <div className={cx(styles.sidebar, { [styles.expanded]: isExpanded })}>
+            <img className={styles.toggleExpanded} onClick={toggleSidebar} src={sidebarToggleExpanded} />
+            <img className={styles.toggleCollapsed} onClick={toggleSidebar} src={sidebarToggleCollapsed} />
             <div className={styles.sidebarHeader}>
                 <img className={styles.logo} src={bajaLogo} alt="Logo"/>
                 <span className={styles.title}>Data Viewer</span>
