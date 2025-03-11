@@ -22,12 +22,12 @@ interface SidebarItemProps {
 // Sidebar item component
 const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
     return (
-        <div className={styles.sidebarItem} onClick={onClick}>
+        <button className={styles.sidebarItem} onClick={onClick}>
             <div className={styles.iconContainer}>
                 <img className={styles.icon} src={icon} alt="Icon" />
             </div>
             <span className={styles.text}>{text}</span>
-        </div>
+        </button>
     )
 }
 

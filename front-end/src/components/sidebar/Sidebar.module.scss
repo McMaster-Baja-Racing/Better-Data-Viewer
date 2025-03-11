@@ -5,7 +5,7 @@
 $leftSidebarWidth: 4rem;
 $rightSidebarWidth: 16rem;
 $logoWidth: 3rem;
-$iconSize: 2rem;
+$iconSize: 1.75rem;
 $toggleLongHeight: 5.5rem;
 $toggleShortHeight: 4rem;
 $toggleWidth: 1.25rem;
@@ -13,7 +13,7 @@ $arrowsHeight: 0.6rem;
 $arrowsWidth: 0.3rem;
 
 // Compute the position of the clip-path for the short side of the toggle
-$toggleHeightPercentage: (($toggleLongHeight - $toggleShortHeight) / (2 * $toggleLongHeight)) * 100%;
+$toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $toggleLongHeight)) * 100%;
 
 .sidebar {
     position: relative;
@@ -50,15 +50,18 @@ $toggleHeightPercentage: (($toggleLongHeight - $toggleShortHeight) / (2 * $toggl
         @include fonts.title-mini;
         justify-self: center;
         transition: color 0.3s ease-in;
-        padding-left: 1rem;
+        padding-left: 1.25rem;
     }
 
     .sectionHeader {
         display: grid;
         grid-template-columns: inherit;
-        padding: 1.5rem 0rem 2.25rem 0.25rem;
+        padding-top: 1.5rem;
+        padding-bottom: 1rem;
         text-transform: uppercase;
         height: 1rem;
+        height: fit-content;
+        align-items: center;
     }
 
     .sectionItems {
@@ -167,6 +170,7 @@ $toggleHeightPercentage: (($toggleLongHeight - $toggleShortHeight) / (2 * $toggl
         cursor: pointer;
         gap: 2rem;
         padding: 1rem 0rem;
+        background: none;
 
         &:hover {
             backdrop-filter: brightness(0.75);
