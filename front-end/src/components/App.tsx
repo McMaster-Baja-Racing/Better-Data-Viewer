@@ -47,9 +47,12 @@ const App = () => {
     return () => clearTimeout(timer); 
   }, [successMessage]);
 
+  // Temp variable to maintain old styling on /old
+  const isNew = location.pathname == '/';
+
   return (
-    <div className={styles.App}>
-      {location.pathname == '/' ? <Sidebar /> : (
+    <div className={cx(styles.App, { [styles.new]: isNew })}>
+      {isNew ? <Sidebar /> : (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
       

@@ -3,7 +3,10 @@
   font-family: "HelveticaNeueW01-77BdCnObl";
   height: calc(100vh);
   background-color: black; // will change this back!!!! just for testing the accordion on dark bg!!!!
-  display: flex;
+  
+  &.new {
+    display: flex;
+  }
 
   .Body {
     width: 100%;
