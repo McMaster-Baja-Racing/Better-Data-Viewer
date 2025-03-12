@@ -26,6 +26,7 @@ import savitzkyGolayGif from '../assets/help/sgolay.gif';
 import splitImage from '../assets/help/split.png';
 import chevronDownIcon from '../assets/icons/chevronDown.svg';
 import sigmaIcon from '../assets/icons/sigma.svg';
+import plusIcon from '../assets/icons/plus.svg';
 
 export const icons = {
   delete: deleteIcon,
@@ -48,6 +49,7 @@ export const icons = {
   settings: settingsIcon,
   chevronDown: chevronDownIcon,
   sigma: sigmaIcon,
+  plus: plusIcon,
 };
 
 export const images = {

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styles from './dataSelect.module.scss';
 import { Dropdown } from '@components/dropdown/Dropdown';
+import sigma from '@assets/icons/sigma.svg';
+import plus from '@assets/icons/plus.svg';
 
 interface DataSelectProps {
     sources: string[];
