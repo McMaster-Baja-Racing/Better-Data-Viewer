@@ -109,6 +109,19 @@ const App = () => {
               />
             }
           />
+          <Route path="*" element={
+          <>
+            <Views
+              viewInformation={viewInformation} 
+              setModal={setModal} 
+              setButtonID={setButtonID} 
+              numViews={numViews} 
+              videoTimestamp={videoTimestamp} 
+              setVideoTimestamp={setVideoTimestamp} 
+              video={video} 
+            />
+          </>
+          }/>
           <Route path="/map" element={<MapChart />} />
           <Route path="/IMU" element={<ModelViewer />} />
           <Route
