@@ -3,6 +3,8 @@ import styles from './dataSelect.module.scss';
 import { Dropdown } from '@components/dropdown/Dropdown';
 import sigma from '@assets/icons/sigma.svg';
 import plus from '@assets/icons/plus.svg';
+import minus from '@assets/icons/minus.svg';
+import close from '@assets/icons/close.svg';
 
 interface DataSelectProps {
     sources: string[];

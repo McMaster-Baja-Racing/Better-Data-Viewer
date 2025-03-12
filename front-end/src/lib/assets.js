@@ -28,6 +28,7 @@ import chevronDownIcon from '../assets/icons/chevronDown.svg';
 import sigmaIcon from '../assets/icons/sigma.svg';
 import plusIcon from '../assets/icons/plus.svg';
 import minusIcon from '../assets/icons/minus.svg';
+import closeIcon from '../assets/icons/close.svg';
 
 export const icons = {
   delete: deleteIcon,
@@ -52,6 +53,7 @@ export const icons = {
   sigma: sigmaIcon,
   plus: plusIcon,
   minus: minusIcon,
+  close: closeIcon,
 };
 
 export const images = {
