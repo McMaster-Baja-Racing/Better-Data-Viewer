@@ -27,6 +27,7 @@ import splitImage from '../assets/help/split.png';
 import chevronDownIcon from '../assets/icons/chevronDown.svg';
 import sigmaIcon from '../assets/icons/sigma.svg';
 import plusIcon from '../assets/icons/plus.svg';
+import minusIcon from '../assets/icons/minus.svg';
 
 export const icons = {
   delete: deleteIcon,
@@ -50,6 +51,7 @@ export const icons = {
   chevronDown: chevronDownIcon,
   sigma: sigmaIcon,
   plus: plusIcon,
+  minus: minusIcon,
 };
 
 export const images = {
