@@ -3,8 +3,13 @@
   font-family: "HelveticaNeueW01-77BdCnObl";
   height: calc(100vh);
   background-color: black; // will change this back!!!! just for testing the accordion on dark bg!!!!
+  
+  &.new {
+    display: flex;
+  }
 
   .Body {
+    width: 100%;
     height: calc(100vh - 5rem);
     background-color: #3d0202;
     display: flex;
@@ -88,6 +93,3 @@ button {
     background-color: rgb(238, 48, 86);
   }
 }
-
-
-

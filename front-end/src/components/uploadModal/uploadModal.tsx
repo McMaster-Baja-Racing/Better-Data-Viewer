@@ -7,21 +7,21 @@ import rightArrow from '@assets/icons/arrow.svg';
 import { ApiUtil } from '@lib/apiUtils';
 
 interface UploadModalProps {
-  setIsOpen: (modal: boolean) => void;
   isOpen: boolean;
+  onClose: () => void;
 }
 
-export const UploadModal = ({ setIsOpen, isOpen }: UploadModalProps) => {
+export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const submitFiles = async () => {
     const uploadPromises = files.map((file) => ApiUtil.uploadFile(file));
     await Promise.all(uploadPromises);
-    setIsOpen(false);
+    onClose();
   }
 
   return (
-    <BaseModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+    <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className={styles.uploadModal}>
         <h2 className={styles.title}>Upload your file</h2>
         <UploadForm files={files} setFiles={setFiles} />
