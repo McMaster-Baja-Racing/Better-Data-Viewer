@@ -24,15 +24,14 @@ export const GraphWrapper = ({ title, children }: GraphWrapperProps) => {
         <div className={styles.editBar}>
             <div className={styles.title}>{title}</div>
             <div className={styles.iconGroup}>
-                <img src={write} alt="Edit" className={styles.icon} />
+                <img src={write} className={styles.icon} />
                 <img 
                         src={clicked ? unfullscreen : fullscreen} 
-                        alt={clicked ? "Unfullscreen" : "Fullscreen"} 
                         className={styles.icon} 
                         onClick={handleClick} 
                         style={{ cursor: 'pointer' }} 
                     />
-                <img src={threedots} alt="More" className={styles.icon} />
+                <img src={threedots} className={styles.icon} />
             </div>
         </div>
         <div className={styles.graphContainer}>
