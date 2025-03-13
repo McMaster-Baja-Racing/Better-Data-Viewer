@@ -1,11 +1,10 @@
-import React, { ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import cx from 'classnames';
 import styles from './GraphWrapper.module.scss';
 import fullscreen from '@assets/icons/fullscreen.svg';
 import unfullscreen from '@assets/icons/un-fullscreen.svg';
 import write from '@assets/icons/write.svg';
 import threedots from '@assets/icons/threedots.svg';
-
 
 interface GraphWrapperProps {
     title: string;
