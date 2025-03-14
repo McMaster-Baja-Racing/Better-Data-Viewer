@@ -14,6 +14,7 @@ import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
 import { Homepage } from '@pages/Homepage';
+import Sidebar from './sidebar/Sidebar';
 
 const App = () => {
   const location = useLocation();
@@ -47,9 +48,12 @@ const App = () => {
     return () => clearTimeout(timer); 
   }, [successMessage]);
 
+  // Temp variable to maintain old styling on /old
+  const isNew = location.pathname == '/';
+
   return (
-    <div className={styles.App}>
-      {location.pathname !== '/' && (
+    <div className={cx(styles.App, { [styles.new]: isNew })}>
+      {isNew ? <Sidebar /> : (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
       

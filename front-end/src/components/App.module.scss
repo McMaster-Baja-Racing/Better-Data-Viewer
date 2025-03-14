@@ -1,8 +1,15 @@
 .App {
   text-align: center;
   font-family: "HelveticaNeueW01-77BdCnObl";
+  height: calc(100vh);
+  
+  &.new {
+    display: flex;
+  }
 
   .Body {
+    width: 100%;
+    height: calc(100vh - 5rem);
     background-color: #3d0202;
     display: flex;
     flex-direction: column;
@@ -86,6 +93,3 @@ button {
     background-color: rgb(238, 48, 86);
   }
 }
-
-
-
