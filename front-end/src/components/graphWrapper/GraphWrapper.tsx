@@ -57,8 +57,6 @@ export const GraphWrapper = ({ title, children }: GraphWrapperProps) => {
             src={isFullscreen ? unfullscreenIcon : fullscreenIcon}
             className={styles.icon}
             onClick={handleFullscreenToggle}
-            style={{ cursor: 'pointer' }}
-            alt="Fullscreen toggle icon"
           />
           <img src={threedots} className={styles.icon} alt="Options icon" />
         </div>
