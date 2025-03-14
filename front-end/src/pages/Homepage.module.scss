@@ -1,0 +1,22 @@
+@use '@styles/_mixins';
+
+.homepage {
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  @include mixins.scrollbar-dark;
+  background-color: var(--background);
+
+  .body {
+    padding-top: 2rem;
+    flex-grow: 1;
+    
+  }
+
+  .footerWrapper {
+    margin-top: auto;
+  }
+}

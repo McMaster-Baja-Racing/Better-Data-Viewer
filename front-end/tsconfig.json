@@ -23,6 +23,7 @@
       "@lib/*": ["lib/*"],
       "@styles/*": ["styles/*"],
       "@types": ["types/index.ts"],
+      "@pages/*": ["pages/*"],
     },
   },
   "include": ["src"],

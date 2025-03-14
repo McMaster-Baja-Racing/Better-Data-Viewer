@@ -91,6 +91,7 @@ $toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $t
         text-align: center;
         text-transform: uppercase;
         margin-right: $logoWidth;
+        overflow: hidden;
     }
 
     .sidebarHeader {
@@ -111,6 +112,7 @@ $toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $t
         @extend .sectionHeader;
         grid-area: bodyHeader;
         background-color: var(--tertiary);
+        overflow: hidden;
     }
 
     .bodyItems {
@@ -154,6 +156,7 @@ $toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $t
     .footerHeader {
         @extend .sectionHeader;
         grid-area: footerHeader;
+        overflow: hidden;
     }
 
     .footerItems {
