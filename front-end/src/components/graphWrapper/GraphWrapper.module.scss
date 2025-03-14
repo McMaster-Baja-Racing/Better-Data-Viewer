@@ -2,63 +2,52 @@
 @use '@styles/_variables';
 
 .graphWrapper {
-    @include fonts.title-medium;
+  @include fonts.title-medium;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--background);
+  transition: all 0.3s ease;
+
+  .editBar {
+    width: 100%;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4.5rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    
+    .title {
+      text-align: center;
+      display: flex;
+      color: var(--text-colour);
+      padding-left: 3.75rem;
+    }
+    .iconGroup {
+      display: flex;
+      justify-content: center;
+      padding-right: 3.75rem;
+      gap: 1.87rem;
+    }
+  }
+
+  .graphContainer {
     height: 100%;
     width: 100%;
-    flex-direction: column;
+    display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--background);
-    transition: all 0.3s ease;
-    
-    &.fullscreen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 9999;
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-    }
-
-    .editBar {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 4.5rem;
-        padding-top: 1.25rem;
-        padding-bottom: 1.25rem;
-        
-        .title {
-            text-align: center;
-            display: flex;
-            color: var(--text-colour);
-            padding-left: 3.75rem;
-        }
-        .iconGroup {
-            display: flex;
-            justify-content: center;
-            padding-right: 3.75rem;
-            gap: 1.87rem;
-        }
-    }
-
-    .graphContainer {
-        height: 100%;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        background: 'transparent';
-        padding-left: 1.25rem;
-        padding-right: 1.25rem;
-        padding-bottom: 1.25rem;
-        box-sizing: border-box;
-    }
+    background: transparent;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 1.25rem;
+    box-sizing: border-box;
+  }
 }
 
+/* Optional: styles applied when in native fullscreen mode */
+.graphWrapper:fullscreen {
+  /* Additional styling if needed */
+}
