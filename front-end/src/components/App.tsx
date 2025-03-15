@@ -55,7 +55,6 @@ const App = () => {
       {isNew ? <Sidebar /> : (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
-      
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>{successMessage.message}</div>
     
