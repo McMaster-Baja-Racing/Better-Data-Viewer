@@ -15,7 +15,6 @@ export const GraphWrapper = ({ title, children }: GraphWrapperProps) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleFullscreenToggle = async () => {
-    // If nothing is in fullscreen, request fullscreen on our wrapper element
     if (!document.fullscreenElement) {
       if (wrapperRef.current) {
         try {
@@ -26,7 +25,6 @@ export const GraphWrapper = ({ title, children }: GraphWrapperProps) => {
         }
       }
     } else {
-      // If already in fullscreen, exit it
       try {
         await document.exitFullscreen();
         setIsFullscreen(false);
@@ -36,7 +34,6 @@ export const GraphWrapper = ({ title, children }: GraphWrapperProps) => {
     }
   };
 
-  // Listen for native fullscreen changes to keep state in sync
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
