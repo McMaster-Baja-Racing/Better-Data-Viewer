@@ -11,11 +11,11 @@ import { File as CustomFile, DataViewerPreset, FileInformation } from '@types';
 interface PresetFilesModalProps {
   onClose: () => void;
   isOpen: boolean;
-  setBins: (fileKeys: string[]) => void;
-  preset: DataViewerPreset | null;
+  onSubmit: (fileKeys: string[], preset: DataViewerPreset) => void;
+  preset: DataViewerPreset;
 }
 
-export const PresetFilesModal = ({ onClose, isOpen, setBins, preset }: PresetFilesModalProps) => {
+export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFilesModalProps) => {
   // TODO: Adjust based on preset
   const [existingFiles, setExistingFiles] = useState<CustomFile[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<CustomFile[]>([]);
@@ -44,7 +44,7 @@ export const PresetFilesModal = ({ onClose, isOpen, setBins, preset }: PresetFil
     const fileKeys = selectedFiles.map((file) => file.key);
     fileKeys.push(...uploadedFiles.map((file) => file.name));
 
-    setBins(fileKeys);
+    onSubmit(fileKeys, preset);
     onClose();
   }
 
