@@ -12,8 +12,7 @@ import cx from 'classnames';
 import sidebarToggleCollapsed from '@assets/icons/sidebarToggleCollapsed.svg';
 import sidebarToggleExpanded from '@assets/icons/sidebarToggleExpanded.svg';
 import { onIconClick } from '@lib/navigationUtils';
-import { DownloadModal } from '@components/downloadModal/downloadModal';
-import { UploadModal } from '@components/uploadModal/uploadModal';
+import { useModal } from '../../ModalContext';
 
 // Sidebar item definition
 interface SidebarItemProps {
@@ -37,13 +36,10 @@ const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
 const Sidebar = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     const toggleSidebar = () => setIsExpanded(!isExpanded);
-    const [showDownload, setShowDownload] = useState(false);
-    const [showUpload, setShowUpload] = useState(false);
+    const { openModal } = useModal();
 
     return (
         <div className={cx(styles.sidebar, { [styles.expanded]: isExpanded })}>
-            <DownloadModal isOpen={showDownload} onClose={() => setShowDownload(false)} />
-            <UploadModal isOpen={showUpload} onClose={() => setShowUpload(false)} />
             <img className={styles.toggleExpanded} onClick={toggleSidebar} src={sidebarToggleExpanded} />
             <img className={styles.toggleCollapsed} onClick={toggleSidebar} src={sidebarToggleCollapsed} />
             <div className={styles.sidebarHeader}>
@@ -56,8 +52,8 @@ const Sidebar = () => {
             <div className={styles.bodyItems}>
                 <SidebarItem icon={homeIcon} text="Home" onClick={() => onIconClick('')}/>
                 <SidebarItem icon={bookmarkIcon} text="Bookmarked" onClick={() => console.log('bookmarked')}/>
-                <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => setShowUpload(true)}/>
-                <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => setShowDownload(true)}/>
+                <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => openModal('upload')}/>
+                <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => openModal('download')}/>
                 <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/>
             </div>
             <div className={styles.footerHeader}>

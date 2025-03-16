@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './styles/index.scss';
 import App from './components/App';
 import { ThemeProvider } from './ThemeContext';
+import { ModalProvider } from './ModalContext';
 import { RouterComponent } from '@lib/navigationUtils';
 
 const rootElement = document.getElementById('root');
@@ -15,9 +16,11 @@ const root = ReactDOM.createRoot(rootElement as HTMLElement);
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <RouterComponent>
-        <App />
-      </RouterComponent>
+      <ModalProvider>
+        <RouterComponent>
+          <App />
+        </RouterComponent>
+      </ModalProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

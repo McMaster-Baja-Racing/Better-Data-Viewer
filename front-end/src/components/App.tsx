@@ -13,7 +13,7 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
-import { Homepage } from '@pages/Homepage';
+import { Homepage } from '@pages/Homepage/Homepage';
 import Sidebar from './sidebar/Sidebar';
 
 const App = () => {

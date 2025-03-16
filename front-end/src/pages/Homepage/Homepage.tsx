@@ -3,14 +3,10 @@ import { PresetList } from "@components/presetList/PresetList"
 import { Footer } from "@components/Footer/Footer"
 import styles from "./Homepage.module.scss"
 import { DataViewerPreset } from "@types"
-import { PresetFilesModal } from "@components/presetFilesModal/PresetFilesModal"
-import { useState } from "react"
+import { useModal } from "../../ModalContext"
 
 export const Homepage = () => {
-  const handleClick = (preset: DataViewerPreset) => {
-    setPreset(preset);
-    setIsOpen(true);
-  }
+  const { openModal } = useModal();
 
   // TODO: Either pass this in from parent and pass to graphing page
   // or store in context
@@ -18,8 +14,9 @@ export const Homepage = () => {
     console.log(fileKeys);
   }
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [preset, setPreset] = useState<DataViewerPreset | null>(null);
+  const handleClick = (preset: DataViewerPreset) => {
+    openModal('preset', {setBins: setBins, preset: preset});
+  }
 
   return (
     <div className={styles.homepage}>
@@ -30,7 +27,6 @@ export const Homepage = () => {
       <div className={styles.footerWrapper}>
         <Footer />
       </div>
-      <PresetFilesModal isOpen={isOpen} onClose={() => setIsOpen(false)} setBins={setBins} preset={preset}/>
     </div>
   )
 
