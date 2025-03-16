@@ -13,6 +13,7 @@ if (!rootElement) {
 
 const root = ReactDOM.createRoot(rootElement as HTMLElement);
 
+// TODO: Re-add strict mode when we fix the API double calls
 root.render(
   <React.StrictMode>
     <ThemeProvider>

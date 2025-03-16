@@ -47,11 +47,13 @@ export const Homepage = () => {
       };
       chartInformations.push(chartInformation);
     }
+    // TODO: Handle multiple charts
     return chartInformations[0];
   }
 
   const onSubmit = (fileKeys: string[], preset: DataViewerPreset) => {
     const chartInformation = generateChartInformation(fileKeys, preset);
+    console.log(chartInformation, fileKeys, preset);
     navigate('dataview', {state: {chartInformation}});
   }
 
