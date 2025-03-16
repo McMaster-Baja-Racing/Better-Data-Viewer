@@ -58,9 +58,10 @@ export const TitleCard = () => {
         legend: {
             enabled: false
         },
-        series: chartData.map((data) => ({
+        series: chartData.map((data, index) => ({
             type: 'spline',
             data,
+            name: ['X', 'Y', 'Z'][index],
         })),
     };
     return (

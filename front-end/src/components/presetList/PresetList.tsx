@@ -9,7 +9,6 @@ interface PresetListProps {
 
 export const PresetList = ({ handleClick }: PresetListProps) => {
 
-  // TODO: Add onClick event to handle opening modals and passing in which preset is selected
   return (
     <div className={styles.presetListWrapper}>
       <h2 className={styles.title}>Presets</h2>

@@ -13,6 +13,7 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
+import { Homepage } from '@pages/Homepage';
 import Sidebar from './sidebar/Sidebar';
 
 const App = () => {
@@ -84,15 +85,7 @@ const App = () => {
         <Routes>
           <Route path="*" element={
           <>
-            <Views
-              viewInformation={viewInformation} 
-              setModal={setModal} 
-              setButtonID={setButtonID} 
-              numViews={numViews} 
-              videoTimestamp={videoTimestamp} 
-              setVideoTimestamp={setVideoTimestamp} 
-              video={video} 
-            />
+            < Homepage />
           </>
           }/>
           <Route path="/map" element={<MapChart />} />
