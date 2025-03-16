@@ -15,6 +15,7 @@ import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
 import { Homepage } from '@pages/Homepage/Homepage';
 import Sidebar from './sidebar/Sidebar';
+import { DataView } from '@pages/DataView/DataView';
 
 const App = () => {
   const location = useLocation();
@@ -83,11 +84,8 @@ const App = () => {
         {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
         {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
         <Routes>
-          <Route path="*" element={
-          <>
-            < Homepage />
-          </>
-          }/>
+          <Route path="*" element={<Homepage />}/>
+          <Route path="/dataview" element={<DataView />} />
           <Route path="/map" element={<MapChart />} />
           <Route path="/IMU" element={<ModelViewer />} />
           <Route path='/old' element={
