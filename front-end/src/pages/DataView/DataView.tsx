@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 export const DataView = () => {
   const location = useLocation();
   const { chartInformation } = (location.state || {}) as { chartInformation: ChartInformation };
+  console.log(chartInformation);
 
   return (
     <Chart 

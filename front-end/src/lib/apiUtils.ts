@@ -55,7 +55,7 @@ export const ApiUtil = {
    * @description Sends a GET request to the server to fetch all bins that have been uploaded.
    * @returns {Promise<string[]>} A promise that resolves to an array of bin names.
    */
-  getBins: async (): Promise<string[]> => {
+  getBins: async (): Promise<FileInformation[]> => {
     const response = await fetch(`${baseApiUrl}/files/listBins`);
     if (!response.ok) throw Error(response.statusText);
     return response.json();

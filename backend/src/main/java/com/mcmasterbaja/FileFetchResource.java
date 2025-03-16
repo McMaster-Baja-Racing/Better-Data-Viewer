@@ -113,19 +113,32 @@ public class FileFetchResource {
 
   @GET
   @jakarta.ws.rs.Path("/listBins")
-  public List<String> getFolders() {
-    logger.info("Getting all folders");
-
-    Path dir = Paths.get("csv");
-
-    List<String> folderNames =
-        storageService
-            .loadDirectories(dir)
-            .map(path -> path.toString().replace("\\", "/"))
-            .collect(Collectors.toList());
-
-    return folderNames;
+  public List<FileInformation> getFolders() {
+    logger.info("Getting file information for CSV folders");
+  
+    Path csvDir = Paths.get("csv");
+  
+    List<FileInformation> fileInformationList = storageService.loadDirectories(csvDir)
+        .map(relativeFolderPath -> {
+          // Resolve the folder's full path by prepending the csv directory.
+          Path fullFolderPath = csvDir.resolve(relativeFolderPath);
+          
+          // Calculate total size of all files within this folder.
+          long totalSize = storageService.loadAll(fullFolderPath)
+              .map(filePath -> fileMetadataService.getSize(filePath))
+              .reduce(0L, Long::sum);
+          
+          // Create a folder key relative to the csvDir.
+          String folderKey = csvDir.relativize(fullFolderPath).toString().replace("\\", "/");
+          
+          // Return a FileInformation with null headers and the aggregated size.
+          return new FileInformation(folderKey, null, totalSize);
+        })
+        .collect(Collectors.toList());
+  
+    return fileInformationList;
   }
+  
 
   @GET
   @jakarta.ws.rs.Path("/timespan/folder/{folderkey}")

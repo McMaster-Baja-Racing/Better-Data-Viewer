@@ -11,6 +11,7 @@ export const Homepage = () => {
   const navigate = useNavigate();
 
   const generateChartInformation = (fileKeys: string[], preset: DataViewerPreset) => {
+    const chartInformations: ChartInformation[] = [];
     for(const currGraph of preset.graphs) {
       const columns: Column[] = [];
       const analyze: ChartAnalyzerInformation = {
@@ -44,10 +45,9 @@ export const Homepage = () => {
           (file) => file.columns[0].timespan.start == null
         ),
       };
-
-      // TODO: Handle multiple charts
-      return chartInformation;
+      chartInformations.push(chartInformation);
     }
+    return chartInformations[0];
   }
 
   const onSubmit = (fileKeys: string[], preset: DataViewerPreset) => {

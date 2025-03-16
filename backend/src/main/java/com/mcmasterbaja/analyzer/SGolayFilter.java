@@ -6,8 +6,12 @@ import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
+
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import lombok.SneakyThrows;
@@ -57,15 +61,20 @@ public class SGolayFilter extends Analyzer {
 
   @Override
   @SneakyThrows
+  @OnAnalyzerException
   public void analyze(AnalyzerParams params) {
     extractParams(params);
     this.windowSize = Integer.parseInt(params.getOptions()[0]);
+    if (this.windowSize % 2 == 0) {
+      this.windowSize += 1;
+    }
     this.polynomialDegree = Integer.parseInt(params.getOptions()[1]);
-    this.dataBuffer = new CircularBuffer(windowSize);
+    this.dataBuffer = new CircularBuffer(this.windowSize);
     // Half the size of the data buffer so that when we write data, we write it in
     // the middle
     // (looking forwards and backwards)
-    this.timestampBuffer = new CircularBuffer(windowSize / 2);
+    this.timestampBuffer = new CircularBuffer(this.windowSize / 2);
+    
 
     logger.info(
         "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
@@ -73,23 +82,26 @@ public class SGolayFilter extends Analyzer {
             + " to "
             + super.outputFiles[0]
             + " with window size "
-            + windowSize
+            + this.windowSize
             + " and polynomial degree "
-            + polynomialDegree);
+            + this.polynomialDegree);
 
     getReader(
-        inputFiles[0],
+        this.inputFiles[0],
         reader -> {
           getWriter(
-              outputFiles[0],
+              this.outputFiles[0],
               writer -> {
-                savGolIO(reader, writer, inputColumns);
+                try {
+                  savGolIO(reader, writer, inputColumns);
+                } catch (Exception e) {
+                  logger.warn(e.getMessage(), e);
+                }
               });
         });
   }
 
-  @SneakyThrows
-  public void savGolIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) {
+  public void savGolIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) throws IOException, CsvValidationException{
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
