@@ -45,7 +45,7 @@ public class AccelCurveAnalyzer extends Analyzer {
     // golayParams.setOutputFiles(Arrays.copyOfRange(outputFiles, 0, 1));
     golayParams.generateOutputFileNames();
     this.outputFiles[0] = golayParams.getOutputFiles()[0];
-    golayParams.setOptions(new String[] {"300", "3"});
+    golayParams.setOptions(new String[] {"100", "3"});
     golayer.analyze(golayParams);
 
     Analyzer golayer2 = analyzerFactory.getAnalyzer(AnalyzerType.SGOLAY);
@@ -56,7 +56,7 @@ public class AccelCurveAnalyzer extends Analyzer {
     // golayParams2.setOutputFiles(Arrays.copyOfRange(outputFiles, 1, 2));
     golayParams2.generateOutputFileNames();
     this.outputFiles[1] = golayParams2.getOutputFiles()[0];
-    golayParams2.setOptions(new String[] {"300", "3"});
+    golayParams2.setOptions(new String[] {"100", "3"});
     golayer2.analyze(golayParams2);
 
     logger.info("Interpolating...");

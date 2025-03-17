@@ -23,7 +23,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
 
   useEffect(() => {
     const fetchFiles = async () => {
-      const files = await ApiUtil.getFolder('csv');
+      const files = await ApiUtil.getBins();
       setExistingFiles(apiToFiles(files));
     }
 
