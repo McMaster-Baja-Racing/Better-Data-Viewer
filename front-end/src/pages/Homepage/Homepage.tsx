@@ -53,7 +53,6 @@ export const Homepage = () => {
 
   const onSubmit = (fileKeys: string[], preset: DataViewerPreset) => {
     const chartInformation = generateChartInformation(fileKeys, preset);
-    console.log(chartInformation, fileKeys, preset);
     navigate('dataview', {state: {chartInformation}});
   }
 
