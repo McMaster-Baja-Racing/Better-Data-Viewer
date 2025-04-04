@@ -1,5 +1,6 @@
 import { ChartInformation } from "@types";
 import Chart from "@components/views/Chart/Chart";
+import { GraphWrapper } from "@components/graphWrapper/GraphWrapper";
 import { useLocation } from "react-router-dom";
 import { useMemo, useState } from "react";
 
@@ -18,10 +19,17 @@ export const DataView = () => {
   }), []);
 
   return (
-    <Chart 
-      chartInformation={data} 
-      video={video} 
-      videoTimestamp={0}
-    />
+    // TODO: Extract this title better
+    <GraphWrapper title={
+      chartInformation.files[0].columns[1].header 
+      + ' vs ' 
+      + chartInformation.files[0].columns[0].header
+    }>
+      <Chart 
+        chartInformation={data} 
+        video={video} 
+        videoTimestamp={0}
+      />
+    </GraphWrapper>
   );
 }
