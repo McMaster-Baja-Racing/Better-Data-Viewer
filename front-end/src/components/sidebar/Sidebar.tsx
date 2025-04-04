@@ -9,6 +9,7 @@ import settingsIcon from '@assets/icons/settings.svg';
 import accountIcon from '@assets/icons/account.svg';
 import newGraphIcon from '@assets/icons/newGraph2.svg';
 import cubeIcon from '@assets/icons/cubeOutline.svg';
+import historyIcon from '@assets/icons/history.svg';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
 import sidebarToggleCollapsed from '@assets/icons/sidebarToggleCollapsed.svg';
@@ -58,12 +59,13 @@ const Sidebar = ({ setModal }: SidebarProps) => {
             </div>
             <div className={styles.bodyItems}>
                 <SidebarItem icon={homeIcon} text="Home" onClick={() => onIconClick('')}/>
-                <SidebarItem icon={bookmarkIcon} text="Bookmarked" onClick={() => console.log('bookmarked')}/>
+                {/* <SidebarItem icon={bookmarkIcon} text="Bookmarked" onClick={() => console.log('bookmarked')}/> */}
                 <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => openModal('upload')}/>
                 <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => openModal('download')}/>
-                <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/>
+                {/* <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/> */}
                 <SidebarItem icon={cubeIcon} text="Model Viewer" onClick={() => onIconClick('IMU')}/>
                 <SidebarItem icon={newGraphIcon} text="Legacy Create Graph" onClick={() => setModal('Create')}/>
+                <SidebarItem icon={historyIcon} text="Legacy UI" onClick={() => onIconClick('old')}/>
             </div>
             <div className={styles.footerHeader}>
                 <span className={styles.footerTitle}>Settings</span>
