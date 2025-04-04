@@ -12,7 +12,7 @@ export const DataView = () => {
 
   // Store the chart information in state so it doesn't update on every render.
   const [data] = useState(chartInformation);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Memoize the video object to prevent re-creation on every render.
   const video = useMemo(() => ({
@@ -35,12 +35,12 @@ export const DataView = () => {
           }
             editOnClick={() => setIsOpen(!isOpen)}
           >
-            {/* <Chart 
+            <Chart 
               chartInformation={data}
               video={video}
               videoTimestamp={0}
-            /> */}
-            Oooga booga
+            />
+            
           </GraphWrapper>
         }
         sidebarContent={<div>Hai</div>}
