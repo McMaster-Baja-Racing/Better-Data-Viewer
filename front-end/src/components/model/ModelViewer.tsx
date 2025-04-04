@@ -35,7 +35,7 @@ const ModelViewer = () => {
   };
 
   useEffect(() => {
-    ApiUtil.getBins().then(bins => setBins(bins));
+    ApiUtil.getBins().then(bins => setBins(bins.map(bin => bin.key)));
   }, []);
 
   // Setup the replay controller
