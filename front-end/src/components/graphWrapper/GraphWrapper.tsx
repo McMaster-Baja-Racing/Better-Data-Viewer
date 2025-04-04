@@ -7,10 +7,11 @@ import threedots from '@assets/icons/threedots.svg';
 
 interface GraphWrapperProps {
   title: string;
+  editOnClick: () => void;
   children: ReactNode;
 }
 
-export const GraphWrapper = ({ title, children }: GraphWrapperProps) => {
+export const GraphWrapper = ({ title, editOnClick, children }: GraphWrapperProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -49,7 +50,7 @@ export const GraphWrapper = ({ title, children }: GraphWrapperProps) => {
       <div className={styles.editBar}>
         <div className={styles.title}>{title}</div>
         <div className={styles.iconGroup}>
-          <img src={write} className={styles.icon} alt="Write icon" />
+          <img src={write} className={styles.icon} alt="Edit Graph" onClick={editOnClick} />
           <img
             src={isFullscreen ? unfullscreenIcon : fullscreenIcon}
             className={styles.icon}
