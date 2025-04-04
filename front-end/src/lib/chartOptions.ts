@@ -34,9 +34,7 @@ const getStandardChartConfig = (chartInformation: ChartInformation) => {
 
   const chartConfig = defaultChartOptions;
 
-  chartConfig.title = {text: chartInformation.files[0].columns[1].header + 
-    ' vs ' + 
-    chartInformation.files[0].columns[0].header};
+
 
   chartConfig.chart = {
     type: chartInformation.type,
