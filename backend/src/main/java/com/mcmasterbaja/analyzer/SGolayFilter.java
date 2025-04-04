@@ -7,10 +7,8 @@ import com.mcmasterbaja.model.AnalyzerType;
 import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
-
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -74,7 +72,6 @@ public class SGolayFilter extends Analyzer {
     // the middle
     // (looking forwards and backwards)
     this.timestampBuffer = new CircularBuffer(this.windowSize / 2);
-    
 
     logger.info(
         "I so fussy wussy UwU. Applying Savitzky-Golay filter to "
@@ -101,7 +98,8 @@ public class SGolayFilter extends Analyzer {
         });
   }
 
-  public void savGolIO(CSVReader reader, ICSVWriter writer, String[] inputColumns) throws IOException, CsvValidationException{
+  public void savGolIO(CSVReader reader, ICSVWriter writer, String[] inputColumns)
+      throws IOException, CsvValidationException {
     String[] headers = reader.readNext();
     if (headers == null) {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
