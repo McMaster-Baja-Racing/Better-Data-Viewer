@@ -54,7 +54,7 @@ const App = () => {
 
   return (
     <div className={cx(styles.App, { [styles.new]: isNew })}>
-      {isNew ? <Sidebar /> : (
+      {isNew ? <Sidebar setModal={setModal}/> : (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
       )}
       <header className={styles.Body}>

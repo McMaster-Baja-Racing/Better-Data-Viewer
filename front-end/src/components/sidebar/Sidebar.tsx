@@ -7,6 +7,8 @@ import uploadIcon from '@assets/icons/upload.svg';
 import folderIcon from '@assets/icons/folder.svg';
 import settingsIcon from '@assets/icons/settings.svg';
 import accountIcon from '@assets/icons/account.svg';
+import newGraphIcon from '@assets/icons/newGraph2.svg';
+import cubeIcon from '@assets/icons/cubeOutline.svg';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
 import sidebarToggleCollapsed from '@assets/icons/sidebarToggleCollapsed.svg';
@@ -33,7 +35,12 @@ const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
     )
 }
 
-const Sidebar = () => {
+// TODO: Remove these props once custom modal is added back
+interface SidebarProps {
+    setModal: (modal: string) => void;
+}
+
+const Sidebar = ({ setModal }: SidebarProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const toggleSidebar = () => setIsExpanded(!isExpanded);
     const { openModal } = useModal();
@@ -55,6 +62,8 @@ const Sidebar = () => {
                 <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => openModal('upload')}/>
                 <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => openModal('download')}/>
                 <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/>
+                <SidebarItem icon={cubeIcon} text="Model Viewer" onClick={() => onIconClick('IMU')}/>
+                <SidebarItem icon={newGraphIcon} text="Legacy Create Graph" onClick={() => setModal('Create')}/>
             </div>
             <div className={styles.footerHeader}>
                 <span className={styles.footerTitle}>Settings</span>
