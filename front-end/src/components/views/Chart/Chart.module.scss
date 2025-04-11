@@ -1,6 +1,8 @@
 .chartContainer {
     height: 100%;
     width: 100%;
+    resize: both;
+    overflow: hidden;
 
     > * {
         font-family: "HelveticaNeueW01-77BdCnObl";

@@ -22,7 +22,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
         graphs: [
             {
                 axes: [
-                    { file: 'RPM SEC.csv', axis: 'RPM SEC' },
+                    { file: 'GPS SPEED.csv', axis: 'GPS SPEED' },
                     { file: 'RPM PRIM.csv', axis: 'RPM PRIM' },
                 ],
                 analyzer: AnalyzerType.ACCEL_CURVE,
