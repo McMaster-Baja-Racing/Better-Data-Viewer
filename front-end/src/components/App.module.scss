@@ -3,8 +3,13 @@
   font-family: "HelveticaNeueW01-77BdCnObl";
   height: calc(100vh);
   background-color: black; // will change this back!!!! just for testing on dark bg!!!!
+  
+  &.new {
+    display: flex;
+  }
 
   .Body {
+    width: 100%;
     height: calc(100vh - 5rem);
     background-color: #3d0202;
     display: flex;
@@ -12,6 +17,7 @@
     align-items: center;
     font-size: calc(10px + 2vmin);
     color: white;
+    height: 100vh;
 
     .success {
       padding: 15px;
@@ -88,6 +94,3 @@ button {
     background-color: rgb(238, 48, 86);
   }
 }
-
-
-

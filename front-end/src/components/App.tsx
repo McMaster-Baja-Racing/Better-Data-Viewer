@@ -14,6 +14,9 @@ import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
 import { DataSelect } from './dataSelect/dataSelect.js';
+import { Homepage } from '@pages/Homepage/Homepage';
+import Sidebar from './sidebar/Sidebar';
+import { DataView } from '@pages/DataView/DataView';
 
 const App = () => {
   const location = useLocation();
@@ -47,20 +50,20 @@ const App = () => {
     return () => clearTimeout(timer); 
   }, [successMessage]);
 
+  // Temp variable to maintain old styling on /old
+  const isNew = location.pathname == '/';
+
   return (
-    <div className={styles.App}>
-      {location.pathname !== "/" && (
-        <Topbar
-          setModal={setModal}
-          numViews={numViews}
-          setNumViews={setNumViews}
-        />
+    <div className={cx(styles.App, { [styles.new]: isNew })}>
+      {isNew ? <Sidebar /> : (
+        <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
+        
       )}
-      <DataSelect
-        sources={["All", "Meow", "Woof"]}
-        dataTypes={["Speed", "Mrreow", "MEw"]}
-      />{" "}
       <header className={styles.Body}>
+        <DataSelect
+          sources={["All", "Meow", "Woof"]}
+          dataTypes={["Speed", "Mrreow", "MEw"]}
+        />{" "}
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>
           {successMessage.message}
         </div>
@@ -95,33 +98,8 @@ const App = () => {
         {modal === "Download" ? <DownloadModal setModal={setModal} /> : null}
         {modal === "Help" ? <HelpModal setModal={setModal} /> : null}
         <Routes>
-          <Route
-            path="*"
-            element={
-              <Views
-                viewInformation={viewInformation}
-                setModal={setModal}
-                setButtonID={setButtonID}
-                numViews={numViews}
-                videoTimestamp={videoTimestamp}
-                setVideoTimestamp={setVideoTimestamp}
-                video={video}
-              />
-            }
-          />
-          <Route path="*" element={
-          <>
-            <Views
-              viewInformation={viewInformation} 
-              setModal={setModal} 
-              setButtonID={setButtonID} 
-              numViews={numViews} 
-              videoTimestamp={videoTimestamp} 
-              setVideoTimestamp={setVideoTimestamp} 
-              video={video} 
-            />
-          </>
-          }/>
+          <Route path="*" element={<Homepage />}/>
+          <Route path="/dataview" element={<DataView />} />
           <Route path="/map" element={<MapChart />} />
           <Route path="/IMU" element={<ModelViewer />} />
           <Route

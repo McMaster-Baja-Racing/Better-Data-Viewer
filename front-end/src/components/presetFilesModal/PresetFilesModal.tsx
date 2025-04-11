@@ -1,4 +1,4 @@
-import styles from './presetFilesModal.module.scss';
+import styles from './PresetFilesModal.module.scss';
 import { BaseModal } from '@components/baseModal/BaseModal';
 import { FileTable } from '@components/fileTable/FileTable';
 import { UploadForm } from '@components/uploadForm/UploadForm';
@@ -6,15 +6,17 @@ import { Button } from '@components/button/Button';
 import { useState, useEffect } from 'react';
 import rightArrow from '@assets/icons/arrow.svg';
 import { ApiUtil } from '@lib/apiUtils';
-import { File as CustomFile, FileInformation } from '@types';
+import { File as CustomFile, DataViewerPreset, FileInformation } from '@types';
 
 interface PresetFilesModalProps {
   onClose: () => void;
   isOpen: boolean;
-  setBins: (fileKeys: string[]) => void;
+  onSubmit: (fileKeys: string[], preset: DataViewerPreset) => void;
+  preset: DataViewerPreset;
 }
 
-export const PresetFilesModal = ({ onClose, isOpen, setBins }: PresetFilesModalProps) => {
+export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFilesModalProps) => {
+  // TODO: Adjust based on preset
   const [existingFiles, setExistingFiles] = useState<CustomFile[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<CustomFile[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -42,7 +44,7 @@ export const PresetFilesModal = ({ onClose, isOpen, setBins }: PresetFilesModalP
     const fileKeys = selectedFiles.map((file) => file.key);
     fileKeys.push(...uploadedFiles.map((file) => file.name));
 
-    setBins(fileKeys);
+    onSubmit(fileKeys, preset);
     onClose();
   }
 
