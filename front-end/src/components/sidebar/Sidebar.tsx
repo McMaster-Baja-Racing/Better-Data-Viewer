@@ -10,6 +10,7 @@ import accountIcon from '@assets/icons/account.svg';
 import newGraphIcon from '@assets/icons/newGraph2.svg';
 import cubeIcon from '@assets/icons/cubeOutline.svg';
 import historyIcon from '@assets/icons/history.svg';
+import mapIcon from '@assets/icons/map.svg';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
 import sidebarToggleCollapsed from '@assets/icons/sidebarToggleCollapsed.svg';
@@ -36,7 +37,7 @@ const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
     )
 }
 
-// TODO: Remove these props once custom modal is added back
+// TODO: Remove these props once custom modal is reworked
 interface SidebarProps {
     setModal: (modal: string) => void;
 }
@@ -64,6 +65,7 @@ const Sidebar = ({ setModal }: SidebarProps) => {
                 <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => openModal('download')}/>
                 {/* <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/> */}
                 <SidebarItem icon={cubeIcon} text="Model Viewer" onClick={() => onIconClick('IMU')}/>
+                <SidebarItem icon={mapIcon} text="Map" onClick={() => onIconClick('map')}/>
                 <SidebarItem icon={newGraphIcon} text="Legacy Create Graph" onClick={() => setModal('Create')}/>
                 <SidebarItem icon={historyIcon} text="Legacy UI" onClick={() => onIconClick('old')}/>
             </div>
