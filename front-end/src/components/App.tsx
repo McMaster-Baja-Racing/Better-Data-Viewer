@@ -13,7 +13,6 @@ import Chart from './views/Chart/Chart';
 import MapChart from './map/MapChart/MapChart';
 import cx from 'classnames';
 import ModelViewer from './model/ModelViewer';
-import { DataSelect } from './dataSelect/dataSelect.js';
 import { Homepage } from '@pages/Homepage/Homepage';
 import Sidebar from './sidebar/Sidebar';
 import { DataView } from '@pages/DataView/DataView';
@@ -60,10 +59,6 @@ const App = () => {
         
       )}
       <header className={styles.Body}>
-        <DataSelect
-          sources={["All", "Meow", "Woof"]}
-          dataTypes={["Speed", "Mrreow", "MEw"]}
-        />{" "}
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>
           {successMessage.message}
         </div>

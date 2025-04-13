@@ -1,0 +1,7 @@
+@use '@styles/_fonts';
+
+.title {
+  @include fonts.title-medium;
+  color: var(--text-colour);
+  margin: 1rem 0;
+}

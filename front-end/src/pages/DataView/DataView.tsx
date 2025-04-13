@@ -5,6 +5,7 @@ import { RightSidebar } from "@components/rightSidebar/RightSidebar";
 import { useLocation } from "react-router-dom";
 import { useMemo, useState } from "react";
 import styles from "./DataView.module.scss";
+import { DataSelect } from "@components/dataSelect/dataSelect";
 
 export const DataView = () => {
   const location = useLocation();
@@ -35,15 +36,52 @@ export const DataView = () => {
           }
             editOnClick={() => setIsOpen(!isOpen)}
           >
-            <Chart 
+            {/* <Chart 
               chartInformation={data}
               video={video}
               videoTimestamp={0}
-            />
+            /> */}
+            Yeoooo
             
           </GraphWrapper>
         }
-        sidebarContent={<div>Hai</div>}
+        sidebarContent={
+          <>
+          <div className={styles.title}>
+            {"oooga booooga"}
+          </div>
+          <DataSelect
+          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+        />
+        <DataSelect
+          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+        />
+        <DataSelect
+          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+        />
+        <DataSelect
+          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+        />
+        <DataSelect
+          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+        />
+        <DataSelect
+          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+        />
+        <DataSelect
+          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
+        />
+
+        </>
+        
+        }
       />
   );
 }

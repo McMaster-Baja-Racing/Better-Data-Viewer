@@ -24,7 +24,7 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
     const handleMouseMove = (event: MouseEvent) => {
       if (!isResizing.current) return;
       const newWidth = window.innerWidth - event.clientX;
-      if (newWidth > MIN_WIDTH && newWidth < MAX_WIDTH) setWidth(newWidth); // Limit resize range
+      if (newWidth > MIN_WIDTH && newWidth < MAX_WIDTH) setWidth(newWidth);
     };
 
     const handleMouseUp = () => {
@@ -53,7 +53,9 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
         <button className={styles.closeButton} onClick={() => setIsOpen(false)}>
           <img src={closeIcon} alt="Close sidebar" />
         </button>
-        {sidebarContent}
+        <div className={styles.sidebarContent}>
+          {sidebarContent}
+        </div>
       </div>
     </div>
   )
