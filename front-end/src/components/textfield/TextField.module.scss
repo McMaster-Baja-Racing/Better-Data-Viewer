@@ -13,7 +13,7 @@
     align-items: center;
     background-color: var(--light-grey);
     border-radius: 8px;
-    padding: 0.5rem;
+    padding: 0.75rem;
    
 
     .title {
@@ -29,7 +29,7 @@
       flex-grow: 1;
       padding-left: 1rem;
       text-align: left;
-      width: 100%;
+
 
       &::placeholder {
         color: var(--alt-text);

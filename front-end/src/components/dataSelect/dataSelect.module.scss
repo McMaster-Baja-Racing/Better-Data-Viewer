@@ -7,38 +7,37 @@ $border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-}
 
-.row {
-    display: flex;
-    gap: 1rem;
-    align-items: center; 
-}
+    .row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
 
-.column {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; 
-}
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
 
-.label {
-    color: var(--alt-text);
-    @include fonts.text-small;
-    display: block;
-    margin-bottom: 0.25rem;
-}
+            .toggle {
+                @include fonts.text-large;
+                background-color: var(--light-grey);
+            
+                &:hover {
+                    background-color: var(--light-grey);
+                }
+            }
 
-.toggle {
-    @include fonts.text-medium;
-    min-width: 15rem;
-    border-radius: $border-radius;
-    background-color: var(--light-grey);
-    color: var(--text-colour);
-    width: 240px;
-    cursor: pointer;
-    position: relative;
-
-    &:hover {
-        background-color: var(--light-grey);
+            .label {
+                color: var(--alt-text);
+                @include fonts.text-small;
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+        }
     }
 }
+
+
+
+
+
