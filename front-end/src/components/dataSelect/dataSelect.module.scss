@@ -20,12 +20,17 @@ $border-radius: 0.5rem;
             align-items: flex-start;
 
             .longDropDown {
-                width: 17.75rem;
+                width: 16.75rem;
             }
 
             .toggle {
-                @include fonts.text-large;
+                @include fonts.text-medium;
                 background-color: var(--light-grey);
+
+                img {
+                    width: 1.25rem;
+                    height: 1.5rem;
+                }
             
                 &:hover {
                     background-color: var(--light-grey);
@@ -40,9 +45,12 @@ $border-radius: 0.5rem;
             }
         }
     }
+
+    .deleteIcon {
+        width: 2rem;
+        height: 2rem;
+    }
 }
-
-
 
 
 

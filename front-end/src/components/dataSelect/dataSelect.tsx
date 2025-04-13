@@ -4,9 +4,9 @@ import { Dropdown } from '@components/dropdown/Dropdown';
 import { Button } from '@components/button/Button';
 import TextField from '@components/textfield/TextField';
 import sigma from '@assets/icons/sigma.svg';
-import plus from '@assets/icons/plus.svg';
-import minus from '@assets/icons/minus.svg';
-import close from '@assets/icons/close.svg';
+import plus from '@assets/icons/add.svg';
+import minus from '@assets/icons/remove.svg';
+import trash from '@assets/icons/trash.svg';
 import analyzerData from '@components/analyzerData';
 
 interface DataSelectProps {
@@ -52,25 +52,26 @@ export function DataSelect({ sources, dataTypes }: Readonly<DataSelectProps>) {
                 <div className={styles.column}>
                     <label className={styles.label}>Analyzer</label>
                     <Button className={styles.toggle} onClick={() => setIsExpanded(!isExpanded)} >
-                        {isExpanded ? 'Σ−' : 'Σ+'}
+                        <img src={sigma} alt="analyzer" className={styles.analyzerIcon} />
+                        <img src={isExpanded ? minus : plus} alt="toggle" className={styles.toggleIcon} />
                     </Button>
                 </div>
             </div>
             {isExpanded && (
                 <div className={styles.row}>
                     <div className={styles.column}>
-                        <label className={styles.label}>Data Type</label>
+                        <label className={styles.label}>Analyzer Type</label>
                         <Dropdown options={analyzerOptions} selected={analyzer} setSelected={setAnalyzer} />
                     </div>
                     {analyzer.parameters.map((param, index) => (
-                        <div className={styles.column}>
+                        <div className={styles.column} key={index}>
                             <label className={styles.label}>Options</label>
-                            <TextField title={param.name} value="" setValue={() => {}}/>
+                            <TextField title={param.name} value="" setValue={() => {}} placeholder={param.default}/>
                         </div>
                     ))}
-                    
                 </div>
             )}
+        <img src={trash} alt="delete" className={styles.deleteIcon}/>
         </div>
     );
 }
