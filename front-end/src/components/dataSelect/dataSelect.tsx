@@ -43,11 +43,11 @@ export function DataSelect({ sources, dataTypes }: Readonly<DataSelectProps>) {
             <div className={styles.row}>
                 <div className={styles.column}>
                     <label className={styles.label}>Source</label>
-                    <Dropdown options={sources2} selected={selectedSource} setSelected={setSelectedSource} />
+                    <Dropdown options={sources2} selected={selectedSource} setSelected={setSelectedSource} className={styles.longDropDown}/>
                 </div>
                 <div className={styles.column}>
                     <label className={styles.label}>Data Type</label>
-                    <Dropdown options={dataTypes2} selected={selectedDataType} setSelected={setSelectedDataType} />
+                    <Dropdown options={dataTypes2} selected={selectedDataType} setSelected={setSelectedDataType} className={styles.longDropDown}/>
                 </div>
                 <div className={styles.column}>
                     <label className={styles.label}>Analyzer</label>
@@ -60,13 +60,12 @@ export function DataSelect({ sources, dataTypes }: Readonly<DataSelectProps>) {
                 <div className={styles.row}>
                     <div className={styles.column}>
                         <label className={styles.label}>Data Type</label>
-                        {/* //TODO: Update to have codes as key value pair */}
                         <Dropdown options={analyzerOptions} selected={analyzer} setSelected={setAnalyzer} />
                     </div>
                     {analyzer.parameters.map((param, index) => (
                         <div className={styles.column}>
                             <label className={styles.label}>Options</label>
-                            <TextField title={param.name} value="" setValue={() => {}} />
+                            <TextField title={param.name} value="" setValue={() => {}}/>
                         </div>
                     ))}
                     

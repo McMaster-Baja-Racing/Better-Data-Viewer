@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styles from './Dropdown.module.scss';
 import chevronDown from '@assets/icons/chevronDown.svg';
+import cx from 'classnames';
 
 export interface DropdownOption<T> {
   value: T;
@@ -12,10 +13,10 @@ interface DropdownProps<T> {
   selected: T;
   setSelected: (selected: T) => void;
   width?: string;
+  className?: string;
 }
 
-// Use select dropdown
-export const Dropdown = <T,>({ options, selected, setSelected, width }: DropdownProps<T>) => {
+export const Dropdown = <T,>({ options, selected, setSelected, width, className }: DropdownProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionClick = (option: T, event: React.MouseEvent) => {
@@ -28,7 +29,7 @@ export const Dropdown = <T,>({ options, selected, setSelected, width }: Dropdown
 
   return (
     <div 
-      className={`${styles.dropdown} ${isOpen ? styles.open : ''}`} 
+      className={cx(styles.dropdown, {[styles.open]: isOpen}, className)} 
       style={{ width }}
       onClick={() => setIsOpen((prev) => !prev)}
     >
