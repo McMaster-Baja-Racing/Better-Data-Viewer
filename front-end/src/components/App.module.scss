@@ -9,14 +9,13 @@
 
   .Body {
     width: 100%;
-    height: calc(100vh - 5rem);
+    height: 100%;
     background-color: #3d0202;
     display: flex;
     flex-direction: column;
     align-items: center;
     font-size: calc(10px + 2vmin);
     color: white;
-    height: 100vh;
 
     .success {
       padding: 15px;

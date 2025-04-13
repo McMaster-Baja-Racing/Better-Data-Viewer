@@ -13,6 +13,7 @@ import VideoPlayer from '@components/views/VideoPlayer/VideoPlayer';
 import { replaceViewAtIndex } from '@lib/viewUtils';
 import { filterFiles } from '@lib/videoUtils';
 import { ApiUtil } from '@lib/apiUtils';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const CreateGraphModal = ({
   setModal,
@@ -37,7 +38,8 @@ export const CreateGraphModal = ({
   const [videoTimespans, setvideoTimespans] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState({ key: '', start: '', end: '' });
   const [fileTimespans, setfileTimespans] = useState([]);
-
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Fetch data when the component mounts
@@ -99,6 +101,10 @@ export const CreateGraphModal = ({
     }
 
     setViewInformation(updatedViewInformation);
+
+    if (location.pathname !== '/old') {
+      navigate('dataview', {state: {chartInformation}});
+    }
   }, [
     buttonID,
     selectedFiles,
