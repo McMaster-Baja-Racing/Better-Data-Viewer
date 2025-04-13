@@ -15,8 +15,8 @@ interface DataSelectProps {
 }
 
 export function DataSelect({ sources, dataTypes }: Readonly<DataSelectProps>) {
-    const [selectedSource, setSelectedSource] = useState<string>(sources[0].value || '');
-    const [selectedDataType, setSelectedDataType] = useState<string>(dataTypes[0].value || '');
+    const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
+    const [selectedDataType, setSelectedDataType] = useState<string>(dataTypes[0].value);
     const [analyzer, setAnalyzer] = useState(analyzerData[0] || '');
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -30,35 +30,61 @@ export function DataSelect({ sources, dataTypes }: Readonly<DataSelectProps>) {
             <div className={styles.row}>
                 <div className={styles.column}>
                     <label className={styles.label}>Source</label>
-                    <Dropdown options={sources} selected={selectedSource} setSelected={setSelectedSource} className={styles.longDropDown}/>
+                    <Dropdown
+                        options={sources}
+                        selected={selectedSource}
+                        setSelected={setSelectedSource}
+                        className={styles.longDropDown}
+                    />
                 </div>
                 <div className={styles.column}>
                     <label className={styles.label}>Data Type</label>
-                    <Dropdown options={dataTypes} selected={selectedDataType} setSelected={setSelectedDataType} className={styles.longDropDown}/>
+                    <Dropdown
+                        options={dataTypes}
+                        selected={selectedDataType}
+                        setSelected={setSelectedDataType}
+                        className={styles.longDropDown}
+                    />
                 </div>
                 <div className={styles.column}>
                     <label className={styles.label}>Analyzer</label>
-                    <Button className={styles.toggle} onClick={() => setIsExpanded(!isExpanded)} >
+                    <Button
+                        className={styles.toggle}
+                        onClick={() => setIsExpanded(!isExpanded)}
+                    >
                         <img src={sigma} alt="analyzer" className={styles.analyzerIcon} />
-                        <img src={isExpanded ? minus : plus} alt="toggle" className={styles.toggleIcon} />
+                        <img
+                            src={isExpanded ? minus : plus}
+                            alt="toggle"
+                            className={styles.toggleIcon}
+                        />
                     </Button>
                 </div>
             </div>
-            {isExpanded && (
+            <div className={`${styles.analyzerOptions} ${isExpanded ? styles.expanded : ''}`}>
                 <div className={styles.row}>
                     <div className={styles.column}>
                         <label className={styles.label}>Analyzer Type</label>
-                        <Dropdown options={analyzerOptions} selected={analyzer} setSelected={setAnalyzer} />
+                        <Dropdown
+                            options={analyzerOptions}
+                            selected={analyzer}
+                            setSelected={setAnalyzer}
+                        />
                     </div>
                     {analyzer.parameters.map((param, index) => (
                         <div className={styles.column} key={index}>
                             <label className={styles.label}>Options</label>
-                            <TextField title={param.name} value="" setValue={() => {}} placeholder={param.default}/>
+                            <TextField
+                                title={param.name}
+                                value=""
+                                setValue={() => {}}
+                                placeholder={param.default}
+                            />
                         </div>
                     ))}
                 </div>
-            )}
-        <img src={trash} alt="delete" className={styles.deleteIcon}/>
+            </div>
+            <img src={trash} alt="delete" className={styles.deleteIcon} />
         </div>
     );
 }

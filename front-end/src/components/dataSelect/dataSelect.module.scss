@@ -1,7 +1,8 @@
 @use '@styles/_fonts';
 @use '@styles/_variables';
 
-$border-radius: 0.5rem;
+$transition-duration: 0.3s;
+$row-height: 4.5rem;
 
 .dataSelect {
     display: flex;
@@ -31,7 +32,7 @@ $border-radius: 0.5rem;
                     width: 1.25rem;
                     height: 1.5rem;
                 }
-            
+                
                 &:hover {
                     background-color: var(--light-grey);
                 }
@@ -46,11 +47,20 @@ $border-radius: 0.5rem;
         }
     }
 
+    .analyzerOptions {
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: height $transition-duration ease, opacity $transition-duration ease;
+
+        &.expanded {
+            height: $row-height;
+            opacity: 1;
+        }
+    }
+
     .deleteIcon {
         width: 2rem;
         height: 2rem;
     }
 }
-
-
-
