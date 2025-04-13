@@ -10,8 +10,9 @@ export const FileSelectionPage = ({ handleNextPage }: {handleNextPage: (file: st
   const [fileList, setFileList] = useState<string[]>([]);
   useEffect(()=>{
     ApiUtil.getBins().then(list => {
-      setFileList(list);
-      setSelectedFile(list[0]);
+      const newList = list.map((file) => file.key);
+      setFileList(newList);
+      setSelectedFile(newList[0]);
     })
   }, []);
   return (

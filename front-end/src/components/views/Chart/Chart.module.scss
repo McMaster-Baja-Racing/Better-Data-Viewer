@@ -1,9 +1,8 @@
 .chartContainer {
+    height: 100%;
+    width: 100%;
     resize: both;
     overflow: hidden;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
 
     > * {
         font-family: "HelveticaNeueW01-77BdCnObl";
@@ -27,9 +26,7 @@
     }
 
     .chart {
-        position: relative;
-        overflow: hidden;
-
+        
         :global(.highcharts-root) {
             font-family: "HelveticaNeueW01-77BdCnObl" !important;
         }

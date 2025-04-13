@@ -3,7 +3,7 @@ import styles from './RightSidebar.module.scss';
 import cx from 'classnames';
 import closeIcon from '@assets/icons/close.svg';
 
-const MAX_WIDTH = 1250;
+const MAX_WIDTH = 1000;
 const MIN_WIDTH = 300;
 
 interface RightSidebarProps {

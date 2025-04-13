@@ -85,14 +85,27 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     refreshRate: 100,
   });
 
+  useEffect(() => {
+    const handleWindowResize = () => {
+      if (chartRef.current) {
+        chartRef.current.reflow();
+      }
+    };
+    window.addEventListener('resize', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
+
   return (
-    <div className={styles.chartContainer} ref={ref}>
+    <div className={styles.chartContainer}>
       {syncedDataPoints.length > 0 ? (<div className={styles.valueBox}>{syncedDataPoints.join('\n')}</div>) : null}
-      <div className={styles.chart}>
+      <div className={styles.chart} style={{ height: "100%", width: '100%' }}>
         <HighchartsReact
           highcharts={Highcharts}
           options={chartOptions}
           callback={(chart: ChartType) => { chartRef.current = chart; }}
+          containerProps={{ style: { height: '100%', width: '100%' } }}  
         />
       </div>
       {loading && <img className={styles.loading} src={loadingImg} alt="Loading..." />}

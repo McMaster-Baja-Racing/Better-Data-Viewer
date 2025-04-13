@@ -13,8 +13,9 @@ if (!rootElement) {
 
 const root = ReactDOM.createRoot(rootElement as HTMLElement);
 
+// TODO: Re-add strict mode when we fix the API double calls
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ThemeProvider>
       <ModalProvider>
         <RouterComponent>
@@ -22,7 +23,7 @@ root.render(
         </RouterComponent>
       </ModalProvider>
     </ThemeProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

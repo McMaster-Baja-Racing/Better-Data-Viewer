@@ -51,11 +51,11 @@ const App = () => {
   }, [successMessage]);
 
   // Temp variable to maintain old styling on /old
-  const isNew = location.pathname == '/';
+  const isNew = location.pathname == '/' || location.pathname == '/dataview';
 
   return (
     <div className={cx(styles.App, { [styles.new]: isNew })}>
-      {isNew ? <Sidebar /> : (
+      {isNew ? <Sidebar setModal={setModal}/> : (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
         
       )}
