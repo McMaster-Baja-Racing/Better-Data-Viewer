@@ -14,7 +14,7 @@ interface ButtonProps {
 export const Button = ({ onClick, children, primary = true, paddingX, paddingY, textSize, className }: ButtonProps) => {
   return (
     <button
-      className={cx(styles.button, { [styles.primary]: primary }, className)}
+      className={cx(styles.button, {[styles.primary]: primary}, className)}
       onClick={onClick}
       style={{
         paddingLeft: `${paddingX}`,

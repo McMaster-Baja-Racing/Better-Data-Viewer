@@ -8,8 +8,22 @@
 
 import { images } from '../lib/assets.js';
 
+interface analyzerData {
+  title: string;
+  code: string | null;
+  parameters: { name: string; default: string }[];
+  checked?: boolean;
+  description: string;
+  image: {
+    link: string;
+    alt: string;
+    src?: string;
+  };
+  links: { title: string; link: string }[];
+}
+
 // probably too verbose to put in the actual code
-const analyzerData = [
+const analyzerData: analyzerData[] = [
   {
     title: 'No Analyzer.',
     code: null,
@@ -115,7 +129,7 @@ const analyzerData = [
   {
     title: 'Split',
     code: 'SPLIT',
-    parameters: [{ name: 'Start', default: '0' }, { name: 'End', default: null }],
+    parameters: [{ name: 'Start', default: '0' }, { name: 'End', default: '' }],
     description: 'Splits the data into two parts, given a start and end point (timestamp)',
     image: {
       link: 'split.png',
