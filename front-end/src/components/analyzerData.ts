@@ -6,11 +6,12 @@
 
 // importAll(require.context('../assets/help', false, /\.(png|jpe?g|svg|gif)$/));
 
+import { AnalyzerType } from '@types';
 import { images } from '../lib/assets.js';
 
 interface analyzerData {
   title: string;
-  code: string | null;
+  code: AnalyzerType | null;
   parameters: { name: string; default: string }[];
   checked?: boolean;
   description: string;
@@ -43,7 +44,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Acceleration Curve Tool',
-    code: 'ACCEL_CURVE',
+    code: AnalyzerType.ACCEL_CURVE,
     parameters: [],
     description: 'Given both primary (on y-axis) and secondary (x-axis) RPM values, this tool will first apply a noise reduction algorithm, and then interpolate between them to achieve a graph that displays the shift curve. ',
     image: {
@@ -60,7 +61,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Ultimate Smoothener',
-    code: 'SGOLAY',
+    code: AnalyzerType.ROLL_AVG,
     parameters: [{ name: 'Window Size', default: '100' }, { name: 'Polynomial Order', default: '3' }],
     description: 'Implements the Savitzky-Golay algorithm in order to smooth out a curve. This is a very powerful tool that can help capture many trends not visible. Input variables are the window and polynomial order.',
     image: {
@@ -77,7 +78,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Interpolation',
-    code: 'INTERPOLATER_PRO',
+    code: AnalyzerType.INTERPOLATER_PRO,
     parameters: [], // One day should take in column
     description: 'Interpolation is the act of adding new data points between existing data points. This is useful for making data more readable, or for making it easier to compare data sets. This is implemented linearly.',
     image: {
@@ -94,7 +95,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Moving Average',
-    code: 'ROLL_AVG',
+    code: AnalyzerType.ROLL_AVG,
     parameters: [{ name: 'WindowSize', default: '100' }],
     description: 'Given noisy data, this will take the average over a window of points. This should help reduce noise, but can add other imperfections.',
     image: {
@@ -111,7 +112,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Compression',
-    code: 'RDP_COMPRESSION',
+    code: AnalyzerType.RDP_COMPRESSION,
     parameters: [{ name: 'Epsilon', default: '0.1' }],
     description: 'The Ramer-Douglas-Peucker algorithm helps simplify a curve by removing some of its points while keeping its overall shape intact. It\'s a handy tool for looking at large files!',
     image: {
@@ -128,7 +129,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Split',
-    code: 'SPLIT',
+    code: AnalyzerType.SPLIT,
     parameters: [{ name: 'Start', default: '0' }, { name: 'End', default: '' }],
     description: 'Splits the data into two parts, given a start and end point (timestamp)',
     image: {
@@ -145,7 +146,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Linear Multiply.',
-    code: 'LINEAR_MULTIPLY',
+    code: AnalyzerType.LINEAR_MULTIPLY,
     parameters: [{ name: 'Multiplier', default: '1' }, { name: 'Offset', default: '0' }],
     description: 'Given a multiplier and offset, this will multiply the data by the multiplier and add the offset.',
     image: {
@@ -166,7 +167,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Cubic Multiply.',
-    code: 'CUBIC',
+    code: AnalyzerType.CUBIC,
     parameters: [{ name: 'A', default: '1' }, { name: 'B', default: '1' }, { name: 'C', default: '1' }, { name: 'D', default: '1' }],
     description: 'Given the coefficients of a cubic function, this will pass the data into the cubic function.',
     image: {
@@ -182,7 +183,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Delete Outliers',
-    code: 'DELETE_OUTLIER',
+    code: AnalyzerType.DELETE_OUTLIER,
     parameters: [{ name: 'Threshold', default: '1' }],
     description: 'Given a threshold, this will remove any points that are outside of the threshold.',
     image: {

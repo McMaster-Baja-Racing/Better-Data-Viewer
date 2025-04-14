@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './dataSelect.module.scss';
 import { Dropdown, DropdownOption } from '@components/dropdown/Dropdown';
 import { Button } from '@components/button/Button';
@@ -8,22 +8,54 @@ import plus from '@assets/icons/add.svg';
 import minus from '@assets/icons/remove.svg';
 import trash from '@assets/icons/trash.svg';
 import analyzerData from '@components/analyzerData';
+import { AnalyzerType, ChartFileInformation, Column } from '@types';
 
 interface DataSelectProps {
     sources: DropdownOption<string>[];
     dataTypes: DropdownOption<string>[];
+    chartFileInformation: ChartFileInformation;
+    bins: string[];
+    onColumnUpdate: (columnIndex: number, updatedColumn: Partial<Column>) => void;
+    onAnalyzerUpdate: (analyzerType?: AnalyzerType, analyzerValues?: string[]) => void;
 }
 
-export function DataSelect({ sources, dataTypes }: Readonly<DataSelectProps>) {
+export function DataSelect({ sources, dataTypes, onAnalyzerUpdate, onColumnUpdate }: DataSelectProps) {
     const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
     const [selectedDataType, setSelectedDataType] = useState<string>(dataTypes[0].value);
     const [analyzer, setAnalyzer] = useState(analyzerData[0] || '');
     const [isExpanded, setIsExpanded] = useState(false);
+    const [analyzerValues, setAnalyzerValues] = useState<string[]>(
+        (analyzer && analyzer.parameters) ? analyzer.parameters.map(param => param.default) : []
+    );
 
     const analyzerOptions = analyzerData.map(analyzer => ({
         label: analyzer.title,
         value: analyzer
     }));
+
+    useEffect(() => {
+        onAnalyzerUpdate(analyzer?.code ?? undefined, analyzerValues);
+    }, [analyzer, analyzerValues]);
+
+    useEffect(() => {
+        onColumnUpdate(0, { filename: selectedSource + '/' + selectedDataType + '.csv', header: selectedDataType });
+    }, [selectedSource, selectedDataType]);
+
+    useEffect(() => {
+        if (analyzer && analyzer.parameters) {
+            setAnalyzerValues(analyzer.parameters.map(param => param.default));
+        } else {
+            setAnalyzerValues([]);
+        }
+    }, [analyzer]);
+
+    const handleParameterChange = (index: number, newValue: string) => {
+        setAnalyzerValues(prevValues => {
+          const updatedValues = [...prevValues];
+          updatedValues[index] = newValue;
+          return updatedValues;
+        });
+      };
 
     return (
         <div className={styles.dataSelect}>
@@ -73,11 +105,11 @@ export function DataSelect({ sources, dataTypes }: Readonly<DataSelectProps>) {
                     </div>
                     {analyzer.parameters.map((param, index) => (
                         <div className={styles.column} key={index}>
-                            <label className={styles.label}>Options</label>
+                            <label className={styles.label}>{param.name}</label>
                             <TextField
                                 title={param.name}
-                                value=""
-                                setValue={() => {}}
+                                value={analyzerValues[index] || ''}
+                                setValue={(newVal: string) => handleParameterChange(index, newVal)}
                                 placeholder={param.default}
                             />
                         </div>

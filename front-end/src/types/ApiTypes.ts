@@ -29,3 +29,21 @@ export enum AnalyzerType {
   SPLIT = 'SPLIT',
   DELETE_OUTLIER = 'DELETE_OUTLIER',
 }
+
+// Define the constant array with all valid values
+export const dataTypesArray = [
+  "BATT PERC",
+  "BATT VOLT",
+  "BRAKE PRES",
+  "GPS ANGLE",
+  "GPS DAY MONTH YEAR",
+  "GPS LATITUDE",
+  "GPS LONGITUDE",
+  "GPS SECOND MINUTE HOUR",
+  "GPS SPEED",
+  "PRM PRIM",
+  "PRM SEC"
+] as const;
+
+// Derive the union type from the array
+export type DataTypes = typeof dataTypesArray[number];

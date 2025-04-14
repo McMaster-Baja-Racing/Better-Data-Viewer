@@ -50,7 +50,6 @@ $row-height: 4.5rem;
     .analyzerOptions {
         height: 0;
         opacity: 0;
-        overflow: hidden;
         transition: height $transition-duration ease, opacity $transition-duration ease;
 
         &.expanded {

@@ -1,19 +1,32 @@
-import { ChartInformation } from "@types";
+import { ChartInformation, DataTypes, dataTypesArray } from "@types";
 import Chart from "@components/views/Chart/Chart";
 import { GraphWrapper } from "@components/graphWrapper/GraphWrapper";
 import { RightSidebar } from "@components/rightSidebar/RightSidebar";
 import { useLocation } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import styles from "./DataView.module.scss";
 import { DataSelect } from "@components/dataSelect/dataSelect";
+import { chartInformationReducer } from "@lib/chartInformationReducer";
+
 
 export const DataView = () => {
   const location = useLocation();
   const { chartInformation } = (location.state || {}) as { chartInformation: ChartInformation };
 
   // Store the chart information in state so it doesn't update on every render.
-  const [data] = useState(chartInformation);
+  const [chartDataState, dispatch] = useReducer(chartInformationReducer, chartInformation);;
+  const [bins, setBins] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const tempBins = chartDataState.files.map((file) => {
+      return file.columns.map((column) => {
+        return column.filename.split('/')[0]
+      })
+    });
+    const uniqueBins = [...new Set(tempBins.flat())];
+    setBins(uniqueBins);
+  }, [chartDataState]);  
 
   // Memoize the video object to prevent re-creation on every render.
   const video = useMemo(() => ({
@@ -22,6 +35,9 @@ export const DataView = () => {
     end: new Date()
   }), []);
 
+  if (!chartDataState || bins.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     // TODO: Extract this title better
@@ -30,9 +46,9 @@ export const DataView = () => {
         setIsOpen={setIsOpen}
         mainContent={
           <GraphWrapper title={
-            chartInformation.files[0].columns[1].header 
+            chartDataState.files[0].columns[1].header 
             + ' vs ' 
-            + chartInformation.files[0].columns[0].header
+            + chartDataState.files[0].columns[0].header
           }
             editOnClick={() => setIsOpen(!isOpen)}
           >
@@ -48,36 +64,22 @@ export const DataView = () => {
         sidebarContent={
           <>
           <div className={styles.title}>
-            {"oooga booooga"}
+            {"Oooga booooga"}
           </div>
-          <DataSelect
-          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-        />
-        <DataSelect
-          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-        />
-        <DataSelect
-          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-        />
-        <DataSelect
-          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-        />
-        <DataSelect
-          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-        />
-        <DataSelect
-          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-        />
-        <DataSelect
-          sources={[{value: "All", label: "All!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-          dataTypes={[{value: "Speed", label: "Speed!"}, {value: "Meow", label: "Meow!"}, {value: "Woof", label: "Woof!"}]}
-        />
+          {chartDataState.files.map((file, fileIndex) => {
+            return (
+              <DataSelect
+                sources={bins.map((bin) => ({ value: bin, label: bin }))}
+                dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
+                key={fileIndex}
+                chartFileInformation={file}
+                bins={bins}
+                onColumnUpdate={(columnIndex, updatedColumn) => dispatch({ type: 'UPDATE_COLUMN', fileIndex, columnIndex, updatedColumn })}
+                onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
+              />
+            )
+          })}
+          
 
         </>
         
