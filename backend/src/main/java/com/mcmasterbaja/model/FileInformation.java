@@ -1,6 +1,7 @@
 package com.mcmasterbaja.model;
 
 import java.nio.file.Path;
+
 import lombok.ToString;
 
 // This class represents the data structure that is used to send information about the file through

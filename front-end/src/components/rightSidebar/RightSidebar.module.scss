@@ -1,4 +1,5 @@
 @use '@styles/_variables';
+@use '@styles/_mixins';
 @use 'sass:map';
 
 .rightSidebarContainer {
@@ -17,7 +18,7 @@
     color: var(--text-colour);
     position: relative;
     transition: width 0.75s ease-in-out;
-  
+
     &.collapsed {
       width: 0;
 
@@ -35,8 +36,8 @@
     .closeButton {
       all: unset;
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
+      top: 1rem;
+      right: 1rem;
       cursor: pointer;
       padding: 0.75rem;
       border-radius: 100%;
@@ -57,9 +58,10 @@
     }
 
     $resizerWidth: 1.5rem;
-  
+
     .resizer {
-      position: relative;
+      z-index: map.get(variables.$z-index, sidebarToggle);
+      position: absolute;
       left: -0.5 * $resizerWidth;
       top: 50%;
       transform: translateY(-50%);
@@ -75,19 +77,29 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-    
+
         // Dot size & color
         width: 0.5rem;
         height: 0.5rem;
         background-color: #fff;
         border-radius: 50%;
-    
+
         // The top and bottom dots are created with box-shadow offsets
         box-shadow:
           0 -0.85rem 0 0 #fff,
           0 0.85rem 0 0 #fff;
       }
     }
-  }
 
+    // Actual content of the sidebar
+    .sidebarContent {
+      @include mixins.scrollbar-dark;
+      overflow-x: hidden;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 }
