@@ -41,7 +41,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
                     { file: 'GPS SPEED.csv', axis: 'GPS SPEED' },
                 ],
                 analyzer: null,
-                analyzerOptions: ['100', '3'],
+                analyzerOptions: [],
                 graphType: 'line',
             },
         ],

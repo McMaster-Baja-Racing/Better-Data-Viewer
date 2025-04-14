@@ -41,8 +41,8 @@ export const dataTypesArray = [
   "GPS LONGITUDE",
   "GPS SECOND MINUTE HOUR",
   "GPS SPEED",
-  "PRM PRIM",
-  "PRM SEC"
+  "RPM PRIM",
+  "RPM SEC"
 ] as const;
 
 // Derive the union type from the array

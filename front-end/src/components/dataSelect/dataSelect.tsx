@@ -19,14 +19,17 @@ interface DataSelectProps {
     onAnalyzerUpdate: (analyzerType?: AnalyzerType, analyzerValues?: string[]) => void;
 }
 
-export function DataSelect({ sources, dataTypes, onAnalyzerUpdate, onColumnUpdate }: DataSelectProps) {
+export function DataSelect({ sources, dataTypes, onAnalyzerUpdate, onColumnUpdate, chartFileInformation }: DataSelectProps) {
     const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
-    const [selectedDataType, setSelectedDataType] = useState<string>(dataTypes[0].value);
-    const [analyzer, setAnalyzer] = useState(analyzerData[0] || '');
+    // TODO: Make this column smarter
+    const [selectedDataType, setSelectedDataType] = useState<string>(chartFileInformation.columns[1].header);
+    const [analyzer, setAnalyzer] = useState(analyzerData.find(analyzer => analyzer.code === chartFileInformation.analyze.type));
     const [isExpanded, setIsExpanded] = useState(false);
     const [analyzerValues, setAnalyzerValues] = useState<string[]>(
         (analyzer && analyzer.parameters) ? analyzer.parameters.map(param => param.default) : []
     );
+
+    console.log(chartFileInformation)
 
     const analyzerOptions = analyzerData.map(analyzer => ({
         label: analyzer.title,
@@ -38,7 +41,8 @@ export function DataSelect({ sources, dataTypes, onAnalyzerUpdate, onColumnUpdat
     }, [analyzer, analyzerValues]);
 
     useEffect(() => {
-        onColumnUpdate(0, { filename: selectedSource + '/' + selectedDataType + '.csv', header: selectedDataType });
+        onColumnUpdate(0, { filename: selectedSource + '/' + selectedDataType + '.csv', header: "Timestamp (ms)" });
+        onColumnUpdate(1, { filename: selectedSource + '/' + selectedDataType + '.csv', header: selectedDataType });
     }, [selectedSource, selectedDataType]);
 
     useEffect(() => {
@@ -103,7 +107,7 @@ export function DataSelect({ sources, dataTypes, onAnalyzerUpdate, onColumnUpdat
                             setSelected={setAnalyzer}
                         />
                     </div>
-                    {analyzer.parameters.map((param, index) => (
+                    {analyzer?.parameters.map((param, index) => (
                         <div className={styles.column} key={index}>
                             <label className={styles.label}>{param.name}</label>
                             <TextField

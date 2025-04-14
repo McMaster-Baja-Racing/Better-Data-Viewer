@@ -16,7 +16,7 @@ export const DataView = () => {
   // Store the chart information in state so it doesn't update on every render.
   const [chartDataState, dispatch] = useReducer(chartInformationReducer, chartInformation);;
   const [bins, setBins] = useState<string[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     const tempBins = chartDataState.files.map((file) => {
@@ -52,12 +52,11 @@ export const DataView = () => {
           }
             editOnClick={() => setIsOpen(!isOpen)}
           >
-            {/* <Chart 
-              chartInformation={data}
+            <Chart 
+              chartInformation={chartDataState}
               video={video}
               videoTimestamp={0}
-            /> */}
-            Yeoooo
+            />
             
           </GraphWrapper>
         }
@@ -79,8 +78,6 @@ export const DataView = () => {
               />
             )
           })}
-          
-
         </>
         
         }
