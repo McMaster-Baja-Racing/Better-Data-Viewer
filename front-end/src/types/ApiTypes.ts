@@ -28,6 +28,7 @@ export enum AnalyzerType {
   SGOLAY = 'SGOLAY',
   SPLIT = 'SPLIT',
   DELETE_OUTLIER = 'DELETE_OUTLIER',
+  STRICT_TIMESTAMP = 'STRICT_TIMESTAMP',
 }
 
 // Define the constant array with all valid values
