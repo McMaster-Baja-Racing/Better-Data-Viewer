@@ -8,11 +8,11 @@ import com.opencsv.CSVReader;
 import com.opencsv.ICSVWriter;
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-import lombok.SneakyThrows;
-import org.jboss.logging.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.SneakyThrows;
+import org.jboss.logging.Logger;
 
 @Dependent
 @AnalyzerQualifier(AnalyzerType.STRICT_TIMESTAMP)
@@ -29,16 +29,17 @@ public class StrictTimestampAnalyzer extends Analyzer {
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
-    logger.info("Filtering file " + inputFiles[0] +
-        " to ensure strictly increasing timestamps in column '" + TIMESTAMP_COLUMN +
-        "', filtering single or two large gaps > " + MAX_GAP + "ms");
+    logger.info(
+        "Filtering file "
+            + inputFiles[0]
+            + " to ensure strictly increasing timestamps in column '"
+            + TIMESTAMP_COLUMN
+            + "', filtering single or two large gaps > "
+            + MAX_GAP
+            + "ms");
     getReader(
-      inputFiles[0],
-      reader -> getWriter(
-        getOutputFilename(),
-        writer -> filterIO(reader, writer)
-      )
-    );
+        inputFiles[0],
+        reader -> getWriter(getOutputFilename(), writer -> filterIO(reader, writer)));
   }
 
   @SneakyThrows
@@ -56,7 +57,6 @@ public class StrictTimestampAnalyzer extends Analyzer {
 
     // Buffer for consecutive large-gap rows
     List<String[]> largeGapBuffer = new ArrayList<>();
-    long bufferStartTimestamp = 0;
 
     while ((row = reader.readNext()) != null) {
       long currentTimestamp;
@@ -81,10 +81,12 @@ public class StrictTimestampAnalyzer extends Analyzer {
             for (String[] bufRow : largeGapBuffer) {
               writer.writeNext(bufRow);
             }
-            lastTimestamp = Long.parseLong(
-                largeGapBuffer.get(largeGapBuffer.size() - 1)[timestampIndex].trim());
+            lastTimestamp =
+                Long.parseLong(
+                    largeGapBuffer.get(largeGapBuffer.size() - 1)[timestampIndex].trim());
           } else {
-            logger.info("Discarding " + largeGapBuffer.size() + " rows with gaps > " + MAX_GAP + "ms");
+            logger.info(
+                "Discarding " + largeGapBuffer.size() + " rows with gaps > " + MAX_GAP + "ms");
           }
           largeGapBuffer.clear();
         }
@@ -93,18 +95,16 @@ public class StrictTimestampAnalyzer extends Analyzer {
         lastTimestamp = currentTimestamp;
       } else {
         // Large gap: buffer for potential keep/discard
-        if (largeGapBuffer.isEmpty()) {
-          bufferStartTimestamp = lastTimestamp;
-        }
         largeGapBuffer.add(row);
         // If buffer reached threshold, flush immediately
         if (largeGapBuffer.size() >= MIN_CONSECUTIVE_LARGE) {
           for (String[] bufRow : largeGapBuffer) {
             writer.writeNext(bufRow);
           }
-          logger.info("Flushing " + largeGapBuffer.size() + " large-gap rows as consecutive threshold met");
-          lastTimestamp = Long.parseLong(
-              largeGapBuffer.get(largeGapBuffer.size() - 1)[timestampIndex].trim());
+          logger.info(
+              "Flushing " + largeGapBuffer.size() + " large-gap rows as consecutive threshold met");
+          lastTimestamp =
+              Long.parseLong(largeGapBuffer.get(largeGapBuffer.size() - 1)[timestampIndex].trim());
           largeGapBuffer.clear();
         }
       }
@@ -117,7 +117,8 @@ public class StrictTimestampAnalyzer extends Analyzer {
           writer.writeNext(bufRow);
         }
       } else {
-        logger.info("Discarding trailing " + largeGapBuffer.size() + " rows with gaps > " + MAX_GAP + "ms");
+        logger.info(
+            "Discarding trailing " + largeGapBuffer.size() + " rows with gaps > " + MAX_GAP + "ms");
       }
     }
   }
