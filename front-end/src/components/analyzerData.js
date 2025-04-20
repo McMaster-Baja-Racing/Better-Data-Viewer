@@ -183,6 +183,23 @@ const analyzerData = [
       },
     ]
   },
+  {
+    title: 'Strict Timestamps',
+    code: 'STRICT_TIMESTAMP',
+    parameters: [],
+    description: 'This will take the timestamps and make them strictly increasing. This is useful for some analyzers that require strictly increasing timestamps.',
+    image: {
+      link: 'strict.png',
+      alt: 'Strict Timestamps Image',
+      src: images['strict'],
+    },
+    links: [
+      {
+        title: 'Strictly Increasing',
+        link: 'https://en.wikipedia.org/wiki/Strictly_increasing',
+      },
+    ]
+  }
 ];
 
 export default analyzerData;
