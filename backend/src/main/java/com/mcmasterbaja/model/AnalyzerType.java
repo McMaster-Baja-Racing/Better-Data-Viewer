@@ -11,7 +11,9 @@ public enum AnalyzerType {
   ROLL_AVG,
   SGOLAY,
   SPLIT,
-  CONSTANT_ADDER;
+  CONSTANT_ADDER,
+  STRICT_TIMESTAMP,
+  SHIFT_CURVE;
 
   public String toString() {
     return this.name();
