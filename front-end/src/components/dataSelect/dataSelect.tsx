@@ -34,12 +34,16 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
     }));
 
     useEffect(() => {
-        setSelectedDataType(chartFileInformation[columnKey]?.header || dataTypes[0].value);
-        setAnalyzer(analyzerData.find(a => a.code === chartFileInformation.analyze.type) || analyzerData[0]);
-      }, [chartFileInformation, columnKey]);
+        setAnalyzer(analyzerData.find(analyzer => analyzer.code === chartFileInformation.analyze.type) || analyzerData[0]);
+        setAnalyzerValues(analyzer.parameters.map(param => param.default));
+    }, [chartFileInformation.analyze.type]);
 
     useEffect(() => {
-        onAnalyzerUpdate(analyzer?.code ?? undefined, analyzerValues);
+        // wait until values array matches expected length
+        if (analyzer.parameters && analyzerValues.length !== analyzer.parameters?.length || 0) {
+            return;
+        }
+        onAnalyzerUpdate(analyzer.code, analyzerValues);
     }, [analyzer, analyzerValues]);
 
     useEffect(() => {
@@ -49,27 +53,29 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
         const update: Partial<Column> = { header: selectedDataType };
 
         if (columnKey === 'y' && currX === "Timestamp (ms)") {
-            update.filename = selectedSource + '/' + selectedDataType + '.csv';
+            // Update Y and X is time
+            update.filename = `${selectedSource}/${selectedDataType}.csv`;
             onColumnUpdate('x', {filename: update.filename});
-            console.log("A")
         } else if (columnKey === 'y') {
-            update.filename = selectedSource + '/' + selectedDataType + '.csv';
-            setAnalyzer(analyzerData[3]); // Set to Interpolation Analyzer
-            console.log("B")
+            // Update Y and X is not time
+            update.filename = `${selectedSource}/${selectedDataType}.csv`;
+            setAnalyzer(analyzerData[4]); // Set to Interpolation Analyzer
         } else if (columnKey === 'x' && selectedDataType !== "Timestamp (ms)") {
-            update.filename = selectedSource + '/' + selectedDataType + '.csv';
-            setAnalyzer(analyzerData[3]); // Set to Interpolation Analyzer
-            console.log("C")
+            // Update X and X is not time
+            update.filename = `${selectedSource}/${selectedDataType}.csv`;
+            setAnalyzer(analyzerData[4]); // Set to Interpolation Analyzer
         } else if (columnKey === 'x' && analyzer.code === AnalyzerType.INTERPOLATER_PRO) {
+            // Update X and X is time, abd was interpolation
             onAnalyzerUpdate(null, []); // Remove analyzer
             setAnalyzer(analyzerData[0]); // Remove analyzer
-            console.log("D")
+            onColumnUpdate('x', {filename: chartFileInformation.y.filename});
         }
+        
         onColumnUpdate(columnKey, update);
     }, [selectedSource, selectedDataType]);
 
     useEffect(() => {
-        if (analyzer && analyzer.parameters) {
+        if (analyzer.parameters) {
             setAnalyzerValues(analyzer.parameters.map(param => param.default));
         } else {
             setAnalyzerValues([]);
