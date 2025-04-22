@@ -60,6 +60,23 @@ const analyzerData: analyzerData[] = [
     ]
   },
   {
+    title: 'Shift Curve',
+    code: 'SHIFT_CURVE',
+    parameters: [],
+    description: 'This will take the primary and secondary RPM values and shift them to be in the same range. This is useful for comparing the two values.',
+    image: {
+      link: 'shiftCurve.png',
+      alt: 'Shift Curve Image',
+      src: images['shiftCurve'],
+    },
+    links: [
+      {
+        title: 'Shift Curve',
+        link: 'https://en.wikipedia.org/wiki/Shift_curve',
+      },
+    ]
+  },
+  {
     title: 'Ultimate Smoothener',
     code: AnalyzerType.ROLL_AVG,
     parameters: [{ name: 'Window Size', default: '100' }, { name: 'Polynomial Order', default: '3' }],
@@ -214,7 +231,7 @@ const analyzerData: analyzerData[] = [
         link: 'https://en.wikipedia.org/wiki/Strictly_increasing',
       },
     ]
-  }
+  },
 ];
 
 export default analyzerData;

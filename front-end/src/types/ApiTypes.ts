@@ -29,6 +29,7 @@ export enum AnalyzerType {
   SPLIT = 'SPLIT',
   DELETE_OUTLIER = 'DELETE_OUTLIER',
   STRICT_TIMESTAMP = 'STRICT_TIMESTAMP',
+  SHIFT_CURVE = 'SHIFT_CURVE',
 }
 
 // Define the constant array with all valid values
