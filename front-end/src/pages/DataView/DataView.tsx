@@ -1,4 +1,4 @@
-import { ChartInformation, DataTypes, dataTypesArray } from "@types";
+import { ChartInformation, DataTypes, dataTypesArray, dataColumnKeys } from "@types";
 import Chart from "@components/views/Chart/Chart";
 import { GraphWrapper } from "@components/graphWrapper/GraphWrapper";
 import { RightSidebar } from "@components/rightSidebar/RightSidebar";
@@ -16,14 +16,15 @@ export const DataView = () => {
   // Store the chart information in state so it doesn't update on every render.
   const [chartDataState, dispatch] = useReducer(chartInformationReducer, chartInformation);;
   const [bins, setBins] = useState<string[]>([]);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const tempBins = chartDataState.files.map((file) => {
-      return file.columns.map((column) => {
-        return column.filename.split('/')[0]
-      })
-    });
+    const tempBins = chartDataState.files.map((file) =>
+      dataColumnKeys
+        .map((key) => file[key]?.filename)
+        .filter((fn): fn is string => !!fn)
+        .map((filename) => filename.split("/")[0])
+    );
     const uniqueBins = [...new Set(tempBins.flat())];
     setBins(uniqueBins);
   }, [chartDataState]);  
@@ -46,9 +47,9 @@ export const DataView = () => {
         setIsOpen={setIsOpen}
         mainContent={
           <GraphWrapper title={
-            chartDataState.files[0].columns[1].header 
+            chartDataState.files[0].y.header 
             + ' vs ' 
-            + chartDataState.files[0].columns[0].header
+            + chartDataState.files[0].x.header
           }
             editOnClick={() => setIsOpen(!isOpen)}
           >
@@ -67,15 +68,28 @@ export const DataView = () => {
           </div>
           {chartDataState.files.map((file, fileIndex) => {
             return (
+              <div key={fileIndex}>
+              Y
               <DataSelect
                 sources={bins.map((bin) => ({ value: bin, label: bin }))}
                 dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-                key={fileIndex}
+                key={fileIndex + 'y'}
                 chartFileInformation={file}
-                bins={bins}
-                onColumnUpdate={(columnIndex, updatedColumn) => dispatch({ type: 'UPDATE_COLUMN', fileIndex, columnIndex, updatedColumn })}
+                columnKey="y"
+                onColumnUpdate={(column, updatedColumn) => dispatch({ type: 'UPDATE_COLUMN', fileIndex, column, updatedColumn })}
                 onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
               />
+              X
+              <DataSelect
+                sources={bins.map((bin) => ({ value: bin, label: bin }))}
+                dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
+                key={fileIndex + 'x'}
+                chartFileInformation={file}
+                columnKey="x"
+                onColumnUpdate={(_, updatedColumn) => dispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
+                onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
+              />
+              </div>
             )
           })}
         </>

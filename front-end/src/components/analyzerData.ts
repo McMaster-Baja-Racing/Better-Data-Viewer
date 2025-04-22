@@ -200,7 +200,7 @@ const analyzerData: analyzerData[] = [
   },
   {
     title: 'Strict Timestamps',
-    code: 'STRICT_TIMESTAMP',
+    code: AnalyzerType.STRICT_TIMESTAMP,
     parameters: [],
     description: 'This will take the timestamps and make them strictly increasing. This is useful for some analyzers that require strictly increasing timestamps.',
     image: {

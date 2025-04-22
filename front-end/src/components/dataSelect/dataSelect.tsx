@@ -8,28 +8,25 @@ import plus from '@assets/icons/add.svg';
 import minus from '@assets/icons/remove.svg';
 import trash from '@assets/icons/trash.svg';
 import analyzerData from '@components/analyzerData';
-import { AnalyzerType, ChartFileInformation, Column } from '@types';
+import { AnalyzerType, ChartFileInformation, Column, DataColumnKey } from '@types';
 
 interface DataSelectProps {
     sources: DropdownOption<string>[];
     dataTypes: DropdownOption<string>[];
     chartFileInformation: ChartFileInformation;
-    bins: string[];
-    onColumnUpdate: (columnIndex: number, updatedColumn: Partial<Column>) => void;
-    onAnalyzerUpdate: (analyzerType?: AnalyzerType, analyzerValues?: string[]) => void;
+    columnKey: DataColumnKey;
+    onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<Column>) => void;
+    onAnalyzerUpdate: (analyzerType?: AnalyzerType | null, analyzerValues?: string[]) => void;
 }
 
-export function DataSelect({ sources, dataTypes, onAnalyzerUpdate, onColumnUpdate, chartFileInformation }: DataSelectProps) {
+export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, onColumnUpdate, chartFileInformation }: DataSelectProps) {
     const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
-    // TODO: Make this column smarter
-    const [selectedDataType, setSelectedDataType] = useState<string>(chartFileInformation.columns[1].header);
-    const [analyzer, setAnalyzer] = useState(analyzerData.find(analyzer => analyzer.code === chartFileInformation.analyze.type));
+    const [selectedDataType, setSelectedDataType] = useState<string>(chartFileInformation[columnKey]?.header || dataTypes[0].value);
+    const [analyzer, setAnalyzer] = useState<analyzerData>(analyzerData.find(analyzer => analyzer.code === chartFileInformation.analyze.type) || analyzerData[0]);
     const [isExpanded, setIsExpanded] = useState(false);
     const [analyzerValues, setAnalyzerValues] = useState<string[]>(
         (analyzer && analyzer.parameters) ? analyzer.parameters.map(param => param.default) : []
     );
-
-    console.log(chartFileInformation)
 
     const analyzerOptions = analyzerData.map(analyzer => ({
         label: analyzer.title,
@@ -37,12 +34,38 @@ export function DataSelect({ sources, dataTypes, onAnalyzerUpdate, onColumnUpdat
     }));
 
     useEffect(() => {
+        setSelectedDataType(chartFileInformation[columnKey]?.header || dataTypes[0].value);
+        setAnalyzer(analyzerData.find(a => a.code === chartFileInformation.analyze.type) || analyzerData[0]);
+      }, [chartFileInformation, columnKey]);
+
+    useEffect(() => {
         onAnalyzerUpdate(analyzer?.code ?? undefined, analyzerValues);
     }, [analyzer, analyzerValues]);
 
     useEffect(() => {
-        onColumnUpdate(0, { filename: selectedSource + '/' + selectedDataType + '.csv', header: "Timestamp (ms)" });
-        onColumnUpdate(1, { filename: selectedSource + '/' + selectedDataType + '.csv', header: selectedDataType });
+        // TODO: Update this logic to handle situations for interpolation
+        const currX = chartFileInformation.x.header;
+
+        const update: Partial<Column> = { header: selectedDataType };
+
+        if (columnKey === 'y' && currX === "Timestamp (ms)") {
+            update.filename = selectedSource + '/' + selectedDataType + '.csv';
+            onColumnUpdate('x', {filename: update.filename});
+            console.log("A")
+        } else if (columnKey === 'y') {
+            update.filename = selectedSource + '/' + selectedDataType + '.csv';
+            setAnalyzer(analyzerData[3]); // Set to Interpolation Analyzer
+            console.log("B")
+        } else if (columnKey === 'x' && selectedDataType !== "Timestamp (ms)") {
+            update.filename = selectedSource + '/' + selectedDataType + '.csv';
+            setAnalyzer(analyzerData[3]); // Set to Interpolation Analyzer
+            console.log("C")
+        } else if (columnKey === 'x' && analyzer.code === AnalyzerType.INTERPOLATER_PRO) {
+            onAnalyzerUpdate(null, []); // Remove analyzer
+            setAnalyzer(analyzerData[0]); // Remove analyzer
+            console.log("D")
+        }
+        onColumnUpdate(columnKey, update);
     }, [selectedSource, selectedDataType]);
 
     useEffect(() => {

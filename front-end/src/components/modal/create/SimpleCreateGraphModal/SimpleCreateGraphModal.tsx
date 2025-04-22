@@ -1,8 +1,6 @@
-//CreateGraphModal.js
 import ReactDom from 'react-dom';
 import '@styles/modalStyles.css';
-import React, { useEffect, useState, useCallback } from 'react';
-import { useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import PresetSelectionPage from '../PresetSelectionPage/PresetSelectionPage';
 import { FileSelectionPage } from '../FileSelectionPage/FileSelectionPage';
 import Chart from '@components/views/Chart/Chart';
@@ -25,113 +23,113 @@ export const SimpleCreateGraphModal = ({
   viewInformation,
   setNumViews,
 }) => {
-
   const [selectedBinFile, setSelectedBinFile] = useState<string>('182848');
   const [selectedPreset, setSelectedPreset] = useState<DataViewerPreset | null>(null);
   const [displayPage, setDisplayPage] = useState(0);
 
-  const modalRef: React.RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null);
-  
-  const closeModal = (e) => {
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
+  const closeModal = (e: React.MouseEvent) => {
     if (e.target === modalRef.current) {
       setModal('');
     }
   };
 
-  const movePage = (amount) => { 
-    setDisplayPage(displayPage + amount);
+  const movePage = (amount: number) => {
+    setDisplayPage((prev) => prev + amount);
   };
 
-  //Stuff for handling final submit
+  // Handle final submit
   const handleSubmit = useCallback(() => {
-    if(selectedPreset == null || selectedBinFile == null)
-    {
-      return;
-    }
-    for(const currGraph of selectedPreset.graphs)
-    {
-      const columns: Column[] = [];
+    if (!selectedPreset || !selectedBinFile) return;
+
+    const files: ChartFileInformation[] = selectedPreset.graphs.map((currGraph) => {
+      // Build x, y, z columns explicitly
+      const [xAxis, yAxis, zAxis] = currGraph.axes;
+      const x: Column = {
+        header: xAxis.axis,
+        filename: `${selectedBinFile}/${xAxis.file}`,
+        timespan: { start: null, end: null },
+      };
+      const y: Column = {
+        header: yAxis.axis,
+        filename: `${selectedBinFile}/${yAxis.file}`,
+        timespan: { start: null, end: null },
+      };
+      const z: Column | null = zAxis
+        ? {
+            header: zAxis.axis,
+            filename: `${selectedBinFile}/${zAxis.file}`,
+            timespan: { start: null, end: null },
+          }
+        : null;
+
       const analyze: ChartAnalyzerInformation = {
         type: currGraph.analyzer,
         analyzerValues: currGraph.analyzerOptions,
       };
-      for (let i = 0; i < currGraph.axes.length; i++) {
-        columns.push({
-          header: currGraph.axes[i].axis,
-          filename: selectedBinFile + '/' + currGraph.axes[i].file,
-          timespan: { start: null, end: null },
-        });
-      }
-      const chartInformationFiles: ChartFileInformation[] = [
-        {
-          columns: columns,
-          analyze: analyze,
-        },
-      ];
-  
-      const chartInformation: ChartInformation = {
-        files: chartInformationFiles,
-        live: false,
-        type: currGraph.graphType,
-        // Only true if all files have Timestamp (ms) as the first column
-        hasTimestampX: !chartInformationFiles.some(
-          (file) => file.columns[0].header !== 'Timestamp (ms)'
-        ),
-        // Only true if all files have a timespan from the GPS data
-        hasGPSTime: !chartInformationFiles.some(
-          (file) => file.columns[0].timespan.start == null
-        ),
-      };
-      
-      const updatedViewInformation = replaceViewAtIndex(viewInformation, 0, {
-        component: Chart,
-        props: { chartInformation },
-      });
-      setViewInformation(updatedViewInformation);
-    }    
+
+      return { x, y, z, analyze };
+    });
+
+    const chartInformation: ChartInformation = {
+      files,
+      live: false,
+      type: selectedPreset.graphs[0].graphType,
+      hasTimestampX: !files.some((file) => file.x.header !== 'Timestamp (ms)'),
+      hasGPSTime: !files.some((file) => file.x.timespan.start == null),
+    };
+
+    // Replace the view
+    const updatedViewInformation = replaceViewAtIndex(viewInformation, 0, {
+      component: Chart,
+      props: { chartInformation },
+    });
+    setViewInformation(updatedViewInformation);
+    setNumViews(selectedPreset.graphs.length);
     setModal('');
-    setNumViews(selectedPreset.graphs.length)
-  }, [
-    viewInformation,
-    setViewInformation,
-    selectedPreset,
-    selectedBinFile
-  ]);
-  
+  }, [selectedPreset, selectedBinFile, viewInformation, setViewInformation, setNumViews, setModal]);
+
   useEffect(() => {
     if (displayPage === 2) {
       handleSubmit();
-      setModal('');
     }
-  }, [displayPage, setModal, handleSubmit]);
+  }, [displayPage, handleSubmit]);
 
-  const pageSelect = (page) => {
+  const pageSelect = (page: number) => {
     switch (page) {
       case 0:
-        return <FileSelectionPage handleNextPage={(file) => {
-          setSelectedBinFile(file);
-          movePage(1);
-        }} />;
+        return (
+          <FileSelectionPage
+            handleNextPage={(file) => {
+              setSelectedBinFile(file);
+              movePage(1);
+            }}
+          />
+        );
       case 1:
-        return <PresetSelectionPage handleNextPage={(preset) => {
-          setSelectedPreset(preset);
-          movePage(1);
-        }} />;
+        return (
+          <PresetSelectionPage
+            handleNextPage={(preset) => {
+              setSelectedPreset(preset);
+              movePage(1);
+            }}
+          />
+        );
       default:
-        break;
+        return null;
     }
   };
 
-  //render the modal JSX in the portal div.
   return ReactDom.createPortal(
     <div className="container" ref={modalRef} onClick={closeModal}>
       <div className="modal">
         {pageSelect(displayPage)}
         <button className="closeButton" onClick={() => setModal('')}>
-                    X
+          X
         </button>
       </div>
     </div>,
-        document.getElementById('portal') as HTMLElement
+    document.getElementById('portal') as HTMLElement
   );
 };

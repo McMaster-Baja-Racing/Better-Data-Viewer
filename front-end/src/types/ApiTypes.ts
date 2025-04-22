@@ -33,6 +33,7 @@ export enum AnalyzerType {
 
 // Define the constant array with all valid values
 export const dataTypesArray = [
+  "Timestamp (ms)",
   "BATT PERC",
   "BATT VOLT",
   "BRAKE PRES",
