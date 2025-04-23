@@ -69,7 +69,7 @@ export const CreateGraphModal = ({
 
     const chartInformationFiles = (buttonID === MAX_VIEWS) ? selectedFiles : seriesInfo;
 
-    const chartInformation = {
+    let chartInformation = {
       files: chartInformationFiles,
       live: liveCheck,
       type: graphType,
@@ -78,6 +78,8 @@ export const CreateGraphModal = ({
       // Only true if all files have a timespan from the GPS data
       hasGPSTime: !chartInformationFiles.some(file => file.columns[0].timespan.start === '')
     };
+
+    chartInformation = convertLegacyChartInformation(chartInformation);
   
     let updatedViewInformation = replaceViewAtIndex(
       viewInformation,
@@ -223,3 +225,25 @@ export const CreateGraphModal = ({
     document.getElementById('portal')
   );
 };
+
+
+const convertLegacyChartInformation = (oldCI) => {
+  const newFiles = oldCI.files.map((legacyFile) => {
+    const [xCol, yCol, zCol] = legacyFile.columns;
+    return {
+      x: xCol,
+      y: yCol,
+      z: zCol || null,
+      analyze: legacyFile.analyze
+    };
+  });
+
+  return {
+    files: newFiles,
+    live: oldCI.live,
+    type: oldCI.type,
+    // Preserve existing flags (or recalc if needed)
+    hasGPSTime: oldCI.hasGPSTime,
+    hasTimestampX: oldCI.hasTimestampX
+  };
+}

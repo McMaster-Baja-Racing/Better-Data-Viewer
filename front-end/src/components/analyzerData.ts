@@ -1,11 +1,3 @@
-/* eslint-disable max-len */
-// const images = {};
-// const importAll = r => {
-//   r.keys().forEach(key => images[key] = r(key));
-// };
-
-// importAll(require.context('../assets/help', false, /\.(png|jpe?g|svg|gif)$/));
-
 import { AnalyzerType } from '@types';
 import { images } from '../lib/assets.js';
 
