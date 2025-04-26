@@ -116,6 +116,7 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
                     <Button
                         className={styles.toggle}
                         onClick={() => setIsExpanded(!isExpanded)}
+                        disabled={columnKey === 'x'}
                     >
                         <img src={sigma} alt="analyzer" className={styles.analyzerIcon} />
                         <img

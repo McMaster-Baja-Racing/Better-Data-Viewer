@@ -8,20 +8,31 @@ interface ButtonProps {
   paddingX?: string;
   paddingY?: string;
   textSize?: string;
+  disabled?: boolean;
   className?: string;
 }
 
-export const Button = ({ onClick, children, primary = true, paddingX, paddingY, textSize, className }: ButtonProps) => {
+export const Button = ({
+  onClick,
+  children,
+  primary = true,
+  paddingX = '1.5rem',
+  paddingY = '0.75rem',
+  textSize = '1rem',
+  disabled = false,
+  className,
+}: ButtonProps) => {
   return (
     <button
-      className={cx(styles.button, {[styles.primary]: primary}, className)}
+      className={cx(styles.button, { [styles.primary]: primary }, className)}
       onClick={onClick}
+      disabled={disabled}
       style={{
-        paddingLeft: `${paddingX}`,
-        paddingRight: `${paddingX}`,
-        paddingTop: `${paddingY}`,
-        paddingBottom: `${paddingY}`,
-        fontSize: `${textSize}`
+        paddingLeft: paddingX,
+        paddingRight: paddingX,
+        paddingTop: paddingY,
+        paddingBottom: paddingY,
+        fontSize: textSize,
       }}
     >
       {children}
