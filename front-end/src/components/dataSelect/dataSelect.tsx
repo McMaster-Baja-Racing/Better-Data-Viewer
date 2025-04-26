@@ -7,7 +7,7 @@ import sigma from '@assets/icons/sigma.svg';
 import plus from '@assets/icons/add.svg';
 import minus from '@assets/icons/remove.svg';
 import trash from '@assets/icons/trash.svg';
-import analyzerData from '@components/analyzerData';
+import { legacyAnalyzerData as analyzerData } from '@lib/legacyUtils';
 import { AnalyzerType, ChartFileInformation, Column, DataColumnKey } from '@types';
 
 interface DataSelectProps {
@@ -22,7 +22,7 @@ interface DataSelectProps {
 export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, onColumnUpdate, chartFileInformation }: DataSelectProps) {
     const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
     const [selectedDataType, setSelectedDataType] = useState<string>(chartFileInformation[columnKey]?.header || dataTypes[0].value);
-    const [analyzer, setAnalyzer] = useState<analyzerData>(analyzerData.find(analyzer => analyzer.code === chartFileInformation.analyze.type) || analyzerData[0]);
+    const [analyzer, setAnalyzer] = useState(analyzerData.find(analyzer => analyzer.code === chartFileInformation.analyze.type) || analyzerData[0]);
     const [isExpanded, setIsExpanded] = useState(false);
     const [analyzerValues, setAnalyzerValues] = useState<string[]>(
         (analyzer && analyzer.parameters) ? analyzer.parameters.map(param => param.default) : []
