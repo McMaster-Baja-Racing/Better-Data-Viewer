@@ -63,13 +63,13 @@ export const DataView = () => {
         }
         sidebarContent={
           <>
-          <div className={styles.title}>
-            {"Oooga booooga"}
-          </div>
+          
           {chartDataState.files.map((file, fileIndex) => {
             return (
               <div key={fileIndex}>
-              Y
+                <div className={styles.title}>
+                  {"Pick your data (Y-Axis)"}
+                </div>
               <DataSelect
                 sources={bins.map((bin) => ({ value: bin, label: bin }))}
                 dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
@@ -79,7 +79,9 @@ export const DataView = () => {
                 onColumnUpdate={(column, updatedColumn) => dispatch({ type: 'UPDATE_COLUMN', fileIndex, column, updatedColumn })}
                 onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
               />
-              X
+              <div className={styles.title}>
+                {"Pick your data (X-Axis)"}
+              </div>
               <DataSelect
                 sources={bins.map((bin) => ({ value: bin, label: bin }))}
                 dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
@@ -89,6 +91,9 @@ export const DataView = () => {
                 onColumnUpdate={(_, updatedColumn) => dispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
                 onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
               />
+              <div className={styles.title}>
+                {"Options"}
+              </div>
               </div>
             )
           })}

@@ -160,7 +160,7 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
                     ))}
                 </div>
             </div>
-            <img src={trash} alt="delete" className={styles.deleteIcon} />
+            {/* <img src={trash} alt="delete" className={styles.deleteIcon} /> */}
         </div>
     );
 }
