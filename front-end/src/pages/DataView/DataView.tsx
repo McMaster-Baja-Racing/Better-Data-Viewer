@@ -68,7 +68,7 @@ export const DataView = () => {
             return (
               <div key={fileIndex}>
                 <div className={styles.title}>
-                  {"Pick your data (Y-Axis)"}
+                  Pick your data (Y-Axis)
                 </div>
               <DataSelect
                 sources={bins.map((bin) => ({ value: bin, label: bin }))}
@@ -80,7 +80,7 @@ export const DataView = () => {
                 onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
               />
               <div className={styles.title}>
-                {"Pick your data (X-Axis)"}
+                Pick your data (X-Axis)
               </div>
               <DataSelect
                 sources={bins.map((bin) => ({ value: bin, label: bin }))}
@@ -92,7 +92,7 @@ export const DataView = () => {
                 onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
               />
               <div className={styles.title}>
-                {"Options"}
+                Options
               </div>
               </div>
             )

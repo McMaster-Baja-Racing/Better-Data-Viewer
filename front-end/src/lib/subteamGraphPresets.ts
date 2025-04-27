@@ -60,5 +60,20 @@ export const subteamGraphPresets: DataViewerPreset[] = [
                 graphType: 'line',
             },
         ]
+    },
+    {
+        name: "Map",
+        description: "Map of GPS coordinates",
+        graphs: [
+            {
+                axes: [
+                    { file: 'GPS LATITUDE.csv', axis: 'GPS LATITUDE' },
+                    { file: 'GPS LONGITUDE.csv', axis: 'GPS LONGITUDE' },
+                ],
+                analyzer: AnalyzerType.SHIFT_CURVE,
+                analyzerOptions: [],
+                graphType: 'line',
+            },
+        ]
     }
 ];

@@ -67,27 +67,28 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
 
     useEffect(() => {
         const currX = chartFileInformation.x.header;
-
         const update: Partial<Column> = { header: selectedDataType };
 
         unstable_batchedUpdates(() => {
-          if (columnKey === 'y' && currX === TIMESTAMP_HEADER) {
+          if (columnKey === 'y') {
             update.filename = `${selectedSource}/${selectedDataType}.csv`;
-            onColumnUpdate('x', { filename: update.filename });
+            if (currX === TIMESTAMP_HEADER) {
+              onColumnUpdate('x', { filename: update.filename });
+            } else if (!isSeriesAnalyzer(analyzerKey)) {
+              onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
+            }
+          } else if (columnKey === 'x') {
+            if (selectedDataType === TIMESTAMP_HEADER && isSeriesAnalyzer(analyzerKey)) {
+              onAnalyzerUpdate(null, []);
+              onColumnUpdate('x', { filename: chartFileInformation.y.filename });
+            } else if (selectedDataType !== TIMESTAMP_HEADER && isSeriesAnalyzer(analyzerKey)) {
+              
+            } else if (selectedDataType !== TIMESTAMP_HEADER) {
+              update.filename = `${selectedSource}/${selectedDataType}.csv`;
+              onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
+            }
           }
-          else if (columnKey === 'y') {
-            update.filename = `${selectedSource}/${selectedDataType}.csv`;
-            onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
-          }
-          else if (columnKey === 'x' && selectedDataType !== TIMESTAMP_HEADER) {
-            update.filename = `${selectedSource}/${selectedDataType}.csv`;
-            onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
-          }
-          else if (columnKey === 'x' && isSeriesAnalyzer(analyzerKey)) {
-            onAnalyzerUpdate(null, []);
-            onColumnUpdate('x', { filename: chartFileInformation.y.filename });
-          }
-    
+  
           onColumnUpdate(columnKey, update);
         });
     }, [selectedSource, selectedDataType]);
