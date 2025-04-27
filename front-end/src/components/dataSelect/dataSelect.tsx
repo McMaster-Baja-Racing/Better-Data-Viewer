@@ -59,7 +59,7 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
 
     useEffect(() => {
         // wait until values array matches expected length
-        if (analyzer.parameters && analyzerValues.length !== analyzer.parameters?.length || 0) {
+        if (analyzer.parameters && analyzerValues.length !== (analyzer.parameters?.length || 0)) {
             return;
         }
         onAnalyzerUpdate(analyzerKey === 'NONE' ? null : analyzerKey, analyzerValues);
