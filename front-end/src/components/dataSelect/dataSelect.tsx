@@ -7,8 +7,8 @@ import sigma from '@assets/icons/sigma.svg';
 import plus from '@assets/icons/add.svg';
 import minus from '@assets/icons/remove.svg';
 import trash from '@assets/icons/trash.svg';
-import { legacyAnalyzerData as analyzerData } from '@lib/legacyUtils';
-import { AnalyzerType, ChartFileInformation, Column, DataColumnKey } from '@types';
+import { unstable_batchedUpdates } from 'react-dom';
+import { analyzerConfig, AnalyzerKey, AnalyzerType, ChartFileInformation, Column, DataColumnKey } from '@types';
 
 interface DataSelectProps {
     sources: DropdownOption<string>[];
@@ -19,23 +19,42 @@ interface DataSelectProps {
     onAnalyzerUpdate: (analyzerType?: AnalyzerType | null, analyzerValues?: string[]) => void;
 }
 
+const TIMESTAMP_HEADER = 'Timestamp (ms)';
+
+// Analyzers that do interpolation
+const seriesAnalyzers: AnalyzerType[] = [
+  AnalyzerType.SHIFT_CURVE,
+  AnalyzerType.ACCEL_CURVE,
+  AnalyzerType.LINEAR_INTERPOLATE,
+  AnalyzerType.INTERPOLATER_PRO,
+];
+
+function isSeriesAnalyzer(key?: AnalyzerKey | null): key is AnalyzerType {
+  return !!key && seriesAnalyzers.includes(key as AnalyzerType);
+}
+
 export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, onColumnUpdate, chartFileInformation }: DataSelectProps) {
     const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
     const [selectedDataType, setSelectedDataType] = useState<string>(chartFileInformation[columnKey]?.header || dataTypes[0].value);
-    const [analyzer, setAnalyzer] = useState(analyzerData.find(analyzer => analyzer.code === chartFileInformation.analyze.type) || analyzerData[0]);
+
+    const [analyzerKey, setAnalyzerKey] = useState<AnalyzerKey>(chartFileInformation.analyze.type ?? 'NONE');
+    const analyzer = analyzerConfig[analyzerKey];
+
     const [isExpanded, setIsExpanded] = useState(false);
     const [analyzerValues, setAnalyzerValues] = useState<string[]>(
-        (analyzer && analyzer.parameters) ? analyzer.parameters.map(param => param.default) : []
+      analyzer.parameters?.map(param => param.defaultValue) || []
     );
 
-    const analyzerOptions = analyzerData.map(analyzer => ({
-        label: analyzer.title,
-        value: analyzer
+    const analyzerOptions = (Object.entries(analyzerConfig) as [AnalyzerKey, typeof analyzer][])
+    .map(([key, cfg]) => ({
+      label: cfg.title,
+      value: key
     }));
 
     useEffect(() => {
-        setAnalyzer(analyzerData.find(analyzer => analyzer.code === chartFileInformation.analyze.type) || analyzerData[0]);
-        setAnalyzerValues(analyzer.parameters.map(param => param.default));
+      const newKey: AnalyzerKey = chartFileInformation.analyze.type ?? 'NONE';
+      setAnalyzerKey(newKey);
+      setAnalyzerValues(analyzerConfig[newKey].parameters?.map(param => param.defaultValue) || []);
     }, [chartFileInformation.analyze.type]);
 
     useEffect(() => {
@@ -43,44 +62,35 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
         if (analyzer.parameters && analyzerValues.length !== analyzer.parameters?.length || 0) {
             return;
         }
-        onAnalyzerUpdate(analyzer.code, analyzerValues);
-    }, [analyzer, analyzerValues]);
+        onAnalyzerUpdate(analyzerKey === 'NONE' ? null : analyzerKey, analyzerValues);
+    }, [analyzerKey, analyzerValues]);
 
     useEffect(() => {
-        // TODO: Update this logic to handle situations for interpolation
         const currX = chartFileInformation.x.header;
 
         const update: Partial<Column> = { header: selectedDataType };
 
-        if (columnKey === 'y' && currX === "Timestamp (ms)") {
-            // Update Y and X is time
+        unstable_batchedUpdates(() => {
+          if (columnKey === 'y' && currX === TIMESTAMP_HEADER) {
             update.filename = `${selectedSource}/${selectedDataType}.csv`;
-            onColumnUpdate('x', {filename: update.filename});
-        } else if (columnKey === 'y') {
-            // Update Y and X is not time
+            onColumnUpdate('x', { filename: update.filename });
+          }
+          else if (columnKey === 'y') {
             update.filename = `${selectedSource}/${selectedDataType}.csv`;
-            setAnalyzer(analyzerData[4]); // Set to Interpolation Analyzer
-        } else if (columnKey === 'x' && selectedDataType !== "Timestamp (ms)") {
-            // Update X and X is not time
+            onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
+          }
+          else if (columnKey === 'x' && selectedDataType !== TIMESTAMP_HEADER) {
             update.filename = `${selectedSource}/${selectedDataType}.csv`;
-            setAnalyzer(analyzerData[4]); // Set to Interpolation Analyzer
-        } else if (columnKey === 'x' && analyzer.code === AnalyzerType.INTERPOLATER_PRO) {
-            // Update X and X is time, abd was interpolation
-            onAnalyzerUpdate(null, []); // Remove analyzer
-            setAnalyzer(analyzerData[0]); // Remove analyzer
-            onColumnUpdate('x', {filename: chartFileInformation.y.filename});
-        }
-        
-        onColumnUpdate(columnKey, update);
+            onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
+          }
+          else if (columnKey === 'x' && isSeriesAnalyzer(analyzerKey)) {
+            onAnalyzerUpdate(null, []);
+            onColumnUpdate('x', { filename: chartFileInformation.y.filename });
+          }
+    
+          onColumnUpdate(columnKey, update);
+        });
     }, [selectedSource, selectedDataType]);
-
-    useEffect(() => {
-        if (analyzer.parameters) {
-            setAnalyzerValues(analyzer.parameters.map(param => param.default));
-        } else {
-            setAnalyzerValues([]);
-        }
-    }, [analyzer]);
 
     const handleParameterChange = (index: number, newValue: string) => {
         setAnalyzerValues(prevValues => {
@@ -133,18 +143,18 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
                         <label className={styles.label}>Analyzer Type</label>
                         <Dropdown
                             options={analyzerOptions}
-                            selected={analyzer}
-                            setSelected={setAnalyzer}
+                            selected={analyzerKey}
+                            setSelected={setAnalyzerKey}
                         />
                     </div>
-                    {analyzer?.parameters.map((param, index) => (
+                    {analyzer?.parameters?.map((param, index) => (
                         <div className={styles.column} key={index}>
                             <label className={styles.label}>{param.name}</label>
                             <TextField
                                 title={param.name}
                                 value={analyzerValues[index] || ''}
                                 setValue={(newVal: string) => handleParameterChange(index, newVal)}
-                                placeholder={param.default}
+                                placeholder={param.defaultValue}
                             />
                         </div>
                     ))}
