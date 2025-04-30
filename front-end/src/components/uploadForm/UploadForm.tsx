@@ -12,7 +12,7 @@ interface UploadFormProps {
   accept?: string;
 }
 
-export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov' }: UploadFormProps) => {
+export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, .fit' }: UploadFormProps) => {
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
