@@ -5,6 +5,7 @@ import bookmarkIcon from '@assets/icons/bookmark.svg';
 import downloadIcon from '@assets/icons/download.svg';
 import uploadIcon from '@assets/icons/upload.svg';
 import folderIcon from '@assets/icons/folder.svg';
+import trashIcon from '@assets/icons/delete.svg';
 import settingsIcon from '@assets/icons/settings.svg';
 import accountIcon from '@assets/icons/account.svg';
 import newGraphIcon from '@assets/icons/newGraph2.svg';
@@ -17,6 +18,7 @@ import sidebarToggleCollapsed from '@assets/icons/sidebarToggleCollapsed.svg';
 import sidebarToggleExpanded from '@assets/icons/sidebarToggleExpanded.svg';
 import { onIconClick } from '@lib/navigationUtils';
 import { useModal } from '../../ModalContext';
+import { ApiUtil } from '@lib/apiUtils';
 
 // Sidebar item definition
 interface SidebarItemProps {
@@ -40,6 +42,16 @@ const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
 // TODO: Remove these props once custom modal is reworked
 interface SidebarProps {
     setModal: (modal: string) => void;
+}
+
+const deleteAllFiles = async () => {
+    const res = await ApiUtil.deleteAllFiles();
+
+    if (res.ok) {
+        alert("All files deleted succesfully")
+    } else {
+        alert("Something went wrong... sorry")
+    }
 }
 
 const Sidebar = ({ setModal }: SidebarProps) => {
@@ -68,6 +80,7 @@ const Sidebar = ({ setModal }: SidebarProps) => {
                 <SidebarItem icon={mapIcon} text="Map" onClick={() => onIconClick('map')}/>
                 <SidebarItem icon={newGraphIcon} text="Legacy Create Graph" onClick={() => setModal('Create')}/>
                 <SidebarItem icon={historyIcon} text="Legacy UI" onClick={() => onIconClick('old')}/>
+                <SidebarItem icon={trashIcon} text="Delete All Files" onClick={() => deleteAllFiles()}/>
             </div>
             <div className={styles.footerHeader}>
                 <span className={styles.footerTitle}>Settings</span>

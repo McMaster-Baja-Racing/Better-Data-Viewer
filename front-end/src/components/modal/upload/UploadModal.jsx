@@ -74,7 +74,7 @@ export const UploadModal = ({ setModal, setSuccessMessage}) => {
           <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={handleSubmit(onSubmit)}>
             <input 
               type="file" 
-              accept=".csv, .bin, .mp4, .mov" 
+              accept=".csv, .bin, .mp4, .mov, .fit" 
               id="input-file-upload" 
               multiple={true} 
               {...register('file')} 
