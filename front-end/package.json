@@ -1,6 +1,6 @@
 {
   "name": "dataviewer",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "private": true,
   "type": "module",
   "main": "build/main.js",
@@ -63,7 +63,7 @@
         "to": "backend",
         "filter": [
           "jre/**/*",
-          "backend-1.2.0-runner.jar"
+          "backend-1.4.0-runner.jar"
         ]
       },
       {
