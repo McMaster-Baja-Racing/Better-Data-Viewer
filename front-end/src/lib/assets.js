@@ -25,6 +25,8 @@ import rollAvgImage from '../assets/help/rollAvg.png';
 import savitzkyGolayGif from '../assets/help/sgolay.gif';
 import splitImage from '../assets/help/split.png';
 import chevronDownIcon from '../assets/icons/chevronDown.svg';
+import sigmaIcon from '../assets/icons/sigma.svg';
+import closeIcon from '../assets/icons/close.svg';
 
 export const icons = {
   delete: deleteIcon,
@@ -46,6 +48,8 @@ export const icons = {
   youtube: youtubeIcon,
   settings: settingsIcon,
   chevronDown: chevronDownIcon,
+  sigma: sigmaIcon,
+  close: closeIcon,
 };
 
 export const images = {

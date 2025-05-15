@@ -145,6 +145,6 @@ public abstract class Analyzer {
       }
     }
     throw new InvalidColumnException(
-        "No column in file exists with analysis column name " + columnName);
+        "No column in file exists with analysis column name {" + columnName + "}");
   }
 }

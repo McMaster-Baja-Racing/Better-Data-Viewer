@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
 import {
-  getHeadersIndex, 
-  getTimestampOffset, 
-  getTimestamps, 
-  HUE_MAX, 
-  HUE_MIN, 
+  getHeadersIndex,
+  getTimestampOffset,
+  getTimestamps,
+  HUE_MAX,
+  HUE_MIN,
   validateChartInformation
 } from '@lib/chartUtils';
-import { ChartInformation, seriesData, MinMax } from '@types';
+import { ChartInformation, seriesData, MinMax, Column, dataColumnKeys } from '@types';
 
 export const useChartData = (chartInformation: ChartInformation) => {
   const [parsedData, setParsedData] = useState<seriesData[]>([]);
@@ -20,78 +20,79 @@ export const useChartData = (chartInformation: ChartInformation) => {
   const resetData = () => {
     setParsedData([]);
     setFileNames([]);
-    setTimestamps([]); // TODO: Maybe not this line
+    setTimestamps([]);
     minMax.current = { min: 0, max: 0 };
   };
 
   const fetchChartData = useCallback(async () => {
     if (!validateChartInformation(chartInformation)) return;
 
-    const { hasGPSTime, hasTimestampX, type } = chartInformation;
+    const { hasGPSTime, hasTimestampX, type, live } = chartInformation;
 
     for (const file of chartInformation.files) {
-      const { columns, analyze } = file;
+      // Build a Column[] by iterating dataColumnKeys
+      const cols = dataColumnKeys
+        .map((key) => file[key])
+        .filter((col): col is Column => !!col);
 
+      // Fetch & analyze the files
       const { filename, text } = await ApiUtil.analyzeFiles(
-        columns.map(col => col.filename),
-        columns.map(col => col.header),
+        cols.map(col => col.filename),
+        cols.map(col => col.header),
         [],
-        analyze.type,
-        analyze.analyzerValues.filter(e => e),
-        chartInformation.live
+        file.analyze.type,
+        file.analyze.analyzerValues.filter(e => e),
+        live
       );
 
       setFileNames(prev => [...prev, filename]);
 
-      // TODO: Maybe separate this logic out since its just formatting
-      const headers = text
-        .slice(0, text.indexOf('\n'))
-        .replace('\r', '')
-        .split(',');
+      // Parse headers
+      const headers = text.slice(0, text.indexOf('\n')).replace('\r', '').split(',');
+      const headerIndices = getHeadersIndex(headers, cols);
 
-      const headerIndices = getHeadersIndex(headers, columns);
+      // Split into lines of fields
+      const lines = text.trim().split('\n').slice(1).map(row => row.split(','));
 
-      const lines = text.trim().split('\n').slice(1).map((line) => line.split(','));
-
-      // TODO: I dont like this handling both cases which are very separate
-      let seriesData: seriesData;
+      let series: seriesData;
 
       if (type !== 'coloredline') {
-        const timestampOffset = hasTimestampX && hasGPSTime ? getTimestampOffset(columns, lines, headerIndices) : 0;
-        seriesData = lines.map((line) => {
-          return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
-        });
+        const timestampOffset = hasTimestampX && hasGPSTime
+          ? getTimestampOffset(cols, lines, headerIndices)
+          : 0;
+
+        series = lines.map(fields => [
+          parseFloat(fields[headerIndices.x]) + timestampOffset,
+          parseFloat(fields[headerIndices.y])
+        ]);
       } else {
-        // TODO: Currently only doing this for the first column. Also only should be done if colour mode is enabled
-        const { min, max } = minMax.current = await ApiUtil.getMinMax(filename, columns[0].header);
+        // Colour series: use first col for colour base
+        const firstColHeader = cols[0].header;
+        const { min, max } = minMax.current = await ApiUtil.getMinMax(filename, firstColHeader);
 
-        seriesData = lines.map((line) => {
+        series = lines.map(fields => {
+          const val = parseFloat(fields[headerIndices.colour]);
+          const hue = HUE_MIN + (HUE_MAX - HUE_MIN) *
+            (val - minMax.current.min) / (max - min);
 
-          const val = parseFloat(line[headerIndices.colour]);
-          const hue = HUE_MIN + (HUE_MAX - HUE_MIN) * (val - minMax.current.min) / (max - min);
-      
-          return { 
-            x: parseFloat(line[headerIndices.x]), 
-            y: parseFloat(line[headerIndices.y]), 
-            colorValue: val, 
+          return {
+            x: parseFloat(fields[headerIndices.x]),
+            y: parseFloat(fields[headerIndices.y]),
+            colorValue: val,
             segmentColor: `hsl(${hue}, 100%, 50%)`
           };
         });
       }
-      setParsedData(prev => [...prev, seriesData]);
 
-      // TODO: This while timestamp stuff shouldn't  be needed anymore
-      let timestamps: number[];
-      if (hasTimestampX) {
-        // TODO: Fix this case, which seems to be an overlap of colour and syncing timestamps
-        timestamps = seriesData.map(item => item[0]) as number[];
-      } else {
-        timestamps = await getTimestamps(text);
-      }
+      setParsedData(prev => [...prev, series]);
 
-      setTimestamps(prev => [...prev, timestamps]);
+      // Generate timestamp array
+      const tsArray: number[] = hasTimestampX
+        ? (series as number[][]).map(point => point[0])
+        : await getTimestamps(text);
+
+      setTimestamps(prev => [...prev, tsArray]);
     }
-
   }, [chartInformation]);
 
   useEffect(() => {

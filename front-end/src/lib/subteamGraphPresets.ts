@@ -41,7 +41,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
                     { file: 'GPS SPEED.csv', axis: 'GPS SPEED' },
                 ],
                 analyzer: null,
-                analyzerOptions: ['100', '3'],
+                analyzerOptions: [],
                 graphType: 'line',
             },
         ],
@@ -54,6 +54,21 @@ export const subteamGraphPresets: DataViewerPreset[] = [
                 axes: [
                     { file: 'RPM SEC.csv', axis: 'RPM SEC' },
                     { file: 'RPM PRIM.csv', axis: 'RPM PRIM' },
+                ],
+                analyzer: AnalyzerType.SHIFT_CURVE,
+                analyzerOptions: [],
+                graphType: 'line',
+            },
+        ]
+    },
+    {
+        name: "Map",
+        description: "Map of GPS coordinates",
+        graphs: [
+            {
+                axes: [
+                    { file: 'GPS LATITUDE.csv', axis: 'GPS LATITUDE' },
+                    { file: 'GPS LONGITUDE.csv', axis: 'GPS LONGITUDE' },
                 ],
                 analyzer: AnalyzerType.SHIFT_CURVE,
                 analyzerOptions: [],
