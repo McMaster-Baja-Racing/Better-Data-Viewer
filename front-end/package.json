@@ -93,7 +93,7 @@
       "runAfterFinish": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": false,
+      "createStartMenuShortcut": true,
       "installerIcon": "public/bajacar.ico",
       "installerHeaderIcon": "public/bajacar.ico",
       "shortcutName": "Data Viewer"
