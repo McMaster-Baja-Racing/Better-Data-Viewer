@@ -34,7 +34,16 @@ public class DeleteOutliers extends Analyzer {
         "Deleting outliers from "
             + super.inputFiles[0]
             + " to "
-            + super.outputFiles[0]);
+            + super.outputFiles[0]
+            + " with x-axis range ["
+            + minX
+            + ", "
+            + maxX
+            + "] and y-axis range ["
+            + minY
+            + ", "
+            + maxY
+            + "]");
 
     getReader(
         inputFiles[0],
