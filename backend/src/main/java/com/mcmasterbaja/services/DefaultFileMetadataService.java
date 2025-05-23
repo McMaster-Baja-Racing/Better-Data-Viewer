@@ -120,8 +120,8 @@ public class DefaultFileMetadataService implements FileMetadataService {
   public boolean canComputeTimespan(Path folderPath) {
     if (folderPath.toString().equals("csv")) return false;
     Path smhPath =
-        storageService.getRootLocation().resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv"));
-    Path dmyPath = storageService.load(folderPath.resolve("GPS DAY MONTH YEAR.csv"));
+        storageService.getRootLocation().resolve(folderPath.resolve("GPS_SECOND_MINUTE_HOUR.csv"));
+    Path dmyPath = storageService.load(folderPath.resolve("GPS_DAY_MONTH_YEAR.csv"));
     return Files.exists(smhPath) && Files.exists(dmyPath);
   }
 
@@ -143,7 +143,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
           Files.lines(
                   storageService
                       .getRootLocation()
-                      .resolve(folderPath.resolve("GPS SECOND MINUTE HOUR.csv")))
+                      .resolve(folderPath.resolve("GPS_SECOND_MINUTE_HOUR.csv")))
               .skip(1)
               .findFirst()
               .orElseThrow()
@@ -153,7 +153,7 @@ public class DefaultFileMetadataService implements FileMetadataService {
           Files.lines(
                   storageService
                       .getRootLocation()
-                      .resolve(folderPath.resolve("GPS DAY MONTH YEAR.csv")))
+                      .resolve(folderPath.resolve("GPS_DAY_MONTH_YEAR.csv")))
               .skip(1)
               .findFirst()
               .orElseThrow()

@@ -6,7 +6,7 @@ export class GraphTester extends Tester {
 
   constructor(page: Page, binFileName: string) {
     super(page);
-    this.frontendFilePath = `${binFileName}/BATT VOLT`;
+    this.frontendFilePath = `${binFileName}/BATT_VOLT`;
   }
 
   async testCreateGraph() {

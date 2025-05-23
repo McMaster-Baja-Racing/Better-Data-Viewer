@@ -26,8 +26,8 @@ public class ShiftCurveAnalyzer extends Analyzer {
     // Hardcoded inputs and columns
     String file1 = params.getInputFiles()[0];
     String file2 = params.getInputFiles()[1];
-    String col1 = "RPM SEC"; // params.getInputColumns()[0];
-    String col2 = "RPM PRIM"; // params.getInputColumns()[1];
+    String col1 = "RPM_SEC"; // params.getInputColumns()[0];
+    String col2 = "RPM_PRIM"; // params.getInputColumns()[1];
 
     // 1a) StrictTimestamp for file1/col1
     Analyzer strict1 = factory.getAnalyzer(AnalyzerType.STRICT_TIMESTAMP);

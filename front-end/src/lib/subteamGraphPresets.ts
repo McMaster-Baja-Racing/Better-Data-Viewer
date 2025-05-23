@@ -7,8 +7,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
         graphs: [
             {
                 axes: [
-                    { file: 'RPM SEC.csv', axis: 'RPM SEC' },
-                    { file: 'RPM PRIM.csv', axis: 'RPM PRIM' },
+                    { file: 'RPM_SEC.csv', axis: 'RPM_SEC' },
+                    { file: 'RPM_PRIM.csv', axis: 'RPM_PRIM' },
                 ],
                 analyzer: AnalyzerType.ACCEL_CURVE,
                 analyzerOptions: [],
@@ -18,12 +18,12 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     },
     {
         name: 'Shift Curve with GPS',
-        description: 'Primary RPM vs GPS Speed',
+        description: 'Primary RPM vs GPS_SPEED',
         graphs: [
             {
                 axes: [
-                    { file: 'GPS SPEED.csv', axis: 'GPS SPEED' },
-                    { file: 'RPM PRIM.csv', axis: 'RPM PRIM' },
+                    { file: 'GPS_SPEED.csv', axis: 'GPS_SPEED' },
+                    { file: 'RPM_PRIM.csv', axis: 'RPM_PRIM' },
                 ],
                 analyzer: AnalyzerType.ACCEL_CURVE,
                 analyzerOptions: [],
@@ -37,8 +37,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
         graphs: [
             {
                 axes: [
-                    { file: 'GPS SPEED.csv', axis: 'Timestamp (ms)' },
-                    { file: 'GPS SPEED.csv', axis: 'GPS SPEED' },
+                    { file: 'GPS_SPEED.csv', axis: 'Timestamp (ms)' },
+                    { file: 'GPS_SPEED.csv', axis: 'GPS_SPEED' },
                 ],
                 analyzer: null,
                 analyzerOptions: ['100', '3'],
@@ -48,12 +48,12 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     },
     {
         name: "Goated Shift Curve",
-        description: "Primary RPM vs Secondary RPM with GPS Speed",
+        description: "Primary RPM vs Secondary RPM with GPS_SPEED",
         graphs: [
             {
                 axes: [
-                    { file: 'RPM SEC.csv', axis: 'RPM SEC' },
-                    { file: 'RPM PRIM.csv', axis: 'RPM PRIM' },
+                    { file: 'RPM_SEC.csv', axis: 'RPM_SEC' },
+                    { file: 'RPM_PRIM.csv', axis: 'RPM_PRIM' },
                 ],
                 analyzer: AnalyzerType.SHIFT_CURVE,
                 analyzerOptions: [],

@@ -81,7 +81,7 @@ public class AccelCurveAnalyzer extends Analyzer {
     return outputFiles[2];
   }
 
-  // Gets start and end timestamps of accel runs based on GPS speed
+  // Gets start and end timestamps of accel runs based on GPS_SPEED
   @Deprecated
   public static List<List<Integer>> getAccelTimestamp(List<List<String>> dataPoints) {
     int initialTime = 0;

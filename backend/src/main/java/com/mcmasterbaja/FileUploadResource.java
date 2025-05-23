@@ -99,9 +99,9 @@ public class FileUploadResource {
 
         // Build CSV contents
         String header = "Timestamp (ms),%s\n";
-        StringBuilder latCsv = new StringBuilder(String.format(header, "GPS LATITUDE"));
-        StringBuilder lonCsv = new StringBuilder(String.format(header, "GPS LONGITUDE"));
-        StringBuilder speedCsv = new StringBuilder(String.format(header, "GPS SPEED"));
+        StringBuilder latCsv = new StringBuilder(String.format(header, "GPS_LATITUDE"));
+        StringBuilder lonCsv = new StringBuilder(String.format(header, "GPS_LONGITUDE"));
+        StringBuilder speedCsv = new StringBuilder(String.format(header, "GPS_SPEED"));
 
         for (RecordMesg rec : records) {
           // Convert FIT timestamp to Java epoch ms
@@ -134,9 +134,9 @@ public class FileUploadResource {
             InputStream speedStream =
                 new java.io.ByteArrayInputStream(
                     speedCsv.toString().getBytes(StandardCharsets.UTF_8))) {
-          storageService.store(latStream, fitDir.resolve("GPS LATITUDE.csv"));
-          storageService.store(lonStream, fitDir.resolve("GPS LONGITUDE.csv"));
-          storageService.store(speedStream, fitDir.resolve("GPS SPEED.csv"));
+          storageService.store(latStream, fitDir.resolve("GPS_LATITUDE.csv"));
+          storageService.store(lonStream, fitDir.resolve("GPS_LONGITUDE.csv"));
+          storageService.store(speedStream, fitDir.resolve("GPS_SPEED.csv"));
         } catch (IOException e) {
           throw new StorageException("Failed to store CSV files for FIT: " + fileName, e);
         }
