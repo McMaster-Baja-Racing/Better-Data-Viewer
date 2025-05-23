@@ -24,7 +24,7 @@ public class StrictTimestampAnalyzer extends Analyzer {
   private static final String TIMESTAMP_COLUMN = "Timestamp (ms)";
   private static final long MAX_GAP = 10_000L;
   private static final int MIN_CONSECUTIVE_LARGE = 3;
-  private static final int MIN_TTMESTAMP = 1000;
+  private static final int MIN_TIMESTAMP = 1000;
 
   @Override
   @SneakyThrows
@@ -68,8 +68,8 @@ public class StrictTimestampAnalyzer extends Analyzer {
         continue;
       }
 
-      if (currentTimestamp < MIN_TTMESTAMP) {
-        logger.warn("Skipping row with timestamp < " + MIN_TTMESTAMP + ": " + Arrays.toString(row));
+      if (currentTimestamp < MIN_TIMESTAMP) {
+        logger.warn("Skipping row with timestamp < " + MIN_TIMESTAMP + ": " + Arrays.toString(row));
         continue;
       }
 
