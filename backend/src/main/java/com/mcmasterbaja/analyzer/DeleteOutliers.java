@@ -56,7 +56,7 @@ public class DeleteOutliers extends Analyzer {
     String[] dataPoint;
 
     while ((dataPoint = reader.readNext()) != null) {
-      if (Double.parseDouble(dataPoint[xAxisIndex]) <= this.limit) {
+      if (Double.parseDouble(dataPoint[xAxisIndex]) >= this.limit) {
         writer.writeNext(dataPoint);
       }
     }
