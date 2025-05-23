@@ -15,26 +15,26 @@ import org.jboss.logging.Logger;
 @AnalyzerQualifier(AnalyzerType.DELETE_OUTLIER)
 @OnAnalyzerException
 public class DeleteOutliers extends Analyzer {
-  private double minimum;
-  private double maximum;
+  private double minX;
+  private double maxX;
+  private double minY;
+  private double maxY;
   @Inject Logger logger;
 
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
 
-    this.minimum = Double.parseDouble(params.getOptions()[0]);
-    this.maximum = Double.parseDouble(params.getOptions()[1]);
+    this.minX = Double.parseDouble(params.getOptions()[0]);
+    this.maxX = Double.parseDouble(params.getOptions()[1]);
+    this.minY = Double.parseDouble(params.getOptions()[2]);
+    this.maxY = Double.parseDouble(params.getOptions()[3]);
 
     logger.info(
         "Deleting outliers from "
             + super.inputFiles[0]
             + " to "
-            + super.outputFiles[0]
-            + " with a min of "
-            + this.minimum
-            + " and a max of "
-            + this.maximum);
+            + super.outputFiles[0]);
 
     getReader(
         inputFiles[0],
@@ -54,15 +54,17 @@ public class DeleteOutliers extends Analyzer {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
     }
 
-    logger.debug(inputColumns[0]);
-    int xAxisIndex = this.getColumnIndex(inputColumns[1], headers);
+    int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
+    int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);
 
     String[] dataPoint;
 
     while ((dataPoint = reader.readNext()) != null) {
-      if (this.minimum <= Double.parseDouble(dataPoint[xAxisIndex])
-          && Double.parseDouble(dataPoint[xAxisIndex]) <= this.maximum) {
+      if (minX <= Double.parseDouble(dataPoint[xAxisIndex])
+          && Double.parseDouble(dataPoint[xAxisIndex]) <= maxX
+          && minY <= Double.parseDouble(dataPoint[yAxisIndex])
+          && Double.parseDouble(dataPoint[yAxisIndex]) <= maxY) {
         writer.writeNext(dataPoint);
       }
     }

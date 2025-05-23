@@ -186,7 +186,7 @@ const analyzerData = [
   {
     title: 'Delete Outliers',
     code: 'DELETE_OUTLIER',
-    parameters: [{ name: 'Minimum', default: '-1000000'}, {name: 'Maximum', default: '1000000' }],
+    parameters: [{name : 'Min X', default: '-1000000000'}, {name : 'Max X', default: '1000000000'}, { name: 'Min Y', default: '-1000000000'}, {name: 'Max Y', default: '1000000000' }],
     description: 'Given a minimum and maximum, this will remove any points that are outside of the range.',
     image: {
       link: 'deleteOutliers.png',
@@ -203,7 +203,7 @@ const analyzerData = [
   {
     title: 'Strict Timestamps',
     code: "STRICT_TIMESTAMP",
-    parameters: [{name : 'First', default: '0'}, {name : 'Last', default: '9999999'}],
+    parameters: [],
     description: 'This will take the timestamps and make them strictly increasing. This is useful for some analyzers that require strictly increasing timestamps.',
     image: {
       link: 'strict.png',

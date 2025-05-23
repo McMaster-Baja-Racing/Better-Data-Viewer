@@ -24,18 +24,11 @@ public class StrictTimestampAnalyzer extends Analyzer {
   private static final String TIMESTAMP_COLUMN = "Timestamp (ms)";
   private static final long MAX_GAP = 10_000L;
   private static final int MIN_CONSECUTIVE_LARGE = 3;
-  private int minimumTimestamp = 0;
-  private int maximumTimestamp = 0;
 
   @Override
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
-
-    this.minimumTimestamp = Integer.parseInt(params.getOptions()[0]);
-    System.out.println("Minimum timestamp: " + this.minimumTimestamp);
-    this.maximumTimestamp = Integer.parseInt(params.getOptions()[1]);
-    System.out.println("Maximum timestamp: " + this.maximumTimestamp);
 
     logger.info(
         "Filtering file "
@@ -44,11 +37,7 @@ public class StrictTimestampAnalyzer extends Analyzer {
             + TIMESTAMP_COLUMN
             + "', filtering single or two large gaps > "
             + MAX_GAP
-            + "ms"
-            + " with a min of "
-            + this.minimumTimestamp
-            + " and a max of "
-            + this.maximumTimestamp);
+            + "ms");
     getReader(
         inputFiles[0],
         reader -> getWriter(getOutputFilename(), writer -> filterIO(reader, writer)));
@@ -76,18 +65,6 @@ public class StrictTimestampAnalyzer extends Analyzer {
         currentTimestamp = Long.parseLong(row[timestampIndex].trim());
       } catch (NumberFormatException e) {
         logger.warn("Skipping row with invalid timestamp: " + Arrays.toString(row));
-        continue;
-      }
-
-      if (currentTimestamp < minimumTimestamp || currentTimestamp > maximumTimestamp) {
-        logger.info(
-            "Skipping row with timestamp outside range: "
-                + currentTimestamp
-                + " ("
-                + minimumTimestamp
-                + " - "
-                + maximumTimestamp
-                + ")");
         continue;
       }
 
