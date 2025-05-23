@@ -16,6 +16,7 @@ import org.jboss.logging.Logger;
 @OnAnalyzerException
 public class DeleteOutliers extends Analyzer {
   private double limit;
+  private int minTimestamp = 1000;
   @Inject Logger logger;
 
   @SneakyThrows
@@ -49,6 +50,8 @@ public class DeleteOutliers extends Analyzer {
       throw new InvalidHeaderException("Failed to read headers from input file: " + inputFiles[0]);
     }
 
+    int timestampIndex = this.getColumnIndex("Timestamp (ms)", headers);
+
     logger.debug(inputColumns[0]);
     int xAxisIndex = this.getColumnIndex(inputColumns[1], headers);
     writer.writeNext(headers);
@@ -56,7 +59,7 @@ public class DeleteOutliers extends Analyzer {
     String[] dataPoint;
 
     while ((dataPoint = reader.readNext()) != null) {
-      if (Double.parseDouble(dataPoint[xAxisIndex]) <= this.limit) {
+      if (Double.parseDouble(dataPoint[xAxisIndex]) >= this.limit && Integer.parseInt(dataPoint[timestampIndex]) > this.minTimestamp) {
         writer.writeNext(dataPoint);
       }
     }
