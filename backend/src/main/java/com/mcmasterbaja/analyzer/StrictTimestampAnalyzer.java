@@ -24,7 +24,6 @@ public class StrictTimestampAnalyzer extends Analyzer {
   private static final String TIMESTAMP_COLUMN = "Timestamp (ms)";
   private static final long MAX_GAP = 10_000L;
   private static final int MIN_CONSECUTIVE_LARGE = 3;
-  
   private int minimumTimestamp = 0;
   private int maximumTimestamp = 0;
 
