@@ -15,21 +15,26 @@ import org.jboss.logging.Logger;
 @AnalyzerQualifier(AnalyzerType.DELETE_OUTLIER)
 @OnAnalyzerException
 public class DeleteOutliers extends Analyzer {
-  private double limit;
+  private double minimum;
+  private double maximum;
   @Inject Logger logger;
 
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
-    this.limit = Double.parseDouble(params.getOptions()[0]);
     extractParams(params);
+
+    this.minimum = Double.parseDouble(params.getOptions()[0]);
+    this.maximum = Double.parseDouble(params.getOptions()[1]);
 
     logger.info(
         "Deleting outliers from "
             + super.inputFiles[0]
             + " to "
             + super.outputFiles[0]
-            + " with a limit of "
-            + this.limit);
+            + " with a min of "
+            + this.minimum
+            + " and a max of "
+            + this.maximum);
 
     getReader(
         inputFiles[0],
@@ -56,7 +61,7 @@ public class DeleteOutliers extends Analyzer {
     String[] dataPoint;
 
     while ((dataPoint = reader.readNext()) != null) {
-      if (Double.parseDouble(dataPoint[xAxisIndex]) >= this.limit) {
+      if (this.minimum <= Double.parseDouble(dataPoint[xAxisIndex]) && Double.parseDouble(dataPoint[xAxisIndex]) <= this.maximum) {
         writer.writeNext(dataPoint);
       }
     }
