@@ -15,7 +15,7 @@ try {
 
     # Get modules
     Write-Output "Getting modules..."
-    $modules = jdeps --module-path $JAVA_HOME/jmods --multi-release 21 --print-module-deps --ignore-missing-deps target/backend-1.2.0-runner.jar
+    $modules = jdeps --module-path $JAVA_HOME/jmods --multi-release 21 --print-module-deps --ignore-missing-deps target/backend-2.0.0-alpha-runner.jar
     Write-Output "modules: $modules"
 
     # Create the JRE

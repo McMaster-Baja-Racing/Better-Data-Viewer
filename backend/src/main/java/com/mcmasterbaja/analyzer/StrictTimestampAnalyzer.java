@@ -29,6 +29,7 @@ public class StrictTimestampAnalyzer extends Analyzer {
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
+
     logger.info(
         "Filtering file "
             + inputFiles[0]
