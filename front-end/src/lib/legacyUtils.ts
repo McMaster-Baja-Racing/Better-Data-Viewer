@@ -23,7 +23,7 @@ export function toLegacyArray(): legacyAnalyzerData[] {
   
         return {
           title:       cfg.title,
-          code:        key === 'NONE' ? null : (key as AnalyzerType),
+          code:        key === 'NONE' ? null : key,
           parameters:  cfg.parameters?.map(p => ({ name: p.name, default: p.defaultValue })) ?? [],
           checked:     isChecked,
           description: cfg.description,

@@ -6,7 +6,6 @@ import TextField from '@components/textfield/TextField';
 import sigma from '@assets/icons/sigma.svg';
 import plus from '@assets/icons/add.svg';
 import minus from '@assets/icons/remove.svg';
-import trash from '@assets/icons/trash.svg';
 import { unstable_batchedUpdates } from 'react-dom';
 import { analyzerConfig, AnalyzerKey, AnalyzerType, ChartFileInformation, Column, DataColumnKey } from '@types';
 
@@ -51,12 +50,14 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
       value: key
     }));
 
+    // Update analyzer type
     useEffect(() => {
       const newKey: AnalyzerKey = chartFileInformation.analyze.type ?? 'NONE';
       setAnalyzerKey(newKey);
       setAnalyzerValues(analyzerConfig[newKey].parameters?.map(param => param.defaultValue) || []);
     }, [chartFileInformation.analyze.type]);
 
+    // Wait before API call
     useEffect(() => {
         // wait until values array matches expected length
         if (analyzer.parameters && analyzerValues.length !== (analyzer.parameters?.length || 0)) {
@@ -65,6 +66,7 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
         onAnalyzerUpdate(analyzerKey === 'NONE' ? null : analyzerKey, analyzerValues);
     }, [analyzerKey, analyzerValues]);
 
+    // TODO: This logic could be decoupled from this
     useEffect(() => {
         const currX = chartFileInformation.x.header;
         const update: Partial<Column> = { header: selectedDataType };
@@ -161,7 +163,6 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
                     ))}
                 </div>
             </div>
-            {/* <img src={trash} alt="delete" className={styles.deleteIcon} /> */}
         </div>
     );
 }

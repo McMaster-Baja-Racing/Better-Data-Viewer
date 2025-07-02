@@ -1,6 +1,5 @@
 import isEqual from 'lodash.isequal';
-import { AnalyzerType, DataColumnKey } from '@types';
-import { ChartFileInformation, Column, ChartInformation } from '@types';
+import { AnalyzerType, ChartFileInformation, Column, ChartInformation, DataColumnKey } from '@types';
 
 export type ChartAction =
   | { type: 'UPDATE_FILE'; fileIndex: number; updatedFile: Partial<ChartFileInformation> }
