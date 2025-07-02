@@ -24,12 +24,12 @@ public class StrictTimestampAnalyzer extends Analyzer {
   private static final String TIMESTAMP_COLUMN = "Timestamp (ms)";
   private static final long MAX_GAP = 10_000L;
   private static final int MIN_CONSECUTIVE_LARGE = 3;
-  private static final int MIN_TIMESTAMP = 1000;
 
   @Override
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
+
     logger.info(
         "Filtering file "
             + inputFiles[0]
@@ -65,11 +65,6 @@ public class StrictTimestampAnalyzer extends Analyzer {
         currentTimestamp = Long.parseLong(row[timestampIndex].trim());
       } catch (NumberFormatException e) {
         logger.warn("Skipping row with invalid timestamp: " + Arrays.toString(row));
-        continue;
-      }
-
-      if (currentTimestamp < MIN_TIMESTAMP) {
-        logger.warn("Skipping row with timestamp < " + MIN_TIMESTAMP + ": " + Arrays.toString(row));
         continue;
       }
 

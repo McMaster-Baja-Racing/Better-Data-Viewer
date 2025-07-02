@@ -186,8 +186,8 @@ const analyzerData = [
   {
     title: 'Delete Outliers',
     code: 'DELETE_OUTLIER',
-    parameters: [{ name: 'Threshold', default: '1' }],
-    description: 'Given a threshold, this will remove any points that are outside of the threshold.',
+    parameters: [{name : 'Min X', default: '-1000000000'}, {name : 'Max X', default: '1000000000'}, { name: 'Min Y', default: '-1000000000'}, {name: 'Max Y', default: '1000000000' }],
+    description: 'Given a minimum and maximum, this will remove any points that are outside of the range.',
     image: {
       link: 'deleteOutliers.png',
       alt: 'Delete Outliers Image',
