@@ -19,6 +19,7 @@ export interface ImageConfig {
 export interface AnalyzerConfigItem {
     title: string;
     description: string;
+    isJoinBased: boolean;
     parameters?: ParameterConfig[];
     image?: ImageConfig;
     links?: LinkConfig[];
@@ -32,6 +33,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
     NONE: {
       title: 'No Analyzer',
       description: 'Probably self-explanatory',
+      isJoinBased: false,
       defaultChecked: true,
     },
   
@@ -39,6 +41,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Acceleration Curve Tool',
       description:
         'Given both primary (y-axis) and secondary (x-axis) RPM values, applies noise reduction then interpolates to show the shift curve.',
+      isJoinBased: true,
       image: {
         src: images.accel,
         alt: 'Acceleration curve demo',
@@ -50,6 +53,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Shift Curve',
       description:
         'Aligns primary and secondary RPM into the same range for easy comparison.',
+      isJoinBased: true,
       image: {
         src: images.shiftCurve,
         alt: 'Shift curve graphic',
@@ -61,6 +65,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Savitzky-Golay Smoother',
       description:
         'Smooths a curve by fitting consecutive sub-sets of data points with a low-degree polynomial.',
+      isJoinBased: false,
       parameters: [
         { name: 'windowSize', defaultValue: '100' },
         { name: 'polyOrder', defaultValue: '3' },
@@ -76,6 +81,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Linear Interpolator',
       description:
         'Applies linear interpolation to fill in gaps in data.',
+      isJoinBased: true,
       image: {
         src: images.linearInterpolate,
         alt: 'Linear interpolation demo',
@@ -87,6 +93,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Linear Multiplier',
       description:
         'Multiplies the data by a linear factor.',
+      isJoinBased: false,
       image: {
         src: images.linearMultiply,
         alt: 'Linear multiplication demo',
@@ -98,6 +105,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Ramer-Douglas-Peucker Compression',
       description:
         'Reduces the number of points in a curve while maintaining its shape.',
+      isJoinBased: false,
       image: {
         src: images.rdpCompression,
         alt: 'RDP compression demo',
@@ -109,6 +117,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Rolling Average',
       description:
         'Calculates the average of a set of data points over a specified window.',
+      isJoinBased: false,
       image: {
         src: images.rollAvg,
         alt: 'Rolling average demo',
@@ -120,6 +129,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Delete Outlier',
       description:
         'Removes outliers from the data set.',
+      isJoinBased: false,
       image: {
         src: images.deleteOutlier,
         alt: 'Delete outlier demo',
@@ -131,6 +141,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Strict Timestamp',
       description:
         'Ensures that the timestamps in the data set are strictly increasing.',
+      isJoinBased: false,
       image: {
         src: images.strictTimestamp,
         alt: 'Strict timestamp demo',
@@ -142,6 +153,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Split',
       description:
         'Splits the data set into two parts based on a specified timestamp.',
+      isJoinBased: false,
       parameters: [
         { name: 'start', defaultValue: '0' },
         { name: 'end', defaultValue: '' },
@@ -157,6 +169,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Interpolation Pro',
       description:
         'Advanced interpolation tool for more complex data sets.',
+      isJoinBased: true,
       image: {
         src: images.interpolaterPro,
         alt: 'Interpolation Pro demo',
@@ -168,6 +181,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       title: 'Average',
       description:
         'Calculates the average of the data points.',
+      isJoinBased: false,
       image: {
         src: images.average,
         alt: 'Average demo',
@@ -178,13 +192,12 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
     [AnalyzerType.CUBIC]: {
         title: 'Cubic',
         description:
-            'Applies a cubic function to the data points.',
+          'Applies a cubic function to the data points.',
+        isJoinBased: false,
         image: {
             src: images.cubic,
             alt: 'Cubic demo',
         },
         links: [{ title: 'Cubic Function (Wiki)', url: 'https://en.wikipedia.org/wiki/Cubic_function' }],
         },
-
-
 };  

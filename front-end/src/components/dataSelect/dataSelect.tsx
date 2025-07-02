@@ -20,16 +20,8 @@ interface DataSelectProps {
 
 const TIMESTAMP_HEADER = 'Timestamp (ms)';
 
-// Analyzers that do interpolation
-const seriesAnalyzers: AnalyzerType[] = [
-  AnalyzerType.SHIFT_CURVE,
-  AnalyzerType.ACCEL_CURVE,
-  AnalyzerType.LINEAR_INTERPOLATE,
-  AnalyzerType.INTERPOLATER_PRO,
-];
-
-function isSeriesAnalyzer(key?: AnalyzerKey | null): key is AnalyzerType {
-  return !!key && seriesAnalyzers.includes(key as AnalyzerType);
+function isJoinAnalyzer(key?: AnalyzerKey | null): key is AnalyzerType {
+  return !!key && analyzerConfig[key].isJoinBased
 }
 
 export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, onColumnUpdate, chartFileInformation }: DataSelectProps) {
@@ -76,14 +68,14 @@ export function DataSelect({ sources, dataTypes, columnKey, onAnalyzerUpdate, on
             update.filename = `${selectedSource}/${selectedDataType}.csv`;
             if (currX === TIMESTAMP_HEADER) {
               onColumnUpdate('x', { filename: update.filename });
-            } else if (!isSeriesAnalyzer(analyzerKey)) {
+            } else if (!isJoinAnalyzer(analyzerKey)) {
               onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
             }
           } else if (columnKey === 'x') {
-            if (selectedDataType === TIMESTAMP_HEADER && isSeriesAnalyzer(analyzerKey)) {
+            if (selectedDataType === TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
               onAnalyzerUpdate(null, []);
               onColumnUpdate('x', { filename: chartFileInformation.y.filename });
-            } else if (selectedDataType !== TIMESTAMP_HEADER && isSeriesAnalyzer(analyzerKey)) {
+            } else if (selectedDataType !== TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
               
             } else if (selectedDataType !== TIMESTAMP_HEADER) {
               update.filename = `${selectedSource}/${selectedDataType}.csv`;
