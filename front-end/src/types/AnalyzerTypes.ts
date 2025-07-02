@@ -128,7 +128,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
     [AnalyzerType.DELETE_OUTLIER]: {
       title: 'Delete Outlier',
       description:
-        'Removes outliers from the data set.',
+        'Given a minimum and maximum, this will remove any points that are outside of the range.',
       isJoinBased: false,
       image: {
         src: images.deleteOutlier,
