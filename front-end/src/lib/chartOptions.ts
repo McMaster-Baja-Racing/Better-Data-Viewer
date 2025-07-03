@@ -49,7 +49,7 @@ const getStandardChartConfig = (chartInformation: ChartInformation) => {
 
   chartConfig.xAxis = {
     title: {
-      text: chartInformation.files[0].columns[0].header
+      text: chartInformation.files[0].x.header
     },
 
     dateTimeLabelFormats: {
@@ -64,7 +64,7 @@ const getStandardChartConfig = (chartInformation: ChartInformation) => {
 
   chartConfig.yAxis = {
     title: {
-      text: chartInformation.files[0].columns[1].header
+      text: chartInformation.files[0].y.header
     },
     lineColor: 'grey',
     tickColor: 'grey',

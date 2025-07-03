@@ -4,7 +4,7 @@ import cx from 'classnames';
 import closeIcon from '@assets/icons/close.svg';
 
 const MAX_WIDTH = 1000;
-const MIN_WIDTH = 300;
+const MIN_WIDTH = 700;
 
 interface RightSidebarProps {
   isOpen: boolean;
@@ -14,7 +14,7 @@ interface RightSidebarProps {
 }
 
 export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }: RightSidebarProps) => {
-  const [width, setWidth] = useState(500);
+  const [width, setWidth] = useState(MIN_WIDTH);
   const isResizing = useRef(false);
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -24,7 +24,7 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
     const handleMouseMove = (event: MouseEvent) => {
       if (!isResizing.current) return;
       const newWidth = window.innerWidth - event.clientX;
-      if (newWidth > MIN_WIDTH && newWidth < MAX_WIDTH) setWidth(newWidth); // Limit resize range
+      if (newWidth > MIN_WIDTH && newWidth < MAX_WIDTH) setWidth(newWidth);
     };
 
     const handleMouseUp = () => {
@@ -53,7 +53,9 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
         <button className={styles.closeButton} onClick={() => setIsOpen(false)}>
           <img src={closeIcon} alt="Close sidebar" />
         </button>
-        {sidebarContent}
+        <div className={styles.sidebarContent}>
+          {sidebarContent}
+        </div>
       </div>
     </div>
   )

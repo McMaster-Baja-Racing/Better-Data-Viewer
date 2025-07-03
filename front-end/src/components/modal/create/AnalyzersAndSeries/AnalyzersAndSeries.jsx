@@ -1,6 +1,6 @@
 import '@styles/modalStyles.css';
 import Help from '../Help/Help';
-import analyzerData from '@components/analyzerData';
+import { legacyAnalyzerData as analyzerData } from '@lib/legacyUtils';
 import './AnalyzersAndSeries.css';
 import React, { useState, useEffect } from 'react';
 const AnalyzersAndSeries = ({
