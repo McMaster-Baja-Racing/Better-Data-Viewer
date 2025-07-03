@@ -14,7 +14,7 @@ export const DataView = () => {
   const { chartInformation } = (location.state || {}) as { chartInformation: ChartInformation };
 
   // Store the chart information in state so it doesn't update on every render.
-  const [chartDataState, dispatch] = useReducer(chartInformationReducer, chartInformation);;
+  const [chartDataState, dispatch] = useReducer(chartInformationReducer, chartInformation);
   const [bins, setBins] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
