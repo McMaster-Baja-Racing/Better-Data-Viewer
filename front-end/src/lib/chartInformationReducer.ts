@@ -12,7 +12,6 @@ export const chartInformationReducer = (
   state: ChartInformation,
   action: ChartAction
 ): ChartInformation => {
-  console.log('Reducer action:', action);
   let updatedState = state;
 
   switch (action.type) {

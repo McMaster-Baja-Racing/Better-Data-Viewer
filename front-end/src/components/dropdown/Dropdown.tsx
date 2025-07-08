@@ -40,12 +40,12 @@ export const Dropdown = <T,>({ options, selected, setSelected, width, className 
 
       <div className={`${styles.options} ${isOpen ? styles.open : ''}`}>
         {options
-          .filter(option => option.value !== selected) // Filter out the selected option
+          .filter(option => option.value !== selected) // Filter out the selected option // TODO: Is this right? Check it
           .map((option, index) => (
             <div
               key={index}
               className={`${styles.option} ${
-                option === selected ? styles.selected : ''
+                option.value === selected ? styles.selected : ''
               }`}
               onClick={(e) => handleOptionClick(option.value, e)}
             >
