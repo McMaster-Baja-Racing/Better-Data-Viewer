@@ -67,8 +67,8 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         'Smooths a curve by fitting consecutive sub-sets of data points with a low-degree polynomial.',
       isJoinBased: false,
       parameters: [
-        { name: 'windowSize', defaultValue: '100' },
-        { name: 'polyOrder', defaultValue: '3' },
+        { name: 'Window Size', defaultValue: '100' },
+        { name: 'Polynomial Order', defaultValue: '3' },
       ],
       image: {
         src: images.sGolay,
@@ -94,6 +94,10 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       description:
         'Multiplies the data by a linear factor.',
       isJoinBased: false,
+      parameters: [
+        { name: 'Multiplier', defaultValue: '1' }, 
+        { name: 'Offset', defaultValue: '0' },
+      ],
       image: {
         src: images.linearMultiply,
         alt: 'Linear multiplication demo',
@@ -106,6 +110,9 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       description:
         'Reduces the number of points in a curve while maintaining its shape.',
       isJoinBased: false,
+      parameters: [
+        { name: 'Epsilon', defaultValue: '0.1' }
+      ],
       image: {
         src: images.rdpCompression,
         alt: 'RDP compression demo',
@@ -118,6 +125,9 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       description:
         'Calculates the average of a set of data points over a specified window.',
       isJoinBased: false,
+      parameters: [
+        { name: 'WindowSize', defaultValue: '100' }
+      ],
       image: {
         src: images.rollAvg,
         alt: 'Rolling average demo',
@@ -130,6 +140,12 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       description:
         'Given a minimum and maximum, this will remove any points that are outside of the range.',
       isJoinBased: false,
+      parameters: [
+        {name : 'Min X', defaultValue: '-1000000000'}, 
+        {name : 'Max X', defaultValue: '1000000000'}, 
+        { name: 'Min Y', defaultValue: '-1000000000'}, 
+        {name: 'Max Y', defaultValue: '1000000000' }
+      ],
       image: {
         src: images.deleteOutlier,
         alt: 'Delete outlier demo',
@@ -155,8 +171,8 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         'Splits the data set into two parts based on a specified timestamp.',
       isJoinBased: false,
       parameters: [
-        { name: 'start', defaultValue: '0' },
-        { name: 'end', defaultValue: '' },
+        { name: 'Start', defaultValue: '0' },
+        { name: 'End', defaultValue: '' },
       ],
       image: {
         src: images.split,
@@ -194,6 +210,11 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         description:
           'Applies a cubic function to the data points.',
         isJoinBased: false,
+        parameters: [
+          { name: 'A', defaultValue: '1' }, 
+          { name: 'B', defaultValue: '1' }, 
+          { name: 'C', defaultValue: '1' }, 
+          { name: 'D', defaultValue: '1' }],
         image: {
             src: images.cubic,
             alt: 'Cubic demo',
