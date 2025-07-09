@@ -19,6 +19,6 @@ export default tseslint.config(
       2,  
       { 'SwitchCase': 1 }
     ],
-    'unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
   }}
 );
