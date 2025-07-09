@@ -40,7 +40,7 @@ export const Dropdown = <T,>({ options, selected, setSelected, width, className 
 
       <div className={`${styles.options} ${isOpen ? styles.open : ''}`}>
         {options
-          .filter(option => option.value !== selected) // Filter out the selected option // TODO: Is this right? Check it
+          .filter(option => option.value !== selected) // Filter out the selected option, since its already displayed
           .map((option, index) => (
             <div
               key={index}
