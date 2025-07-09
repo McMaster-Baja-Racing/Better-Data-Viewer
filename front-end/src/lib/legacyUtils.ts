@@ -1,6 +1,6 @@
 import { analyzerConfig, AnalyzerConfigItem, AnalyzerKey, AnalyzerType } from '@types';
 
-interface legacyAnalyzerData {
+interface LegacyAnalyzerData {
   title: string;
   code: AnalyzerType | null;
   parameters: { name: string; default: string }[];
@@ -14,7 +14,7 @@ interface legacyAnalyzerData {
   links: { title: string; link: string }[];
 }
 
-export function toLegacyArray(): legacyAnalyzerData[] {
+export function toLegacyArray(): LegacyAnalyzerData[] {
     return (Object.entries(analyzerConfig) as [AnalyzerKey, AnalyzerConfigItem][])
       .map(([key, cfg]) => {
         const imageSrc = cfg.image?.src ?? '';
