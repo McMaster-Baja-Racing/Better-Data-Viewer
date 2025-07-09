@@ -5,6 +5,7 @@ $dropdown-transition-time: 0.3s;
 $border-radius: 8px;
 
 .dropdown {
+  all: unset;
   @include fonts.text-medium;
   min-width: 15rem;
   border-radius: $border-radius;

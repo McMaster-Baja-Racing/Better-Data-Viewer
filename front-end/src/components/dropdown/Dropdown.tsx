@@ -28,7 +28,7 @@ export const Dropdown = <T,>({ options, selected, setSelected, width, className 
   const selectedOption = options.find(option => option.value === selected);
 
   return (
-    <div 
+    <button 
       className={cx(styles.dropdown, {[styles.open]: isOpen}, className)} 
       style={{ width }}
       onClick={() => setIsOpen((prev) => !prev)}
@@ -53,6 +53,6 @@ export const Dropdown = <T,>({ options, selected, setSelected, width, className 
             </div>
           ))}
       </div>
-    </div>
+    </button>
   );
 };
