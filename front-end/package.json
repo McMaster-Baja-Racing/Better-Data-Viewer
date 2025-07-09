@@ -49,6 +49,7 @@
     "build:electron": "electron-builder",
     "serve": "vite preview",
     "lint": "npx eslint . --fix",
+    "lint-check": "npx eslint .",
     "electron": "electron src/main.ts --trace-warnings"
   },
   "build": {
