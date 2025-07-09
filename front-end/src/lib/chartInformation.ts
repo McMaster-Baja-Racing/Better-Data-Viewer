@@ -1,5 +1,5 @@
 import isEqual from 'lodash.isequal';
-import { AnalyzerType, ChartFileInformation, Column, ChartInformation, DataColumnKey } from '@types';
+import { AnalyzerType, ChartFileInformation, Column, ChartInformation, DataColumnKey, DataViewerPreset, ChartAnalyzerInformation, dataColumnKeys } from '@types';
 
 export type ChartAction =
   | { type: 'UPDATE_FILE'; fileIndex: number; updatedFile: Partial<ChartFileInformation> }
@@ -91,3 +91,50 @@ export const chartInformationReducer = (
   }
   return isEqual(state, updatedState) ? state : updatedState;
 };
+
+const cols: Record<DataColumnKey, Column | null> = {
+  x: null,
+  y: null,
+  z: null
+};
+
+export const generateChartInformation = (
+    fileKeys: string[],
+    preset: DataViewerPreset
+  ): ChartInformation => {
+    const chartInformations: ChartInformation[] = preset.graphs.map((currGraph) => {
+      const cols: (Column | null)[] = dataColumnKeys.map((key, idx) => {
+        const axisDef = currGraph.axes[idx];
+        if (!axisDef) return null;
+        return {
+          header: axisDef.axis,
+          filename: `${fileKeys[0]}/${axisDef.file}`,
+          timespan: { start: null, end: null }
+        };
+      });
+
+      if (!cols[0] || !cols[1]) {  
+        throw new Error("Required axes (x and y) are missing in the graph configuration.");  
+      }
+
+      const [x, y, z] = cols;
+  
+      const analyze: ChartAnalyzerInformation = {
+        type: currGraph.analyzer,
+        analyzerValues: currGraph.analyzerOptions
+      };
+  
+      const fileEntry: ChartFileInformation = { x: x, y: y, z: z || null, analyze };
+  
+      return {
+        files: [fileEntry],
+        live: false,
+        type: currGraph.graphType,
+        hasTimestampX: fileEntry.x.header === 'Timestamp (ms)',
+        hasGPSTime: fileEntry.x.timespan.start != null
+      };
+    });
+  
+    // Return the first chart /// TODO: Extend for multiple
+    return chartInformations[0];
+  };

@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useMemo, useReducer, useState } from "react";
 import styles from "./DataView.module.scss";
 import { DataSelect } from "@components/dataSelect/dataSelect";
-import { chartInformationReducer } from "@lib/chartInformationReducer";
+import { chartInformationReducer } from "@lib/chartInformation";
 
 
 export const DataView = () => {
