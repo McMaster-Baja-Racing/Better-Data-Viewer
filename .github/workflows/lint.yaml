@@ -57,6 +57,10 @@ jobs:
       run: npm ci --force
       working-directory: ./front-end
 
+    - name: Lint
+      run: npm run lint-check
+      working-directory: ./front-end
+
     - name: Build
       run: npm run build:frontend --if-present
       working-directory: ./front-end
