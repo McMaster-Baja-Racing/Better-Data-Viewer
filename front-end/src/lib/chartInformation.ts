@@ -92,12 +92,6 @@ export const chartInformationReducer = (
   return isEqual(state, updatedState) ? state : updatedState;
 };
 
-const cols: Record<DataColumnKey, Column | null> = {
-  x: null,
-  y: null,
-  z: null
-};
-
 export const generateChartInformation = (
     fileKeys: string[],
     preset: DataViewerPreset
