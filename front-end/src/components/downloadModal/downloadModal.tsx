@@ -39,15 +39,15 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
 
       onClose();
     } catch (error) {
-      console.error('Error downloading files:', error); // TODO: Handle error properly
+      alert('Error downloading files: ' + error); // TODO: Handle error properly
     }
-  }
+  };
 
   useEffect(() => {
     const fetchFiles = async () => {
       const files = await ApiUtil.getFolder('csv');
       setFiles(apiToFiles(files));
-    }
+    };
 
     fetchFiles();
   }, []);
@@ -70,7 +70,7 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
       </div>
     </BaseModal>
   );
-}
+};
 
 // Converts from fileInformation, which only has key, fileHeaders and size
 // to the File type, which has key, name, size, date, extension.
@@ -89,4 +89,4 @@ const apiToFiles = (apiFiles: FileInformation[]): File[] => {
       extension
     };
   });
-}
+};

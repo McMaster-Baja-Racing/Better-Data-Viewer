@@ -63,7 +63,7 @@ const App = () => {
           {successMessage.message}
         </div>
 
-        {modal === "Create" ? (
+        {modal === 'Create' ? (
           <CreateGraphModal
             setModal={setModal}
             setViewInformation={setViewInformation}
@@ -76,7 +76,7 @@ const App = () => {
             setVideo={setVideo}
           />
         ) : null}
-        {modal === "ChoosePreset" ? (
+        {modal === 'ChoosePreset' ? (
           <SimpleCreateGraphModal
             setModal={setModal}
             setViewInformation={setViewInformation}
@@ -84,14 +84,14 @@ const App = () => {
             setNumViews={setNumViews}
           />
         ) : null}
-        {modal === "Upload" ? (
+        {modal === 'Upload' ? (
           <UploadModal
             setModal={setModal}
             setSuccessMessage={setSuccessMessage}
           />
         ) : null}
-        {modal === "Download" ? <DownloadModal setModal={setModal} /> : null}
-        {modal === "Help" ? <HelpModal setModal={setModal} /> : null}
+        {modal === 'Download' ? <DownloadModal setModal={setModal} /> : null}
+        {modal === 'Help' ? <HelpModal setModal={setModal} /> : null}
         <Routes>
           <Route path="*" element={<Homepage />}/>
           <Route path="/dataview" element={<DataView />} />

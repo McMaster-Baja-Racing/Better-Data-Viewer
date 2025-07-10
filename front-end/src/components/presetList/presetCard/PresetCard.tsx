@@ -11,20 +11,20 @@ interface PresetCardProps {
 }
 
 export const PresetCard = ({ image, name, description, fileCount, onClick }: PresetCardProps) => {
-    return (
-      <button className={styles.presetCard} onClick={onClick}>
-        <img src={image ?? defaultImage} alt="Preset" className={styles.image} />
-        <div className={styles.content}>
-            <div className={styles['title-container']}>
-                <div>{name}</div>
-                <div className={styles.fileCount}>
-                    <span>{fileCount} x</span>
-                <img src={icons['newGraph']} alt="New Graph" />
-            </div>
-            </div>
-            <div className={styles.description}>{description}</div>
+  return (
+    <button className={styles.presetCard} onClick={onClick}>
+      <img src={image ?? defaultImage} alt="Preset" className={styles.image} />
+      <div className={styles.content}>
+        <div className={styles['title-container']}>
+          <div>{name}</div>
+          <div className={styles.fileCount}>
+            <span>{fileCount} x</span>
+            <img src={icons['newGraph']} alt="New Graph" />
+          </div>
         </div>
-      </button>
-    );
+        <div className={styles.description}>{description}</div>
+      </div>
+    </button>
+  );
 };
 

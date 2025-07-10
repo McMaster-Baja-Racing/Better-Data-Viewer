@@ -22,7 +22,7 @@ export const GraphWrapper = ({ title, editOnClick, children }: GraphWrapperProps
           await wrapperRef.current.requestFullscreen();
           setIsFullscreen(true);
         } catch (err) {
-          console.error('Failed to enter fullscreen:', err);
+          alert('Failed to enter fullscreen: ' + err);
         }
       }
     } else {
@@ -30,7 +30,7 @@ export const GraphWrapper = ({ title, editOnClick, children }: GraphWrapperProps
         await document.exitFullscreen();
         setIsFullscreen(false);
       } catch (err) {
-        console.error('Failed to exit fullscreen:', err);
+        alert('Failed to exit fullscreen: ' + err);
       }
     }
   };

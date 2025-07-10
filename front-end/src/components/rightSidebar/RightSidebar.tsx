@@ -29,12 +29,12 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
 
     const handleMouseUp = () => {
       isResizing.current = false;
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
   };
 
   return (
@@ -58,5 +58,5 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

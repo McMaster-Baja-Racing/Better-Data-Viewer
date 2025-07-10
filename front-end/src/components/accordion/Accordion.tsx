@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import styles from "./Accordion.module.scss";
-import { icons } from "@lib/assets";
-import cx from "classnames";
+import { useState, useRef, useEffect } from 'react';
+import styles from './Accordion.module.scss';
+import { icons } from '@lib/assets';
+import cx from 'classnames';
 
 interface AccordionProps {
   readonly title: string;
@@ -11,13 +11,13 @@ interface AccordionProps {
 export function Accordion({ title, children }: AccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [contentHeight, setContentHeight] = useState("0px");
+  const [contentHeight, setContentHeight] = useState('0px');
 
   useEffect(() => {
     if (isOpen && contentRef.current) {
       setContentHeight(`${contentRef.current.scrollHeight}px`);
     } else {
-      setContentHeight("0px");
+      setContentHeight('0px');
     }
   }, [isOpen]);
 

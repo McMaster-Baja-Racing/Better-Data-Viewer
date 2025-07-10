@@ -58,10 +58,10 @@ export const SimpleCreateGraphModal = ({
       };
       const z: Column | null = zAxis
         ? {
-            header: zAxis.axis,
-            filename: `${selectedBinFile}/${zAxis.file}`,
-            timespan: { start: null, end: null },
-          }
+          header: zAxis.axis,
+          filename: `${selectedBinFile}/${zAxis.file}`,
+          timespan: { start: null, end: null },
+        }
         : null;
 
       const analyze: ChartAnalyzerInformation = {

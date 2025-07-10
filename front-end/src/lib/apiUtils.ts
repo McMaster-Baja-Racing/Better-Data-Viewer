@@ -131,7 +131,7 @@ export const ApiUtil = {
      */
   deleteAllFiles: async (): Promise<Response> => {
     const response = await fetch(`${baseApiUrl}/delete/all`, {
-      method: "DELETE" 
+      method: 'DELETE' 
     });
 
     if (!response.ok) throw Error(response.statusText);
