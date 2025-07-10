@@ -10,9 +10,15 @@ export interface ChartInformation {
 }
 
 export interface ChartFileInformation {
-  columns: Column[];
+  x: Column;
+  y: Column;
+  z: Column | null;
   analyze: ChartAnalyzerInformation;
 }
+
+export const dataColumnKeys = ["x", "y", "z"] as const;
+
+export type DataColumnKey = typeof dataColumnKeys[number];
 
 export interface ChartAnalyzerInformation {
   type: AnalyzerType | null;
