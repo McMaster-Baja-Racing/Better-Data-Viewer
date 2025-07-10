@@ -6,6 +6,10 @@ $border-radius: 8px;
 
 .dropdown {
   all: unset;
+  &:hover {
+    // TODO: Remove this once global css is fixed
+    background-color: var(--light-grey);
+  }
   @include fonts.text-medium;
   min-width: 15rem;
   border-radius: $border-radius;
