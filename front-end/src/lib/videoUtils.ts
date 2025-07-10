@@ -6,13 +6,13 @@ export const computeOffsets = (chartInformation: ChartInformation, videoTimespan
 
   const tempOffsets: number[] = [];
   chartInformation.files.forEach(file => {
-    if(file.columns[0].timespan.start == null)
+    if(file.x.timespan.start == null)
       {
         // TODO: Decide when should a file require a timespan and when it's okay to be missing
         // throw new Error('File has no timespan start')
         return;
       }
-    const fileStart = new Date(file.columns[0].timespan.start).getTime(); // Unix date of first timestamp in file
+    const fileStart = new Date(file.x.timespan.start).getTime(); // Unix date of first timestamp in file
     tempOffsets.push(videoStart - fileStart);
   });
   return tempOffsets;

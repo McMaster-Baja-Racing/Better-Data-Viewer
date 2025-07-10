@@ -1,4 +1,5 @@
 import styles from './TextField.module.scss';
+import cx from 'classnames';
 
 interface TextFieldProps {
   title: string;
@@ -6,6 +7,7 @@ interface TextFieldProps {
   setValue: (value: string) => void;
   label?: string;
   placeholder?: string;
+  className?: string;
 }
 
 const TextField = ({
@@ -14,9 +16,10 @@ const TextField = ({
   setValue,
   label,
   placeholder = 'Value',
+  className = '',
 }: TextFieldProps) => {
   return (
-    <div className={styles.textField}>
+    <div className={cx(styles.textField, className)} >
       {label && <div className={styles.label}>{label}</div>}
       <div className={styles.container}>
         <div className={styles.title}>

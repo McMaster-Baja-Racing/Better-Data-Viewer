@@ -46,10 +46,10 @@ export const validateChartInformation = (chartInformation: ChartInformation): bo
   if (chartInformation.files.length === 0) {
     return false;
   }
-  if (chartInformation.files[0].columns.length === 0) {
+  if (chartInformation.files[0].x === undefined || chartInformation.files[0].y === undefined) {
     return false;
   }
-  if (chartInformation.files[0].columns[0].header === '' || chartInformation.files[0].columns[0].filename === '') {
+  if (chartInformation.files[0].x.header === '' || chartInformation.files[0].x.filename === '') {
     return false;
   }
   return true;
