@@ -3,7 +3,7 @@ import '@styles/modalStyles.css';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import PresetSelectionPage from '../PresetSelectionPage/PresetSelectionPage';
 import { FileSelectionPage } from '../FileSelectionPage/FileSelectionPage';
-import Chart from '@components/views/Chart/Chart';
+import Chart from '@components/legacy/views/Chart/Chart';
 import { replaceViewAtIndex } from '@lib/viewUtils';
 import {
   ChartInformation,

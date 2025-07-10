@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import styles from './dataSelect.module.scss';
-import { Dropdown, DropdownOption } from '@components/dropdown/Dropdown';
-import { Button } from '@components/button/Button';
-import TextField from '@components/textfield/TextField';
+import { Dropdown, DropdownOption } from '@components/ui/dropdown/Dropdown';
+import { Button } from '@components/ui/button/Button';
+import TextField from '@components/ui/textfield/TextField';
 import sigma from '@assets/icons/sigma.svg';
 import plus from '@assets/icons/add.svg';
 import minus from '@assets/icons/remove.svg';

@@ -15,7 +15,7 @@ import cx from 'classnames';
 import sidebarToggleCollapsed from '@assets/icons/sidebarToggleCollapsed.svg';
 import sidebarToggleExpanded from '@assets/icons/sidebarToggleExpanded.svg';
 import { onIconClick } from '@lib/navigationUtils';
-import { useModal } from '../../ModalContext';
+import { useModal } from '../../../ModalContext';
 import { ApiUtil } from '@lib/apiUtils';
 
 // Sidebar item definition

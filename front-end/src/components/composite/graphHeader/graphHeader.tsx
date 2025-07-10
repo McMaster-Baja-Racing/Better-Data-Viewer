@@ -1,7 +1,7 @@
 import styles from './graphHeader.module.scss';
 import settingsIcon from '@assets/icons/settings.svg';
 import uploadIcon from '@assets/icons/upload.svg';
-import { Button } from '../button/Button';
+import { Button } from '../../ui/button/Button';
 
 interface GraphHeaderProps {
   readonly title: string;

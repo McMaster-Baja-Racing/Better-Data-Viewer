@@ -1,11 +1,11 @@
 import { ChartInformation, dataTypesArray, dataColumnKeys } from '@types';
-import Chart from '@components/views/Chart/Chart';
-import { GraphWrapper } from '@components/graphWrapper/GraphWrapper';
-import { RightSidebar } from '@components/rightSidebar/RightSidebar';
+import Chart from '@components/legacy/views/Chart/Chart';
+import { GraphWrapper } from '@components/simple/graphWrapper/GraphWrapper';
+import { RightSidebar } from '@components/ui/rightSidebar/RightSidebar';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useMemo, useReducer, useState } from 'react';
 import styles from './DataView.module.scss';
-import { DataSelect } from '@components/dataSelect/dataSelect';
+import { DataSelect } from '@components/composite/dataSelect/dataSelect';
 import { chartInformationReducer } from '@lib/chartInformation';
 
 

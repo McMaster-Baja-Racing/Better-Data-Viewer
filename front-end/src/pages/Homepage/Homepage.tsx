@@ -1,6 +1,6 @@
-import { TitleCard } from '@components/titleCard/titleCard';
-import { PresetList } from '@components/presetList/PresetList';
-import { Footer } from '@components/footer/Footer';
+import { TitleCard } from '@components/simple/titleCard/titleCard';
+import { PresetList } from '@components/composite/presetList/PresetList';
+import { Footer } from '@components/simple/footer/Footer';
 import styles from './Homepage.module.scss';
 import { DataViewerPreset } from '@types';
 import { useModal } from '../../ModalContext';

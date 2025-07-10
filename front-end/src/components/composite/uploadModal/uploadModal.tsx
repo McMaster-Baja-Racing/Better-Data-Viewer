@@ -1,7 +1,7 @@
 import styles from './uploadModal.module.scss';
-import { BaseModal } from '@components/baseModal/BaseModal';
-import { UploadForm } from '@components/uploadForm/UploadForm';
-import { Button } from '@components/button/Button';
+import { BaseModal } from '@components/ui/baseModal/BaseModal';
+import { UploadForm } from '@components/ui/uploadForm/UploadForm';
+import { Button } from '@components/ui/button/Button';
 import { useState } from 'react';
 import rightArrow from '@assets/icons/arrow.svg';
 import { ApiUtil } from '@lib/apiUtils';

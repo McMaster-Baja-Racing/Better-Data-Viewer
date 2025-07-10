@@ -1,7 +1,7 @@
 import styles from './downloadModal.module.scss';
-import { BaseModal } from '@components/baseModal/BaseModal';
-import { FileTable } from '@components/fileTable/FileTable';
-import { Button } from '@components/button/Button';
+import { BaseModal } from '@components/ui/baseModal/BaseModal';
+import { FileTable } from '@components/ui/fileTable/FileTable';
+import { Button } from '@components/ui/button/Button';
 import { useState, useEffect } from 'react';
 import rightArrow from '@assets/icons/arrow.svg';
 import { ApiUtil } from '@lib/apiUtils';

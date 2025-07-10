@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { UploadModal } from '@components/uploadModal/uploadModal';
-import { DownloadModal } from '@components/downloadModal/downloadModal';
-import { PresetFilesModal } from '@components/presetFilesModal/PresetFilesModal';
+import { UploadModal } from '@components/composite/uploadModal/uploadModal';
+import { DownloadModal } from '@components/composite/downloadModal/downloadModal';
+import { PresetFilesModal } from '@components/composite/presetFilesModal/PresetFilesModal';
 
 type ModalType = 'upload' | 'download' | 'preset' | null;
 

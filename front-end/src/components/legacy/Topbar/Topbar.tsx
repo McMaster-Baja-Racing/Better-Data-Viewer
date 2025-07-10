@@ -4,7 +4,7 @@ import { ApiUtil } from '@lib/apiUtils';
 import { onIconClick } from '@lib/navigationUtils';
 import bajalogo from '@assets/baja_logo.svg';
 import loadingImg from '@assets/loading.gif';
-import { MAX_VIEWS } from '@components/views/viewsConfig';
+import { MAX_VIEWS } from '@components/legacy/views/viewsConfig';
 import sunIcon from '@assets/icons/sun.svg';
 import moonIcon from '@assets/icons/moon.svg';
 import liveOnIcon from '@assets/icons/liveOn.svg';
@@ -14,7 +14,7 @@ import newGraphIcon from '@assets/icons/newGraph.svg';
 import uploadIcon from '@assets/icons/upload.svg';
 import downloadIcon from '@assets/icons/download.svg';
 import helpIcon from '@assets/icons/help.svg';
-import { useTheme } from '../../ThemeContext';
+import { useTheme } from '../../../ThemeContext';
 
 interface TopbarProps {
   numViews: number;
