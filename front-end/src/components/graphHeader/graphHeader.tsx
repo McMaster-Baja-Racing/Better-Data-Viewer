@@ -1,5 +1,6 @@
 import styles from './graphHeader.module.scss';
-import { icons } from '@lib/assets';
+import settingsIcon from '@assets/icons/settings.svg';
+import uploadIcon from '@assets/icons/upload.svg';
 import { Button } from '../button/Button';
 
 interface GraphHeaderProps {
@@ -18,7 +19,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
           paddingY="0.3rem"
         >
           <span>Configure</span>
-          <img src={icons['settings']} alt="settings" />
+          <img src={settingsIcon} alt="settings" />
         </Button>
         <Button
           onClick={() => {/* */}} //TODO: fill this in when functionality is added
@@ -27,7 +28,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
           paddingY="0.3rem"
         >
           <span>Share Dashboard</span>
-          <img src={icons['upload']} alt="upload" />
+          <img src={uploadIcon} alt="upload" />
         </Button>
       </div>
     </div>

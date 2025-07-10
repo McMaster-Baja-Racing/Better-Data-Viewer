@@ -5,7 +5,15 @@ import { onIconClick } from '@lib/navigationUtils';
 import bajalogo from '@assets/baja_logo.svg';
 import loadingImg from '@assets/loading.gif';
 import { MAX_VIEWS } from '@components/views/viewsConfig';
-import { icons } from '@lib/assets';
+import sunIcon from '@assets/icons/sun.svg';
+import moonIcon from '@assets/icons/moon.svg';
+import liveOnIcon from '@assets/icons/liveOn.svg';
+import liveOffIcon from '@assets/icons/liveOff.svg';
+import mapIcon from '@assets/icons/map.svg';
+import newGraphIcon from '@assets/icons/newGraph.svg';
+import uploadIcon from '@assets/icons/upload.svg';
+import downloadIcon from '@assets/icons/download.svg';
+import helpIcon from '@assets/icons/help.svg';
 import { useTheme } from '../../ThemeContext';
 
 interface TopbarProps {
@@ -51,28 +59,28 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
       <div className={styles.buttons}>
         <button title="Toggle Theme" onClick={toggleTheme}>
           {theme === 'dark'
-            ? <img className={styles.icon} src={icons['sun']} alt="Light Mode" />
-            : <img className={styles.icon} src={icons['moon']} alt="Dark Mode" />}
+            ? <img className={styles.icon} src={sunIcon} alt="Light Mode" />
+            : <img className={styles.icon} src={moonIcon} alt="Dark Mode" />}
         </button>
         
         <button title="Start Live Data" onClick={beginLiveData}>
           {liveStatus
-            ? <img className={styles.icon} src={icons['liveOn']} alt="Live Mode On" />
-            : <img className={styles.icon} src={icons['liveOff']} alt="Live Mode Off" />}
+            ? <img className={styles.icon} src={liveOnIcon} alt="Live Mode On" />
+            : <img className={styles.icon} src={liveOffIcon} alt="Live Mode Off" />}
         </button>
 
         <button title="Go to map" onClick={() =>onIconClick('map')}>
-          <img className={styles.icon} src={icons['map']} alt="Go to map" />
+          <img className={styles.icon} src={mapIcon} alt="Go to map" />
         </button>
         <button title="Choose Preset" className="choosePreset" onClick={() => setModal('ChoosePreset')}>
-          <img className="icon"src={icons['newGraph']} alt="Choose Preset" />
+          <img className="icon"src={newGraphIcon} alt="Choose Preset" />
         </button>
         <button title="Upload Files" onClick={() => setModal('Upload')}>
-          <img className={styles.icon} src={icons['upload']} alt="Upload" />
+          <img className={styles.icon} src={uploadIcon} alt="Upload" />
         </button>
 
         <button title="Download Files" onClick={() => setModal('Download')}>
-          <img className={styles.icon} src={icons['download']} alt="Download" />
+          <img className={styles.icon} src={downloadIcon} alt="Download" />
         </button>
 
         <button title="PlusView" onClick={() => updateNumViews(numViews-1)}>
@@ -84,7 +92,7 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
         </button>
 
         <button title="Help" onClick={() => setModal('Help')}>
-          <img className={styles.icon} src={icons['help']} alt="Help" />
+          <img className={styles.icon} src={helpIcon} alt="Help" />
         </button>
       </div>
     </div>

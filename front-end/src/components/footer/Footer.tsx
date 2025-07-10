@@ -1,6 +1,10 @@
 import styles from './Footer.module.scss';
 import bajalogo from '@assets/baja_logo.svg';
-import { icons } from '@lib/assets';
+import instagramIcon from '@assets/icons/instagram.svg';
+import youtubeIcon from '@assets/icons/youtube.svg';
+import facebookIcon from '@assets/icons/facebook.svg';
+import linkedinIcon from '@assets/icons/linkedin.svg';
+import twitterIcon from '@assets/icons/twitter.svg';
 
 export function Footer() { 
   return (
@@ -21,7 +25,7 @@ export function Footer() {
           rel="noopener noreferrer" 
           className={styles.iconLink}
         >
-          <img className={styles.icon} src={icons['instagram']} alt="Instagram" />
+          <img className={styles.icon} src={instagramIcon} alt="Instagram" />
         </a>
 
         <a 
@@ -31,7 +35,7 @@ export function Footer() {
           rel="noopener noreferrer" 
           className={styles.iconLink}
         >
-          <img className={styles.icon} src={icons['facebook']} alt="Facebook" />
+          <img className={styles.icon} src={facebookIcon} alt="Facebook" />
         </a>
 
         <a 
@@ -41,7 +45,7 @@ export function Footer() {
           rel="noopener noreferrer" 
           className={styles.iconLink}
         >
-          <img className={styles.icon} src={icons['youtube']} alt="YouTube" />
+          <img className={styles.icon} src={youtubeIcon} alt="YouTube" />
         </a>
 
         <a 
@@ -51,7 +55,7 @@ export function Footer() {
           rel="noopener noreferrer" 
           className={styles.iconLink}
         >
-          <img className={styles.icon} src={icons['linkedin']} alt="LinkedIn" />
+          <img className={styles.icon} src={linkedinIcon} alt="LinkedIn" />
         </a>
 
         <a 
@@ -61,7 +65,7 @@ export function Footer() {
           rel="noopener noreferrer" 
           className={styles.iconLink}
         >
-          <img className={styles.icon} src={icons['twitter']} alt="Twitter" />
+          <img className={styles.icon} src={twitterIcon} alt="Twitter" />
         </a>
       </div>
     </div>

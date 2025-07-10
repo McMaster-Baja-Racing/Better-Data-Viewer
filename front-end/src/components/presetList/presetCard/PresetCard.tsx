@@ -1,6 +1,6 @@
 import styles from './PresetCard.module.scss';
 import defaultImage from '@assets/preset_thumbnail.png';
-import { icons } from '@lib/assets';
+import newGraphIcon from '@assets/icons/newGraph.svg';
 
 interface PresetCardProps {
     image?: string;
@@ -19,7 +19,7 @@ export const PresetCard = ({ image, name, description, fileCount, onClick }: Pre
           <div>{name}</div>
           <div className={styles.fileCount}>
             <span>{fileCount} x</span>
-            <img src={icons['newGraph']} alt="New Graph" />
+            <img src={newGraphIcon} alt="New Graph" />
           </div>
         </div>
         <div className={styles.description}>{description}</div>
