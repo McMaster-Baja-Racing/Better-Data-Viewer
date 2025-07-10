@@ -46,7 +46,7 @@ const deleteAllFiles = async () => {
   const res = await ApiUtil.deleteAllFiles();
 
   if (res.ok) {
-    alert('All files deleted succesfully');
+    alert('All files deleted successfully');
   } else {
     alert('Something went wrong... sorry');
   }
