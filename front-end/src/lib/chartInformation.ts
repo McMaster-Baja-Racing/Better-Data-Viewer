@@ -86,6 +86,7 @@ export const chartInformationReducer = (
   }
 
   if (!isEqual(state, updatedState)) {
+    // TODO: Remove this once chartInformation is complete
     console.log('State updated:', updatedState);
     console.log('State before update:', state);
   }
