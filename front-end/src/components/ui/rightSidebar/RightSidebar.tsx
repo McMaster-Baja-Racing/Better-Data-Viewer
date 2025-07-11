@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import styles from './RightSidebar.module.scss';
 import cx from 'classnames';
-import closeIcon from '@assets/icons/close.svg';
+import {closeIcon} from '@assets/icons';
 
 const MAX_WIDTH = 1000;
 const MIN_WIDTH = 700;

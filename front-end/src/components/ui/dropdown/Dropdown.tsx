@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from './Dropdown.module.scss';
-import chevronDown from '@assets/icons/chevronDown.svg';
+import {chevronDownIcon} from '@assets/icons';
 import cx from 'classnames';
 
 export interface DropdownOption<T> {
@@ -35,7 +35,7 @@ export const Dropdown = <T,>({ options, selected, setSelected, width, className 
     >
       <div className={styles.dropdownContent}>
         {selectedOption?.label || 'Select an option'}
-        <img src={chevronDown} alt="dropdown arrow" className={styles.icon} />
+        <img src={chevronDownIcon} alt="dropdown arrow" className={styles.icon} />
       </div>
 
       <div className={`${styles.options} ${isOpen ? styles.open : ''}`}>

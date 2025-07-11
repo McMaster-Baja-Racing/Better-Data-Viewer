@@ -1,6 +1,6 @@
 import styles from './optionSquare.module.scss';
 import cx from 'classnames';
-import checkMark from '@assets/icons/checkmark.svg';
+import {checkMarkIcon} from '@assets/icons';
 
 interface OptionSquareProps {
   label: string;
@@ -21,7 +21,7 @@ export const OptionSquare = ({ label, illustration, clicked, setClicked}: Option
         <img src={illustration} alt="Illustration" />
       </div>
       <div className={styles.labelContainer}>
-        {clicked && <img src={checkMark} alt="Selected" className={styles.checkMark} />}
+        {clicked && <img src={checkMarkIcon} alt="Selected" className={styles.checkMark} />}
         <span className={styles.label}>{label}</span>
       </div>
     </div>

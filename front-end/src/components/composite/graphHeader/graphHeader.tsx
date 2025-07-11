@@ -1,6 +1,5 @@
 import styles from './graphHeader.module.scss';
-import settingsIcon from '@assets/icons/settings.svg';
-import uploadIcon from '@assets/icons/upload.svg';
+import { settingsIcon, uploadIcon } from '@assets/icons';
 import { Button } from '../../ui/button/Button';
 
 interface GraphHeaderProps {

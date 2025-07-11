@@ -1,5 +1,5 @@
 import styles from './Views.module.scss';
-import newGraphImg from '@assets/icons/newGraph2.svg';
+import { newGraph2Icon } from '@assets/icons';
 import { viewStyles } from '../viewsConfig';
 
 const Views = ({ viewInformation, setModal, setButtonID, numViews, videoTimestamp, setVideoTimestamp, video }) => {
@@ -15,7 +15,7 @@ const Views = ({ viewInformation, setModal, setButtonID, numViews, videoTimestam
               className={styles.createGraph}
               onClick={() => { setButtonID(index); setModal('Create'); }}
             >
-              <img className="icon" src={newGraphImg} alt="Create Graph" />
+              <img className="icon" src={newGraph2Icon} alt="Create Graph" />
             </button>
           </div>
         );

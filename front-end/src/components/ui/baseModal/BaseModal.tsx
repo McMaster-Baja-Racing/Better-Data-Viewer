@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactModal from 'react-modal';
 import styles from './BaseModal.module.scss';
-import closeIcon from '@assets/icons/close.svg';
+import {closeIcon} from '@assets/icons';
 
 ReactModal.setAppElement('#root'); // To improve accessibility
 

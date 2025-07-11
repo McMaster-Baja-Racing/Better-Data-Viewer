@@ -3,7 +3,7 @@ import { BaseModal } from '@components/ui/baseModal/BaseModal';
 import { FileTable } from '@components/ui/fileTable/FileTable';
 import { Button } from '@components/ui/button/Button';
 import { useState, useEffect } from 'react';
-import rightArrow from '@assets/icons/arrow.svg';
+import { rightArrowIcon } from '@assets/icons';
 import { ApiUtil } from '@lib/apiUtils';
 import { File, FileInformation } from '@types';
 import JSZip from 'jszip';
@@ -65,7 +65,7 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
           className={styles.submitButton}
         >
           Download
-          <img src={rightArrow} alt="right arrow"/>
+          <img src={rightArrowIcon} alt="right arrow"/>
         </Button>
       </div>
     </BaseModal>

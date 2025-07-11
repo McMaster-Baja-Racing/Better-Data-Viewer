@@ -1,19 +1,21 @@
 import { useState } from 'react';
 import bajaLogo from '@assets/baja_logo.svg';
-import homeIcon from '@assets/icons/home.svg';
-import downloadIcon from '@assets/icons/download.svg';
-import uploadIcon from '@assets/icons/upload.svg';
-import trashIcon from '@assets/icons/delete.svg';
-import settingsIcon from '@assets/icons/settings.svg';
-import accountIcon from '@assets/icons/account.svg';
-import newGraphIcon from '@assets/icons/newGraph2.svg';
-import cubeIcon from '@assets/icons/cubeOutline.svg';
-import historyIcon from '@assets/icons/history.svg';
-import mapIcon from '@assets/icons/map.svg';
+import {
+  homeIcon,
+  downloadIcon,
+  uploadIcon,
+  trashIcon,
+  settingsIcon,
+  accountIcon,
+  newGraphIcon,
+  cubeIcon,
+  historyIcon,
+  mapIcon,
+  sidebarToggleCollapsedIcon,
+  sidebarToggleExpandedIcon,
+} from '@assets/icons';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
-import sidebarToggleCollapsed from '@assets/icons/sidebarToggleCollapsed.svg';
-import sidebarToggleExpanded from '@assets/icons/sidebarToggleExpanded.svg';
 import { onIconClick } from '@lib/navigationUtils';
 import { useModal } from '../../../ModalContext';
 import { ApiUtil } from '@lib/apiUtils';
@@ -59,8 +61,8 @@ const Sidebar = ({ setModal }: SidebarProps) => {
 
   return (
     <div className={cx(styles.sidebar, { [styles.expanded]: isExpanded })}>
-      <img className={styles.toggleExpanded} onClick={toggleSidebar} src={sidebarToggleExpanded} />
-      <img className={styles.toggleCollapsed} onClick={toggleSidebar} src={sidebarToggleCollapsed} />
+      <img className={styles.toggleExpanded} onClick={toggleSidebar} src={sidebarToggleExpandedIcon} />
+      <img className={styles.toggleCollapsed} onClick={toggleSidebar} src={sidebarToggleCollapsedIcon} />
       <div className={styles.sidebarHeader}>
         <img className={styles.logo} src={bajaLogo} alt="Logo"/>
         <span className={styles.title}>Data Viewer</span>

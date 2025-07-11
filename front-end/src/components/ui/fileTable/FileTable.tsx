@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './FileTable.module.scss';
 import cx from 'classnames';
-import folderIcon from '@assets/icons/folder.svg';
-import folderOpenIcon from '@assets/icons/folderOpen.svg';
+import {folderIcon, folderOpenIcon} from '@assets/icons';
 import { File, Folder } from '@types';
 
 const formatSize = (size: number) => {

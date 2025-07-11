@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import styles from './Accordion.module.scss';
-import chevronDown from '@assets/icons/chevronDown.svg';
+import {chevronDownIcon} from '@assets/icons';
 import cx from 'classnames';
 
 interface AccordionProps {
@@ -29,7 +29,7 @@ export function Accordion({ title, children }: AccordionProps) {
         aria-expanded={isOpen}
       >
         <img
-          src={chevronDown}
+          src={chevronDownIcon}
           alt="Toggle"
           className={cx(styles.arrow, { [styles.open]: isOpen })}
         />

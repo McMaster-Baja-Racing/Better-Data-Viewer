@@ -1,10 +1,12 @@
 import styles from './Footer.module.scss';
 import bajalogo from '@assets/baja_logo.svg';
-import instagramIcon from '@assets/icons/instagram.svg';
-import youtubeIcon from '@assets/icons/youtube.svg';
-import facebookIcon from '@assets/icons/facebook.svg';
-import linkedinIcon from '@assets/icons/linkedin.svg';
-import twitterIcon from '@assets/icons/twitter.svg';
+import {
+  instagramIcon,
+  youtubeIcon,
+  facebookIcon,
+  linkedinIcon,
+  twitterIcon,
+} from '@assets/icons';
 
 export function Footer() { 
   return (

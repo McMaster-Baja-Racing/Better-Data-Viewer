@@ -3,9 +3,7 @@ import styles from './dataSelect.module.scss';
 import { Dropdown, DropdownOption } from '@components/ui/dropdown/Dropdown';
 import { Button } from '@components/ui/button/Button';
 import TextField from '@components/ui/textfield/TextField';
-import sigma from '@assets/icons/sigma.svg';
-import plus from '@assets/icons/add.svg';
-import minus from '@assets/icons/remove.svg';
+import { sigmaIcon, plusIcon, minusIcon } from '@assets/icons';
 import { unstable_batchedUpdates } from 'react-dom';
 import { analyzerConfig, AnalyzerKey, AnalyzerType, ChartFileInformation, Column, DataColumnKey } from '@types';
 
@@ -132,9 +130,9 @@ export function DataSelect({
             onClick={() => setIsExpanded(!isExpanded)}
             disabled={columnKey === 'x'}
           >
-            <img src={sigma} alt="analyzer" className={styles.analyzerIcon} />
+            <img src={sigmaIcon} alt="analyzer" className={styles.analyzerIcon} />
             <img
-              src={isExpanded ? minus : plus}
+              src={isExpanded ? minusIcon : plusIcon}
               alt="toggle"
               className={styles.toggleIcon}
             />

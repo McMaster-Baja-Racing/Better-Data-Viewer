@@ -1,6 +1,6 @@
 import styles from './PresetCard.module.scss';
 import defaultImage from '@assets/preset_thumbnail.png';
-import newGraphIcon from '@assets/icons/newGraph.svg';
+import {newGraphIcon} from '@assets/icons';
 
 interface PresetCardProps {
     image?: string;

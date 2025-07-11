@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './UploadForm.module.scss';
-import uploadIcon from '@assets/icons/upload.svg';
-import deleteIcon from '@assets/icons/close.svg';
+import {uploadIcon, deleteIcon} from '@assets/icons';
 import cx from 'classnames';
 import daytime from '@assets/upload_form_daytime.png';
 import nighttime from '@assets/upload_form_nighttime.png';

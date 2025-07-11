@@ -4,7 +4,7 @@ import { FileTable } from '@components/ui/fileTable/FileTable';
 import { UploadForm } from '@components/ui/uploadForm/UploadForm';
 import { Button } from '@components/ui/button/Button';
 import { useState, useEffect } from 'react';
-import rightArrow from '@assets/icons/arrow.svg';
+import { rightArrowIcon } from '@assets/icons';
 import { ApiUtil } from '@lib/apiUtils';
 import { File as CustomFile, DataViewerPreset, FileInformation } from '@types';
 
@@ -72,7 +72,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
           className={styles.submitButton}
         >
           <span>Submit</span>
-          <img src={rightArrow} alt="right arrow"/>
+          <img src={rightArrowIcon} alt="right arrow"/>
         </Button>
       </div>
     </BaseModal>
