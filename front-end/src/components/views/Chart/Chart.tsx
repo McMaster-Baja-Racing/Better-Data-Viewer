@@ -74,7 +74,8 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     return () => clearInterval(intervalId);
   }, [chartInformation, refetch]);
 
-  
+  // TODO: Use it or lose it
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { width, height, ref } = useResizeDetector({
     onResize: () => {
       if (chartRef.current) {
@@ -100,7 +101,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   return (
     <div className={styles.chartContainer}>
       {syncedDataPoints.length > 0 ? (<div className={styles.valueBox}>{syncedDataPoints.join('\n')}</div>) : null}
-      <div className={styles.chart} style={{ height: "100%", width: '100%' }}>
+      <div className={styles.chart} style={{ height: '100%', width: '100%' }}>
         <HighchartsReact
           highcharts={Highcharts}
           options={chartOptions}

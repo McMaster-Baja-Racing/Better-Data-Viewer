@@ -55,6 +55,8 @@ const updateQuaternion = (quat: Quaternion, objRef: THREE.Group) => {
   }
 };
 
+// TODO: useEuler or remove
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const updateEuler = (euler: Euler, objRef: THREE.Group) => {
   if (objRef) {
     objRef.rotation.set(euler.x, euler.y, euler.z);
@@ -135,6 +137,8 @@ export class ModelReplayController {
 
   setSpeed(newSpeed: number) {
     if (newSpeed <= 0) {
+      // TODO: Remove debugging statement
+      // eslint-disable-next-line no-console
       console.warn('Speed must be positive. Ignoring invalid value:', newSpeed);
       return;
     }

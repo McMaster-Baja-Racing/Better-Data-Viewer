@@ -34,18 +34,18 @@ export enum AnalyzerType {
 
 // Define the constant array with all valid values
 export const dataTypesArray = [
-  "Timestamp (ms)",
-  "BATT PERC",
-  "BATT VOLT",
-  "BRAKE PRESS",
-  "GPS ANGLE",
-  "GPS DAY MONTH YEAR",
-  "GPS LATITUDE",
-  "GPS LONGITUDE",
-  "GPS SECOND MINUTE HOUR",
-  "GPS SPEED",
-  "RPM PRIM",
-  "RPM SEC"
+  'Timestamp (ms)',
+  'BATT PERC',
+  'BATT VOLT',
+  'BRAKE PRESS',
+  'GPS ANGLE',
+  'GPS DAY MONTH YEAR',
+  'GPS LATITUDE',
+  'GPS LONGITUDE',
+  'GPS SECOND MINUTE HOUR',
+  'GPS SPEED',
+  'RPM PRIM',
+  'RPM SEC'
 ] as const;
 
 // Derive the union type from the array

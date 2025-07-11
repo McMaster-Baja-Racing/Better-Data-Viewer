@@ -12,7 +12,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
       <div className={styles.title}>{title}</div>
       <div className={styles.buttons}>
         <Button
-          onClick={() => {}} //TODO: fill this in when functionality is added
+          onClick={() => {/* */}} //TODO: fill this in when functionality is added
           primary={true}
           paddingX="1.5rem"
           paddingY="0.3rem"
@@ -21,7 +21,7 @@ export function GraphHeader({ title }: GraphHeaderProps) {
           <img src={icons['settings']} alt="settings" />
         </Button>
         <Button
-          onClick={() => {}} //TODO: fill this in when functionality is added
+          onClick={() => {/* */}} //TODO: fill this in when functionality is added
           primary={true}
           paddingX="1.5rem"
           paddingY="0.3rem"

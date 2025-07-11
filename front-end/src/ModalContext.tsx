@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { UploadModal } from '@components/uploadModal/uploadModal';
 import { DownloadModal } from '@components/downloadModal/downloadModal';

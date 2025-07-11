@@ -13,7 +13,7 @@ export const FileSelectionPage = ({ handleNextPage }: {handleNextPage: (file: st
       const newList = list.map((file) => file.key);
       setFileList(newList);
       setSelectedFile(newList[0]);
-    })
+    });
   }, []);
   return (
     <>

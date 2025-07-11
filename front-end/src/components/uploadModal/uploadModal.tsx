@@ -18,7 +18,7 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
     const uploadPromises = files.map((file) => ApiUtil.uploadFile(file));
     await Promise.all(uploadPromises);
     onClose();
-  }
+  };
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
@@ -36,4 +36,4 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
       </div>
     </BaseModal>
   );
-}
+};

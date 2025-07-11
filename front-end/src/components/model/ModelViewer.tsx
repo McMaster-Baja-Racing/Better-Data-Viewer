@@ -71,7 +71,13 @@ const ModelViewer = () => {
         <button onClick={() => replayControllerRef.current?.reset()}>Reset</button>
         <div>
           <label>Speed:</label>
-          <input type="number" min="0" step="0.1" defaultValue="1" onChange={(e) => replayControllerRef.current?.setSpeed(parseFloat(e.target.value))} />
+          <input 
+            type="number" 
+            min="0" 
+            step="0.1"
+            defaultValue="1" 
+            onChange={(e) => replayControllerRef.current?.setSpeed(parseFloat(e.target.value))} 
+          />
         </div>
         <div>
           <label>Current Index: </label>

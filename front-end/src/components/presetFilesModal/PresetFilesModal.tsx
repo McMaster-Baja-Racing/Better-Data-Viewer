@@ -25,7 +25,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
     const fetchFiles = async () => {
       const files = await ApiUtil.getBins();
       setExistingFiles(apiToFiles(files));
-    }
+    };
 
     fetchFiles();
   }, []);
@@ -46,7 +46,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
 
     onSubmit(fileKeys, preset);
     onClose();
-  }
+  };
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
@@ -77,7 +77,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
       </div>
     </BaseModal>
   );
-}
+};
 
 // Converts from fileInformation, which only has key, fileHeaders and size
 // to the File type, which has key, name, size, date, extension.
@@ -96,4 +96,4 @@ const apiToFiles = (apiFiles: FileInformation[]): CustomFile[] => {
       extension
     };
   });
-}
+};

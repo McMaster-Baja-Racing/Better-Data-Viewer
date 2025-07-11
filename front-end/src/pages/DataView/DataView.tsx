@@ -1,12 +1,12 @@
-import { ChartInformation, DataTypes, dataTypesArray, dataColumnKeys } from "@types";
-import Chart from "@components/views/Chart/Chart";
-import { GraphWrapper } from "@components/graphWrapper/GraphWrapper";
-import { RightSidebar } from "@components/rightSidebar/RightSidebar";
-import { useLocation } from "react-router-dom";
-import { useEffect, useMemo, useReducer, useState } from "react";
-import styles from "./DataView.module.scss";
-import { DataSelect } from "@components/dataSelect/dataSelect";
-import { chartInformationReducer } from "@lib/chartInformation";
+import { ChartInformation, dataTypesArray, dataColumnKeys } from '@types';
+import Chart from '@components/views/Chart/Chart';
+import { GraphWrapper } from '@components/graphWrapper/GraphWrapper';
+import { RightSidebar } from '@components/rightSidebar/RightSidebar';
+import { useLocation } from 'react-router-dom';
+import { useEffect, useMemo, useReducer, useState } from 'react';
+import styles from './DataView.module.scss';
+import { DataSelect } from '@components/dataSelect/dataSelect';
+import { chartInformationReducer } from '@lib/chartInformation';
 
 
 export const DataView = () => {
@@ -23,7 +23,7 @@ export const DataView = () => {
       dataColumnKeys
         .map((key) => file[key]?.filename)
         .filter((fn): fn is string => !!fn)
-        .map((filename) => filename.split("/")[0])
+        .map((filename) => filename.split('/')[0])
     );
     const uniqueBins = [...new Set(tempBins.flat())];
     setBins(uniqueBins);
@@ -42,27 +42,27 @@ export const DataView = () => {
 
   return (
     // TODO: Extract this title better
-      <RightSidebar 
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        mainContent={
-          <GraphWrapper title={
-            chartDataState.files[0].y.header 
+    <RightSidebar 
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      mainContent={
+        <GraphWrapper title={
+          chartDataState.files[0].y.header 
             + ' vs ' 
             + chartDataState.files[0].x.header
-          }
-            editOnClick={() => setIsOpen(!isOpen)}
-          >
-            <Chart 
-              chartInformation={chartDataState}
-              video={video}
-              videoTimestamp={0}
-            />
-            
-          </GraphWrapper>
         }
-        sidebarContent={
-          <>
+        editOnClick={() => setIsOpen(!isOpen)}
+        >
+          <Chart 
+            chartInformation={chartDataState}
+            video={video}
+            videoTimestamp={0}
+          />
+            
+        </GraphWrapper>
+      }
+      sidebarContent={
+        <>
           
           {chartDataState.files.map((file, fileIndex) => {
             return (
@@ -70,36 +70,42 @@ export const DataView = () => {
                 <div className={styles.title}>
                   Pick your data (Y-Axis)
                 </div>
-              <DataSelect
-                sources={bins.map((bin) => ({ value: bin, label: bin }))}
-                dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-                key={fileIndex + 'y'}
-                chartFileInformation={file}
-                columnKey="y"
-                onColumnUpdate={(column, updatedColumn) => dispatch({ type: 'UPDATE_COLUMN', fileIndex, column, updatedColumn })}
-                onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
-              />
-              <div className={styles.title}>
+                <DataSelect
+                  sources={bins.map((bin) => ({ value: bin, label: bin }))}
+                  dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
+                  key={fileIndex + 'y'}
+                  chartFileInformation={file}
+                  columnKey="y"
+                  onColumnUpdate={(column, updatedColumn) => dispatch(
+                    { type: 'UPDATE_COLUMN', fileIndex, column, updatedColumn }
+                  )}
+                  onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ 
+                    type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues
+                  })}
+                />
+                <div className={styles.title}>
                 Pick your data (X-Axis)
-              </div>
-              <DataSelect
-                sources={bins.map((bin) => ({ value: bin, label: bin }))}
-                dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-                key={fileIndex + 'x'}
-                chartFileInformation={file}
-                columnKey="x"
-                onColumnUpdate={(_, updatedColumn) => dispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
-                onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues })}
-              />
-              <div className={styles.title}>
+                </div>
+                <DataSelect
+                  sources={bins.map((bin) => ({ value: bin, label: bin }))}
+                  dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
+                  key={fileIndex + 'x'}
+                  chartFileInformation={file}
+                  columnKey="x"
+                  onColumnUpdate={(_, updatedColumn) => dispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
+                  onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({
+                    type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues
+                  })}
+                />
+                <div className={styles.title}>
                 Options
+                </div>
               </div>
-              </div>
-            )
+            );
           })}
         </>
         
-        }
-      />
+      }
+    />
   );
-}
+};

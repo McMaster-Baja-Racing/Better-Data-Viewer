@@ -26,18 +26,18 @@ export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, 
       setFiles([...files, ...Array.from(e.dataTransfer.files)]);
     }
     setIsDragging(false);
-  }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFiles([...files, ...Array.from(e.target.files)]);
     }
-  }
+  };
 
   const handleRemoveFile = (index: number, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setFiles(files.filter((_, i) => i !== index));
-  }
+  };
 
   return (
     <label 
@@ -59,12 +59,12 @@ export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, 
         <p className={styles.text}><strong>Choose a file</strong> or drag it here</p>
         <p className={styles.textHover}><strong>Drop the file</strong></p>
         <input
-        className={styles.input}
-        type="file"
-        accept={accept}
-        multiple={true}
-        onChange={(e) => {handleFileChange(e)}}
-      />
+          className={styles.input}
+          type="file"
+          accept={accept}
+          multiple={true}
+          onChange={(e) => {handleFileChange(e);}}
+        />
       </div>
       {files.length > 0 && (
         <ul className={styles.fileList}>
@@ -80,5 +80,5 @@ export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, 
       )}
       
     </label>
-  )
-}
+  );
+};
