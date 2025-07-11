@@ -1,6 +1,15 @@
 /* eslint-disable max-len */
 import { AnalyzerType } from '@types';
-import { images } from '../lib/assets.js';
+import {
+  accelImage,
+  interpolateImage,
+  linearMultiplierImage,
+  RdpGif,
+  rollAvgImage,
+  savitzkyGolayGif,
+  splitImage,
+  placeholderImage // TODO: Get rid of this and all places its used
+} from '@assets/help';
 
 export interface ParameterConfig {
     name: string;
@@ -44,7 +53,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         'Given both primary (y-axis) and secondary (x-axis) RPM values, applies noise reduction then interpolates to show the shift curve.',
     isJoinBased: true,
     image: {
-      src: images.accel,
+      src: accelImage,
       alt: 'Acceleration curve demo',
     },
     links: [{ title: 'CVT Shifting Stages', url: 'CVT_Tutorial-part-2.pdf' }],
@@ -56,7 +65,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         'Aligns primary and secondary RPM into the same range for easy comparison.',
     isJoinBased: true,
     image: {
-      src: images.shiftCurve,
+      src: accelImage,
       alt: 'Shift curve graphic',
     },
     links: [{ title: 'Shift Curve (Wiki)', url: 'https://en.wikipedia.org/wiki/Shift_curve' }],
@@ -72,7 +81,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       { name: 'Polynomial Order', defaultValue: '3' },
     ],
     image: {
-      src: images.sGolay,
+      src: savitzkyGolayGif,
       alt: 'Savitzky-Golay filter demo',
     },
     links: [{ title: 'Savitzky–Golay filter (Wiki)', url: 'https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter' }],
@@ -84,7 +93,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         'Applies linear interpolation to fill in gaps in data.',
     isJoinBased: true,
     image: {
-      src: images.linearInterpolate,
+      src: interpolateImage,
       alt: 'Linear interpolation demo',
     },
     links: [{ title: 'Linear Interpolation (Wiki)', url: 'https://en.wikipedia.org/wiki/Linear_interpolation' }],
@@ -100,7 +109,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       { name: 'Offset', defaultValue: '0' },
     ],
     image: {
-      src: images.linearMultiply,
+      src: linearMultiplierImage,
       alt: 'Linear multiplication demo',
     },
     links: [{ title: 'Linear Multiplication (Wiki)', url: 'https://en.wikipedia.org/wiki/Linear_multiplication' }],
@@ -115,7 +124,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       { name: 'Epsilon', defaultValue: '0.1' }
     ],
     image: {
-      src: images.rdpCompression,
+      src: RdpGif,
       alt: 'RDP compression demo',
     },
     links: [{ title: 'Ramer-Douglas-Peucker algorithm (Wiki)', url: 'https://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm' }],
@@ -130,7 +139,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       { name: 'WindowSize', defaultValue: '100' }
     ],
     image: {
-      src: images.rollAvg,
+      src: rollAvgImage,
       alt: 'Rolling average demo',
     },
     links: [{ title: 'Moving Average (Wiki)', url: 'https://en.wikipedia.org/wiki/Moving_average' }],
@@ -148,7 +157,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       {name: 'Max Y', defaultValue: '1000000000' }
     ],
     image: {
-      src: images.deleteOutlier,
+      src: placeholderImage,
       alt: 'Delete outlier demo',
     },
     links: [{ title: 'Outlier Detection (Wiki)', url: 'https://en.wikipedia.org/wiki/Outlier' }],
@@ -160,7 +169,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         'Ensures that the timestamps in the data set are strictly increasing.',
     isJoinBased: false,
     image: {
-      src: images.strictTimestamp,
+      src: placeholderImage,
       alt: 'Strict timestamp demo',
     },
     links: [{ title: 'Timestamp (Wiki)', url: 'https://en.wikipedia.org/wiki/Timestamp' }],
@@ -176,7 +185,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       { name: 'End', defaultValue: '' },
     ],
     image: {
-      src: images.split,
+      src: splitImage,
       alt: 'Split demo',
     },
     links: [{ title: 'Split (Wiki)', url: 'https://en.wikipedia.org/wiki/Split' }],
@@ -188,7 +197,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         'Advanced interpolation tool for more complex data sets.',
     isJoinBased: true,
     image: {
-      src: images.interpolaterPro,
+      src: placeholderImage,
       alt: 'Interpolation Pro demo',
     },
     links: [{ title: 'Interpolation (Wiki)', url: 'https://en.wikipedia.org/wiki/Interpolation' }],
@@ -200,7 +209,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
         'Calculates the average of the data points.',
     isJoinBased: false,
     image: {
-      src: images.average,
+      src: placeholderImage,
       alt: 'Average demo',
     },
     links: [{ title: 'Average (Wiki)', url: 'https://en.wikipedia.org/wiki/Average' }],
@@ -217,7 +226,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       { name: 'C', defaultValue: '1' }, 
       { name: 'D', defaultValue: '1' }],
     image: {
-      src: images.cubic,
+      src: placeholderImage,
       alt: 'Cubic demo',
     },
     links: [{ title: 'Cubic Function (Wiki)', url: 'https://en.wikipedia.org/wiki/Cubic_function' }],
