@@ -1,20 +1,20 @@
 import styles from './App.module.scss';
-import { CreateGraphModal } from './legacy/modal/create/CreateGraphModal/CreateGraphModal';
-import { SimpleCreateGraphModal } from './legacy/modal/create/SimpleCreateGraphModal/SimpleCreateGraphModal.js';
-import { UploadModal } from './legacy/modal/upload/UploadModal';
-import { HelpModal } from './legacy/modal/help/helpModal';
-import { DownloadModal } from './legacy/modal/download/DownloadModal';
+import { CreateGraphModal } from '../modal/create/CreateGraphModal/CreateGraphModal';
+import { SimpleCreateGraphModal } from '../modal/create/SimpleCreateGraphModal/SimpleCreateGraphModal.js';
+import { UploadModal } from '../modal/upload/UploadModal';
+import { HelpModal } from '../modal/help/helpModal';
+import { DownloadModal } from '../modal/download/DownloadModal';
 import { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Topbar from './legacy/Topbar/Topbar';
-import Views from './legacy/views/Views/Views';
-import { MAX_VIEWS } from './legacy/views/viewsConfig';
-import Chart from './legacy/views/Chart/Chart';
-import MapChart from './legacy/map/MapChart/MapChart';
+import Topbar from '../Topbar/Topbar';
+import Views from '../views/Views/Views';
+import { MAX_VIEWS } from '../views/viewsConfig';
+import Chart from '../views/Chart/Chart';
+import MapChart from '../map/MapChart/MapChart';
 import cx from 'classnames';
-import ModelViewer from './legacy/model/ModelViewer';
+import ModelViewer from '../model/ModelViewer';
 import { Homepage } from '@pages/Homepage/Homepage';
-import Sidebar from './simple/sidebar/Sidebar';
+import Sidebar from '../../simple/sidebar/Sidebar';
 import { DataView } from '@pages/DataView/DataView';
 
 const App = () => {
