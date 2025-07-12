@@ -7,6 +7,7 @@ import { fetchData, ModelReplayController } from '@lib/modelUtils';
 import './modelViewer.css';
 import { ApiUtil } from '@lib/apiUtils';
 import { ReplayEvent, ReplayEventType, StateType, quatReplayData } from '@types';
+import { showInfoToast } from '@components/ui/toastNotification/ToastNotification';
 
 const ModelViewer = () => {
   const objRef = useRef<THREE.Group>(undefined);
@@ -29,7 +30,7 @@ const ModelViewer = () => {
         setCurrentTimestamp(event.timestamp);
         break;
       case ReplayEventType.Finished:
-        alert('Replay finished!' + event);
+        showInfoToast('Replay finished!', `${event}`);
         break;
     }
   };

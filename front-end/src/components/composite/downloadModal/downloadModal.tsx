@@ -7,6 +7,7 @@ import { rightArrowIcon } from '@assets/icons';
 import { ApiUtil } from '@lib/apiUtils';
 import { File, FileInformation } from '@types';
 import JSZip from 'jszip';
+import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 
 interface DownloadModalProps {
   onClose: () => void;
@@ -36,10 +37,9 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
-
       onClose();
     } catch (error) {
-      alert('Error downloading files: ' + error); // TODO: Handle error properly
+      showErrorToast('Error downloading files: ' + error);
     }
   };
 

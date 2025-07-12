@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { rightArrowIcon } from '@assets/icons';
 import { ApiUtil } from '@lib/apiUtils';
 import { File as CustomFile, DataViewerPreset, FileInformation } from '@types';
+import { showWarningToast } from '@components/ui/toastNotification/ToastNotification';
 
 interface PresetFilesModalProps {
   onClose: () => void;
@@ -32,8 +33,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
 
   const handleSubmit = async () => {
     if (selectedFiles.length === 0 && uploadedFiles.length === 0) {
-      // TODO: Replace alert with popup or toast notification
-      alert('Please select or upload at least one file');
+      showWarningToast('Oops!', 'Please select or upload at least one file');
       return;
     }
 

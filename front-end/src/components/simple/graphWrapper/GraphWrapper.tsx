@@ -1,6 +1,7 @@
 import { ReactNode, useState, useRef, useEffect } from 'react';
 import styles from './GraphWrapper.module.scss';
 import {fullscreenIcon, unfullscreenIcon, writeIcon, threeDotsIcon} from '@assets/icons';
+import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 
 interface GraphWrapperProps {
   title: string;
@@ -19,7 +20,7 @@ export const GraphWrapper = ({ title, editOnClick, children }: GraphWrapperProps
           await wrapperRef.current.requestFullscreen();
           setIsFullscreen(true);
         } catch (err) {
-          alert('Failed to enter fullscreen: ' + err);
+          showErrorToast('Failed to enter fullscreen: ' + err);
         }
       }
     } else {
@@ -27,7 +28,7 @@ export const GraphWrapper = ({ title, editOnClick, children }: GraphWrapperProps
         await document.exitFullscreen();
         setIsFullscreen(false);
       } catch (err) {
-        alert('Failed to exit fullscreen: ' + err);
+        showErrorToast('Failed to exit fullscreen: ' + err);
       }
     }
   };

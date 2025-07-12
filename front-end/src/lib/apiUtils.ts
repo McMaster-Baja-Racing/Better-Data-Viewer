@@ -1,5 +1,6 @@
 import { AnalyzerType, FileInformation, FileTimespan, MinMax } from '@types';
 import { isElectron } from './navigationUtils';
+import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 
 const baseApiUrl = 'http://' + (isElectron ? 'localhost' : window.location.hostname) + ':8080';
 
@@ -98,7 +99,7 @@ export const ApiUtil = {
     });
 
     if (!response.ok) {
-      alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
+      showErrorToast(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
       throw Error(response.statusText);
     }
 
@@ -120,7 +121,7 @@ export const ApiUtil = {
     const response = await fetch(url);
         
     if (!response.ok) {
-      alert(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
+      showErrorToast(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
       throw Error(response.statusText);
     }
     return response.json();

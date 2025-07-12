@@ -17,6 +17,7 @@ import {
   helpIcon,
 } from '@assets/icons';
 import { useTheme } from '../../../ThemeContext';
+import { showErrorToast, showSuccessToast } from '@components/ui/toastNotification/ToastNotification';
 
 interface TopbarProps {
   numViews: number;
@@ -32,9 +33,9 @@ const Topbar = ({ setModal, numViews, setNumViews }: TopbarProps) => {
   const beginLiveData = () => {
 
     ApiUtil.toggleLiveData('COM2').then((res) => {
-      alert(res);
+      showSuccessToast('Response', res.toString());
     }).catch((err) => {
-      alert(err);
+      showErrorToast(err);
     });
 
     setLiveStatus(!liveStatus);
