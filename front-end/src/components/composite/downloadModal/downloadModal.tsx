@@ -40,7 +40,7 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
       onClose();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      showErrorToast('Error downloading files: ' + errorMessage);
+      showErrorToast(`Error downloading files: ${errorMessage}`);
     }
   };
 
