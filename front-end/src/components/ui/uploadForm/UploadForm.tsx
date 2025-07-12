@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './UploadForm.module.scss';
-import {uploadIcon, deleteIcon} from '@assets/icons';
+import {uploadIcon, closeIcon} from '@assets/icons';
 import cx from 'classnames';
 import daytime from '@assets/upload_form_daytime.png';
 import nighttime from '@assets/upload_form_nighttime.png';
@@ -70,7 +70,7 @@ export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, 
           {files.map((file, index) => (
             <li key={index} className={styles.fileItem}>
               <button onClick={(e) => handleRemoveFile(index, e)}>
-                <img src={deleteIcon} alt="delete icon" />
+                <img src={closeIcon} alt="delete icon" />
               </button>
               <span>{file.name}</span>
             </li>
