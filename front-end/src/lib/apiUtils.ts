@@ -99,7 +99,7 @@ export const ApiUtil = {
     });
 
     if (!response.ok) {
-      showErrorToast(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
+      showErrorToast(`Code: ${response.status}\n${await response.text()}`);
       throw Error(response.statusText);
     }
 
@@ -121,7 +121,7 @@ export const ApiUtil = {
     const response = await fetch(url);
         
     if (!response.ok) {
-      showErrorToast(`An error has occured!\nCode: ${response.status}\n${await response.text()}`);
+      showErrorToast(`Code: ${response.status}\n${await response.text()}`);
       throw Error(response.statusText);
     }
     return response.json();

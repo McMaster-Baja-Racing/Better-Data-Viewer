@@ -18,7 +18,7 @@ export const ToastNotification = () => {
 export function showErrorToast(description?: string) {
   toast.error(
     <div className={styles.errorContainer}>
-      <h2 className={styles.title}>{'Oops, an error occured!'}</h2>
+      <h2 className={styles.title}>{'Oops, an error occurred!'}</h2>
       {description && 
         <p className={styles.description}>{description}</p>
       }
