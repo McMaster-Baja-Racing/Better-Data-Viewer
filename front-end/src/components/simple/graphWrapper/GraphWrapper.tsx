@@ -20,7 +20,7 @@ export const GraphWrapper = ({ title, editOnClick, children }: GraphWrapperProps
           await wrapperRef.current.requestFullscreen();
           setIsFullscreen(true);
         } catch (err) {
-          showErrorToast('Failed to enter fullscreen: ' + err);
+          showErrorToast('Failed to enter fullscreen: ' + (err instanceof Error ? err.message : String(err)));
         }
       }
     } else {
