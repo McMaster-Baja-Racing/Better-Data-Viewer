@@ -19,6 +19,7 @@ import cx from 'classnames';
 import { onIconClick } from '@lib/navigationUtils';
 import { useModal } from '../../../ModalContext';
 import { ApiUtil } from '@lib/apiUtils';
+import { showErrorToast, showSuccessToast } from '@components/ui/toastNotification/ToastNotification';
 
 // Sidebar item definition
 interface SidebarItemProps {
@@ -48,9 +49,9 @@ const deleteAllFiles = async () => {
   const res = await ApiUtil.deleteAllFiles();
 
   if (res.ok) {
-    alert('All files deleted successfully');
+    showSuccessToast('All files deleted successfully');
   } else {
-    alert('Something went wrong... sorry');
+    showErrorToast('Something went wrong... sorry');
   }
 };
 

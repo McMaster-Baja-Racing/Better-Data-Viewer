@@ -1,0 +1,26 @@
+@use '@styles/_fonts';
+
+.toast {
+  background-color: var(--background);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+}
+
+.errorContainer, .successContainer, .warningContainer, .infoContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .title {
+    @include fonts.text-huge;
+    font-weight: bold;
+    margin: 0;
+    align-items: center;
+  }
+
+  .description {
+    @include fonts.text-small;
+    margin: 0;
+    white-space: pre-line;
+  }
+
+}
