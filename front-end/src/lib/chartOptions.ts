@@ -133,13 +133,13 @@ const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
   chartConfig.boost = {enabled: chartInformation.hasTimestampX};
 
   chartConfig.xAxis = {plotLines: [{
-    color: 'red',
+    color: 'black',
     width: 2,
     zIndex: 3,
   }]};
 
   chartConfig.yAxis = {plotLines: [{
-    color: 'red',
+    color: 'black',
     width: 2,
     zIndex: 3,
   }]};
