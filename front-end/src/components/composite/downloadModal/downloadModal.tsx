@@ -39,7 +39,8 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
       document.body.removeChild(downloadLink);
       onClose();
     } catch (error) {
-      showErrorToast('Error downloading files: ' + error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      showErrorToast('Error downloading files: ' + errorMessage);
     }
   };
 
