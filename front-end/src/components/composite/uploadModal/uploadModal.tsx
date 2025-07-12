@@ -5,6 +5,7 @@ import { Button } from '@components/ui/button/Button';
 import { useState } from 'react';
 import {rightArrowIcon} from '@assets/icons';
 import { ApiUtil } from '@lib/apiUtils';
+import { showSuccessToast } from '@components/ui/toastNotification/ToastNotification';
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
   const submitFiles = async () => {
     const uploadPromises = files.map((file) => ApiUtil.uploadFile(file));
     await Promise.all(uploadPromises);
+    showSuccessToast('Files uploaded successfully', files.map(file => file.name).join('\n'));
     onClose();
   };
 
