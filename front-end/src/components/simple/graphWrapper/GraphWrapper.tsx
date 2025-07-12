@@ -28,7 +28,7 @@ export const GraphWrapper = ({ title, editOnClick, children }: GraphWrapperProps
         await document.exitFullscreen();
         setIsFullscreen(false);
       } catch (err) {
-        showErrorToast('Failed to exit fullscreen: ' + err);
+        showErrorToast('Failed to exit fullscreen: ' + (err instanceof Error ? err.message : String(err)));
       }
     }
   };
