@@ -98,7 +98,7 @@ const getStandardChartConfig = (chartInformation: ChartInformation) => {
       ...axisDefaults.title,
       text: chartInformation.files[0].y.header,
     },
-  } as Highcharts.YAxisOptions;;
+  } as Highcharts.YAxisOptions;
 
   return chartConfig;
 };
