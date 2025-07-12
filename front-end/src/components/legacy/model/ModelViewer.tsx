@@ -30,7 +30,7 @@ const ModelViewer = () => {
         setCurrentTimestamp(event.timestamp);
         break;
       case ReplayEventType.Finished:
-        showInfoToast('Replay finished!', `${event}`);
+        showInfoToast('Replay finished!', JSON.stringify(event));
         break;
     }
   };
