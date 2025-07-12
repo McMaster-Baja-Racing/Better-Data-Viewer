@@ -16,6 +16,7 @@ import ModelViewer from '../model/ModelViewer';
 import { Homepage } from '@pages/Homepage/Homepage';
 import Sidebar from '../../simple/sidebar/Sidebar';
 import { DataView } from '@pages/DataView/DataView';
+import { ToastNotification } from '@components/ui/toastNotification/ToastNotification';
 
 const App = () => {
   const location = useLocation();
@@ -54,9 +55,9 @@ const App = () => {
 
   return (
     <div className={cx(styles.App, { [styles.new]: isNew })}>
+      <ToastNotification />
       {isNew ? <Sidebar setModal={setModal}/> : (
         <Topbar setModal={setModal} numViews={numViews} setNumViews={setNumViews} />
-        
       )}
       <header className={styles.Body}>
         <div className={cx(styles.success, { [styles.visible]: isVisible })}>
