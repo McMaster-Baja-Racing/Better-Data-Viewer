@@ -7,7 +7,7 @@ export const defaultChartOptions: Options = {
     zooming: {
       type: 'x'
     },
-    backgroundColor: '#ffffff'
+    backgroundColor: '#222222'
   },
   title: {
     text: ''
@@ -17,7 +17,13 @@ export const defaultChartOptions: Options = {
       'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
   },
   legend: {
-    enabled: true
+    enabled: true,
+    itemHoverStyle: {
+      color: 'grey'
+    },
+    itemStyle: {
+      color: 'white',
+    }
   },
   accessibility: {
     enabled: false
@@ -30,11 +36,36 @@ export const defaultChartOptions: Options = {
   }
 };
 
+const axisDefaults = {
+  // Axis lines
+  lineColor: 'white',
+  lineWidth: 2,
+  // Major grid lines
+  gridLineWidth: 1,
+  gridLineColor: 'grey',
+  // Minor grid lines
+  minorTickInterval: 'auto',
+  minorTickColor: 'grey',
+  minorGridLineColor: 'grey',
+  minorGridLineWidth: 0.5,
+  // Axis labels
+  labels: {
+    style: {
+      color: 'white'
+    }
+  },
+  // Axis title
+  title: {
+    style: {
+      color: 'white',
+      fontWeight: 'bold',
+    }
+  }
+};
+
 const getStandardChartConfig = (chartInformation: ChartInformation) => {
 
   const chartConfig = defaultChartOptions;
-
-
 
   chartConfig.chart = {
     type: chartInformation.type,
@@ -48,7 +79,9 @@ const getStandardChartConfig = (chartInformation: ChartInformation) => {
   };
 
   chartConfig.xAxis = {
+    ...axisDefaults,
     title: {
+      ...axisDefaults.title,
       text: chartInformation.files[0].x.header
     },
 
@@ -57,19 +90,15 @@ const getStandardChartConfig = (chartInformation: ChartInformation) => {
     },
 
     type: chartInformation.hasTimestampX ? 'datetime' : 'linear',
-
-    lineColor: 'grey',
-    tickColor: 'grey',
-  };
+  } as Highcharts.XAxisOptions;;
 
   chartConfig.yAxis = {
+    ...axisDefaults,
     title: {
-      text: chartInformation.files[0].y.header
+      ...axisDefaults.title,
+      text: chartInformation.files[0].y.header,
     },
-    lineColor: 'grey',
-    tickColor: 'grey',
-    lineWidth: 1,
-  };
+  } as Highcharts.YAxisOptions;;
 
   return chartConfig;
 };
@@ -104,13 +133,13 @@ const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
   chartConfig.boost = {enabled: chartInformation.hasTimestampX};
 
   chartConfig.xAxis = {plotLines: [{
-    color: 'black',
+    color: 'red',
     width: 2,
     zIndex: 3,
   }]};
 
   chartConfig.yAxis = {plotLines: [{
-    color: 'black',
+    color: 'red',
     width: 2,
     zIndex: 3,
   }]};

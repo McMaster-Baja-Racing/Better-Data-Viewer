@@ -4,10 +4,6 @@
     resize: both;
     overflow: hidden;
 
-    > * {
-        font-family: "HelveticaNeueW01-77BdCnObl";
-    }
-
     .valueBox {
         position: absolute;
         top: 3px;
@@ -26,9 +22,8 @@
     }
 
     .chart {
-        
         :global(.highcharts-root) {
-            font-family: "HelveticaNeueW01-77BdCnObl" !important;
+            font-family: 'Roboto', sans-serif !important;
         }
     }
 
