@@ -90,7 +90,7 @@ const getStandardChartConfig = (chartInformation: ChartInformation) => {
     },
 
     type: chartInformation.hasTimestampX ? 'datetime' : 'linear',
-  } as Highcharts.XAxisOptions;;
+  } as Highcharts.XAxisOptions;
 
   chartConfig.yAxis = {
     ...axisDefaults,
