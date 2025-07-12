@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.scss';
-import App from './components/App';
+import App from './components/legacy/App/App';
 import { ThemeProvider } from './ThemeContext';
 import { ModalProvider } from './ModalContext';
 import { RouterComponent } from '@lib/navigationUtils';
