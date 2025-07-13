@@ -4,9 +4,18 @@ import { Series } from 'highcharts';
 export interface ChartInformation {
   files: ChartFileInformation[];
   live: boolean;
-  type: string;
+  type: chartType;
   hasGPSTime: boolean;
   hasTimestampX: boolean;
+}
+
+export enum chartType {
+  scatter = 'scatter',
+  line = 'line',
+  coloredline = 'coloredline',
+  video = 'video',
+  datetime = 'datetime',
+  // video = 'video'
 }
 
 export interface ChartFileInformation {

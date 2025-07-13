@@ -7,6 +7,7 @@ import { useEffect, useMemo, useReducer, useState } from 'react';
 import styles from './DataView.module.scss';
 import { DataSelect } from '@components/composite/dataSelect/dataSelect';
 import { chartInformationReducer } from '@lib/chartInformation';
+import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
 
 
 export const DataView = () => {
@@ -15,7 +16,7 @@ export const DataView = () => {
 
   // Store the chart information in state so it doesn't update on every render.
   const [chartDataState, dispatch] = useReducer(chartInformationReducer, chartInformation);
-  const [bins, setBins] = useState<string[]>([]);
+  const [bins, setBins] = useState<string[]>([]); // TODO: Expand past bins
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export const DataView = () => {
     );
     const uniqueBins = [...new Set(tempBins.flat())];
     setBins(uniqueBins);
-  }, [chartDataState]);  
+  }, [chartDataState]);
 
   // Memoize the video object to prevent re-creation on every render.
   const video = useMemo(() => ({
@@ -62,49 +63,11 @@ export const DataView = () => {
         </GraphWrapper>
       }
       sidebarContent={
-        <>
-          
-          {chartDataState.files.map((file, fileIndex) => {
-            return (
-              <div key={fileIndex}>
-                <div className={styles.title}>
-                  Pick your data (Y-Axis)
-                </div>
-                <DataSelect
-                  sources={bins.map((bin) => ({ value: bin, label: bin }))}
-                  dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-                  key={fileIndex + 'y'}
-                  chartFileInformation={file}
-                  columnKey="y"
-                  onColumnUpdate={(column, updatedColumn) => dispatch(
-                    { type: 'UPDATE_COLUMN', fileIndex, column, updatedColumn }
-                  )}
-                  onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ 
-                    type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues
-                  })}
-                />
-                <div className={styles.title}>
-                Pick your data (X-Axis)
-                </div>
-                <DataSelect
-                  sources={bins.map((bin) => ({ value: bin, label: bin }))}
-                  dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-                  key={fileIndex + 'x'}
-                  chartFileInformation={file}
-                  columnKey="x"
-                  onColumnUpdate={(_, updatedColumn) => dispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
-                  onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({
-                    type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues
-                  })}
-                />
-                <div className={styles.title}>
-                Options
-                </div>
-              </div>
-            );
-          })}
-        </>
-        
+        <EditSidebar 
+          chartInfo={chartDataState} 
+          dispatch={dispatch}
+          files={bins}
+        />
       }
     />
   );

@@ -7,14 +7,15 @@ import {
   DataColumnKey, 
   DataViewerPreset, 
   ChartAnalyzerInformation, 
-  dataColumnKeys 
+  dataColumnKeys, 
+  chartType
 } from '@types';
 
 export type ChartAction =
   | { type: 'UPDATE_FILE'; fileIndex: number; updatedFile: Partial<ChartFileInformation> }
   | { type: 'UPDATE_ANALYZER'; fileIndex: number; analyzerType?: AnalyzerType | null; analyzerValues?: string[] }
   | { type: 'UPDATE_COLUMN'; fileIndex: number; column: DataColumnKey; updatedColumn: Partial<Column> }
-  | { type: 'UPDATE_GRAPHING_TYPE'; updatedType: string }
+  | { type: 'UPDATE_GRAPHING_TYPE'; updatedType: chartType }
   | { type: 'UPDATE_X_COLUMN_ALL'; updatedColumn: Partial<Column> };
 
 export const chartInformationReducer = (
