@@ -16,7 +16,8 @@ export type ChartAction =
   | { type: 'UPDATE_ANALYZER'; fileIndex: number; analyzerType?: AnalyzerType | null; analyzerValues?: string[] }
   | { type: 'UPDATE_COLUMN'; fileIndex: number; column: DataColumnKey; updatedColumn: Partial<Column> }
   | { type: 'UPDATE_GRAPHING_TYPE'; updatedType: chartType }
-  | { type: 'UPDATE_X_COLUMN_ALL'; updatedColumn: Partial<Column> };
+  | { type: 'UPDATE_X_COLUMN_ALL'; updatedColumn: Partial<Column> }
+  | { type: 'UPDATE_ANALYZER_TYPE_ALL'; analyzerType?: AnalyzerType | null; analyzerValues?: string[] };
 
 export const chartInformationReducer = (
   state: ChartInformation,
@@ -88,6 +89,20 @@ export const chartInformationReducer = (
 
     case 'UPDATE_GRAPHING_TYPE': {
       updatedState = { ...state, type: action.updatedType };
+      break;
+    }
+
+    case 'UPDATE_ANALYZER_TYPE_ALL': {
+      updatedState = {
+        ...state,
+        files: state.files.map((file) => ({
+          ...file,
+          analyze: {
+            type: action.analyzerType !== undefined ? action.analyzerType : file.analyze.type,
+            analyzerValues: action.analyzerValues !== undefined ? action.analyzerValues : file.analyze.analyzerValues,
+          },
+        })),
+      };
       break;
     }
 

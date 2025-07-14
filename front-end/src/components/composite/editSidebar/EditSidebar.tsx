@@ -19,10 +19,9 @@ export const EditSidebar = ({ chartInfo, dispatch, files }: EditSidebarProps) =>
     dispatch({ type: 'UPDATE_GRAPHING_TYPE', updatedType: chartType });
   }, [chartType, dispatch]);
 
-
   return (
-    <>
-      <div>
+    <div className={styles.editSidebar}>
+      <div className={styles.title}>
         Chart type
       </div>
       <Dropdown 
@@ -30,18 +29,37 @@ export const EditSidebar = ({ chartInfo, dispatch, files }: EditSidebarProps) =>
         selected={chartType}
         setSelected={setChartType}
       />
+
+      <div className={styles.title}>
+        X-Axis
+      </div>
+      {chartInfo.files[0] && <DataSelect
+        sources={files.map((file) => ({ value: file, label: file }))}
+        dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
+        chartFileInformation={chartInfo.files[0]}
+        columnKey='x'
+        onColumnUpdate={(_, updatedColumn) => dispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
+        onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => {
+          dispatch({
+            type: 'UPDATE_ANALYZER_TYPE_ALL',
+            analyzerType: newAnalyzerType ?? null,
+            analyzerValues: newAnalyzerValues ?? []
+          });
+        }}
+      />}
+
       {chartInfo.files.map((file, fileIndex) => {
         return (
           <div key={fileIndex}>
             <div className={styles.title}>
-                  Pick your data (Y-Axis)
+              Series
             </div>
             <DataSelect
               sources={files.map((file) => ({ value: file, label: file }))}
               dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
               key={fileIndex + 'y'}
               chartFileInformation={file}
-              columnKey="y"
+              columnKey='y'
               onColumnUpdate={(column, updatedColumn) => dispatch(
                 { type: 'UPDATE_COLUMN', fileIndex, column, updatedColumn }
               )}
@@ -49,26 +67,13 @@ export const EditSidebar = ({ chartInfo, dispatch, files }: EditSidebarProps) =>
                 type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues
               })}
             />
-            <div className={styles.title}>
-                Pick your data (X-Axis)
-            </div>
-            <DataSelect
-              sources={files.map((file) => ({ value: file, label: file }))}
-              dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-              key={fileIndex + 'x'}
-              chartFileInformation={file}
-              columnKey="x"
-              onColumnUpdate={(_, updatedColumn) => dispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
-              onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({
-                type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues
-              })}
-            />
-            <div className={styles.title}>
-                Options
-            </div>
           </div>
         );
       })}
-    </>
+
+      <div className={styles.title}>
+        Options
+      </div>
+    </div>
   );
 };

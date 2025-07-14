@@ -1,5 +1,11 @@
 @use '@styles/_fonts';
 
+.editSidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
 .title {
   @include fonts.title-medium;
   text-align: left;
