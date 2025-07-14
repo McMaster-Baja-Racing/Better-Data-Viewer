@@ -58,16 +58,19 @@ public abstract class Analyzer {
 
     try {
       for (String filePath : filePaths) {
-        FileReader fileReader = new FileReader(filePath);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        CSVReader reader = new CSVReaderBuilder(bufferedReader).withSkipLines(0).build();
-        readersMap.put(filePath, reader);
+        try {
+          FileReader fileReader = new FileReader(filePath);
+          BufferedReader bufferedReader = new BufferedReader(fileReader);
+          CSVReader reader = new CSVReaderBuilder(bufferedReader).withSkipLines(0).build();
+          readersMap.put(filePath, reader);
+        } catch (IOException e) {
+          throw new InvalidInputFileException("Failed to read input file: " + filePath, e);
+        }
       }
       action.accept(readersMap);
 
-    } catch (IOException e) {
-      throw new InvalidInputFileException("Failed to read input files", e);
-
+    } catch (Exception e) {
+      throw e;
       // Finally block always executes, so readers will always close even if an
       // exception occurred in the try block.
     } finally {
@@ -145,6 +148,6 @@ public abstract class Analyzer {
       }
     }
     throw new InvalidColumnException(
-        "No column in file exists with analysis column name {" + columnName + "}");
+        "Column `" + columnName + " does not exist within []" + String.join(", ", fileHeaders) + "]");
   }
 }
