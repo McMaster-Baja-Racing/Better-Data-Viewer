@@ -1,4 +1,5 @@
 import { ChartInformation, Column, HeadersIndex } from '@types';
+import { columnT, seriesT } from 'types/ChartQuery';
 
 export const HUE_MIN = 150;
 export const HUE_MAX = 0;
@@ -21,7 +22,7 @@ export const getTimestamps = async (text: string) => {
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
-export const getHeadersIndex = (headers: string[], columns: Column[]): HeadersIndex => {
+export const getHeadersIndex = (headers: string[], columns: Column[] | columnT[]): HeadersIndex => {
   const h: HeadersIndex = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {
@@ -51,6 +52,21 @@ export const validateChartInformation = (chartInformation: ChartInformation): bo
   }
   if (chartInformation.files[0].x.header === '' || chartInformation.files[0].x.filename === '') {
     return false;
+  }
+  return true;
+};
+
+export const validateChartQuery = (series: seriesT[]) => {
+  if (!series || series.length === 0) {
+    return false;
+  }
+  for (const s of series) {
+    if (!s.x || !s.y) {
+      return false;
+    }
+    if (s.x.header === '' || s.x.filename === '') {
+      return false;
+    }
   }
   return true;
 };

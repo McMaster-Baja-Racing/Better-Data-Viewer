@@ -8,6 +8,7 @@ import { chartInformationReducer } from '@lib/chartInformation';
 import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
 import { ChartOptionsProvider } from '../../ChartOptionsContext';
 import { DashboardProvider } from '../../DashboardContext';
+import { useChartQuery } from 'ChartQueryContext';
 
 export const DataView = () => {
   const location = useLocation();
@@ -17,7 +18,6 @@ export const DataView = () => {
   const [chartDataState, dispatch] = useReducer(chartInformationReducer, chartInformation);
   const [bins, setBins] = useState<string[]>([]); // TODO: Expand past bins
   const [isOpen, setIsOpen] = useState(false);
-
 
   useEffect(() => {
     const tempBins = chartDataState.files.map((file) =>

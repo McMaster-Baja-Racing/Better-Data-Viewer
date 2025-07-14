@@ -5,6 +5,7 @@ import App from './components/legacy/App/App';
 import { ThemeProvider } from './ThemeContext';
 import { ModalProvider } from './ModalContext';
 import { RouterComponent } from '@lib/navigationUtils';
+import { ChartQueryProvider } from './ChartQueryContext';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -18,9 +19,11 @@ root.render(
   // <React.StrictMode>
   <ThemeProvider>
     <ModalProvider>
-      <RouterComponent>
-        <App />
-      </RouterComponent>
+      <ChartQueryProvider>
+        <RouterComponent>
+          <App />
+        </RouterComponent>
+      </ChartQueryProvider>
     </ModalProvider>
   </ThemeProvider>
   // </React.StrictMode>

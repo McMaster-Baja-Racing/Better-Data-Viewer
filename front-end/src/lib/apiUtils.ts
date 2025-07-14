@@ -81,7 +81,7 @@ export const ApiUtil = {
     inputFiles: string[],
     inputColumns: string[],
     outputFiles: string[] | null,
-    type: AnalyzerType | null,
+    analyzerType: AnalyzerType | null,
     analyzerOptions: string[], // This one is weird as its dependent on which analyzer is run
     live: boolean
   ): Promise<{ filename: string, text: string }> => {
@@ -90,7 +90,7 @@ export const ApiUtil = {
     inputFiles.map(file => params.append('inputFiles', file));
     inputColumns.map(column => params.append('inputColumns', column));
     outputFiles?.map(file => params.append('outputFiles', file));
-    if (type) params.append('type', type);
+    if (analyzerType) params.append('type', analyzerType);
     analyzerOptions.map(option => params.append('analyzerOptions', option));
     if (live) params.append('live', live.toString());
 

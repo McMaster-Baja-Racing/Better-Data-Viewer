@@ -10,9 +10,11 @@ import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '@assets/loading.gif';
 import { FileTimespan, ChartInformation } from '@types';
 import { Chart as ChartType } from 'highcharts';
-import { useChartData } from './useChartData';
+// import { useChartData } from './useChartData';
+import { useChartData } from './useChartDataNew';
 import { useVideoSyncLines } from './useVideoSyncLines';
 import { useChartOptions } from '../../../../ChartOptionsContext';
+
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('highcharts-multicolor-series')(Highcharts);
@@ -28,8 +30,8 @@ interface ChartProps {
 
 const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const chartRef = useRef<ChartType | null>(null);
-  const { options, dispatch } = useChartOptions();
-  const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
+  const { options, dispatch: chartOptionsDispatch } = useChartOptions();
+  const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData();
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
     chartInformation, 
     chartRef.current, 
@@ -38,10 +40,11 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     timestamps
   );
 
+  // Update options
   useEffect(() => {
     if(!validateChartInformation(chartInformation)) return;
 
-    dispatch({
+    chartOptionsDispatch({
       type: 'REPLACE_OPTIONS',
       options: {
         ...options,
@@ -50,20 +53,22 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     }); 
   }, [parsedData, fileNames, chartInformation]);
 
+  // Update line
   useEffect(() => {
     if (lineX === 0) return;
-    dispatch({
+    chartOptionsDispatch({
       type: 'REPLACE_OPTIONS',
       options: movePlotLineX(options, lineX)
     });
   }, [lineX]);
 
+  // Update lines
   useEffect(() => {
     if (linePoint.x === 0 && linePoint.y === 0) return;
-    dispatch({
+    chartOptionsDispatch({
       type: 'REPLACE_OPTIONS',
       options: movePlotLines(options, linePoint.x, linePoint.y)
-    })
+    });
   }, [linePoint]);
 
   // This function loops when live is true, and updates the chart every 500ms
