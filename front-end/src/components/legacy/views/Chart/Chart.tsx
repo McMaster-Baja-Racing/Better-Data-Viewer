@@ -1,7 +1,7 @@
 import styles from './Chart.module.scss';
-import { defaultChartOptions, getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions';
+import { getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions';
 import { LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
@@ -12,6 +12,7 @@ import { FileTimespan, ChartInformation } from '@types';
 import { Chart as ChartType } from 'highcharts';
 import { useChartData } from './useChartData';
 import { useVideoSyncLines } from './useVideoSyncLines';
+import { useChart } from '../../../../ChartContext';
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('highcharts-multicolor-series')(Highcharts);
@@ -27,7 +28,7 @@ interface ChartProps {
 
 const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const chartRef = useRef<ChartType | null>(null);
-  const [chartOptions, setChartOptions] = useState(defaultChartOptions);
+  const { options, dispatch } = useChart();
   const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
     chartInformation, 
@@ -40,23 +41,29 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   useEffect(() => {
     if(!validateChartInformation(chartInformation)) return;
 
-    setChartOptions((prevState) => {
-      return {
-        ...prevState,
+    dispatch({
+      type: 'REPLACE_OPTIONS',
+      options: {
+        ...options,
         ...getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
-      };
-    });
-        
+      }
+    }); 
   }, [parsedData, fileNames, chartInformation]);
 
   useEffect(() => {
     if (lineX === 0) return;
-    setChartOptions(movePlotLineX(chartOptions, lineX));
+    dispatch({
+      type: 'REPLACE_OPTIONS',
+      options: movePlotLineX(options, lineX)
+    });
   }, [lineX]);
 
   useEffect(() => {
     if (linePoint.x === 0 && linePoint.y === 0) return;
-    setChartOptions(movePlotLines(chartOptions, linePoint.x, linePoint.y));
+    dispatch({
+      type: 'REPLACE_OPTIONS',
+      options: movePlotLines(options, linePoint.x, linePoint.y)
+    })
   }, [linePoint]);
 
   // This function loops when live is true, and updates the chart every 500ms
@@ -104,7 +111,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
       <div className={styles.chart} style={{ height: '100%', width: '100%' }}>
         <HighchartsReact
           highcharts={Highcharts}
-          options={chartOptions}
+          options={options}
           callback={(chart: ChartType) => { chartRef.current = chart; }}
           containerProps={{ style: { height: '100%', width: '100%' } }}  
         />

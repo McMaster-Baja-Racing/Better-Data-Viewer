@@ -4,20 +4,23 @@ import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
 import { useEffect, useState } from 'react';
-
+import { useChart } from '../../../ChartContext';
+import TextField from '@components/ui/textfield/TextField';
+import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
 
 interface EditSidebarProps {
   chartInfo: ChartInformation;
-  dispatch: React.Dispatch<ChartAction>;
+  chartInfoDispatch: React.Dispatch<ChartAction>;
   files: string[]; // TODO: This should use the file type specified in the file browser
 }
 
-export const EditSidebar = ({ chartInfo, dispatch, files }: EditSidebarProps) => {
+export const EditSidebar = ({ chartInfo, chartInfoDispatch, files }: EditSidebarProps) => {
+  const { options, dispatch: chartOptionsDispatch } = useChart();
   const [chartType, setChartType] = useState(chartInfo.type);
 
   useEffect(() => {
-    dispatch({ type: 'UPDATE_GRAPHING_TYPE', updatedType: chartType });
-  }, [chartType, dispatch]);
+    chartInfoDispatch({ type: 'UPDATE_GRAPHING_TYPE', updatedType: chartType });
+  }, [chartType, chartInfoDispatch]);
 
   return (
     <div className={styles.editSidebar}>
@@ -38,9 +41,9 @@ export const EditSidebar = ({ chartInfo, dispatch, files }: EditSidebarProps) =>
         dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
         chartFileInformation={chartInfo.files[0]}
         columnKey='x'
-        onColumnUpdate={(_, updatedColumn) => dispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
+        onColumnUpdate={(_, updatedColumn) => chartInfoDispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
         onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => {
-          dispatch({
+          chartInfoDispatch({
             type: 'UPDATE_ANALYZER_TYPE_ALL',
             analyzerType: newAnalyzerType ?? null,
             analyzerValues: newAnalyzerValues ?? []
@@ -60,10 +63,10 @@ export const EditSidebar = ({ chartInfo, dispatch, files }: EditSidebarProps) =>
               key={fileIndex + 'y'}
               chartFileInformation={file}
               columnKey='y'
-              onColumnUpdate={(column, updatedColumn) => dispatch(
+              onColumnUpdate={(column, updatedColumn) => chartInfoDispatch(
                 { type: 'UPDATE_COLUMN', fileIndex, column, updatedColumn }
               )}
-              onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => dispatch({ 
+              onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => chartInfoDispatch({ 
                 type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues
               })}
             />
@@ -74,6 +77,19 @@ export const EditSidebar = ({ chartInfo, dispatch, files }: EditSidebarProps) =>
       <div className={styles.title}>
         Options
       </div>
+
+      <TextField
+        title={'coolguy'}
+        value={options.title?.text || ''}
+        setValue={(title) => chartOptionsDispatch({ type: 'SET_SUBTITLE', text: title })}
+      />
+
+      <OptionSquare
+        label={'Show Legend'}
+        illustration='showLegend'
+        clicked={options.legend?.enabled || false}
+        setClicked={() => chartOptionsDispatch({ type: 'TOGGLE_LEGEND' })}
+      />
     </div>
   );
 };
