@@ -12,7 +12,7 @@ import { FileTimespan, ChartInformation } from '@types';
 import { Chart as ChartType } from 'highcharts';
 import { useChartData } from './useChartData';
 import { useVideoSyncLines } from './useVideoSyncLines';
-import { useChart } from '../../../../ChartContext';
+import { useChartOptions } from '../../../../ChartOptionsContext';
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('highcharts-multicolor-series')(Highcharts);
@@ -28,7 +28,7 @@ interface ChartProps {
 
 const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const chartRef = useRef<ChartType | null>(null);
-  const { options, dispatch } = useChart();
+  const { options, dispatch } = useChartOptions();
   const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData(chartInformation);
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
     chartInformation, 

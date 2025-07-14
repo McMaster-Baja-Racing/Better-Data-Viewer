@@ -2,17 +2,17 @@ import React, { createContext, useReducer, useContext } from 'react';
 import { Options } from 'highcharts';
 import { defaultChartOptions } from '@lib/chartOptions';
 
-type ChartAction =
+type ChartOptionsAction =
   | { type: 'SET_SUBTITLE'; text: string }
   | { type: 'TOGGLE_LEGEND' }
   | { type: 'REPLACE_OPTIONS'; options: Options };
 
-const ChartContext = createContext<{
+const ChartOptionsContext = createContext<{
   options: Options;
-  dispatch: React.Dispatch<ChartAction>;
+  dispatch: React.Dispatch<ChartOptionsAction>;
 } | undefined>(undefined);
 
-const chartReducer = (state: Options, action: ChartAction): Options => {
+const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Options => {
   switch (action.type) {
     case 'SET_SUBTITLE':
       return {
@@ -34,18 +34,18 @@ const chartReducer = (state: Options, action: ChartAction): Options => {
   }
 };
 
-export const ChartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [options, dispatch] = useReducer(chartReducer, defaultChartOptions);
+export const ChartOptionsProvider = ({ children }: { children: React.ReactNode }) => {
+  const [options, dispatch] = useReducer(chartOptionsReducer, defaultChartOptions);
 
   return (
-    <ChartContext.Provider value={{ options, dispatch }}>
+    <ChartOptionsContext.Provider value={{ options, dispatch }}>
       {children}
-    </ChartContext.Provider>
+    </ChartOptionsContext.Provider>
   );
 };
 
-export const useChart = () => {
-  const context = useContext(ChartContext);
+export const useChartOptions = () => {
+  const context = useContext(ChartOptionsContext);
   if (!context) throw new Error('useChart must be used within ChartProvider');
   return context;
 };

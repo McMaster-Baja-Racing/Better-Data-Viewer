@@ -6,7 +6,8 @@ import { useLocation } from 'react-router-dom';
 import { useEffect, useMemo, useReducer, useState } from 'react';
 import { chartInformationReducer } from '@lib/chartInformation';
 import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
-import { ChartProvider, useChart } from '../../ChartContext';
+import { ChartOptionsProvider } from '../../ChartOptionsContext';
+import { DashboardProvider } from '../../DashboardContext';
 
 export const DataView = () => {
   const location = useLocation();
@@ -42,31 +43,32 @@ export const DataView = () => {
 
   return (
     // TODO: Extract this title better
-    <ChartProvider>
-      <RightSidebar 
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        mainContent={
-          <GraphWrapper 
-            title={chartDataState.files[0].y.header + ' vs ' + chartDataState.files[0].x.header}
-            editOnClick={() => setIsOpen(!isOpen)}
-          >
-            <Chart 
-              chartInformation={chartDataState}
-              video={video}
-              videoTimestamp={0}
+    <ChartOptionsProvider>
+      <DashboardProvider>
+        <RightSidebar
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          mainContent={
+            <GraphWrapper 
+              title={chartDataState.files[0].y.header + ' vs ' + chartDataState.files[0].x.header}
+              editOnClick={() => setIsOpen(!isOpen)}
+            >
+              <Chart 
+                chartInformation={chartDataState}
+                video={video}
+                videoTimestamp={0}
+              />
+            </GraphWrapper>
+          }
+          sidebarContent={
+            <EditSidebar 
+              chartInfo={chartDataState} 
+              chartInfoDispatch={dispatch}
+              files={bins}
             />
-              
-          </GraphWrapper>
-        }
-        sidebarContent={
-          <EditSidebar 
-            chartInfo={chartDataState} 
-            chartInfoDispatch={dispatch}
-            files={bins}
-          />
-        }
-      />
-    </ChartProvider>
+          }
+        />
+      </DashboardProvider>
+    </ChartOptionsProvider>
   );
 };

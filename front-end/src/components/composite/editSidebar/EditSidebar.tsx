@@ -4,9 +4,10 @@ import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
 import { useEffect, useState } from 'react';
-import { useChart } from '../../../ChartContext';
+import { useChartOptions } from '../../../ChartOptionsContext';
 import TextField from '@components/ui/textfield/TextField';
 import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
+import { useDashboard } from '../../../DashboardContext';
 
 interface EditSidebarProps {
   chartInfo: ChartInformation;
@@ -15,7 +16,8 @@ interface EditSidebarProps {
 }
 
 export const EditSidebar = ({ chartInfo, chartInfoDispatch, files }: EditSidebarProps) => {
-  const { options, dispatch: chartOptionsDispatch } = useChart();
+  const { options, dispatch: chartOptionsDispatch } = useChartOptions();
+  const { title, dispatch: dashboardDispatch } = useDashboard();
   const [chartType, setChartType] = useState(chartInfo.type);
 
   useEffect(() => {
@@ -80,8 +82,8 @@ export const EditSidebar = ({ chartInfo, chartInfoDispatch, files }: EditSidebar
 
       <TextField
         title={'coolguy'}
-        value={options.title?.text || ''}
-        setValue={(title) => chartOptionsDispatch({ type: 'SET_SUBTITLE', text: title })}
+        value={title || ''}
+        setValue={(title) => dashboardDispatch({ type: 'SET_TITLE', title: title })}
       />
 
       <OptionSquare
