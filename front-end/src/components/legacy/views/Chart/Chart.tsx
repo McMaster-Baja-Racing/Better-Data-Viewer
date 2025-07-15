@@ -43,7 +43,6 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
   // );
 
   useEffect(() => {
-    refetch();
     // TODO: Don't just use the first series for axis titles
     chartOptionsDispatch({
       type: 'SET_AXIS_TITLE',

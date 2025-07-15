@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
 import {
   getHeadersIndex,
@@ -24,6 +24,14 @@ export const useChartData = () => {
   const type = options.series?.[0]?.type;
   // TODO: Dont just initialize to false
   const hasGPSTime = false, hasTimestampX = false, live = false;
+
+  useEffect(() => {
+    // TODO: One day, detect if the specific sries updated rather than wiping all
+    chartOptionsDispatch({ type: 'CLEAR_SERIES' });
+    setTimestamps([]);
+    minMax.current = { min: 0, max: 0 };
+    fetchChartData();
+  }, [series]);
 
   const fetchChartData = useCallback(async () => {
     if (!validateChartQuery(series)) return;
