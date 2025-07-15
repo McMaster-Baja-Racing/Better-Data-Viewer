@@ -10,7 +10,8 @@ type ChartOptionsAction =
   | { type: 'CLEAR_SERIES'}
   | { type: 'ADD_SERIES'; series: SeriesOptionsType }
   | { type: 'SET_AXIS_TITLE'; axis: 'xAxis' | 'yAxis'; title: string }
-  | { type: 'SET_CHART_TYPE'; chartType: SeriesOptionsType['type'] | 'coloredLine' };
+  | { type: 'SET_CHART_TYPE'; chartType: SeriesOptionsType['type'] | 'coloredLine' }
+  | { type: 'UPSERT_SERIES'; index: number, series: SeriesOptionsType };
 
 const ChartOptionsContext = createContext<{
   options: Options;
@@ -71,6 +72,19 @@ const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Option
           .map(s => ({ ...s, type: action.chartType })) as SeriesOptionsType[]
       };
       break;
+    case 'UPSERT_SERIES': {
+      const seriesArr = state.series ? [...state.series] : [];
+      if (seriesArr[action.index]) {
+        seriesArr[action.index] = action.series;
+      } else {
+        seriesArr[action.index] = action.series;
+      }
+      updatedState = {
+        ...state,
+        series: seriesArr
+      };
+      break;
+    }
     default:
       return state;
   }

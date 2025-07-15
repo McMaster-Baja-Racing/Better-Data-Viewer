@@ -1,4 +1,3 @@
-import { validateChartInformation } from '@lib/chartUtils';
 import { useState, useEffect } from 'react';
 import { Chart } from 'highcharts';
 import { FileTimespan, ChartInformation, ExtSeries } from '@types';
@@ -16,6 +15,8 @@ export const useVideoSyncLines = (
   const [linePoint, setLinePoint] = useState<{x: number, y: number}>({x: 0, y: 0});
   const [syncedDataPoints, setSyncedDataPoints] = useState<string[]>([]);
 
+  return;
+
   const resetData = () => {
     setOffsets([]);
     setLineX(0);
@@ -26,7 +27,7 @@ export const useVideoSyncLines = (
   // Do initial calculation when timespan or chartInformation change
   useEffect(() => {
     resetData();
-    if (videoTimespan === undefined || !validateChartInformation(chartInformation)) return;
+    if (videoTimespan === undefined) return;
     setOffsets(computeOffsets(chartInformation, videoTimespan));
   }, [videoTimespan, chartInformation]);
 

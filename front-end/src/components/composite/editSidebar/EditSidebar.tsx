@@ -40,7 +40,6 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
       {series[0] && <DataSelect
         sources={files.map((file) => ({ value: file, label: file }))}
         dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-        chartFileInformation={series[0]}
         columnKey='x'
         onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
           type: 'UPDATE_X_COLUMN_ALL', 
@@ -67,7 +66,6 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
               sources={files.map((file) => ({ value: file, label: file }))}
               dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
               key={fileIndex + 'y'}
-              chartFileInformation={file}
               columnKey='y'
               onColumnUpdate={(column, updatedColumn) => chartQueryDispatch(
                 { type: 'UPDATE_COLUMN', index: fileIndex, columnKey: column, column: updatedColumn  }

@@ -5,12 +5,12 @@ import { Button } from '@components/ui/button/Button';
 import TextField from '@components/ui/textfield/TextField';
 import { sigmaIcon, plusIcon, minusIcon } from '@assets/icons';
 import { unstable_batchedUpdates } from 'react-dom';
-import { analyzerConfig, AnalyzerKey, AnalyzerType, ChartFileInformation, Column, DataColumnKey } from '@types';
+import { analyzerConfig, AnalyzerKey, AnalyzerType, Column, DataColumnKey } from '@types';
+import { useChartQuery } from '../../../ChartQueryContext';
 
 interface DataSelectProps {
     sources: DropdownOption<string>[];
     dataTypes: DropdownOption<string>[];
-    chartFileInformation: ChartFileInformation;
     columnKey: DataColumnKey;
     onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<Column>) => void;
     onAnalyzerUpdate: (analyzerType?: AnalyzerType | null, analyzerValues?: string[]) => void;
@@ -28,14 +28,15 @@ export function DataSelect({
   columnKey, 
   onAnalyzerUpdate, 
   onColumnUpdate, 
-  chartFileInformation 
 }: DataSelectProps) {
   const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
+  const { series } = useChartQuery();
+  const singleSeries = series[0];
   const [selectedDataType, setSelectedDataType] = useState<string>(
-    chartFileInformation[columnKey]?.header || dataTypes[0].value
+    singleSeries[columnKey]?.header || dataTypes[0].value
   );
 
-  const [analyzerKey, setAnalyzerKey] = useState<AnalyzerKey>(chartFileInformation.analyze.type ?? 'NONE');
+  const [analyzerKey, setAnalyzerKey] = useState<AnalyzerKey>(singleSeries.analyzer.type ?? 'NONE');
   const analyzer = analyzerConfig[analyzerKey];
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -51,10 +52,10 @@ export function DataSelect({
 
   // Update analyzer type
   useEffect(() => {
-    const newKey: AnalyzerKey = chartFileInformation.analyze.type ?? 'NONE';
+    const newKey: AnalyzerKey = singleSeries.analyzer.type ?? 'NONE';
     setAnalyzerKey(newKey);
     setAnalyzerValues(analyzerConfig[newKey].parameters?.map(param => param.defaultValue) || []);
-  }, [chartFileInformation.analyze.type]);
+  }, [singleSeries.analyzer.type]);
 
   // Wait before API call
   useEffect(() => {
@@ -67,7 +68,7 @@ export function DataSelect({
 
   // TODO: This logic could be decoupled from this
   useEffect(() => {
-    const currX = chartFileInformation.x.header;
+    const currX = singleSeries.x.header;
     const update: Partial<Column> = { header: selectedDataType };
 
     unstable_batchedUpdates(() => {
@@ -81,7 +82,7 @@ export function DataSelect({
       } else if (columnKey === 'x') {
         if (selectedDataType === TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
           onAnalyzerUpdate(null, []);
-          onColumnUpdate('x', { filename: chartFileInformation.y.filename });
+          onColumnUpdate('x', { filename: singleSeries.y.filename });
         } else if (selectedDataType !== TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
           update.filename = `${selectedSource}/${selectedDataType}.csv`;
         } else if (selectedDataType !== TIMESTAMP_HEADER) {

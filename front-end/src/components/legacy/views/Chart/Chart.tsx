@@ -34,13 +34,13 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
   const { series } = useChartQuery();
   const { live } = useDashboard();
   const { timestamps, loading, refetch } = useChartData();
-  const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
-    chartInformation, // TODO
-    chartRef.current, 
-    videoTimestamp, 
-    video,
-    timestamps
-  );
+  // const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
+  //   {}, // TODO
+  //   chartRef.current, 
+  //   videoTimestamp, 
+  //   video,
+  //   timestamps
+  // );
 
   useEffect(() => {
     refetch();
@@ -55,25 +55,25 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
       axis: 'yAxis',
       title: series[0]?.y.header
     });
-  }, []);
+  }, [series]);
 
   // Update line
-  useEffect(() => {
-    if (lineX === 0) return;
-    chartOptionsDispatch({
-      type: 'REPLACE_OPTIONS',
-      options: movePlotLineX(options, lineX)
-    });
-  }, [lineX]);
+  // useEffect(() => {
+  //   if (lineX === 0) return;
+  //   chartOptionsDispatch({
+  //     type: 'REPLACE_OPTIONS',
+  //     options: movePlotLineX(options, lineX)
+  //   });
+  // }, [lineX]);
 
-  // Update lines
-  useEffect(() => {
-    if (linePoint.x === 0 && linePoint.y === 0) return;
-    chartOptionsDispatch({
-      type: 'REPLACE_OPTIONS',
-      options: movePlotLines(options, linePoint.x, linePoint.y)
-    });
-  }, [linePoint]);
+  // // Update lines
+  // useEffect(() => {
+  //   if (linePoint.x === 0 && linePoint.y === 0) return;
+  //   chartOptionsDispatch({
+  //     type: 'REPLACE_OPTIONS',
+  //     options: movePlotLines(options, linePoint.x, linePoint.y)
+  //   });
+  // }, [linePoint]);
 
   // This function loops when live is true, and updates the chart every 500ms
   useEffect(() => {
@@ -90,7 +90,7 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
 
   return (
     <div className={styles.chartContainer}>
-      {syncedDataPoints.length > 0 ? (<div className={styles.valueBox}>{syncedDataPoints.join('\n')}</div>) : null}
+      {/* {syncedDataPoints.length > 0 ? (<div className={styles.valueBox}>{syncedDataPoints.join('\n')}</div>) : null} */}
       <div className={styles.chart} style={{ height: '100%', width: '100%' }}>
         <HighchartsReact
           highcharts={Highcharts}

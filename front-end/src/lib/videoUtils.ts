@@ -1,11 +1,11 @@
-import { FileInformation, FileTimespan, ChartInformation, ExtSeries } from '@types';
+import { FileInformation, FileTimespan, ExtSeries } from '@types';
 
 // Computs the offsets between the videoStart and the fileStart for all series
-export const computeOffsets = (chartInformation: ChartInformation, videoTimespan: FileTimespan) => {
+export const computeOffsets = (series, videoTimespan: FileTimespan) => {
   const videoStart = new Date(videoTimespan.start).getTime();
 
   const tempOffsets: number[] = [];
-  chartInformation.files.forEach(file => {
+  series.files.forEach(file => {
     if(file.x.timespan.start == null)
     {
       // TODO: Decide when should a file require a timespan and when it's okay to be missing
