@@ -31,7 +31,7 @@ export function DataSelect({
 }: DataSelectProps) {
   const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
   const { series } = useChartQuery();
-  const singleSeries = series[0];
+  const singleSeries = series[0]; // TODO: Handle multiple series
   const [selectedDataType, setSelectedDataType] = useState<string>(
     singleSeries[columnKey]?.header || dataTypes[0].value
   );

@@ -8,6 +8,7 @@ import TextField from '@components/ui/textfield/TextField';
 import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
 import { useDashboard } from '../../../DashboardContext';
 import { useChartQuery } from '../../../ChartQueryContext';
+import { Accordion } from '@components/ui/accordion/Accordion';
 
 interface EditSidebarProps {
   files: string[]; // TODO: This should use the file type specified in the file browser
@@ -15,7 +16,6 @@ interface EditSidebarProps {
 
 export const EditSidebar = ({ files }: EditSidebarProps) => {
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
-  const { title, dispatch: dashboardDispatch } = useDashboard();
   const { series, dispatch: chartQueryDispatch } = useChartQuery();
   const [chartType, setChartType] = useState<SeriesType>(options.series?.[0]?.type || 'line');
 
@@ -84,18 +84,54 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
         Options
       </div>
 
+      <TitleEditor />
+      <LegendEditor />
+    </div>
+  );
+};
+
+const TitleEditor = () => {
+  const { title, dispatch: dashboardDispatch } = useDashboard();
+  const { options, dispatch: chartOptionsDispatch } = useChartOptions();
+
+  return (
+    <Accordion title={'Title Options'}>
       <TextField
-        title={'coolguy'}
+        title={'Dashboard Title'}
         value={title || ''}
         setValue={(title) => dashboardDispatch({ type: 'SET_TITLE', title: title })}
       />
+      <TextField
+        title={'Chart Subtitle'}
+        value={options.title?.text || ''}
+        setValue={(title) => chartOptionsDispatch({ type: 'SET_SUBTITLE', text: title })}
+      />
+      <TextField
+        title={'Chart X-Axis Title'}
+        value={options.xAxis?.title?.text || ''}
+        setValue={(title) => chartOptionsDispatch({ type: 'SET_AXIS_TITLE', axis: 'xAxis',title: title })}
+      />
+      <TextField
+        title={'Chart Y-Axis Title'}
+        value={options.yAxis?.title?.text || ''}
+        setValue={(title) => chartOptionsDispatch({ type: 'SET_AXIS_TITLE', axis: 'yAxis', title: title })}
+      />
+    </Accordion>
+  );
+};
 
+const LegendEditor = () => {
+  const { options, dispatch: chartOptionsDispatch } = useChartOptions();
+
+  return (
+    <Accordion title={'Legend Options'}>
       <OptionSquare
         label={'Show Legend'}
         illustration='showLegend'
         clicked={options.legend?.enabled || false}
         setClicked={() => chartOptionsDispatch({ type: 'TOGGLE_LEGEND' })}
       />
-    </div>
+    </Accordion>
   );
+
 };
