@@ -1,11 +1,16 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import { Options } from 'highcharts';
+import { Options, SeriesOptionsType } from 'highcharts';
 import { defaultChartOptions } from '@lib/chartOptions';
+import isEqual from 'lodash.isequal';
+
 
 type ChartOptionsAction =
   | { type: 'SET_SUBTITLE'; text: string }
   | { type: 'TOGGLE_LEGEND' }
-  | { type: 'REPLACE_OPTIONS'; options: Options };
+  | { type: 'REPLACE_OPTIONS'; options: Options }
+  | { type: 'CLEAR_SERIES'}
+  | { type: 'ADD_SERIES'; series: SeriesOptionsType }
+  | { type: 'SET_AXIS_TITLE'; axis: 'xAxis' | 'yAxis'; title: string };
 
 const ChartOptionsContext = createContext<{
   options: Options;
@@ -13,25 +18,64 @@ const ChartOptionsContext = createContext<{
 } | undefined>(undefined);
 
 const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Options => {
+  console.log('ChartOptionsReducer called with action:', action);
+  let updatedState: Options = state;
+
   switch (action.type) {
     case 'SET_SUBTITLE':
-      return {
+      updatedState = {
         ...state,
         subtitle: { ...state.subtitle, text: action.text },
       };
+      break;
     case 'TOGGLE_LEGEND':
-      return {
+      updatedState = {
         ...state,
         legend: {
           ...state.legend,
           enabled: !state.legend?.enabled,
         },
       };
+      break;
     case 'REPLACE_OPTIONS':
-      return action.options;
+      updatedState = action.options;
+      break;
+    case 'CLEAR_SERIES':
+      updatedState = {
+        ...state,
+        series: []
+      };
+      break;
+    case 'ADD_SERIES':
+      updatedState = {
+        ...state,
+        series: [...(state.series || []), action.series]
+      };
+      break;
+    case 'SET_AXIS_TITLE':
+      updatedState = {
+        ...state,
+        [action.axis]: {
+          ...state[action.axis],
+          title: {
+            ...state[action.axis]?.title,
+            text: action.title,
+          },
+        },
+      };
+      break;
     default:
       return state;
   }
+
+  // TODO: Remove this once debugging is complete
+  if (!isEqual(state, updatedState)) {
+    // eslint-disable-next-line no-console
+    console.log('State updated:', updatedState);
+    // eslint-disable-next-line no-console
+    console.log('State before update:', state);
+  }
+  return isEqual(state, updatedState) ? state : updatedState;
 };
 
 export const ChartOptionsProvider = ({ children }: { children: React.ReactNode }) => {

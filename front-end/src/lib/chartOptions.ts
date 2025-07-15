@@ -1,42 +1,7 @@
-import { Options } from 'highcharts';
+import { Options, XAxisOptions } from 'highcharts';
 import { ChartInformation } from '@types';
 
-export const defaultChartOptions: Options = {
-  chart: {
-    type: 'scatter',
-    zooming: {
-      type: 'x'
-    },
-    backgroundColor: '#222222'
-  },
-  title: {
-    text: ''
-  },
-  subtitle: {
-    text: document.ontouchstart === undefined ?
-      'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-  },
-  legend: {
-    enabled: true,
-    itemHoverStyle: {
-      color: 'grey'
-    },
-    itemStyle: {
-      color: 'white',
-    }
-  },
-  accessibility: {
-    enabled: false
-  },
-  boost: {
-    enabled: true
-  },
-  colorAxis: {
-    showInLegend: false
-  }
-};
-
-const axisDefaults = {
+const axisDefaults: Partial<XAxisOptions> = {
   // Axis lines
   lineColor: 'white',
   lineWidth: 2,
@@ -60,6 +25,47 @@ const axisDefaults = {
       color: 'white',
       fontWeight: 'bold',
     }
+  }
+};
+
+export const defaultChartOptions: Options = {
+  chart: {
+    type: 'scatter',
+    zooming: {
+      type: 'x'
+    },
+    backgroundColor: '#222222'
+  },
+  title: {
+    text: ''
+  },
+  subtitle: {
+    text: document.ontouchstart === undefined ?
+      'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+  },
+  xAxis: {
+    ...axisDefaults
+  },
+  yAxis: {
+    ...axisDefaults
+  },
+  legend: {
+    enabled: true,
+    itemHoverStyle: {
+      color: 'grey'
+    },
+    itemStyle: {
+      color: 'white',
+    }
+  },
+  accessibility: {
+    enabled: false
+  },
+  boost: {
+    enabled: true
+  },
+  colorAxis: {
+    showInLegend: false
   }
 };
 

@@ -1,6 +1,6 @@
 import styles from './Chart.module.scss';
-import { getChartConfig, movePlotLineX, movePlotLines } from '@lib/chartOptions';
-import { LIVE_DATA_INTERVAL, validateChartInformation } from '@lib/chartUtils';
+import { movePlotLineX, movePlotLines } from '@lib/chartOptions';
+import { LIVE_DATA_INTERVAL } from '@lib/chartUtils';
 import { useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -14,6 +14,7 @@ import { Chart as ChartType } from 'highcharts';
 import { useChartData } from './useChartDataNew';
 import { useVideoSyncLines } from './useVideoSyncLines';
 import { useChartOptions } from '../../../../ChartOptionsContext';
+import { useChartQuery } from '../../../../ChartQueryContext';
 
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -31,7 +32,8 @@ interface ChartProps {
 const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const chartRef = useRef<ChartType | null>(null);
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
-  const { parsedData, fileNames, timestamps, minMax, loading, refetch } = useChartData();
+  const { series } = useChartQuery();
+  const { timestamps, loading, refetch } = useChartData();
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
     chartInformation, 
     chartRef.current, 
@@ -40,18 +42,20 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
     timestamps
   );
 
-  // Update options
   useEffect(() => {
-    if(!validateChartInformation(chartInformation)) return;
-
+    refetch();
+    // TODO: Don't just use the first series for axis titles
     chartOptionsDispatch({
-      type: 'REPLACE_OPTIONS',
-      options: {
-        ...options,
-        ...getChartConfig(chartInformation, parsedData, fileNames, minMax.current)
-      }
-    }); 
-  }, [parsedData, fileNames, chartInformation]);
+      type: 'SET_AXIS_TITLE',
+      axis: 'xAxis',
+      title: series[0]?.x.header
+    });
+    chartOptionsDispatch({
+      type: 'SET_AXIS_TITLE',
+      axis: 'yAxis',
+      title: series[0]?.y.header
+    });
+  }, []);
 
   // Update line
   useEffect(() => {
@@ -73,8 +77,6 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
 
   // This function loops when live is true, and updates the chart every 500ms
   useEffect(() => {
-    if(!validateChartInformation(chartInformation)) return;
-
     let intervalId;
 
     if (chartInformation.live) {
