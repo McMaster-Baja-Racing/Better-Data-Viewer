@@ -6,15 +6,15 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
-import { useResizeDetector } from 'react-resize-detector';
 import loadingImg from '@assets/loading.gif';
 import { FileTimespan, ChartInformation } from '@types';
 import { Chart as ChartType } from 'highcharts';
 // import { useChartData } from './useChartData';
-import { useChartData } from './useChartDataNew';
+import { useChartData } from './useChartData';
 import { useVideoSyncLines } from './useVideoSyncLines';
 import { useChartOptions } from '../../../../ChartOptionsContext';
 import { useChartQuery } from '../../../../ChartQueryContext';
+import { useDashboard } from '../../../../DashboardContext';
 
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -33,6 +33,7 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   const chartRef = useRef<ChartType | null>(null);
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   const { series } = useChartQuery();
+  const { live } = useDashboard();
   const { timestamps, loading, refetch } = useChartData();
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
     chartInformation, 
@@ -79,38 +80,14 @@ const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
   useEffect(() => {
     let intervalId;
 
-    if (chartInformation.live) {
+    if (live) {
       intervalId = setInterval(() => {
         refetch();
       }, LIVE_DATA_INTERVAL);
     }
 
     return () => clearInterval(intervalId);
-  }, [chartInformation, refetch]);
-
-  // TODO: Use it or lose it
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { width, height, ref } = useResizeDetector({
-    onResize: () => {
-      if (chartRef.current) {
-        chartRef.current.setSize(width, height);
-      }
-    },
-    refreshMode: 'debounce',
-    refreshRate: 100,
-  });
-
-  useEffect(() => {
-    const handleWindowResize = () => {
-      if (chartRef.current) {
-        chartRef.current.reflow();
-      }
-    };
-    window.addEventListener('resize', handleWindowResize);
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, []);
+  }, [refetch]);
 
   return (
     <div className={styles.chartContainer}>

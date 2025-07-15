@@ -3,14 +3,14 @@ import { Options, SeriesOptionsType } from 'highcharts';
 import { defaultChartOptions } from '@lib/chartOptions';
 import isEqual from 'lodash.isequal';
 
-
 type ChartOptionsAction =
   | { type: 'SET_SUBTITLE'; text: string }
   | { type: 'TOGGLE_LEGEND' }
   | { type: 'REPLACE_OPTIONS'; options: Options }
   | { type: 'CLEAR_SERIES'}
   | { type: 'ADD_SERIES'; series: SeriesOptionsType }
-  | { type: 'SET_AXIS_TITLE'; axis: 'xAxis' | 'yAxis'; title: string };
+  | { type: 'SET_AXIS_TITLE'; axis: 'xAxis' | 'yAxis'; title: string }
+  | { type: 'SET_CHART_TYPE'; chartType: SeriesOptionsType['type'] | 'coloredLine' };
 
 const ChartOptionsContext = createContext<{
   options: Options;
@@ -62,6 +62,13 @@ const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Option
             text: action.title,
           },
         },
+      };
+      break;
+    case 'SET_CHART_TYPE':
+      updatedState = {
+        ...state,
+        series: (state.series || [])
+          .map(s => ({ ...s, type: action.chartType })) as SeriesOptionsType[]
       };
       break;
     default:

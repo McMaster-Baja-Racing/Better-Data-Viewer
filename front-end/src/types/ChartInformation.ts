@@ -1,22 +1,21 @@
 import { AnalyzerType } from '@types';
-import { Series } from 'highcharts';
+import { Series, SeriesOptionsType } from 'highcharts';
 
 export interface ChartInformation {
   files: ChartFileInformation[];
   live: boolean;
-  type: chartType;
+  type: SeriesType;
   hasGPSTime: boolean;
   hasTimestampX: boolean;
 }
 
-export enum chartType {
-  scatter = 'scatter',
-  line = 'line',
-  coloredline = 'coloredline',
-  video = 'video',
-  datetime = 'datetime',
-  // video = 'video'
-}
+export type SeriesType = SeriesOptionsType['type'] | 'coloredLine';
+
+export const chartTypeMap: {value: SeriesType, label: string}[] = [
+  { value: 'scatter', label: 'Scatter' },
+  { value: 'line', label: 'Line' },
+  { value: 'coloredLine', label: 'Colored Line' },
+];
 
 export interface ChartFileInformation {
   x: Column;

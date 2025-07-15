@@ -3,17 +3,19 @@ import React, { createContext, useReducer, useContext } from 'react';
 type DashboardAction = 
   | { type: 'SET_TITLE'; title: string }
   | { type: 'TOGGLE_SIDEBAR' }
-  | { type: 'SET_LAYOUT'; layout: string };
+  | { type: 'SET_LAYOUT'; layout: string }
+  | { type: 'TOGGLE_LIVE' };
 
 const DashboardContext = createContext<{
   title: string;
   sidebarOpen: boolean;
   layout: string;
+  live: boolean;
   dispatch: React.Dispatch<DashboardAction>;
 } | undefined>(undefined);
 
 const dashboardReducer = (state: { 
-  title: string; sidebarOpen: boolean; layout: string 
+  title: string; sidebarOpen: boolean; layout: string, live: boolean 
 }, action: DashboardAction) => {
   switch (action.type) {
     case 'SET_TITLE':
@@ -22,6 +24,8 @@ const dashboardReducer = (state: {
       return { ...state, sidebarOpen: !state.sidebarOpen };
     case 'SET_LAYOUT':
       return { ...state, layout: action.layout };
+    case 'TOGGLE_LIVE':
+      return { ...state, live: !state.live };
     default:
       return state;
   }
@@ -31,7 +35,8 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
   const initialState = {
     title: 'Dashboard',
     sidebarOpen: false,
-    layout: 'grid'
+    layout: 'grid',
+    live: false
   };
 
   const [state, dispatch] = useReducer(dashboardReducer, initialState);

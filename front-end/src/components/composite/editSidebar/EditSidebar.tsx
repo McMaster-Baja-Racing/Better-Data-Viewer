@@ -1,5 +1,5 @@
 import { ChartAction } from '@lib/chartInformation';
-import { ChartInformation, dataTypesArray, chartType as chartTypeEnum } from '@types';
+import { ChartInformation, dataTypesArray, chartTypeMap, SeriesType } from '@types';
 import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
@@ -18,10 +18,10 @@ interface EditSidebarProps {
 export const EditSidebar = ({ chartInfo, chartInfoDispatch, files }: EditSidebarProps) => {
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   const { title, dispatch: dashboardDispatch } = useDashboard();
-  const [chartType, setChartType] = useState(chartInfo.type);
+  const [chartType, setChartType] = useState<SeriesType>(options.series?.[0]?.type || 'line');
 
   useEffect(() => {
-    chartInfoDispatch({ type: 'UPDATE_GRAPHING_TYPE', updatedType: chartType });
+    chartOptionsDispatch({ type: 'SET_CHART_TYPE', chartType: chartType });
   }, [chartType, chartInfoDispatch]);
 
   return (
@@ -30,7 +30,7 @@ export const EditSidebar = ({ chartInfo, chartInfoDispatch, files }: EditSidebar
         Chart type
       </div>
       <Dropdown 
-        options={Object.values(chartTypeEnum).map((type) => ({ value: type, label: type }))}
+        options={chartTypeMap}
         selected={chartType}
         setSelected={setChartType}
       />

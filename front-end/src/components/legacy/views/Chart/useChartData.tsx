@@ -1,5 +1,4 @@
-// TODO: REMOVE FILE
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
 import {
   getHeadersIndex,
@@ -7,74 +6,71 @@ import {
   getTimestamps,
   HUE_MAX,
   HUE_MIN,
-  validateChartInformation
+  validateChartQuery
 } from '@lib/chartUtils';
-import { ChartInformation, seriesData, MinMax, Column, dataColumnKeys } from '@types';
+import { seriesData, MinMax } from '@types';
+import { useChartQuery } from '../../../../ChartQueryContext';
+import { useChartOptions } from '../../../../ChartOptionsContext';
 
-export const useChartData = (chartInformation: ChartInformation) => {
-  const [parsedData, setParsedData] = useState<seriesData[]>([]);
-  const [fileNames, setFileNames] = useState<string[]>([]);
+export const useChartData = () => {
   const [timestamps, setTimestamps] = useState<number[][]>([]);
   const [loading, setLoading] = useState(false);
   const minMax = useRef<MinMax>({ min: 0, max: 0 });
 
-  const resetData = () => {
-    setParsedData([]);
-    setFileNames([]);
-    setTimestamps([]);
-    minMax.current = { min: 0, max: 0 };
-  };
+  // Pull all chart settings and series from context
+  const { series } = useChartQuery();
+  const { options, dispatch: chartOptionsDispatch } = useChartOptions();
+  // TODO: Multiple series different type support?
+  const type = options.series?.[0]?.type;
+  // TODO: Dont just initialize to false
+  const hasGPSTime = false, hasTimestampX = false, live = false;
 
   const fetchChartData = useCallback(async () => {
-    if (!validateChartInformation(chartInformation)) return;
+    if (!validateChartQuery(series)) return;
+    setLoading(true);
 
-    const { hasGPSTime, hasTimestampX, type, live } = chartInformation;
+    for (const file of series) {
+      // Build a Column[] by iterating the defined keys
+      const cols = [file.x, file.y];
 
-    for (const file of chartInformation.files) {
-      // Build a Column[] by iterating dataColumnKeys
-      const cols = dataColumnKeys
-        .map((key) => file[key])
-        .filter((col): col is Column => !!col);
-
-      // Fetch & analyze the files
+      // Fetch & analyze the files based on series definition
       const { filename, text } = await ApiUtil.analyzeFiles(
         cols.map(col => col.filename),
         cols.map(col => col.header),
         [],
-        file.analyze.type,
-        file.analyze.analyzerValues.filter(e => e),
+        file.analyzer.type,
+        file.analyzer.options.filter(e => e),
         live
       );
 
-      setFileNames(prev => [...prev, filename]);
-
-      // Parse headers
+      // Parse headers and compute indices
       const headers = text.slice(0, text.indexOf('\n')).replace('\r', '').split(',');
       const headerIndices = getHeadersIndex(headers, cols);
 
       // Split into lines of fields
       const lines = text.trim().split('\n').slice(1).map(row => row.split(','));
 
-      let series: seriesData;
+      let seriesPoints: seriesData;
 
       if (type !== 'coloredline') {
         const timestampOffset = hasTimestampX && hasGPSTime
           ? getTimestampOffset(cols, lines, headerIndices)
           : 0;
 
-        series = lines.map(fields => [
-          parseFloat(fields[headerIndices.x]) + timestampOffset,
-          parseFloat(fields[headerIndices.y])
-        ]);
+        seriesPoints = lines.map(fields => (
+          [
+            parseFloat(fields[headerIndices.x]) + timestampOffset,
+            parseFloat(fields[headerIndices.y])
+          ]
+        ));
       } else {
-        // Colour series: use first col for colour base
         const firstColHeader = cols[0].header;
         const { min, max } = minMax.current = await ApiUtil.getMinMax(filename, firstColHeader);
 
-        series = lines.map(fields => {
+        seriesPoints = lines.map(fields => {
           const val = parseFloat(fields[headerIndices.colour]);
           const hue = HUE_MIN + (HUE_MAX - HUE_MIN) *
-            (val - minMax.current.min) / (max - min);
+            (val - min) / (max - min);
 
           return {
             x: parseFloat(fields[headerIndices.x]),
@@ -84,24 +80,31 @@ export const useChartData = (chartInformation: ChartInformation) => {
           };
         });
       }
+      setLoading(false);
 
-      setParsedData(prev => [...prev, series]);
+      chartOptionsDispatch({
+        type: 'ADD_SERIES',
+        series: {
+          type: 'line',
+          name: filename,
+          data: seriesPoints
+        }
+      });
 
       // Generate timestamp array
       const tsArray: number[] = hasTimestampX
-        ? (series as number[][]).map(point => point[0])
+        ? (seriesPoints as number[][]).map(point => point[0])
         : await getTimestamps(text);
 
       setTimestamps(prev => [...prev, tsArray]);
     }
-  }, [chartInformation]);
+  }, [series, hasGPSTime, hasTimestampX, type, live]);
 
-  useEffect(() => {
-    setLoading(true);
-    resetData();
-    fetchChartData();
-    setLoading(false);
-  }, [fetchChartData]);
+  // useEffect(() => {
+  //   setLoading(true);
+  //   resetData();
+  //   fetchChartData().finally(() => setLoading(false));
+  // }, [fetchChartData]);
 
-  return { parsedData, fileNames, timestamps, minMax, loading, refetch: fetchChartData };
+  return { timestamps, minMax, loading, refetch: fetchChartData };
 };

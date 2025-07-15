@@ -8,14 +8,14 @@ import {
   DataViewerPreset, 
   ChartAnalyzerInformation, 
   dataColumnKeys, 
-  chartType
+  SeriesType
 } from '@types';
 
 export type ChartAction =
   | { type: 'UPDATE_FILE'; fileIndex: number; updatedFile: Partial<ChartFileInformation> }
   | { type: 'UPDATE_ANALYZER'; fileIndex: number; analyzerType?: AnalyzerType | null; analyzerValues?: string[] }
   | { type: 'UPDATE_COLUMN'; fileIndex: number; column: DataColumnKey; updatedColumn: Partial<Column> }
-  | { type: 'UPDATE_GRAPHING_TYPE'; updatedType: chartType }
+  | { type: 'UPDATE_GRAPHING_TYPE'; updatedType: SeriesType }
   | { type: 'UPDATE_X_COLUMN_ALL'; updatedColumn: Partial<Column> }
   | { type: 'UPDATE_ANALYZER_TYPE_ALL'; analyzerType?: AnalyzerType | null; analyzerValues?: string[] };
 
