@@ -1,26 +1,20 @@
-import { ChartInformation, dataColumnKeys } from '@types';
+import { dataColumnKeys } from '@types';
 import Chart from '@components/legacy/views/Chart/Chart';
 import { GraphWrapper } from '@components/simple/graphWrapper/GraphWrapper';
 import { RightSidebar } from '@components/ui/rightSidebar/RightSidebar';
-import { useLocation } from 'react-router-dom';
-import { useEffect, useMemo, useReducer, useState } from 'react';
-import { chartInformationReducer } from '@lib/chartInformation';
+import { useEffect, useMemo, useState } from 'react';
 import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
 import { ChartOptionsProvider } from '../../ChartOptionsContext';
 import { DashboardProvider } from '../../DashboardContext';
-import { useChartQuery } from 'ChartQueryContext';
+import { useChartQuery } from '../../ChartQueryContext';
 
 export const DataView = () => {
-  const location = useLocation();
-  const { chartInformation } = (location.state || {}) as { chartInformation: ChartInformation };
-
-  // Store the chart information in state so it doesn't update on every render.
-  const [chartDataState, dispatch] = useReducer(chartInformationReducer, chartInformation);
+  const { series } = useChartQuery();
   const [bins, setBins] = useState<string[]>([]); // TODO: Expand past bins
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const tempBins = chartDataState.files.map((file) =>
+    const tempBins = series.map((file) =>
       dataColumnKeys
         .map((key) => file[key]?.filename)
         .filter((fn): fn is string => !!fn)
@@ -28,7 +22,7 @@ export const DataView = () => {
     );
     const uniqueBins = [...new Set(tempBins.flat())];
     setBins(uniqueBins);
-  }, [chartDataState]);
+  }, [series]);
 
   // Memoize the video object to prevent re-creation on every render.
   const video = useMemo(() => ({
@@ -37,7 +31,7 @@ export const DataView = () => {
     end: new Date()
   }), []);
 
-  if (!chartDataState || bins.length === 0) {
+  if (!series || bins.length === 0) {
     return <div>Loading...</div>;
   }
 
@@ -50,11 +44,9 @@ export const DataView = () => {
           setIsOpen={setIsOpen}
           mainContent={
             <GraphWrapper 
-              title={chartDataState.files[0].y.header + ' vs ' + chartDataState.files[0].x.header}
               editOnClick={() => setIsOpen(!isOpen)}
             >
-              <Chart 
-                chartInformation={chartDataState}
+              <Chart
                 video={video}
                 videoTimestamp={0}
               />
@@ -62,8 +54,6 @@ export const DataView = () => {
           }
           sidebarContent={
             <EditSidebar 
-              chartInfo={chartDataState} 
-              chartInfoDispatch={dispatch}
               files={bins}
             />
           }

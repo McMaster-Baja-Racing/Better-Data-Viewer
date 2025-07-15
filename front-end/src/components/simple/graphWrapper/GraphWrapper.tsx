@@ -5,7 +5,6 @@ import { showErrorToast } from '@components/ui/toastNotification/ToastNotificati
 import { useDashboard } from '../../../DashboardContext';
 
 interface GraphWrapperProps {
-  title: string;
   editOnClick: () => void;
   children: ReactNode;
 }

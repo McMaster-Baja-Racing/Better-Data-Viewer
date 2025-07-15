@@ -24,7 +24,7 @@ export interface ChartFileInformation {
   analyze: ChartAnalyzerInformation;
 }
 
-export const dataColumnKeys = ['x', 'y', 'z'] as const;
+export const dataColumnKeys = ['x', 'y'] as const;
 
 export type DataColumnKey = typeof dataColumnKeys[number];
 

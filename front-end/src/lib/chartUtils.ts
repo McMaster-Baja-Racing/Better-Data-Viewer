@@ -1,4 +1,4 @@
-import { ChartInformation, Column, HeadersIndex } from '@types';
+import { Column, HeadersIndex } from '@types';
 import { columnT, seriesT } from 'types/ChartQuery';
 
 export const HUE_MIN = 150;
@@ -38,22 +38,6 @@ export const getHeadersIndex = (headers: string[], columns: Column[] | columnT[]
     }
   }
   return h;
-};
-
-export const validateChartInformation = (chartInformation: ChartInformation): boolean => {
-  if (!chartInformation) {
-    return false;
-  }
-  if (chartInformation.files.length === 0) {
-    return false;
-  }
-  if (chartInformation.files[0].x === undefined || chartInformation.files[0].y === undefined) {
-    return false;
-  }
-  if (chartInformation.files[0].x.header === '' || chartInformation.files[0].x.filename === '') {
-    return false;
-  }
-  return true;
 };
 
 export const validateChartQuery = (series: seriesT[]) => {

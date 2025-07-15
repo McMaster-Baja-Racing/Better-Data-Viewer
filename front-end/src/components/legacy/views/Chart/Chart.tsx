@@ -7,7 +7,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Boost from 'highcharts/modules/boost';
 import HighchartsColorAxis from 'highcharts/modules/coloraxis';
 import loadingImg from '@assets/loading.gif';
-import { FileTimespan, ChartInformation } from '@types';
+import { FileTimespan } from '@types';
 import { Chart as ChartType } from 'highcharts';
 // import { useChartData } from './useChartData';
 import { useChartData } from './useChartData';
@@ -24,19 +24,18 @@ HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
 interface ChartProps {
-  chartInformation: ChartInformation;
   video: FileTimespan;
   videoTimestamp: number;
 }
 
-const Chart = ({ chartInformation, video, videoTimestamp }: ChartProps) => {
+const Chart = ({ video, videoTimestamp }: ChartProps) => {
   const chartRef = useRef<ChartType | null>(null);
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   const { series } = useChartQuery();
   const { live } = useDashboard();
   const { timestamps, loading, refetch } = useChartData();
   const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
-    chartInformation, 
+    chartInformation, // TODO
     chartRef.current, 
     videoTimestamp, 
     video,

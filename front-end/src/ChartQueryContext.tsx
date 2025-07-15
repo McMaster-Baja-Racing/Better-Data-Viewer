@@ -7,7 +7,7 @@ type ChartQueryAction =
   | { type: 'ADD_SERIES'; series: seriesT }
   | { type: 'REMOVE_SERIES'; index: number }
   | { type: 'UPDATE_SERIES'; index: number; series: Partial<seriesT> }
-  | { type: 'UPDATE_COLUMN'; index: number; column: Partial<columnT> }
+  | { type: 'UPDATE_COLUMN'; index: number; columnKey: 'x' | 'y'; column: Partial<columnT> }
   | { type: 'UPDATE_ANALYZER'; index: number; analyzer: Partial<analyzerT> }
   | { type: 'UPDATE_X_COLUMN_ALL'; xColumn: Partial<columnT> }
   | { type: 'UPDATE_ANALYZER_ALL'; analyzer: Partial<analyzerT> };
@@ -39,7 +39,7 @@ const chartQueryReducer = (state: seriesT[], action: ChartQueryAction): seriesT[
     case 'UPDATE_COLUMN': {
       updatedState = state.map((series, index) =>
         index === action.index
-          ? { ...series, x: { ...series.x, ...action.column } }
+          ? { ...series, [action.columnKey]: { ...series[action.columnKey], ...action.column } }
           : series
       );
       break;

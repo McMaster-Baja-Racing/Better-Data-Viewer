@@ -5,7 +5,6 @@ import styles from './Homepage.module.scss';
 import { DataViewerPreset } from '@types';
 import { useModal } from '../../ModalContext';
 import { useNavigate } from 'react-router-dom';  // See if this works on Electron
-import { generateChartInformation } from '@lib/chartInformation';
 import { useChartQuery } from '../../ChartQueryContext';
 import { seriesT } from 'types/ChartQuery';
 
@@ -38,9 +37,7 @@ export const Homepage = () => {
       });
     });
     dispatch({ type: 'SET_SERIES', series});
-
-    const chartInformation = generateChartInformation(fileKeys, preset);
-    navigate('dataview', {state: {chartInformation}});
+    navigate('dataview');
   };
 
   const handleClick = (preset: DataViewerPreset) => {

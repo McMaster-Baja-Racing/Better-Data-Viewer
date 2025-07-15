@@ -1,5 +1,4 @@
-import { ChartAction } from '@lib/chartInformation';
-import { ChartInformation, dataTypesArray, chartTypeMap, SeriesType } from '@types';
+import { dataTypesArray, chartTypeMap, SeriesType } from '@types';
 import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
@@ -8,21 +7,21 @@ import { useChartOptions } from '../../../ChartOptionsContext';
 import TextField from '@components/ui/textfield/TextField';
 import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
 import { useDashboard } from '../../../DashboardContext';
+import { useChartQuery } from '../../../ChartQueryContext';
 
 interface EditSidebarProps {
-  chartInfo: ChartInformation;
-  chartInfoDispatch: React.Dispatch<ChartAction>;
   files: string[]; // TODO: This should use the file type specified in the file browser
 }
 
-export const EditSidebar = ({ chartInfo, chartInfoDispatch, files }: EditSidebarProps) => {
+export const EditSidebar = ({ files }: EditSidebarProps) => {
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   const { title, dispatch: dashboardDispatch } = useDashboard();
+  const { series, dispatch: chartQueryDispatch } = useChartQuery();
   const [chartType, setChartType] = useState<SeriesType>(options.series?.[0]?.type || 'line');
 
   useEffect(() => {
     chartOptionsDispatch({ type: 'SET_CHART_TYPE', chartType: chartType });
-  }, [chartType, chartInfoDispatch]);
+  }, [chartType]);
 
   return (
     <div className={styles.editSidebar}>
@@ -38,22 +37,27 @@ export const EditSidebar = ({ chartInfo, chartInfoDispatch, files }: EditSidebar
       <div className={styles.title}>
         X-Axis
       </div>
-      {chartInfo.files[0] && <DataSelect
+      {series[0] && <DataSelect
         sources={files.map((file) => ({ value: file, label: file }))}
         dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-        chartFileInformation={chartInfo.files[0]}
+        chartFileInformation={series[0]}
         columnKey='x'
-        onColumnUpdate={(_, updatedColumn) => chartInfoDispatch({ type: 'UPDATE_X_COLUMN_ALL', updatedColumn})}
+        onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
+          type: 'UPDATE_X_COLUMN_ALL', 
+          xColumn: {header: updatedColumn.header, filename: updatedColumn.filename}
+        })}
         onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => {
-          chartInfoDispatch({
-            type: 'UPDATE_ANALYZER_TYPE_ALL',
-            analyzerType: newAnalyzerType ?? null,
-            analyzerValues: newAnalyzerValues ?? []
+          chartQueryDispatch({
+            type: 'UPDATE_ANALYZER_ALL',
+            analyzer: {
+              type: newAnalyzerType,
+              options: newAnalyzerValues
+            }
           });
         }}
       />}
 
-      {chartInfo.files.map((file, fileIndex) => {
+      {series.map((file, fileIndex) => {
         return (
           <div key={fileIndex}>
             <div className={styles.title}>
@@ -65,11 +69,13 @@ export const EditSidebar = ({ chartInfo, chartInfoDispatch, files }: EditSidebar
               key={fileIndex + 'y'}
               chartFileInformation={file}
               columnKey='y'
-              onColumnUpdate={(column, updatedColumn) => chartInfoDispatch(
-                { type: 'UPDATE_COLUMN', fileIndex, column, updatedColumn }
+              onColumnUpdate={(column, updatedColumn) => chartQueryDispatch(
+                { type: 'UPDATE_COLUMN', index: fileIndex, columnKey: column, column: updatedColumn  }
               )}
-              onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => chartInfoDispatch({ 
-                type: 'UPDATE_ANALYZER', fileIndex, analyzerType: newAnalyzerType, analyzerValues: newAnalyzerValues
+              onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => chartQueryDispatch({ 
+                type: 'UPDATE_ANALYZER', 
+                index: fileIndex, 
+                analyzer: {type: newAnalyzerType, options: newAnalyzerValues}
               })}
             />
           </div>
