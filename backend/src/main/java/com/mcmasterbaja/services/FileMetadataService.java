@@ -79,5 +79,5 @@ public interface FileMetadataService {
    * @param targetPath The Path of the file to analyze.
    * @return The uploaded date of the file.
    */
-  Instant getUploadDate(Path targetPath);
+  LocalDateTime getUploadDate(Path targetPath);
 }

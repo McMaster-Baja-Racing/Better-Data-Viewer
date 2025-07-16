@@ -1,7 +1,7 @@
 package com.mcmasterbaja.model;
 
 import java.nio.file.Path;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 import lombok.ToString;
 
@@ -16,23 +16,29 @@ public class FileInformation {
   public String extension;
   public String[] headers;
   public long size;
-  public Instant date;
+  public LocalDateTime date;
+  public LocalDateTime start;
+  public LocalDateTime end;
 
-  public FileInformation(String key, String[] headers, long size, Instant date) {
+  public FileInformation(String key, String[] headers, long size, LocalDateTime date, LocalDateTime start, LocalDateTime end) {
     this.key = key;
     this.name = key.substring(key.lastIndexOf('/') + 1);
     this.extension = key.substring(key.lastIndexOf('.') + 1);
     this.headers = headers;
     this.size = size;
     this.date = date;
+    this.start = start;
+    this.end = end;
   }
 
-  public FileInformation(Path key, String[] headers, long size, Instant date) {
+  public FileInformation(Path key, String[] headers, long size, LocalDateTime date, LocalDateTime start, LocalDateTime end) {
     this.key = key.toString().replace("\\", "/");
     this.name = key.getFileName().toString();
     this.extension = key.toString().substring(key.toString().lastIndexOf('.') + 1);
     this.headers = headers;
     this.size = size;
     this.date = date;
+    this.start = start;
+    this.end = end;
   }
 }

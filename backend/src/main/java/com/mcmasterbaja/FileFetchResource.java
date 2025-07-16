@@ -60,17 +60,24 @@ public class FileFetchResource {
   public List<FileInformation> getInformation() {
     logger.info("Getting all file information");
 
+    // Map of parent folders to zero times to avoid recalculating the zero time
+    Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
+
     List<FileInformation> fileInformation =
         storageService
             .loadAll()
             .map(
-                path ->
-                    new FileInformation(
+                path -> {
+                    LocalDateTime[] timespan = getTimespanForFile(path, zeroTimeMap);
+                    return new FileInformation(
                         path,
                         fileMetadataService.readHeaders(path),
                         fileMetadataService.getSize(path),
-                        fileMetadataService.getUploadDate(path)
-                      ))
+                        fileMetadataService.getUploadDate(path),
+                        timespan[0],
+                        timespan[1]
+                      );
+                })
             .collect(Collectors.toList());
 
     return fileInformation;
@@ -82,13 +89,19 @@ public class FileFetchResource {
     logger.info("Getting file information for: " + filekey);
 
     Path targetPath = Paths.get(filekey);
+    
+    // Map of parent folders to zero times to avoid recalculating the zero time
+    Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
+    LocalDateTime[] timespan = getTimespanForFile(targetPath, zeroTimeMap);
 
     FileInformation fileInformation =
         new FileInformation(
             targetPath,
             fileMetadataService.readHeaders(targetPath),
             fileMetadataService.getSize(targetPath),
-            fileMetadataService.getUploadDate(targetPath)
+            fileMetadataService.getUploadDate(targetPath),
+            timespan[0],
+            timespan[1]
           );
 
     return fileInformation;
@@ -100,18 +113,25 @@ public class FileFetchResource {
     logger.info("Getting file information for folder: " + folderkey);
 
     Path folderPath = Paths.get(folderkey);
+    
+    // Map of parent folders to zero times to avoid recalculating the zero time
+    Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
 
     List<FileInformation> fileInformationList =
         storageService
             .loadAll(folderPath)
             .map(
-                path ->
-                    new FileInformation(
+                path -> {
+                    LocalDateTime[] timespan = getTimespanForFile(path, zeroTimeMap);
+                    return new FileInformation(
                         folderPath.relativize(path),
                         fileMetadataService.readHeaders(path),
                         fileMetadataService.getSize(path),
-                        fileMetadataService.getUploadDate(path)
-                    ))
+                        fileMetadataService.getUploadDate(path),
+                        timespan[0],
+                        timespan[1]
+                    );
+                })
             .collect(Collectors.toList());
 
     return fileInformationList;
@@ -143,12 +163,35 @@ public class FileFetchResource {
                   String folderKey =
                       csvDir.relativize(fullFolderPath).toString().replace("\\", "/");
 
+                  // Calculate folder timespan if possible
+                  LocalDateTime start = null;
+                  LocalDateTime end = null;
+                  if (fileMetadataService.canComputeTimespan(fullFolderPath)) {
+                    LocalDateTime zeroTime = fileMetadataService.getZeroTime(fullFolderPath);
+                    Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
+                    zeroTimeMap.put(fullFolderPath, zeroTime);
+                    
+                    // Find the earliest start and latest end times from all files in the folder
+                    List<LocalDateTime[]> timespans = storageService
+                        .loadAll(fullFolderPath)
+                        .map(path -> getTimespanForFile(path, zeroTimeMap))
+                        .filter(timespan -> timespan[0] != null && timespan[1] != null)
+                        .collect(Collectors.toList());
+                    
+                    if (!timespans.isEmpty()) {
+                      start = timespans.stream().map(ts -> ts[0]).min(LocalDateTime::compareTo).orElse(null);
+                      end = timespans.stream().map(ts -> ts[1]).max(LocalDateTime::compareTo).orElse(null);
+                    }
+                  }
+
                   // Return a FileInformation with null headers and the aggregated size.
                   return new FileInformation(
                     folderKey,
                     null, 
                     totalSize,
-                    fileMetadataService.getUploadDate(fullFolderPath)
+                    fileMetadataService.getUploadDate(fullFolderPath),
+                    start,
+                    end
                   );
                 })
             .collect(Collectors.toList());
@@ -199,6 +242,26 @@ public class FileFetchResource {
     }
 
     return timespans;
+  }
+
+  private LocalDateTime[] getTimespanForFile(Path path, Map<Path, LocalDateTime> zeroTimeMap) {
+    Path parent = path.getParent();
+    String typeFolder = fileMetadataService.getTypeFolder(path);
+    
+    switch (typeFolder) {
+      case "csv":
+        if (fileMetadataService.canComputeTimespan(parent)) {
+          // Add the zero time to the map if the parent folder has not been analyzed
+          zeroTimeMap.putIfAbsent(parent, fileMetadataService.getZeroTime(parent));
+          return fileMetadataService.getTimespan(path, zeroTimeMap.get(parent));
+        }
+        break;
+      case "mp4":
+        return fileMetadataService.getTimespan(path, null);
+      default:
+        break;
+    }
+    return new LocalDateTime[]{null, null};
   }
 
   private Path addTypeFolder(String fileKey) {

@@ -196,9 +196,12 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  public Instant getUploadDate(Path targetPath) {
+  public LocalDateTime getUploadDate(Path targetPath) {
     try {
-      return Files.getLastModifiedTime(storageService.load(targetPath)).toInstant();
+      return Files.getLastModifiedTime(storageService.load(targetPath))
+          .toInstant()
+          .atZone(ZoneId.of("GMT"))
+          .toLocalDateTime();
     } catch (IOException e) {
       throw new FileNotFoundException(
           "Failed to get upload date of file: " + targetPath.toString(), e);
