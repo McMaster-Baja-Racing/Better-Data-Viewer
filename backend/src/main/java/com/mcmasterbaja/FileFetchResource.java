@@ -67,8 +67,11 @@ public class FileFetchResource {
                 path ->
                     new FileInformation(
                         path,
+                        path.getFileName().toString(),
                         fileMetadataService.readHeaders(path),
-                        fileMetadataService.getSize(path)))
+                        fileMetadataService.getSize(path),
+                        fileMetadataService.getUploadDate(path)
+                      ))
             .collect(Collectors.toList());
 
     return fileInformation;
@@ -84,8 +87,11 @@ public class FileFetchResource {
     FileInformation fileInformation =
         new FileInformation(
             targetPath,
+            targetPath.getFileName().toString(),
             fileMetadataService.readHeaders(targetPath),
-            fileMetadataService.getSize(targetPath));
+            fileMetadataService.getSize(targetPath),
+            fileMetadataService.getUploadDate(targetPath)
+          );
 
     return fileInformation;
   }
@@ -104,8 +110,11 @@ public class FileFetchResource {
                 path ->
                     new FileInformation(
                         folderPath.relativize(path),
+                        path.getFileName().toString(),
                         fileMetadataService.readHeaders(path),
-                        fileMetadataService.getSize(path)))
+                        fileMetadataService.getSize(path),
+                        fileMetadataService.getUploadDate(path)
+                    ))
             .collect(Collectors.toList());
 
     return fileInformationList;
@@ -138,7 +147,13 @@ public class FileFetchResource {
                       csvDir.relativize(fullFolderPath).toString().replace("\\", "/");
 
                   // Return a FileInformation with null headers and the aggregated size.
-                  return new FileInformation(folderKey, null, totalSize);
+                  return new FileInformation(
+                    folderKey,  
+                    relativeFolderPath.getFileName().toString(),
+                    null, 
+                    totalSize,
+                    fileMetadataService.getUploadDate(fullFolderPath)
+                  );
                 })
             .collect(Collectors.toList());
 
