@@ -92,9 +92,9 @@ const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Option
   // TODO: Remove this once debugging is complete
   if (!isEqual(state, updatedState)) {
     // eslint-disable-next-line no-console
-    console.log('State updated:', updatedState);
+    //console.log('State updated:', updatedState);
     // eslint-disable-next-line no-console
-    console.log('State before update:', state);
+    //console.log('State before update:', state);
   }
   return isEqual(state, updatedState) ? state : updatedState;
 };
