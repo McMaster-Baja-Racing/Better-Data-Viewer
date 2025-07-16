@@ -67,7 +67,6 @@ public class FileFetchResource {
                 path ->
                     new FileInformation(
                         path,
-                        path.getFileName().toString(),
                         fileMetadataService.readHeaders(path),
                         fileMetadataService.getSize(path),
                         fileMetadataService.getUploadDate(path)
@@ -87,7 +86,6 @@ public class FileFetchResource {
     FileInformation fileInformation =
         new FileInformation(
             targetPath,
-            targetPath.getFileName().toString(),
             fileMetadataService.readHeaders(targetPath),
             fileMetadataService.getSize(targetPath),
             fileMetadataService.getUploadDate(targetPath)
@@ -110,7 +108,6 @@ public class FileFetchResource {
                 path ->
                     new FileInformation(
                         folderPath.relativize(path),
-                        path.getFileName().toString(),
                         fileMetadataService.readHeaders(path),
                         fileMetadataService.getSize(path),
                         fileMetadataService.getUploadDate(path)
@@ -148,8 +145,7 @@ public class FileFetchResource {
 
                   // Return a FileInformation with null headers and the aggregated size.
                   return new FileInformation(
-                    folderKey,  
-                    relativeFolderPath.getFileName().toString(),
+                    folderKey,
                     null, 
                     totalSize,
                     fileMetadataService.getUploadDate(fullFolderPath)

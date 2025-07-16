@@ -1,4 +1,4 @@
-import { AnalyzerType, FileInformation, FileTimespan, MinMax } from '@types';
+import { AnalyzerType, FileInformation, FileTimespan, MinMax, RawFileInformation } from '@types';
 import { isElectron } from './navigationUtils';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 
@@ -49,7 +49,13 @@ export const ApiUtil = {
   getFolder: async (folderKey: string): Promise<FileInformation[]> => {
     const response = await fetch(`${baseApiUrl}/files/information/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
-    return response.json();
+    
+    const raw: RawFileInformation[] = await response.json();
+
+    return raw.map((f) => ({
+      ...f,
+      date: new Date(f.date),
+    }));
   },
 
   /**

@@ -1,9 +1,14 @@
 
 export interface FileInformation {
   key: string;
-  fileHeaders: string[];
+  name: string;
+  extension: string;
+  headers: string[];
   size: number;
+  date: Date; // TODO: Change to Date type
 }
+
+export type RawFileInformation = Omit<FileInformation, 'date'> & { date: string };
 
 export interface FileTimespan {
   key: string;

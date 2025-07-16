@@ -12,24 +12,27 @@ import lombok.ToString;
 public class FileInformation {
 
   public String key;
-  public String fileName;
-  public String[] fileHeaders;
+  public String name;
+  public String extension;
+  public String[] headers;
   public long size;
-  public Instant uploadDate;
+  public Instant date;
 
-  public FileInformation(String key, String fileName, String[] fileHeaders, long size, Instant uploadDate) {
+  public FileInformation(String key, String[] headers, long size, Instant date) {
     this.key = key;
-    this.fileName = fileName;
-    this.fileHeaders = fileHeaders;
+    this.name = key.substring(key.lastIndexOf('/') + 1);
+    this.extension = key.substring(key.lastIndexOf('.') + 1);
+    this.headers = headers;
     this.size = size;
-    this.uploadDate = uploadDate;
+    this.date = date;
   }
 
-  public FileInformation(Path key, String fileName, String[] fileHeaders, long size, Instant uploadDate) {
+  public FileInformation(Path key, String[] headers, long size, Instant date) {
     this.key = key.toString().replace("\\", "/");
-    this.fileName = fileName;
-    this.fileHeaders = fileHeaders;
+    this.name = key.getFileName().toString();
+    this.extension = key.toString().substring(key.toString().lastIndexOf('.') + 1);
+    this.headers = headers;
     this.size = size;
-    this.uploadDate = uploadDate;
+    this.date = date;
   }
 }

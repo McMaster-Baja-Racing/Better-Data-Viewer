@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react';
 import styles from './FileTable.module.scss';
 import cx from 'classnames';
 import {folderIcon, folderOpenIcon} from '@assets/icons';
-import { File, Folder } from '@types';
+import { FileInformation } from '@types';
+
+export type Folder = Omit<FileInformation, 'extension' | 'headers'> & {
+  children: (FileInformation | Folder)[];
+};
 
 const formatSize = (size: number) => {
   if (size === 0) return '0 B';
@@ -19,16 +23,16 @@ const depthPadding = (depth: number) => {
   };
 };
 
-const buildHierarchy = (files: File[]): Folder => {
+const buildHierarchy = (files: FileInformation[]): Folder => {
   const root: Folder = {
     key: '',
     name: 'Root',
     size: 0,
-    date: '',
+    date: new Date(),
     children: [],
   };
 
-  const dateMap: Record<string, string[]> = {};
+  const dateMap: Record<string, Date[]> = {};
   const sizeMap: Record<string, number> = {};
 
   files.forEach((file) => {
@@ -52,7 +56,7 @@ const buildHierarchy = (files: File[]): Folder => {
             key: folderKey,
             name: part,
             size: 0,
-            date: '',
+            date: new Date(),
             children: [],
           };
           currentFolder.children.push(folder);
@@ -89,26 +93,25 @@ const buildHierarchy = (files: File[]): Folder => {
 };
 
 interface FileTableProps {
-    files: File[];
-    selectedFiles: File[];
-    setSelectedFiles: (files: File[]) => void;
+    files: FileInformation[] | undefined;
+    selectedFiles: FileInformation[];
+    setSelectedFiles: (files: FileInformation[]) => void;
 }
 
 export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableProps) => {
   const [folderTree, setFolderTree] = useState<Folder | null>(null);
 
   useEffect(() => {
-    setFolderTree(buildHierarchy(files));
+    setFolderTree(buildHierarchy(files || []));
   }, [files]);
-
     
   return (
     <div className={styles.tableContainer}>
       <table className={styles.fileTable}>
         <colgroup>
-          <col style={{ width: '60%' }} />
+          <col style={{ width: '52.5%' }} />
           <col style={{ width: '17.5%' }} />
-          <col style={{ width: '22.5%' }} />
+          <col style={{ width: '30%' }} />
         </colgroup>
         <thead>
           <tr>
@@ -132,8 +135,8 @@ export const FileTable = ({ files, selectedFiles, setSelectedFiles }: FileTableP
 interface FolderRendererProps {
     folder: Folder;
     depth?: number;
-    selectedFiles: File[];
-    setSelectedFiles: (files: File[]) => void;
+    selectedFiles: FileInformation[];
+    setSelectedFiles: (files: FileInformation[]) => void;
 }
 
 const FolderRenderer = ({ folder, depth = 0, selectedFiles, setSelectedFiles }: FolderRendererProps) => {
@@ -156,7 +159,9 @@ const FolderRenderer = ({ folder, depth = 0, selectedFiles, setSelectedFiles }: 
                 {folder.name}
               </td>
               <td className={styles.folderSize}>{formatSize(folder.size)}</td>
-              <td className={styles.folderDate}>{folder.date}</td>
+              <td className={styles.folderDate}>{
+                folder.date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
+              </td>
             </tr>}
       {(isOpen || depth == 0) &&
                 folder.children.map((child) =>
@@ -183,10 +188,10 @@ const FolderRenderer = ({ folder, depth = 0, selectedFiles, setSelectedFiles }: 
 };
 
 interface FileRendererProps {
-    file: File;
+    file: FileInformation;
     depth: number;
-    selectedFiles: File[];
-    setSelectedFiles: (files: File[]) => void;
+    selectedFiles: FileInformation[];
+    setSelectedFiles: (files: FileInformation[]) => void;
 }
 
 const FileRenderer = ({ file, depth, selectedFiles, setSelectedFiles }: FileRendererProps) => {
@@ -207,7 +212,9 @@ const FileRenderer = ({ file, depth, selectedFiles, setSelectedFiles }: FileRend
     >
       <td className={styles.fileName} style={depthPadding(depth)}>{file.name}</td>
       <td className={styles.fileSize}>{formatSize(file.size)}</td>
-      <td className={styles.fileDate}>{file.date}</td>
+      <td className={styles.fileDate}>{
+        file.date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })
+      }</td>
     </tr>
   );
 };
