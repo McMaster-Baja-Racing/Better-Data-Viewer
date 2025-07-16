@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import bajaLogo from '@assets/baja_logo.svg';
 import {
   homeIcon,
@@ -60,8 +60,23 @@ const Sidebar = ({ setModal }: SidebarProps) => {
   const toggleSidebar = () => setIsExpanded(!isExpanded);
   const { openModal } = useModal();
 
+  // Set global CSS variable for left sidebar width
+  useEffect(() => {
+    document.documentElement.style.setProperty('--left-sidebar-width', isExpanded ? '18rem' : '4rem');
+  }, [isExpanded]);
+
+  // Initialize the CSS variable on mount
+  useEffect(() => {
+    document.documentElement.style.setProperty('--left-sidebar-width', '4rem');
+  }, []);
+
   return (
-    <div className={cx(styles.sidebar, { [styles.expanded]: isExpanded })}>
+    <div 
+      className={cx(styles.sidebar, { [styles.expanded]: isExpanded })}
+      style={{ 
+        '--left-sidebar-width': isExpanded ? '18rem' : '4rem'
+      } as React.CSSProperties}
+    >
       <img className={styles.toggleExpanded} onClick={toggleSidebar} src={sidebarToggleExpandedIcon} />
       <img className={styles.toggleCollapsed} onClick={toggleSidebar} src={sidebarToggleCollapsedIcon} />
       <div className={styles.sidebarHeader}>

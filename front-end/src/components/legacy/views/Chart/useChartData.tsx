@@ -12,6 +12,7 @@ import { seriesData, MinMax } from '@types';
 import { useChartQuery } from '../../../../ChartQueryContext';
 import { useChartOptions } from '../../../../ChartOptionsContext';
 
+// TODO: Clean up this file, it is a mess
 export const useChartData = () => {
   const [timestamps, setTimestamps] = useState<number[][]>([]);
   const [loading, setLoading] = useState(false);
