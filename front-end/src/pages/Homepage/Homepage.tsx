@@ -16,9 +16,6 @@ export const Homepage = () => {
   const onSubmit = (fileKeys: string[], preset: DataViewerPreset) => {
     const series: seriesT[] = [];
 
-    console.log('Preset:', preset);
-    console.log('File keys:', fileKeys);
-
     // TODO: Update fileKeys handling (bins) for multiple selected files
     preset.graphs.map((graph) => {
       series.push({

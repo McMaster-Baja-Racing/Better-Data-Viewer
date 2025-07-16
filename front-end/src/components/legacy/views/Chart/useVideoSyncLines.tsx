@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Chart } from 'highcharts';
-import { FileTimespan, ChartInformation, ExtSeries } from '@types';
+import { FileTimespan, ExtSeries } from '@types';
 import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '@lib/videoUtils';
 
 export const useVideoSyncLines = (
-  chartInformation: ChartInformation,
   chartRef: Chart | null,
   videoTimestamp: number,
   videoTimespan: FileTimespan,
@@ -14,8 +13,6 @@ export const useVideoSyncLines = (
   const [lineX, setLineX] = useState<number>(0);
   const [linePoint, setLinePoint] = useState<{x: number, y: number}>({x: 0, y: 0});
   const [syncedDataPoints, setSyncedDataPoints] = useState<string[]>([]);
-
-  return;
 
   const resetData = () => {
     setOffsets([]);
