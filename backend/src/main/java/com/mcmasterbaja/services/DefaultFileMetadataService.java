@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -196,9 +195,12 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
-  public Instant getUploadDate(Path targetPath) {
+  public LocalDateTime getUploadDate(Path targetPath) {
     try {
-      return Files.getLastModifiedTime(storageService.load(targetPath)).toInstant();
+      return Files.getLastModifiedTime(storageService.load(targetPath))
+          .toInstant()
+          .atZone(ZoneId.of("GMT"))
+          .toLocalDateTime();
     } catch (IOException e) {
       throw new FileNotFoundException(
           "Failed to get upload date of file: " + targetPath.toString(), e);

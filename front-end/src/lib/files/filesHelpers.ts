@@ -17,6 +17,8 @@ export const getFolders = (files: FileInformation[]): FileInformation[] => {
           size: 0,
           headers: [],
           date: new Date(),
+          start: new Date(),
+          end: new Date()
         });
       }
     }

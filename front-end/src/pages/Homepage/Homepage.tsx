@@ -20,12 +20,12 @@ export const Homepage = () => {
     preset.graphs.map((graph) => {
       series.push({
         x: {
-          filename: fileKeys[0] + '/' + graph.axes[0].file,
-          header: graph.axes[0].axis,
+          source: fileKeys[0] + '/' + graph.axes[0].source,
+          dataType: graph.axes[0].dataType,
         },
         y: {
-          filename: fileKeys[0] + '/' + graph.axes[1].file,
-          header: graph.axes[1].axis,
+          source: fileKeys[0] + '/' + graph.axes[1].source,
+          dataType: graph.axes[1].dataType,
         },
         analyzer: {
           type: graph.analyzer,

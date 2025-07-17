@@ -7,8 +7,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     graphs: [
       {
         axes: [
-          { file: 'RPM SEC.csv', axis: 'RPM SEC' },
-          { file: 'RPM PRIM.csv', axis: 'RPM PRIM' },
+          { source: 'RPM SEC.csv', dataType: 'RPM SEC' },
+          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
         ],
         analyzer: AnalyzerType.ACCEL_CURVE,
         analyzerOptions: [],
@@ -22,8 +22,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     graphs: [
       {
         axes: [
-          { file: 'GPS SPEED.csv', axis: 'GPS SPEED' },
-          { file: 'RPM PRIM.csv', axis: 'RPM PRIM' },
+          { source: 'GPS SPEED.csv', dataType: 'GPS SPEED' },
+          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
         ],
         analyzer: AnalyzerType.ACCEL_CURVE,
         analyzerOptions: [],
@@ -37,8 +37,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     graphs: [
       {
         axes: [
-          { file: 'GPS SPEED.csv', axis: 'Timestamp (ms)' },
-          { file: 'GPS SPEED.csv', axis: 'GPS SPEED' },
+          { source: 'GPS SPEED.csv', dataType: 'Timestamp (ms)' },
+          { source: 'GPS SPEED.csv', dataType: 'GPS SPEED' },
         ],
         analyzer: null,
         analyzerOptions: [],
@@ -52,8 +52,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     graphs: [
       {
         axes: [
-          { file: 'RPM SEC.csv', axis: 'RPM SEC' },
-          { file: 'RPM PRIM.csv', axis: 'RPM PRIM' },
+          { source: 'RPM SEC.csv', dataType: 'RPM SEC' },
+          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
         ],
         analyzer: AnalyzerType.SHIFT_CURVE,
         analyzerOptions: [],
@@ -67,8 +67,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     graphs: [
       {
         axes: [
-          { file: 'GPS LATITUDE.csv', axis: 'GPS LATITUDE' },
-          { file: 'GPS LONGITUDE.csv', axis: 'GPS LONGITUDE' },
+          { source: 'GPS LATITUDE.csv', dataType: 'GPS LATITUDE' },
+          { source: 'GPS LONGITUDE.csv', dataType: 'GPS LONGITUDE' },
         ],
         analyzer: AnalyzerType.SHIFT_CURVE,
         analyzerOptions: [],

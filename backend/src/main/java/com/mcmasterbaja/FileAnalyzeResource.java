@@ -7,7 +7,9 @@ import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.MinMax;
+import com.mcmasterbaja.model.SmartAnalyzerParams;
 import com.mcmasterbaja.services.FileMetadataService;
+import com.mcmasterbaja.services.SmartAnalyzerService;
 import com.mcmasterbaja.services.StorageService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BeanParam;
@@ -30,6 +32,7 @@ public class FileAnalyzeResource {
   @Inject StorageService storageService;
   @Inject FileMetadataService fileMetadataService;
   @Inject AnalyzerFactory analyzerFactory;
+  @Inject SmartAnalyzerService smartAnalyzerService;
 
   // TODO: Convert to using POST body rather than path variables
   @POST
@@ -45,6 +48,37 @@ public class FileAnalyzeResource {
     // Update input files with rootLocation/csv
     params.updateInputFiles(storageService.getRootLocation());
     params.generateOutputFileNames();
+    // Default to returning the input file, will be overwritten if an analyzer is found later
+    Path targetPath = Path.of(params.getInputFiles()[0]);
+
+    if (params.getType() != null) {
+      Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
+      analyzer.analyze(params);
+      targetPath = Path.of(analyzer.getOutputFilename());
+    }
+
+    File file = storageService.load(targetPath).toFile();
+    Path relativePath = storageService.load(Paths.get("csv")).relativize(targetPath);
+
+    return ResponseBuilder.ok(file, "application/octet-stream")
+        .header("Content-Disposition", "attachment; filename=\"" + relativePath.toString() + "\"")
+        .header("Access-Control-Expose-Headers", "Content-Disposition")
+        .build();
+  }
+
+  @POST
+  @jakarta.ws.rs.Path("analyze/smart")
+  @OnAnalyzerException
+  public RestResponse<File> runSmartAnalyzer(@BeanParam SmartAnalyzerParams smartParams) {
+    logger.info("Running smart analyzer with params: " + smartParams.toString());
+
+    if (!smartParams.getErrors().isEmpty()) {
+      throw new InvalidArgumentException(smartParams.getErrors());
+    }
+
+    // Convert smart params to traditional analyzer params
+    AnalyzerParams params = smartAnalyzerService.convertToAnalyzerParams(smartParams);
+    
     // Default to returning the input file, will be overwritten if an analyzer is found later
     Path targetPath = Path.of(params.getInputFiles()[0]);
 

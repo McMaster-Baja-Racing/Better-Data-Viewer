@@ -1,4 +1,4 @@
-import { AnalyzerType } from '@types';
+import { AnalyzerType, DataTypes } from '@types';
 
 export interface seriesT {
   x: columnT;
@@ -7,11 +7,20 @@ export interface seriesT {
 }
 
 export interface columnT {
-  filename: string;
-  header: string;
+  source: string;
+  dataType: DataTypes;
 }
 
 export interface analyzerT {
   type: AnalyzerType | null;
   options: string[];
+}
+
+// Simplified series for smart analyzer
+export interface smartSeriesT {
+  xDataType: string;
+  yDataType: string;
+  xSource: string;
+  ySource: string;
+  analyzer: analyzerT;
 }

@@ -29,6 +29,8 @@ const buildHierarchy = (files: FileInformation[]): Folder => {
     name: 'Root',
     size: 0,
     date: new Date(),
+    start: new Date(),
+    end: new Date(),
     children: [],
   };
 
@@ -57,6 +59,8 @@ const buildHierarchy = (files: FileInformation[]): Folder => {
             name: part,
             size: 0,
             date: new Date(),
+            start: new Date(),
+            end: new Date(),
             children: [],
           };
           currentFolder.children.push(folder);

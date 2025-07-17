@@ -8,14 +8,14 @@ import {
   DataViewerPreset, 
   ChartAnalyzerInformation, 
   dataColumnKeys, 
-  SeriesType
+  ChartType
 } from '@types';
 
 export type ChartAction =
   | { type: 'UPDATE_FILE'; fileIndex: number; updatedFile: Partial<ChartFileInformation> }
   | { type: 'UPDATE_ANALYZER'; fileIndex: number; analyzerType?: AnalyzerType | null; analyzerValues?: string[] }
   | { type: 'UPDATE_COLUMN'; fileIndex: number; column: DataColumnKey; updatedColumn: Partial<Column> }
-  | { type: 'UPDATE_GRAPHING_TYPE'; updatedType: SeriesType }
+  | { type: 'UPDATE_GRAPHING_TYPE'; updatedType: ChartType }
   | { type: 'UPDATE_X_COLUMN_ALL'; updatedColumn: Partial<Column> }
   | { type: 'UPDATE_ANALYZER_TYPE_ALL'; analyzerType?: AnalyzerType | null; analyzerValues?: string[] };
 
@@ -129,8 +129,8 @@ export const generateChartInformation = (
       const axisDef = currGraph.axes[idx];
       if (!axisDef) return null;
       return {
-        header: axisDef.axis,
-        filename: `${fileKeys[0]}/${axisDef.file}`,
+        header: axisDef.dataType,
+        filename: `${fileKeys[0]}/${axisDef.source}`,
         timespan: { start: null, end: null }
       };
     });

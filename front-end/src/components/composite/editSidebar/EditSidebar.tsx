@@ -1,4 +1,4 @@
-import { dataTypesArray, chartTypeMap, SeriesType } from '@types';
+import { dataTypesArray, chartTypeMap, ChartType } from '@types';
 import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
@@ -17,7 +17,7 @@ interface EditSidebarProps {
 export const EditSidebar = ({ files }: EditSidebarProps) => {
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   const { series, dispatch: chartQueryDispatch } = useChartQuery();
-  const [chartType, setChartType] = useState<SeriesType>(options.series?.[0]?.type || 'line');
+  const [chartType, setChartType] = useState<ChartType>(options.series?.[0]?.type || 'line');
 
   useEffect(() => {
     chartOptionsDispatch({ type: 'SET_CHART_TYPE', chartType: chartType });
@@ -25,36 +25,41 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
 
   return (
     <div className={styles.editSidebar}>
-      <div className={styles.title}>
-        Chart type
+      
+      <div className={styles.chartType}>
+        <div className={styles.title}>
+          Chart type
+        </div>
+        <Dropdown 
+          options={chartTypeMap}
+          selected={chartType}
+          setSelected={setChartType}
+        />
       </div>
-      <Dropdown 
-        options={chartTypeMap}
-        selected={chartType}
-        setSelected={setChartType}
-      />
 
-      <div className={styles.title}>
-        X-Axis
+      <div>
+        <div className={styles.title}>
+          X-Axis
+        </div>
+        {series[0] && <DataSelect
+          sources={files.map((file) => ({ value: file, label: file }))}
+          dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
+          columnKey='x'
+          onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
+            type: 'UPDATE_X_COLUMN_ALL', 
+            xColumn: {dataType: updatedColumn.dataType, source: updatedColumn.source}
+          })}
+          onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => {
+            chartQueryDispatch({
+              type: 'UPDATE_ANALYZER_ALL',
+              analyzer: {
+                type: newAnalyzerType,
+                options: newAnalyzerValues
+              }
+            });
+          }}
+        />}
       </div>
-      {series[0] && <DataSelect
-        sources={files.map((file) => ({ value: file, label: file }))}
-        dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
-        columnKey='x'
-        onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
-          type: 'UPDATE_X_COLUMN_ALL', 
-          xColumn: {header: updatedColumn.header, filename: updatedColumn.filename}
-        })}
-        onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => {
-          chartQueryDispatch({
-            type: 'UPDATE_ANALYZER_ALL',
-            analyzer: {
-              type: newAnalyzerType,
-              options: newAnalyzerValues
-            }
-          });
-        }}
-      />}
 
       {series.map((file, fileIndex) => {
         return (
@@ -80,12 +85,14 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
         );
       })}
 
-      <div className={styles.title}>
-        Options
-      </div>
+      <div className={styles.options}>
+        <div className={styles.title}>
+          Options
+        </div>
 
-      <TitleEditor />
-      <LegendEditor />
+        <TitleEditor />
+        <LegendEditor />
+      </div>
     </div>
   );
 };

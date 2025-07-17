@@ -1,21 +1,15 @@
 import { FileInformation, FileTimespan, ExtSeries } from '@types';
 
 // Computs the offsets between the videoStart and the fileStart for all series
-export const computeOffsets = (series, videoTimespan: FileTimespan) => {
-  const videoStart = new Date(videoTimespan.start).getTime();
+// TODO: 
+export const computeOffsets = (files: FileInformation[], videoTimespan: FileTimespan) => {
+  return files.map(file => computeOffset(file, videoTimespan));
+};
 
-  const tempOffsets: number[] = [];
-  series.files.forEach(file => {
-    if(file.x.timespan.start == null)
-    {
-      // TODO: Decide when should a file require a timespan and when it's okay to be missing
-      // throw new Error('File has no timespan start')
-      return;
-    }
-    const fileStart = new Date(file.x.timespan.start).getTime(); // Unix date of first timestamp in file
-    tempOffsets.push(videoStart - fileStart);
-  });
-  return tempOffsets;
+const computeOffset = (file: FileInformation, videoTimespan: FileTimespan) => {
+  const videoStart = videoTimespan.start.getTime();
+  const fileStart = file.start.getTime();
+  return videoStart - fileStart;
 };
 
 export const getPointIndex = (series: ExtSeries, videoTimestamp: number, offset: number, timestamps: number[]) => {
@@ -26,11 +20,10 @@ export const getPointIndex = (series: ExtSeries, videoTimestamp: number, offset:
   return pointIndex;
 };
 
-// TODO: Error handling instead of null return here?
 export const getFileTimestamp = (videoTimestamp: number, offset: number, timestamps: number[]) => {
   const fileTimestamp = videoTimestamp + offset + timestamps[0];
   if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) {
-    throw new Error('Timestamp out of bounds');
+    return undefined;
   }
   return fileTimestamp;
 };

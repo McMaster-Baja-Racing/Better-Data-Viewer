@@ -49,13 +49,17 @@ export const ApiUtil = {
   getFolder: async (folderKey: string): Promise<FileInformation[]> => {
     const response = await fetch(`${baseApiUrl}/files/information/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
-    
-    const raw: RawFileInformation[] = await response.json();
 
-    return raw.map((f) => ({
-      ...f,
-      date: new Date(f.date),
+    // Convert date strings to Date objects
+    const rawFiles: RawFileInformation[] = await response.json();
+    const files: FileInformation[] = rawFiles.map(file => ({
+      ...file,
+      date: new Date(file.date),
+      start: new Date(file.start),
+      end: new Date(file.end)
     }));
+
+    return files;
   },
 
   /**
@@ -115,6 +119,44 @@ export const ApiUtil = {
 
     const text = await response.text();
 
+    return { filename, text };
+  },
+
+  /**
+   * @description Sends a POST request to the server to analyze files using smart detection.
+   * Automatically detects which files contain the requested data types and selects appropriate analyzer.
+   */
+  analyzeFilesSmart: async (
+    xDataType: string,
+    yDataType: string,
+    xSource: string,
+    ySource: string,
+    analyzerOptions: string[] = [],
+    live = false
+  ): Promise<{ filename: string, text: string }> => {
+    const params = new URLSearchParams();
+
+    params.append('xDataType', xDataType);
+    params.append('yDataType', yDataType);
+    params.append('xSource', xSource);
+    params.append('ySource', ySource);
+    analyzerOptions.forEach(option => params.append('analyzerOptions', option));
+    if (live) params.append('live', live.toString());
+
+    const response = await fetch(`${baseApiUrl}/analyze/smart?` + params.toString(), {
+      method: 'POST'
+    });
+
+    if (!response.ok) {
+      showErrorToast(`Code: ${response.status}\n${await response.text()}`);
+      throw Error(response.statusText);
+    }
+
+    const contentDisposition = response.headers.get('content-disposition');
+    if (!contentDisposition) throw new Error('Content-Disposition header is missing'); 
+    const filename = contentDisposition.split('filename=')[1].slice(1, -1);
+
+    const text = await response.text();
     return { filename, text };
   },
 
