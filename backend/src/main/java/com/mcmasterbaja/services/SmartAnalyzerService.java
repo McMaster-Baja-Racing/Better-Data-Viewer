@@ -1,9 +1,10 @@
 package com.mcmasterbaja.services;
 
-import com.mcmasterbaja.analyzer.AnalyzerType;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.model.SmartAnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -11,7 +12,6 @@ import org.jboss.logging.Logger;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,16 +29,16 @@ public class SmartAnalyzerService {
     public AnalyzerParams convertToAnalyzerParams(SmartAnalyzerParams smartParams) {
         logger.info("Converting smart analyzer params: " + smartParams.toString());
         
-        // Find files containing the requested data types
-        String xFile = findFileContainingDataType(smartParams.getXDataType(), smartParams.getFolderPath());
-        String yFile = findFileContainingDataType(smartParams.getYDataType(), smartParams.getFolderPath());
+        // Find files containing the requested data types from their respective sources
+        String xFile = findFileContainingDataType(smartParams.getXDataType(), smartParams.getXSource());
+        String yFile = findFileContainingDataType(smartParams.getYDataType(), smartParams.getYSource());
         
         logger.info("Found xFile: " + xFile + ", yFile: " + yFile);
         
         // Determine analyzer type based on file compatibility
         AnalyzerType analyzerType = determineAnalyzerType(smartParams.getXDataType(), xFile, yFile);
         
-        // Handle special timestamp case
+        // Handle special timestamp case - if X is timestamp and files are different, use Y file for both
         if (TIMESTAMP_HEADER.equals(smartParams.getXDataType()) && !xFile.equals(yFile)) {
             // Use Y file for both since every file has timestamps
             xFile = yFile;
@@ -51,7 +51,6 @@ public class SmartAnalyzerService {
         params.setInputColumns(new String[]{smartParams.getXDataType(), smartParams.getYDataType()});
         params.setType(analyzerType);
         params.setOptions(smartParams.getAnalyzerOptions().toArray(new String[0]));
-        params.setLive(smartParams.isLive());
         
         // Update input files with root location
         params.updateInputFiles(storageService.getRootLocation());
@@ -60,33 +59,33 @@ public class SmartAnalyzerService {
         return params;
     }
     
-    private String findFileContainingDataType(String dataType, String folderPath) {
+    private String findFileContainingDataType(String dataType, String sourcePath) {
         try {
-            Path folderFullPath = storageService.getRootLocation().resolve("csv").resolve(folderPath);
+            Path sourceFullPath = storageService.getRootLocation().resolve("csv").resolve(sourcePath);
             
-            if (!Files.exists(folderFullPath)) {
-                throw new InvalidArgumentException("Folder does not exist: " + folderPath);
+            if (!Files.exists(sourceFullPath)) {
+                throw new InvalidArgumentException("Source path does not exist: " + sourcePath);
             }
             
             // Check if it's a direct file request (dataType.csv)
             String directFileName = dataType + ".csv";
-            Path directFile = folderFullPath.resolve(directFileName);
+            Path directFile = sourceFullPath.resolve(directFileName);
             if (Files.exists(directFile)) {
-                return folderPath + "/" + directFileName;
+                return sourcePath + "/" + directFileName;
             }
             
-            // Search through all CSV files in the folder
-            try (Stream<Path> files = Files.list(folderFullPath)) {
+            // Search through all CSV files in the source path
+            try (Stream<Path> files = Files.list(sourceFullPath)) {
                 return files
                     .filter(path -> path.toString().endsWith(".csv"))
                     .filter(path -> fileContainsHeader(path, dataType))
                     .findFirst()
-                    .map(path -> folderPath + "/" + path.getFileName().toString())
+                    .map(path -> sourcePath + "/" + path.getFileName().toString())
                     .orElseThrow(() -> new InvalidArgumentException(
-                        "No file found containing data type: " + dataType + " in folder: " + folderPath));
+                        "No file found containing data type: " + dataType + " in source: " + sourcePath));
             }
         } catch (IOException e) {
-            throw new InvalidArgumentException("Error searching for data type: " + dataType, e);
+            throw new InvalidArgumentException("Error searching for data type: " + dataType + " in source: " + sourcePath, e);
         }
     }
     

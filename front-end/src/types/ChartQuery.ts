@@ -20,6 +20,7 @@ export interface analyzerT {
 export interface smartSeriesT {
   xDataType: string;
   yDataType: string;
-  folderPath: string;
+  xSource: string;
+  ySource: string;
   analyzer: analyzerT;
 }

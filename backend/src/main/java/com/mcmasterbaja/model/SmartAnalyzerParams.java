@@ -19,14 +19,14 @@ public class SmartAnalyzerParams {
     @QueryParam("yDataType")
     private String yDataType;
     
-    @QueryParam("folderPath")
-    private String folderPath;
+    @QueryParam("xSource")
+    private String xSource;
+    
+    @QueryParam("ySource")
+    private String ySource;
     
     @QueryParam("analyzerOptions")
     private List<String> analyzerOptions = new ArrayList<>();
-    
-    @QueryParam("live")
-    private boolean live = false;
 
     public List<String> getErrors() {
         List<String> errors = new ArrayList<>();
@@ -39,8 +39,12 @@ public class SmartAnalyzerParams {
             errors.add("yDataType is required");
         }
         
-        if (folderPath == null || folderPath.trim().isEmpty()) {
-            errors.add("folderPath is required");
+        if (xSource == null || xSource.trim().isEmpty()) {
+            errors.add("xSource is required");
+        }
+        
+        if (ySource == null || ySource.trim().isEmpty()) {
+            errors.add("ySource is required");
         }
         
         return errors;

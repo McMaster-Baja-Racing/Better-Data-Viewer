@@ -129,7 +129,8 @@ export const ApiUtil = {
   analyzeFilesSmart: async (
     xDataType: string,
     yDataType: string,
-    folderPath: string,
+    xSource: string,
+    ySource: string,
     analyzerOptions: string[] = [],
     live = false
   ): Promise<{ filename: string, text: string }> => {
@@ -137,7 +138,8 @@ export const ApiUtil = {
 
     params.append('xDataType', xDataType);
     params.append('yDataType', yDataType);
-    params.append('folderPath', folderPath);
+    params.append('xSource', xSource);
+    params.append('ySource', ySource);
     analyzerOptions.forEach(option => params.append('analyzerOptions', option));
     if (live) params.append('live', live.toString());
 

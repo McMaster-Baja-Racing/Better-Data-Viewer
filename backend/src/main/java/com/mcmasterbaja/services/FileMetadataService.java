@@ -2,7 +2,6 @@ package com.mcmasterbaja.services;
 
 import com.mcmasterbaja.model.MinMax;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 public interface FileMetadataService {
