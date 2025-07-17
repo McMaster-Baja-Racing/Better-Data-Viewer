@@ -123,6 +123,42 @@ export const ApiUtil = {
   },
 
   /**
+   * @description Sends a POST request to the server to analyze files using smart detection.
+   * Automatically detects which files contain the requested data types and selects appropriate analyzer.
+   */
+  analyzeFilesSmart: async (
+    xDataType: string,
+    yDataType: string,
+    folderPath: string,
+    analyzerOptions: string[] = [],
+    live = false
+  ): Promise<{ filename: string, text: string }> => {
+    const params = new URLSearchParams();
+
+    params.append('xDataType', xDataType);
+    params.append('yDataType', yDataType);
+    params.append('folderPath', folderPath);
+    analyzerOptions.forEach(option => params.append('analyzerOptions', option));
+    if (live) params.append('live', live.toString());
+
+    const response = await fetch(`${baseApiUrl}/analyze/smart?` + params.toString(), {
+      method: 'POST'
+    });
+
+    if (!response.ok) {
+      showErrorToast(`Code: ${response.status}\n${await response.text()}`);
+      throw Error(response.statusText);
+    }
+
+    const contentDisposition = response.headers.get('content-disposition');
+    if (!contentDisposition) throw new Error('Content-Disposition header is missing'); 
+    const filename = contentDisposition.split('filename=')[1].slice(1, -1);
+
+    const text = await response.text();
+    return { filename, text };
+  },
+
+  /**
      * @description Fetches the min and max values of a specific column in a file.
      * @returns {Promise<MinMax>} A promise that resolves to an object containing the min and max values of the column.
      */

@@ -56,7 +56,7 @@ export const useVideoSyncLines = (
     if (chartRef === null || chartRef.series.length === 0 || videoTimespan === undefined) return;
 
     // TODO: Find a better base value for fileTimestamp
-    let fileTimestamp = -Infinity;
+    let fileTimestamp: number | undefined = -Infinity;
   
     // TODO: This ExtSeries is yucky
     const visibleSeries = chartRef.series.filter(series => series.visible) as ExtSeries[];

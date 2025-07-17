@@ -15,3 +15,11 @@ export interface analyzerT {
   type: AnalyzerType | null;
   options: string[];
 }
+
+// Simplified series for smart analyzer
+export interface smartSeriesT {
+  xDataType: string;
+  yDataType: string;
+  folderPath: string;
+  analyzer: analyzerT;
+}
