@@ -47,7 +47,7 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
           columnKey='x'
           onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
             type: 'UPDATE_X_COLUMN_ALL', 
-            xColumn: {dataType: updatedColumn.header, source: updatedColumn.filename}
+            xColumn: {dataType: updatedColumn.dataType, source: updatedColumn.source}
           })}
           onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => {
             chartQueryDispatch({

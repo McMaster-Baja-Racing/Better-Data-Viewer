@@ -2,6 +2,7 @@ import React, { createContext, useReducer, useContext } from 'react';
 import { Options, SeriesOptionsType } from 'highcharts';
 import { defaultChartOptions } from '@lib/chartOptions';
 import isEqual from 'lodash.isequal';
+import { ChartType } from '@types';
 
 type ChartOptionsAction =
   | { type: 'SET_SUBTITLE'; text: string }
@@ -10,7 +11,7 @@ type ChartOptionsAction =
   | { type: 'CLEAR_SERIES'}
   | { type: 'ADD_SERIES'; series: SeriesOptionsType }
   | { type: 'SET_AXIS_TITLE'; axis: 'xAxis' | 'yAxis'; title: string }
-  | { type: 'SET_CHART_TYPE'; chartType: SeriesOptionsType['type'] | 'coloredLine' }
+  | { type: 'SET_CHART_TYPE'; chartType: ChartType }
   | { type: 'UPSERT_SERIES'; index: number, series: SeriesOptionsType };
 
 const ChartOptionsContext = createContext<{
@@ -19,7 +20,7 @@ const ChartOptionsContext = createContext<{
 } | undefined>(undefined);
 
 const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Options => {
-  console.log('ChartOptionsReducer called with action:', action);
+  //console.log('ChartOptionsReducer called with action:', action);
   let updatedState: Options = state;
 
   switch (action.type) {

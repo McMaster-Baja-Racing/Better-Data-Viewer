@@ -13,9 +13,10 @@ import { seriesData } from '@types';
 const parseData = (csvData: string): number[][] => {
   const lines = csvData.trim().split('\n').map(line => line.split(','));
   const headers = lines[0];
+  // TODO: Decouple dataType from being strictly list
   const columns = [
-    { header: headers[0], filename: '', timespan: { start: new Date(), end: null } },
-    { header: headers[1], filename: '', timespan: { start: new Date(), end: null } }
+    { dataType: headers[0], source: '', timespan: { start: new Date(), end: null } },
+    { dataType: headers[1], source: '', timespan: { start: new Date(), end: null } }
   ];
   const headerIndices = getHeadersIndex(headers, columns);
   const timestampOffset = getTimestampOffset(columns, lines.slice(1), headerIndices);

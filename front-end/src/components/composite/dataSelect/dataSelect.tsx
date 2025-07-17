@@ -5,14 +5,15 @@ import { Button } from '@components/ui/button/Button';
 import TextField from '@components/ui/textfield/TextField';
 import { sigmaIcon, plusIcon, minusIcon } from '@assets/icons';
 import { unstable_batchedUpdates } from 'react-dom';
-import { analyzerConfig, AnalyzerKey, AnalyzerType, Column, DataColumnKey } from '@types';
+import { analyzerConfig, AnalyzerKey, AnalyzerType, DataColumnKey, DataTypes } from '@types';
 import { useChartQuery } from '../../../ChartQueryContext';
+import { columnT } from 'types/ChartQuery';
 
 interface DataSelectProps {
     sources: DropdownOption<string>[];
-    dataTypes: DropdownOption<string>[];
+    dataTypes: DropdownOption<DataTypes>[];
     columnKey: DataColumnKey;
-    onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<Column>) => void;
+    onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<columnT>) => void;
     onAnalyzerUpdate: (analyzerType?: AnalyzerType | null, analyzerValues?: string[]) => void;
 }
 
@@ -32,7 +33,7 @@ export function DataSelect({
   const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
   const { series } = useChartQuery();
   const singleSeries = series[0]; // TODO: Handle multiple series
-  const [selectedDataType, setSelectedDataType] = useState<string>(
+  const [selectedDataType, setSelectedDataType] = useState<DataTypes>(
     singleSeries[columnKey]?.dataType || dataTypes[0].value
   );
 
@@ -69,24 +70,24 @@ export function DataSelect({
   // TODO: This logic could be decoupled from this
   useEffect(() => {
     const currX = singleSeries.x.dataType;
-    const update: Partial<Column> = { header: selectedDataType };
+    const update: Partial<columnT> = { dataType: selectedDataType };
 
     unstable_batchedUpdates(() => {
       if (columnKey === 'y') {
-        update.filename = `${selectedSource}/${selectedDataType}.csv`;
+        update.source = `${selectedSource}/${selectedDataType}.csv`;
         if (currX === TIMESTAMP_HEADER) {
-          onColumnUpdate('x', { filename: update.filename });
+          onColumnUpdate('x', { source: update.source });
         } else if (!isJoinAnalyzer(analyzerKey)) {
           onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
         }
       } else if (columnKey === 'x') {
         if (selectedDataType === TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
           onAnalyzerUpdate(null, []);
-          onColumnUpdate('x', { filename: singleSeries.y.source });
+          onColumnUpdate('x', { source: singleSeries.y.source });
         } else if (selectedDataType !== TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
-          update.filename = `${selectedSource}/${selectedDataType}.csv`;
+          update.source = `${selectedSource}/${selectedDataType}.csv`;
         } else if (selectedDataType !== TIMESTAMP_HEADER) {
-          update.filename = `${selectedSource}/${selectedDataType}.csv`;
+          update.source = `${selectedSource}/${selectedDataType}.csv`;
           onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
         }
       }
