@@ -53,13 +53,13 @@ export const useChartData = () => {
         const cols = [file.x, file.y];
 
         // Fetch & analyze the files based on series definition
-        const { filename, text } = await ApiUtil.analyzeFiles(
-          cols.map(col => col.source),
-          cols.map(col => col.dataType),
-          [],
+        const { filename, text } = await ApiUtil.analyzeFilesSmart(
+          file.x.dataType,
+          file.y.dataType,
+          file.x.source,
+          file.y.source,
           file.analyzer.type,
-          file.analyzer.options.filter(e => e),
-          live
+          file.analyzer.options
         );
 
         if (fetchIdRef.current !== myId) return;

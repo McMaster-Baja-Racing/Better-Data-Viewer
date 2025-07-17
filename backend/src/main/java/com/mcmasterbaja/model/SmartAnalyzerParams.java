@@ -25,6 +25,9 @@ public class SmartAnalyzerParams {
     @QueryParam("ySource")
     private String ySource;
     
+    @QueryParam("type")
+    private AnalyzerType type;
+    
     @QueryParam("analyzerOptions")
     private List<String> analyzerOptions = new ArrayList<>();
 

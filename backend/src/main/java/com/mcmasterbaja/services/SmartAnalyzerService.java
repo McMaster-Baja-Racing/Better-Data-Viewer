@@ -26,37 +26,68 @@ public class SmartAnalyzerService {
     
     private static final String TIMESTAMP_HEADER = "Timestamp (ms)";
     
-    public AnalyzerParams convertToAnalyzerParams(SmartAnalyzerParams smartParams) {
-        logger.info("Converting smart analyzer params: " + smartParams.toString());
-        
-        // Find files containing the requested data types from their respective sources
+    /**
+     * Check if preprocessing is needed based on the smart params
+     */
+    public boolean needsPreprocessing(SmartAnalyzerParams smartParams) {
+        // Find files for the data types
         String xFile = findFileContainingDataType(smartParams.getXDataType(), smartParams.getXSource());
         String yFile = findFileContainingDataType(smartParams.getYDataType(), smartParams.getYSource());
         
-        logger.info("Found xFile: " + xFile + ", yFile: " + yFile);
+        // Need preprocessing if files are different OR either data type is not timestamp
+        boolean differentFiles = !xFile.equals(yFile);
+        boolean nonTimestampData = !TIMESTAMP_HEADER.equals(smartParams.getXDataType()) || 
+                                   !TIMESTAMP_HEADER.equals(smartParams.getYDataType());
         
-        // Determine analyzer type based on file compatibility
-        AnalyzerType analyzerType = determineAnalyzerType(smartParams.getXDataType(), xFile, yFile);
+        logger.info("Preprocessing check - Different files: " + differentFiles + 
+                   ", Non-timestamp data: " + nonTimestampData);
         
-        // Handle special timestamp case - if X is timestamp and files are different, use Y file for both
-        if (TIMESTAMP_HEADER.equals(smartParams.getXDataType()) && !xFile.equals(yFile)) {
-            // Use Y file for both since every file has timestamps
-            xFile = yFile;
-            analyzerType = null; // No analyzer needed for same file
-        }
+        return differentFiles || nonTimestampData;
+    }
+    
+    /**
+     * Create preprocessing params for INTERPOLATER_PRO
+     */
+    public AnalyzerParams createPreprocessingParams(SmartAnalyzerParams smartParams) {
+        String xFile = findFileContainingDataType(smartParams.getXDataType(), smartParams.getXSource());
+        String yFile = findFileContainingDataType(smartParams.getYDataType(), smartParams.getYSource());
         
-        // Create traditional AnalyzerParams
         AnalyzerParams params = new AnalyzerParams();
         params.setInputFiles(new String[]{xFile, yFile});
         params.setInputColumns(new String[]{smartParams.getXDataType(), smartParams.getYDataType()});
-        params.setType(analyzerType);
-        params.setOptions(smartParams.getAnalyzerOptions().toArray(new String[0]));
-        
-        // Update input files with root location
-        params.updateInputFiles(storageService.getRootLocation());
-        params.generateOutputFileNames();
+        params.setType(AnalyzerType.INTERPOLATER_PRO);
+        params.setOptions(new String[0]);
         
         return params;
+    }
+    
+    /**
+     * Create analyzer params for the user's chosen analyzer using the specified input file
+     */
+    public AnalyzerParams createUserAnalyzerParams(SmartAnalyzerParams smartParams, String inputFile) {
+        AnalyzerParams params = new AnalyzerParams();
+        params.setInputFiles(new String[]{inputFile});
+        params.setInputColumns(new String[]{smartParams.getXDataType(), smartParams.getYDataType()});
+        params.setType(smartParams.getType());
+        params.setOptions(smartParams.getAnalyzerOptions().toArray(new String[0]));
+        
+        return params;
+    }
+    
+    /**
+     * Get the appropriate input file when no preprocessing is needed
+     */
+    public String getDirectInputFile(SmartAnalyzerParams smartParams) {
+        String xFile = findFileContainingDataType(smartParams.getXDataType(), smartParams.getXSource());
+        String yFile = findFileContainingDataType(smartParams.getYDataType(), smartParams.getYSource());
+        
+        // If X is timestamp and files are different, use Y file (since every file has timestamps)
+        if (TIMESTAMP_HEADER.equals(smartParams.getXDataType()) && !xFile.equals(yFile)) {
+            return yFile;
+        }
+        
+        // Otherwise use X file (which equals Y file if they're the same)
+        return xFile;
     }
     
     private String findFileContainingDataType(String dataType, String sourcePath) {
@@ -107,16 +138,5 @@ public class SmartAnalyzerService {
             logger.warn("Error reading file: " + filePath, e);
             return false;
         }
-    }
-    
-    private AnalyzerType determineAnalyzerType(String xDataType, String xFile, String yFile) {
-        // If same file, no analyzer needed
-        if (xFile.equals(yFile)) {
-            return null;
-        }
-        
-        // If different files, need join analyzer
-        // Default to INTERPOLATER_PRO for joining files
-        return AnalyzerType.INTERPOLATER_PRO;
     }
 }

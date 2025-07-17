@@ -6,6 +6,7 @@ import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
+import com.mcmasterbaja.model.AnalyzerType;
 import com.mcmasterbaja.model.MinMax;
 import com.mcmasterbaja.model.SmartAnalyzerParams;
 import com.mcmasterbaja.services.FileMetadataService;
@@ -76,16 +77,54 @@ public class FileAnalyzeResource {
       throw new InvalidArgumentException(smartParams.getErrors());
     }
 
-    // Convert smart params to traditional analyzer params
-    AnalyzerParams params = smartAnalyzerService.convertToAnalyzerParams(smartParams);
+    Path targetPath;
     
-    // Default to returning the input file, will be overwritten if an analyzer is found later
-    Path targetPath = Path.of(params.getInputFiles()[0]);
-
-    if (params.getType() != null) {
-      Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
-      analyzer.analyze(params);
-      targetPath = Path.of(analyzer.getOutputFilename());
+    if (smartAnalyzerService.needsPreprocessing(smartParams)) {
+      // PREPROCESSING FLOW: Run INTERPOLATER_PRO first, then user's analyzer
+      logger.info("Preprocessing needed - running two-stage analysis");
+      
+      // Stage 1: Run INTERPOLATER_PRO preprocessing
+      AnalyzerParams preprocessParams = smartAnalyzerService.createPreprocessingParams(smartParams);
+      preprocessParams.updateInputFiles(storageService.getRootLocation());
+      preprocessParams.generateOutputFileNames();
+      
+      Analyzer preprocessAnalyzer = analyzerFactory.getAnalyzer(AnalyzerType.INTERPOLATER_PRO);
+      preprocessAnalyzer.analyze(preprocessParams);
+      String preprocessedFile = preprocessAnalyzer.getOutputFilename();
+      
+      // Stage 2: Run user's analyzer on preprocessed data (if specified)
+      if (smartParams.getType() != null) {
+        logger.info("Running user's analyzer: " + smartParams.getType());
+        AnalyzerParams userParams = smartAnalyzerService.createUserAnalyzerParams(smartParams, preprocessedFile);
+        userParams.updateInputFiles(storageService.getRootLocation());
+        userParams.generateOutputFileNames();
+        
+        Analyzer userAnalyzer = analyzerFactory.getAnalyzer(smartParams.getType());
+        userAnalyzer.analyze(userParams);
+        targetPath = Path.of(userAnalyzer.getOutputFilename());
+      } else {
+        // No user analyzer specified, return preprocessed file
+        targetPath = Path.of(preprocessedFile);
+      }
+      
+    } else {
+      // DIRECT FLOW: No preprocessing needed, run user's analyzer directly
+      logger.info("No preprocessing needed - running analyzer directly");
+      
+      String inputFile = smartAnalyzerService.getDirectInputFile(smartParams);
+      
+      if (smartParams.getType() != null) {
+        AnalyzerParams params = smartAnalyzerService.createUserAnalyzerParams(smartParams, inputFile);
+        params.updateInputFiles(storageService.getRootLocation());
+        params.generateOutputFileNames();
+        
+        Analyzer analyzer = analyzerFactory.getAnalyzer(smartParams.getType());
+        analyzer.analyze(params);
+        targetPath = Path.of(analyzer.getOutputFilename());
+      } else {
+        // No analyzer specified, return input file directly
+        targetPath = storageService.getRootLocation().resolve("csv").resolve(inputFile);
+      }
     }
 
     File file = storageService.load(targetPath).toFile();

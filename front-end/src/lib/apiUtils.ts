@@ -93,7 +93,6 @@ export const ApiUtil = {
     outputFiles: string[] | null,
     analyzerType: AnalyzerType | null,
     analyzerOptions: string[], // This one is weird as its dependent on which analyzer is run
-    live: boolean
   ): Promise<{ filename: string, text: string }> => {
     const params = new URLSearchParams();
 
@@ -102,7 +101,6 @@ export const ApiUtil = {
     outputFiles?.map(file => params.append('outputFiles', file));
     if (analyzerType) params.append('type', analyzerType);
     analyzerOptions.map(option => params.append('analyzerOptions', option));
-    if (live) params.append('live', live.toString());
 
     const response = await fetch(`${baseApiUrl}/analyze?` + params.toString(), {
       method: 'POST'
@@ -131,8 +129,8 @@ export const ApiUtil = {
     yDataType: string,
     xSource: string,
     ySource: string,
+    analyzerType: AnalyzerType | null,
     analyzerOptions: string[] = [],
-    live = false
   ): Promise<{ filename: string, text: string }> => {
     const params = new URLSearchParams();
 
@@ -140,8 +138,8 @@ export const ApiUtil = {
     params.append('yDataType', yDataType);
     params.append('xSource', xSource);
     params.append('ySource', ySource);
+    if (analyzerType) params.append('type', analyzerType);
     analyzerOptions.forEach(option => params.append('analyzerOptions', option));
-    if (live) params.append('live', live.toString());
 
     const response = await fetch(`${baseApiUrl}/analyze/smart?` + params.toString(), {
       method: 'POST'
