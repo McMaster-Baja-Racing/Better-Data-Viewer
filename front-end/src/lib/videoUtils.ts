@@ -20,11 +20,10 @@ export const getPointIndex = (series: ExtSeries, videoTimestamp: number, offset:
   return pointIndex;
 };
 
-// TODO: Error handling instead of null return here?
 export const getFileTimestamp = (videoTimestamp: number, offset: number, timestamps: number[]) => {
   const fileTimestamp = videoTimestamp + offset + timestamps[0];
   if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) {
-    throw new Error('Timestamp out of bounds');
+    return undefined;
   }
   return fileTimestamp;
 };

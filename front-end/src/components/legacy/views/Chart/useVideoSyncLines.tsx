@@ -53,7 +53,7 @@ export const useVideoSyncLines = (
 
   // Calculates the vertical line position for timestamp/functional data
   const updateTimestampLine = (videoTimestamp: number) => {
-    if (chartRef === null || chartRef.series.length === 0) return;
+    if (chartRef === null || chartRef.series.length === 0 || videoTimespan === undefined) return;
 
     // TODO: Find a better base value for fileTimestamp
     let fileTimestamp = -Infinity;
