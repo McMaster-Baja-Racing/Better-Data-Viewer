@@ -49,13 +49,17 @@ export const ApiUtil = {
   getFolder: async (folderKey: string): Promise<FileInformation[]> => {
     const response = await fetch(`${baseApiUrl}/files/information/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
-    
-    const raw: RawFileInformation[] = await response.json();
 
-    return raw.map((f) => ({
-      ...f,
-      date: new Date(f.date),
+    // Convert date strings to Date objects
+    const rawFiles: RawFileInformation[] = await response.json();
+    const files: FileInformation[] = rawFiles.map(file => ({
+      ...file,
+      date: new Date(file.date),
+      start: new Date(file.start),
+      end: new Date(file.end)
     }));
+
+    return files;
   },
 
   /**

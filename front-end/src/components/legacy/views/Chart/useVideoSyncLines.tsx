@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Chart } from 'highcharts';
-import { FileTimespan, ExtSeries } from '@types';
+import { FileTimespan, ExtSeries, FileInformation } from '@types';
 import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '@lib/videoUtils';
+import { useFiles } from '@lib/files/useFiles';
+import { useChartQuery } from '../../../../ChartQueryContext';
+import { findFilesByKeys } from '@lib/files/filesHelpers';
+import { useFileMap } from '@lib/files/useFileMap';
 
 export const useVideoSyncLines = (
   chartRef: Chart | null,
@@ -11,35 +15,46 @@ export const useVideoSyncLines = (
 ) => {
   const [offsets, setOffsets] = useState<number[]>([]);
   const [lineX, setLineX] = useState<number>(0);
-  const [linePoint, setLinePoint] = useState<{x: number, y: number}>({x: 0, y: 0});
+  const [lineY, setLineY] = useState<number>(0);
   const [syncedDataPoints, setSyncedDataPoints] = useState<string[]>([]);
+  const { findFile } = useFileMap();
+  const { series } = useChartQuery();
 
   const resetData = () => {
     setOffsets([]);
     setLineX(0);
-    setLinePoint({x: 0, y: 0});
+    setLineY(0);
     setSyncedDataPoints([]);
   };
 
-  // Do initial calculation when timespan or chartInformation change
+  // Do initial calculation when timespan or series change
   useEffect(() => {
     resetData();
-    if (videoTimespan === undefined) return;
-    setOffsets(computeOffsets(chartInformation, videoTimespan));
-  }, [videoTimespan, chartInformation]);
+    if (videoTimespan === undefined || series.length === 0) return;
+    // TODO: Don't Use only X filenames for offset calculation
+    const fileKeys = series.map(s => s.x.filename);
+    const fileObjects = fileKeys.map(key => findFile(key)).filter((f): f is FileInformation => f !== undefined);
+    setOffsets(computeOffsets(fileObjects, videoTimespan));
+  }, [videoTimespan, series]);
+
+  // TODO: This is just wrong
+  const isTimestampFunction = series.length > 0 && (
+    series[0].x.header.toLowerCase().includes('timestamp') ||
+    series[0].analyzer.type === 'STRICT_TIMESTAMP'
+  );
 
   // Updates when video plays
   useEffect(() => {
     if (timestamps.length === 0) return;
-    if (chartInformation.hasTimestampX) {
-      lineXUpdate(videoTimestamp);
+    if (isTimestampFunction) {
+      updateTimestampLine(videoTimestamp);
     } else { 
-      linePointUpdate(videoTimestamp);
+      updatePointCrosshair(videoTimestamp);
     }
-  }, [videoTimestamp]);
+  }, [videoTimestamp, isTimestampFunction]);
 
-  // Calculates the next vertical line 
-  const lineXUpdate = (videoTimestamp: number) => {
+  // Calculates the vertical line position for timestamp/functional data
+  const updateTimestampLine = (videoTimestamp: number) => {
     if (chartRef === null || chartRef.series.length === 0) return;
 
     // TODO: Find a better base value for fileTimestamp
@@ -79,8 +94,8 @@ export const useVideoSyncLines = (
     setSyncedDataPoints(tempValueLines);
   };
 
-  // Calculates the next vertical and horizontal lines
-  const linePointUpdate = (videoTimestamp: number) => {
+  // Calculates the crosshair position for point data
+  const updatePointCrosshair = (videoTimestamp: number) => {
     // Finds the matching point index for the first visible series using the video timestamp
     if (chartRef === null || chartRef.series.length === 0) return;
     //TODO: Update this null check to be inline and return the right case
@@ -96,7 +111,8 @@ export const useVideoSyncLines = (
     );
 
     if (pointIndex && pointIndex >= 0) {
-      setLinePoint({x: firstVisibleSeries.xData[pointIndex], y: firstVisibleSeries.yData[pointIndex]});
+      setLineX(firstVisibleSeries.xData[pointIndex]);
+      setLineY(firstVisibleSeries.yData[pointIndex]);
     } else return;
 
     // Finds the point index for all the other visible series
@@ -132,5 +148,5 @@ export const useVideoSyncLines = (
     setSyncedDataPoints(tempValueLines);
   };
 
-  return { lineX, linePoint, syncedDataPoints };
+  return { lineX, lineY, syncedDataPoints };
 };

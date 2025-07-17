@@ -1,4 +1,4 @@
-import { Column, HeadersIndex } from '@types';
+import { Column, HeadersIndex, FileInformation } from '@types';
 import { columnT, seriesT } from 'types/ChartQuery';
 
 export const HUE_MIN = 150;
@@ -10,6 +10,12 @@ export const LIVE_DATA_INTERVAL = 300;
 export const getTimestampOffset = (columns: Column[], lines: string[][], headerIndices: HeadersIndex): number => {
   // Offset is the start time in unix millis minus the first timestamp in the file
   return new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]);
+};
+
+// New version that works with the new data structure
+export const getTimestampOffsetFromFile = (fileInfo: FileInformation, firstTimestamp: number): number => {
+  if (!fileInfo.start) return 0;
+  return new Date(fileInfo.start).getTime() - firstTimestamp;
 };
 
 export const getTimestamps = async (text: string) => {

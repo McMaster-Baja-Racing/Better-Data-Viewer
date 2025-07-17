@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { ApiUtil } from '@lib/apiUtils';
 import {
   getHeadersIndex,
-  getTimestampOffset,
+  getTimestampOffsetFromFile,
   getTimestamps,
   HUE_MAX,
   HUE_MIN,
@@ -11,6 +11,7 @@ import {
 import { seriesData, MinMax } from '@types';
 import { useChartQuery } from '../../../../ChartQueryContext';
 import { useChartOptions } from '../../../../ChartOptionsContext';
+import { useFileMap } from '@lib/files/useFileMap';
 
 // TODO: Clean up this file, it is a mess
 export const useChartData = () => {
@@ -21,6 +22,7 @@ export const useChartData = () => {
 
   // Pull all chart settings and series from context
   const { series } = useChartQuery();
+  const { findFile } = useFileMap();
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   // TODO: Multiple series different type support?
   const type = options.series?.[0]?.type;
@@ -72,8 +74,13 @@ export const useChartData = () => {
         let seriesPoints: seriesData;
 
         if (type !== 'coloredline') {
-          const timestampOffset = hasTimestampX && hasGPSTime
-            ? getTimestampOffset(cols, lines, headerIndices)
+          // TODO: Don't only use the first file
+          const fileKey = series[0].x.filename;
+          const fileObject = findFile(fileKey);
+          const firstTimestamp = parseFloat(lines[0][headerIndices.x]);
+
+          const timestampOffset = hasTimestampX && hasGPSTime && fileObject
+            ? getTimestampOffsetFromFile(fileObject, firstTimestamp)
             : 0;
 
           seriesPoints = lines.map(fields => (
@@ -124,12 +131,6 @@ export const useChartData = () => {
       }
     }
   }, [series, hasGPSTime, hasTimestampX, type, live]);
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   resetData();
-  //   fetchChartData().finally(() => setLoading(false));
-  // }, [fetchChartData]);
 
   return { timestamps, minMax, loading, refetch: fetchChartData };
 };

@@ -5,10 +5,13 @@ export interface FileInformation {
   extension: string;
   headers: string[];
   size: number;
-  date: Date; // TODO: Change to Date type
+  date: Date;
+  start: Date;
+  end: Date;
 }
 
-export type RawFileInformation = Omit<FileInformation, 'date'> & { date: string };
+export type RawFileInformation = Omit<FileInformation, 'date' | 'start' | 'end'> 
+  & { date: string; start: string; end: string };
 
 export interface FileTimespan {
   key: string;

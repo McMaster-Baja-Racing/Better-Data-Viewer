@@ -34,13 +34,12 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
   const { series } = useChartQuery();
   const { live } = useDashboard();
   const { timestamps, loading, refetch } = useChartData();
-  // const { lineX, linePoint, syncedDataPoints } = useVideoSyncLines(
-  //   {}, // TODO
-  //   chartRef.current, 
-  //   videoTimestamp, 
-  //   video,
-  //   timestamps
-  // );
+  const { lineX, lineY, syncedDataPoints } = useVideoSyncLines(
+    chartRef.current, 
+    videoTimestamp, 
+    video,
+    timestamps
+  );
 
   useEffect(() => {
     // TODO: Don't just use the first series for axis titles
@@ -57,22 +56,22 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
   }, [series]);
 
   // Update line
-  // useEffect(() => {
-  //   if (lineX === 0) return;
-  //   chartOptionsDispatch({
-  //     type: 'REPLACE_OPTIONS',
-  //     options: movePlotLineX(options, lineX)
-  //   });
-  // }, [lineX]);
+  useEffect(() => {
+    if (lineX === 0) return;
+    chartOptionsDispatch({
+      type: 'REPLACE_OPTIONS',
+      options: movePlotLineX(options, lineX)
+    });
+  }, [lineX]);
 
   // // Update lines
-  // useEffect(() => {
-  //   if (linePoint.x === 0 && linePoint.y === 0) return;
-  //   chartOptionsDispatch({
-  //     type: 'REPLACE_OPTIONS',
-  //     options: movePlotLines(options, linePoint.x, linePoint.y)
-  //   });
-  // }, [linePoint]);
+  useEffect(() => {
+    if (lineX === 0 && lineY === 0) return;
+    chartOptionsDispatch({
+      type: 'REPLACE_OPTIONS',
+      options: movePlotLines(options, lineX, lineY)
+    });
+  }, [lineX, lineY]);
 
   // This function loops when live is true, and updates the chart every 500ms
   useEffect(() => {
