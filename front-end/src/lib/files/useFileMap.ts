@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useFiles } from './useFiles';
-import { findFileByKey } from './filesHelpers';
 import { FileInformation } from '@types';
 
 export const useFileMap = () => {
@@ -21,17 +20,10 @@ export const useFileMap = () => {
     return fileMap.get(key);
   };
 
-  // Alternative using the array method if you prefer
-  const findFileArray = (key: string): FileInformation | undefined => {
-    if (!files) return undefined;
-    return findFileByKey(files, key);
-  };
-
   return {
     files,
     fileMap,
     findFile,
-    findFileArray,
     ...queryResult
   };
 };

@@ -1,14 +1,5 @@
 import { FileInformation } from '@types';
 
-// TODO: Replace with a map for O(1) lookups
-export const findFileByKey = (files: FileInformation[], key: string): FileInformation | undefined => {
-  return files.find((file) => file.key === key);
-};
-
-export const findFilesByKeys = (files: FileInformation[], keys: string[]): FileInformation[] => {
-  return files.filter((file) => keys.includes(file.key));
-};
-
 export const getFolders = (files: FileInformation[]): FileInformation[] => {
   // Extract the folders from the files' keys and build a mock FileInformation array
   const folders: FileInformation[] = [];

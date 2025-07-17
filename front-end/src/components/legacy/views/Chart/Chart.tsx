@@ -88,7 +88,7 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
 
   return (
     <div className={styles.chartContainer}>
-      {/* {syncedDataPoints.length > 0 ? (<div className={styles.valueBox}>{syncedDataPoints.join('\n')}</div>) : null} */}
+      {syncedDataPoints.length > 0 ? (<div className={styles.valueBox}>{syncedDataPoints.join('\n')}</div>) : null}
       <div className={styles.chart} style={{ height: '100%', width: '100%' }}>
         <HighchartsReact
           highcharts={Highcharts}

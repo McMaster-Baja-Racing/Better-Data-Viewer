@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { Chart } from 'highcharts';
 import { FileTimespan, ExtSeries, FileInformation } from '@types';
 import { computeOffsets, getFileTimestamp, getPointIndex, binarySearchClosest} from '@lib/videoUtils';
-import { useFiles } from '@lib/files/useFiles';
 import { useChartQuery } from '../../../../ChartQueryContext';
-import { findFilesByKeys } from '@lib/files/filesHelpers';
 import { useFileMap } from '@lib/files/useFileMap';
 
 export const useVideoSyncLines = (
