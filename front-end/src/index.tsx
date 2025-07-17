@@ -17,7 +17,7 @@ const root = ReactDOM.createRoot(rootElement as HTMLElement);
 
 const queryClient = new QueryClient();
 
-// TODO: Re-add strict mode when we fix the API double calls
+// TODO: Re-add strict mode when we fix the API double calls 
 root.render(
   // <React.StrictMode>
   <ThemeProvider>
