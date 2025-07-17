@@ -1,4 +1,4 @@
-import { dataTypesArray, chartTypeMap, SeriesType } from '@types';
+import { dataTypesArray, chartTypeMap, ChartType } from '@types';
 import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
@@ -17,7 +17,7 @@ interface EditSidebarProps {
 export const EditSidebar = ({ files }: EditSidebarProps) => {
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   const { series, dispatch: chartQueryDispatch } = useChartQuery();
-  const [chartType, setChartType] = useState<SeriesType>(options.series?.[0]?.type || 'line');
+  const [chartType, setChartType] = useState<ChartType>(options.series?.[0]?.type || 'line');
 
   useEffect(() => {
     chartOptionsDispatch({ type: 'SET_CHART_TYPE', chartType: chartType });
@@ -47,7 +47,7 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
           columnKey='x'
           onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
             type: 'UPDATE_X_COLUMN_ALL', 
-            xColumn: {header: updatedColumn.header, filename: updatedColumn.filename}
+            xColumn: {dataType: updatedColumn.header, source: updatedColumn.filename}
           })}
           onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => {
             chartQueryDispatch({

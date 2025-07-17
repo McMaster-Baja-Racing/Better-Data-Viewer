@@ -4,14 +4,14 @@ import { Series, SeriesOptionsType } from 'highcharts';
 export interface ChartInformation {
   files: ChartFileInformation[];
   live: boolean;
-  type: SeriesType;
+  type: ChartType;
   hasGPSTime: boolean;
   hasTimestampX: boolean;
 }
 
-export type SeriesType = SeriesOptionsType['type'] | 'coloredLine';
+export type ChartType = SeriesOptionsType['type'] | 'coloredLine';
 
-export const chartTypeMap: {value: SeriesType, label: string}[] = [
+export const chartTypeMap: {value: ChartType, label: string}[] = [
   { value: 'scatter', label: 'Scatter' },
   { value: 'line', label: 'Line' },
   { value: 'coloredLine', label: 'Colored Line' },

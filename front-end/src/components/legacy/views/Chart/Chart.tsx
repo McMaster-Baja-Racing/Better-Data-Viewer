@@ -46,12 +46,12 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
     chartOptionsDispatch({
       type: 'SET_AXIS_TITLE',
       axis: 'xAxis',
-      title: series[0]?.x.header
+      title: series[0]?.x.dataType
     });
     chartOptionsDispatch({
       type: 'SET_AXIS_TITLE',
       axis: 'yAxis',
-      title: series[0]?.y.header
+      title: series[0]?.y.dataType
     });
   }, [series]);
 

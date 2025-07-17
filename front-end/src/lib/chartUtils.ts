@@ -28,11 +28,11 @@ export const getTimestamps = async (text: string) => {
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
-export const getHeadersIndex = (headers: string[], columns: Column[] | columnT[]): HeadersIndex => {
+export const getHeadersIndex = (headers: string[], columns: columnT[]): HeadersIndex => {
   const h: HeadersIndex = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {
-      if (columns[i].header.trim() === headers[j].trim()) {
+      if (columns[i].dataType.trim() === headers[j].trim()) {
         if (i === 0) {
           h.x = j;
         } else if (i === 1) {
@@ -54,7 +54,7 @@ export const validateChartQuery = (series: seriesT[]) => {
     if (!s.x || !s.y) {
       return false;
     }
-    if (s.x.header === '' || s.x.filename === '') {
+    if (s.x.source === '') {
       return false;
     }
   }

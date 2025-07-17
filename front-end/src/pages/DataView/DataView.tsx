@@ -16,7 +16,7 @@ export const DataView = () => {
   useEffect(() => {
     const tempBins = series.map((file) =>
       dataColumnKeys
-        .map((key) => file[key]?.filename)
+        .map((key) => file[key]?.source)
         .filter((fn): fn is string => !!fn)
         .map((filename) => filename.split('/')[0])
     );

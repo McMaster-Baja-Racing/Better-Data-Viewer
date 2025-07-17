@@ -54,8 +54,8 @@ export const useChartData = () => {
 
         // Fetch & analyze the files based on series definition
         const { filename, text } = await ApiUtil.analyzeFiles(
-          cols.map(col => col.filename),
-          cols.map(col => col.header),
+          cols.map(col => col.source),
+          cols.map(col => col.dataType),
           [],
           file.analyzer.type,
           file.analyzer.options.filter(e => e),
@@ -75,7 +75,7 @@ export const useChartData = () => {
 
         if (type !== 'coloredline') {
           // TODO: Don't only use the first file
-          const fileKey = series[0].x.filename;
+          const fileKey = series[0].x.source;
           const fileObject = findFile(fileKey);
           const firstTimestamp = parseFloat(lines[0][headerIndices.x]);
 
@@ -90,7 +90,7 @@ export const useChartData = () => {
             ]
           ));
         } else {
-          const firstColHeader = cols[0].header;
+          const firstColHeader = cols[0].dataType;
           const { min, max } = minMax.current = await ApiUtil.getMinMax(filename, firstColHeader);
 
           seriesPoints = lines.map(fields => {

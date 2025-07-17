@@ -33,7 +33,7 @@ export function DataSelect({
   const { series } = useChartQuery();
   const singleSeries = series[0]; // TODO: Handle multiple series
   const [selectedDataType, setSelectedDataType] = useState<string>(
-    singleSeries[columnKey]?.header || dataTypes[0].value
+    singleSeries[columnKey]?.dataType || dataTypes[0].value
   );
 
   const [analyzerKey, setAnalyzerKey] = useState<AnalyzerKey>(singleSeries.analyzer.type ?? 'NONE');
@@ -68,7 +68,7 @@ export function DataSelect({
 
   // TODO: This logic could be decoupled from this
   useEffect(() => {
-    const currX = singleSeries.x.header;
+    const currX = singleSeries.x.dataType;
     const update: Partial<Column> = { header: selectedDataType };
 
     unstable_batchedUpdates(() => {
@@ -82,7 +82,7 @@ export function DataSelect({
       } else if (columnKey === 'x') {
         if (selectedDataType === TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
           onAnalyzerUpdate(null, []);
-          onColumnUpdate('x', { filename: singleSeries.y.filename });
+          onColumnUpdate('x', { filename: singleSeries.y.source });
         } else if (selectedDataType !== TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
           update.filename = `${selectedSource}/${selectedDataType}.csv`;
         } else if (selectedDataType !== TIMESTAMP_HEADER) {

@@ -47,19 +47,19 @@ export const SimpleCreateGraphModal = ({
       // Build x, y, z columns explicitly
       const [xAxis, yAxis, zAxis] = currGraph.axes;
       const x: Column = {
-        header: xAxis.axis,
-        filename: `${selectedBinFile}/${xAxis.file}`,
+        header: xAxis.dataType,
+        filename: `${selectedBinFile}/${xAxis.source}`,
         timespan: { start: null, end: null },
       };
       const y: Column = {
-        header: yAxis.axis,
-        filename: `${selectedBinFile}/${yAxis.file}`,
+        header: yAxis.dataType,
+        filename: `${selectedBinFile}/${yAxis.source}`,
         timespan: { start: null, end: null },
       };
       const z: Column | null = zAxis
         ? {
-          header: zAxis.axis,
-          filename: `${selectedBinFile}/${zAxis.file}`,
+          header: zAxis.dataType,
+          filename: `${selectedBinFile}/${zAxis.source}`,
           timespan: { start: null, end: null },
         }
         : null;

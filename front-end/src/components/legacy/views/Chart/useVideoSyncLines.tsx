@@ -30,14 +30,14 @@ export const useVideoSyncLines = (
     resetData();
     if (videoTimespan === undefined || series.length === 0) return;
     // TODO: Don't Use only X filenames for offset calculation
-    const fileKeys = series.map(s => s.x.filename);
+    const fileKeys = series.map(s => s.x.source);
     const fileObjects = fileKeys.map(key => findFile(key)).filter((f): f is FileInformation => f !== undefined);
     setOffsets(computeOffsets(fileObjects, videoTimespan));
   }, [videoTimespan, series]);
 
   // TODO: This is just wrong
   const isTimestampFunction = series.length > 0 && (
-    series[0].x.header.toLowerCase().includes('timestamp') ||
+    series[0].x.dataType.toLowerCase().includes('timestamp') ||
     series[0].analyzer.type === 'STRICT_TIMESTAMP'
   );
 
