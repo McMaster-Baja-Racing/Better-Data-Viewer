@@ -2,12 +2,13 @@ import styles from './downloadModal.module.scss';
 import { BaseModal } from '@components/ui/baseModal/BaseModal';
 import { FileTable } from '@components/ui/fileTable/FileTable';
 import { Button } from '@components/ui/button/Button';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { rightArrowIcon } from '@assets/icons';
 import { ApiUtil } from '@lib/apiUtils';
-import { File, FileInformation } from '@types';
+import { FileInformation } from '@types';
 import JSZip from 'jszip';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
+import { useFiles } from '@lib/files/useFiles';
 
 interface DownloadModalProps {
   onClose: () => void;
@@ -15,8 +16,8 @@ interface DownloadModalProps {
 }
 
 export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
-  const [files, setFiles] = useState<File[]>([]);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<FileInformation[]>([]);
+  const { data: files } = useFiles();
 
   const downloadFiles = async () => {
     try {
@@ -44,15 +45,6 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
     }
   };
 
-  useEffect(() => {
-    const fetchFiles = async () => {
-      const files = await ApiUtil.getFolder('csv');
-      setFiles(apiToFiles(files));
-    };
-
-    fetchFiles();
-  }, []);
-
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className={styles.downloadModal}>
@@ -71,23 +63,4 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
       </div>
     </BaseModal>
   );
-};
-
-// Converts from fileInformation, which only has key, fileHeaders and size
-// to the File type, which has key, name, size, date, extension.
-// For now, make up the date, and for the extension, just take the last part of the key after the last period.
-// Further, the name doesn't have any folders preceeding it, so split along / and take the last part.
-const apiToFiles = (apiFiles: FileInformation[]): File[] => {
-  return apiFiles.map((file) => {
-    const keyParts = file.key.split('/');
-    const name = keyParts[keyParts.length - 1];
-    const extension = name.split('.')[name.split('.').length - 1];
-    return {
-      key: file.key,
-      name,
-      size: file.size,
-      date: '2021-01-01', // TODO: Make this dynamic
-      extension
-    };
-  });
 };
