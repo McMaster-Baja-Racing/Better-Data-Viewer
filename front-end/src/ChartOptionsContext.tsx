@@ -1,8 +1,8 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import { Options, SeriesOptionsType, XAxisOptions, YAxisOptions } from 'highcharts';
+import { XAxisOptions, YAxisOptions } from 'highcharts';
 import { defaultChartOptions } from '@lib/chartOptions';
 import isEqual from 'lodash.isequal';
-import { ChartType } from '@types';
+import { ChartType, CustomOptions, ExtendedSeriesOptionsType } from '@types';
 
 // Helper function to safely get axis title text
 export const getAxisTitle = (
@@ -18,21 +18,21 @@ export const getAxisTitle = (
 type ChartOptionsAction =
   | { type: 'SET_SUBTITLE'; text: string }
   | { type: 'TOGGLE_LEGEND' }
-  | { type: 'REPLACE_OPTIONS'; options: Options }
+  | { type: 'REPLACE_OPTIONS'; options: CustomOptions }
   | { type: 'CLEAR_SERIES'}
-  | { type: 'ADD_SERIES'; series: SeriesOptionsType }
+  | { type: 'ADD_SERIES'; series: ExtendedSeriesOptionsType }
   | { type: 'SET_AXIS_TITLE'; axis: 'xAxis' | 'yAxis'; title: string }
   | { type: 'SET_CHART_TYPE'; chartType: ChartType }
-  | { type: 'UPSERT_SERIES'; index: number, series: SeriesOptionsType };
+  | { type: 'UPSERT_SERIES'; index: number, series: ExtendedSeriesOptionsType };
 
 const ChartOptionsContext = createContext<{
-  options: Options;
+  options: CustomOptions;
   dispatch: React.Dispatch<ChartOptionsAction>;
 } | undefined>(undefined);
 
-const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Options => {
+const chartOptionsReducer = (state: CustomOptions, action: ChartOptionsAction): CustomOptions => {
   //console.log('ChartOptionsReducer called with action:', action);
-  let updatedState: Options = state;
+  let updatedState: CustomOptions = state;
 
   switch (action.type) {
     case 'SET_SUBTITLE':
@@ -93,7 +93,7 @@ const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Option
       updatedState = {
         ...state,
         series: (state.series || [])
-          .map(s => ({ ...s, type: action.chartType })) as SeriesOptionsType[]
+          .map(s => ({ ...s, type: action.chartType })) as ExtendedSeriesOptionsType[]
       };
       break;
     case 'UPSERT_SERIES': {
@@ -117,7 +117,7 @@ const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Option
 };
 
 export const ChartOptionsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [options, dispatch] = useReducer(chartOptionsReducer, defaultChartOptions);
+  const [options, dispatch] = useReducer(chartOptionsReducer, defaultChartOptions as CustomOptions);
 
   return (
     <ChartOptionsContext.Provider value={{ options, dispatch }}>

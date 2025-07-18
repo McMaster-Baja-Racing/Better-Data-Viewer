@@ -1,13 +1,4 @@
-import { AnalyzerType } from '@types';
-import { Series, SeriesOptionsType } from 'highcharts';
-
-export interface ChartInformation {
-  files: ChartFileInformation[];
-  live: boolean;
-  type: ChartType;
-  hasGPSTime: boolean;
-  hasTimestampX: boolean;
-}
+import { Options, Series, SeriesLineOptions, SeriesOptionsType } from 'highcharts';
 
 export type ChartType = SeriesOptionsType['type'] | 'coloredLine';
 
@@ -17,42 +8,15 @@ export const chartTypeMap: {value: ChartType, label: string}[] = [
   { value: 'coloredLine', label: 'Colored Line' },
 ];
 
-export interface ChartFileInformation {
-  x: Column;
-  y: Column;
-  z: Column | null;
-  analyze: ChartAnalyzerInformation;
-}
-
 export const dataColumnKeys = ['x', 'y'] as const;
 
 export type DataColumnKey = typeof dataColumnKeys[number];
-
-export interface ChartAnalyzerInformation {
-  type: AnalyzerType | null;
-  analyzerValues: string[];
-}
-
-export interface Column {
-  header: string;
-  filename: string;
-  timespan: {
-    start: Date | null;
-    end: Date | null;
-  };
-}
 
 export interface ColourSeriesData {
   x: number;
   y: number;
   colorValue: number;
   segmentColor: string;
-}
-
-export interface HeadersIndex {
-  x: number;
-  y: number;
-  colour: number;
 }
 
 export type seriesData = ColourSeriesData[] | number[][];
@@ -62,4 +26,18 @@ export type seriesData = ColourSeriesData[] | number[][];
 export interface ExtSeries extends Series {
   xData: number[];
   yData: number[];
+}
+
+// More highcharts stuff, adding colour series
+// Custom coloredLine series type
+export interface ColoredLineSeriesOptions extends Omit<SeriesLineOptions, 'type'> {
+  type: 'coloredLine';
+}
+
+// Extended series type that includes our custom coloredLine type
+export type ExtendedSeriesOptionsType = SeriesOptionsType | ColoredLineSeriesOptions;
+
+// Extended Options type that uses our custom series type
+export interface CustomOptions extends Omit<Options, 'series'> {
+  series?: ExtendedSeriesOptionsType[];
 }

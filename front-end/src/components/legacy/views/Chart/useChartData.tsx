@@ -73,7 +73,7 @@ export const useChartData = () => {
 
         let seriesPoints: seriesData;
 
-        if (type !== 'coloredline') {
+        if (type !== 'coloredLine') {
           // TODO: Don't only use the first file
           const fileKey = series[0].x.source;
           const fileObject = findFile(fileKey);

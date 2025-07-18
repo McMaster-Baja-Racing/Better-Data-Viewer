@@ -1,4 +1,4 @@
-import { HeadersIndex, FileInformation } from '@types';
+import { FileInformation } from '@types';
 import { columnT, seriesT } from 'types/ChartQuery';
 
 export const HUE_MIN = 150;
@@ -21,8 +21,8 @@ export const getTimestamps = async (text: string) => {
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
-export const getHeadersIndex = (headers: string[], columns: columnT[]): HeadersIndex => {
-  const h: HeadersIndex = { x: -1, y: -1, colour: -1 };
+export const getHeadersIndex = (headers: string[], columns: columnT[]) => {
+  const h = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {
       if (columns[i].dataType.trim() === headers[j].trim()) {
