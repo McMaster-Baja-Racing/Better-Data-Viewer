@@ -45,13 +45,11 @@ export const TitleCard = () => {
       text: ''
     },
     xAxis: {
-      ...defaultChartOptions.xAxis,
       gridLineColor: 'transparent',
       labels: { enabled: false },
       type: 'datetime',
     },
     yAxis: {
-      ...defaultChartOptions.xAxis,
       title: {text: ''},
       gridLineColor: 'transparent',
       tickPositions: [-2.3, 2], // Needed to allow custom sizing
