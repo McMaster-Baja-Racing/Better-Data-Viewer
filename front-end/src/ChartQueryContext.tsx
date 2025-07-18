@@ -18,7 +18,7 @@ const ChartQueryContext = createContext<{
 } | undefined>(undefined);
 
 const chartQueryReducer = (state: seriesT[], action: ChartQueryAction): seriesT[] => {
-  console.log('ChartQueryReducer called with action:', action);
+  //console.log('ChartQueryReducer called with action:', action);
   let updatedState: seriesT[] = state;
 
   switch (action.type) {
@@ -71,13 +71,6 @@ const chartQueryReducer = (state: seriesT[], action: ChartQueryAction): seriesT[
       return state;
   }
 
-  // TODO: Remove this once debugging is complete
-  if (!isEqual(state, updatedState)) {
-    // eslint-disable-next-line no-console
-    console.log('State updated:', updatedState);
-    // eslint-disable-next-line no-console
-    console.log('State before update:', state);
-  }
   return isEqual(state, updatedState) ? state : updatedState;
 };
 

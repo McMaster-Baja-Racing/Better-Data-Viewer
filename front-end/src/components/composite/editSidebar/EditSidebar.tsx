@@ -3,7 +3,7 @@ import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
 import { useEffect, useState } from 'react';
-import { useChartOptions } from '../../../ChartOptionsContext';
+import { useChartOptions, getAxisTitle } from '../../../ChartOptionsContext';
 import TextField from '@components/ui/textfield/TextField';
 import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
 import { useDashboard } from '../../../DashboardContext';
@@ -115,12 +115,12 @@ const TitleEditor = () => {
       />
       <TextField
         title={'Chart X-Axis Title'}
-        value={options.xAxis?.title?.text || ''}
+        value={getAxisTitle(options.xAxis)}
         setValue={(title) => chartOptionsDispatch({ type: 'SET_AXIS_TITLE', axis: 'xAxis',title: title })}
       />
       <TextField
         title={'Chart Y-Axis Title'}
-        value={options.yAxis?.title?.text || ''}
+        value={getAxisTitle(options.yAxis)}
         setValue={(title) => chartOptionsDispatch({ type: 'SET_AXIS_TITLE', axis: 'yAxis', title: title })}
       />
     </Accordion>

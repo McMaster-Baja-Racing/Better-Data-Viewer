@@ -4,7 +4,6 @@ import { Dropdown, DropdownOption } from '@components/ui/dropdown/Dropdown';
 import { Button } from '@components/ui/button/Button';
 import TextField from '@components/ui/textfield/TextField';
 import { sigmaIcon, plusIcon, minusIcon } from '@assets/icons';
-import { unstable_batchedUpdates } from 'react-dom';
 import { analyzerConfig, AnalyzerKey, AnalyzerType, DataColumnKey, DataTypes } from '@types';
 import { useChartQuery } from '../../../ChartQueryContext';
 import { columnT } from 'types/ChartQuery';
@@ -15,12 +14,6 @@ interface DataSelectProps {
     columnKey: DataColumnKey;
     onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<columnT>) => void;
     onAnalyzerUpdate: (analyzerType?: AnalyzerType | null, analyzerValues?: string[]) => void;
-}
-
-const TIMESTAMP_HEADER = 'Timestamp (ms)';
-
-function isJoinAnalyzer(key?: AnalyzerKey | null): key is AnalyzerType {
-  return !!key && analyzerConfig[key].isJoinBased;
 }
 
 export function DataSelect({ 
@@ -58,7 +51,7 @@ export function DataSelect({
     setAnalyzerValues(analyzerConfig[newKey].parameters?.map(param => param.defaultValue) || []);
   }, [singleSeries.analyzer.type]);
 
-  // Wait before API call
+  // update analyzer
   useEffect(() => {
     // wait until values array matches expected length
     if (analyzer.parameters && analyzerValues.length !== (analyzer.parameters?.length || 0)) {
@@ -67,16 +60,9 @@ export function DataSelect({
     onAnalyzerUpdate(analyzerKey === 'NONE' ? null : analyzerKey, analyzerValues);
   }, [analyzerKey, analyzerValues]);
 
-  // TODO: This logic could be decoupled from this
+  // Update column
   useEffect(() => {
-    const update: Partial<columnT> = { dataType: selectedDataType };
-
-    unstable_batchedUpdates(() => {
-      update.source = selectedSource;
-      update.dataType = selectedDataType;
-  
-      onColumnUpdate(columnKey, update);
-    });
+    onColumnUpdate(columnKey, { dataType: selectedDataType, source: selectedSource });
   }, [selectedSource, selectedDataType]);
 
   const handleParameterChange = (index: number, newValue: string) => {

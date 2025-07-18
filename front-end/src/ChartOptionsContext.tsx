@@ -1,8 +1,19 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import { Options, SeriesOptionsType } from 'highcharts';
+import { Options, SeriesOptionsType, XAxisOptions, YAxisOptions } from 'highcharts';
 import { defaultChartOptions } from '@lib/chartOptions';
 import isEqual from 'lodash.isequal';
 import { ChartType } from '@types';
+
+// Helper function to safely get axis title text
+export const getAxisTitle = (
+  axis: XAxisOptions | XAxisOptions[] | YAxisOptions | YAxisOptions[] | undefined
+): string => {
+  if (!axis) return '';
+  if (Array.isArray(axis)) {
+    return axis[0]?.title?.text || '';
+  }
+  return axis.title?.text || '';
+};
 
 type ChartOptionsAction =
   | { type: 'SET_SUBTITLE'; text: string }
@@ -54,18 +65,30 @@ const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Option
         series: [...(state.series || []), action.series]
       };
       break;
-    case 'SET_AXIS_TITLE':
-      updatedState = {
-        ...state,
-        [action.axis]: {
-          ...state[action.axis],
+    case 'SET_AXIS_TITLE': {
+      const currentAxis = state[action.axis];
+      const updatedAxis = Array.isArray(currentAxis) 
+        ? currentAxis.map((axis: XAxisOptions | YAxisOptions, index: number) => index === 0 ? {
+          ...axis,
           title: {
-            ...state[action.axis]?.title,
+            ...axis?.title,
             text: action.title,
           },
-        },
+        } : axis)
+        : {
+          ...currentAxis,
+          title: {
+            ...currentAxis?.title,
+            text: action.title,
+          },
+        };
+      
+      updatedState = {
+        ...state,
+        [action.axis]: updatedAxis,
       };
       break;
+    }
     case 'SET_CHART_TYPE':
       updatedState = {
         ...state,
@@ -90,13 +113,6 @@ const chartOptionsReducer = (state: Options, action: ChartOptionsAction): Option
       return state;
   }
 
-  // TODO: Remove this once debugging is complete
-  if (!isEqual(state, updatedState)) {
-    // eslint-disable-next-line no-console
-    //console.log('State updated:', updatedState);
-    // eslint-disable-next-line no-console
-    //console.log('State before update:', state);
-  }
   return isEqual(state, updatedState) ? state : updatedState;
 };
 
