@@ -34,15 +34,15 @@ public class SmartAnalyzerService {
         String xFile = findFileContainingDataType(smartParams.getXDataType(), smartParams.getXSource());
         String yFile = findFileContainingDataType(smartParams.getYDataType(), smartParams.getYSource());
         
-        // Need preprocessing if files are different OR either data type is not timestamp
+        // Need preprocessing if files are different OR both data types are not timestamp
         boolean differentFiles = !xFile.equals(yFile);
-        boolean nonTimestampData = !TIMESTAMP_HEADER.equals(smartParams.getXDataType()) || 
-                                   !TIMESTAMP_HEADER.equals(smartParams.getYDataType());
+        boolean nonTimestampData = !TIMESTAMP_HEADER.equals(smartParams.getXDataType().trim()) && 
+                                   !TIMESTAMP_HEADER.equals(smartParams.getYDataType().trim());
         
         logger.info("Preprocessing check - Different files: " + differentFiles + 
                    ", Non-timestamp data: " + nonTimestampData);
         
-        return differentFiles || nonTimestampData;
+        return differentFiles && nonTimestampData;
     }
     
     /**

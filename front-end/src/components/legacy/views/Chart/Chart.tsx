@@ -57,7 +57,8 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
 
   // Update line
   useEffect(() => {
-    if (lineX === 0) return;
+    if (lineX === 0 || isNaN(lineX)) return;
+    console.log('Updating lineX:', lineX);
     chartOptionsDispatch({
       type: 'REPLACE_OPTIONS',
       options: movePlotLineX(options, lineX)
@@ -66,7 +67,7 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
 
   // // Update lines
   useEffect(() => {
-    if (lineX === 0 && lineY === 0) return;
+    if (lineX === 0 && lineY === 0 || isNaN(lineX) || isNaN(lineY)) return;
     chartOptionsDispatch({
       type: 'REPLACE_OPTIONS',
       options: movePlotLines(options, lineX, lineY)

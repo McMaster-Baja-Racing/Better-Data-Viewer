@@ -69,28 +69,11 @@ export function DataSelect({
 
   // TODO: This logic could be decoupled from this
   useEffect(() => {
-    const currX = singleSeries.x.dataType;
     const update: Partial<columnT> = { dataType: selectedDataType };
 
     unstable_batchedUpdates(() => {
-      if (columnKey === 'y') {
-        update.source = `${selectedSource}/${selectedDataType}.csv`;
-        if (currX === TIMESTAMP_HEADER) {
-          onColumnUpdate('x', { source: update.source });
-        } else if (!isJoinAnalyzer(analyzerKey)) {
-          onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
-        }
-      } else if (columnKey === 'x') {
-        if (selectedDataType === TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
-          onAnalyzerUpdate(null, []);
-          onColumnUpdate('x', { source: singleSeries.y.source });
-        } else if (selectedDataType !== TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
-          update.source = `${selectedSource}/${selectedDataType}.csv`;
-        } else if (selectedDataType !== TIMESTAMP_HEADER) {
-          update.source = `${selectedSource}/${selectedDataType}.csv`;
-          onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
-        }
-      }
+      update.source = selectedSource;
+      update.dataType = selectedDataType;
   
       onColumnUpdate(columnKey, update);
     });

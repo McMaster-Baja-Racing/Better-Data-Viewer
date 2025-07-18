@@ -147,7 +147,6 @@ export const ApiUtil = {
 
     if (!response.ok) {
       showErrorToast(`Code: ${response.status}\n${await response.text()}`);
-      throw Error(response.statusText);
     }
 
     const contentDisposition = response.headers.get('content-disposition');

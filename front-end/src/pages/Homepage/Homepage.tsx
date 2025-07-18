@@ -20,11 +20,11 @@ export const Homepage = () => {
     preset.graphs.map((graph) => {
       series.push({
         x: {
-          source: fileKeys[0] + '/' + graph.axes[0].source,
+          source: fileKeys[0], // + '/' + graph.axes[0].source,
           dataType: graph.axes[0].dataType,
         },
         y: {
-          source: fileKeys[0] + '/' + graph.axes[1].source,
+          source: fileKeys[0], // + '/' + graph.axes[1].source,
           dataType: graph.axes[1].dataType,
         },
         analyzer: {
