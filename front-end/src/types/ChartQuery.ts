@@ -1,4 +1,4 @@
-import { AnalyzerType, DataTypes } from '@types';
+import { AnalyzerType } from '@types';
 
 export interface seriesT {
   x: columnT;
@@ -8,7 +8,7 @@ export interface seriesT {
 
 export interface columnT {
   source: string;
-  dataType: DataTypes;
+  dataType: string;
 }
 
 export interface analyzerT {

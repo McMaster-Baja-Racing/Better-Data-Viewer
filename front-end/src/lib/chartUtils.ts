@@ -1,18 +1,12 @@
-import { Column, HeadersIndex, FileInformation } from '@types';
+import { HeadersIndex, FileInformation } from '@types';
 import { columnT, seriesT } from 'types/ChartQuery';
 
 export const HUE_MIN = 150;
 export const HUE_MAX = 0;
 export const LIVE_DATA_INTERVAL = 300;
 
-// Calculates the offset required to convert the x values to unix timestamps
+// Returns the offset in milliseconds between the start time of the file and the first timestamp in the file
 // Adding the timestampOffset results in the x value being a the start time unix millis + millis since first timestamp
-export const getTimestampOffset = (columns: Column[], lines: string[][], headerIndices: HeadersIndex): number => {
-  // Offset is the start time in unix millis minus the first timestamp in the file
-  return new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]);
-};
-
-// New version that works with the new data structure
 export const getTimestampOffsetFromFile = (fileInfo: FileInformation, firstTimestamp: number): number => {
   if (!fileInfo.start) return 0;
   return new Date(fileInfo.start).getTime() - firstTimestamp;
@@ -22,7 +16,6 @@ export const getTimestamps = async (text: string) => {
   const timestampHeaderIndex = text.trim().split('\n')[0].split(',').indexOf('Timestamp (ms)');
   return text.trim().split('\n').slice(1).map((line) => parseFloat(line.split(',')[timestampHeaderIndex]));
 };
-
 
 /**
  * @description Matches headers to columns to get the indices of the columns in the headers array.
