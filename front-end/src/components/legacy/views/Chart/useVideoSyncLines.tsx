@@ -8,7 +8,7 @@ import { useFileMap } from '@lib/files/useFileMap';
 export const useVideoSyncLines = (
   chartRef: Chart | null,
   videoTimestamp: number,
-  videoTimespan: FileTimespan,
+  videoTimespan: FileTimespan | null,
   timestamps: number[][]
 ) => {
   const [offsets, setOffsets] = useState<number[]>([]);
@@ -28,7 +28,7 @@ export const useVideoSyncLines = (
   // Do initial calculation when timespan or series change
   useEffect(() => {
     resetData();
-    if (videoTimespan === undefined || series.length === 0) return;
+    if (videoTimespan === undefined || series.length === 0 || videoTimespan === null) return;
     // TODO: Don't Use only X filenames for offset calculation
     const fileKeys = series.map(s => s.x.source);
     const fileObjects = fileKeys.map(key => findFile(key)).filter((f): f is FileInformation => f !== undefined);
@@ -53,7 +53,7 @@ export const useVideoSyncLines = (
 
   // Calculates the vertical line position for timestamp/functional data
   const updateTimestampLine = (videoTimestamp: number) => {
-    if (chartRef === null || chartRef.series.length === 0 || videoTimespan === undefined) return;
+    if (chartRef === null || chartRef.series.length === 0 || videoTimespan === null) return;
 
     // TODO: Find a better base value for fileTimestamp
     let fileTimestamp: number | undefined = -Infinity;

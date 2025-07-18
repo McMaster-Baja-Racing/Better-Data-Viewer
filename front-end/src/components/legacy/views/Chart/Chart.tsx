@@ -24,7 +24,7 @@ HighchartsColorAxis(Highcharts);
 Boost(Highcharts);
 
 interface ChartProps {
-  video: FileTimespan;
+  video: FileTimespan | null;
   videoTimestamp: number;
 }
 
@@ -58,7 +58,6 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
   // Update line
   useEffect(() => {
     if (lineX === 0 || isNaN(lineX)) return;
-    console.log('Updating lineX:', lineX);
     chartOptionsDispatch({
       type: 'REPLACE_OPTIONS',
       options: movePlotLineX(options, lineX)

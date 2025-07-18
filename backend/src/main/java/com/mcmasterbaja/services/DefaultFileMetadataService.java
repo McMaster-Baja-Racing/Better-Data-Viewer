@@ -249,6 +249,10 @@ public class DefaultFileMetadataService implements FileMetadataService {
       BufferedReader reader =
           new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
       int timestampIndex = Arrays.asList(reader.readLine().split(",")).indexOf("Timestamp (ms)");
+      if (timestampIndex == -1) {
+        throw new InvalidColumnException(
+            "Timestamp (ms) column not found in file: " + targetPath.toString());
+      }
       firstTimestamp = reader.readLine().split(",")[timestampIndex];
       reader.close();
       lastTimestamp = getLast(targetPath, timestampIndex);

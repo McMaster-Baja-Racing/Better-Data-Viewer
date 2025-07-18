@@ -2,7 +2,7 @@ import { dataColumnKeys } from '@types';
 import Chart from '@components/legacy/views/Chart/Chart';
 import { GraphWrapper } from '@components/simple/graphWrapper/GraphWrapper';
 import { RightSidebar } from '@components/ui/rightSidebar/RightSidebar';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
 import { ChartOptionsProvider } from '../../ChartOptionsContext';
 import { DashboardProvider } from '../../DashboardContext';
@@ -24,13 +24,6 @@ export const DataView = () => {
     setBins(uniqueBins);
   }, [series]);
 
-  // Memoize the video object to prevent re-creation on every render.
-  const video = useMemo(() => ({
-    key: '',
-    start: new Date(),
-    end: new Date()
-  }), []);
-
   if (!series || bins.length === 0) {
     return <div>Loading...</div>;
   }
@@ -47,7 +40,7 @@ export const DataView = () => {
               editOnClick={() => setIsOpen(!isOpen)}
             >
               <Chart
-                video={video}
+                video={null}
                 videoTimestamp={0}
               />
             </GraphWrapper>
