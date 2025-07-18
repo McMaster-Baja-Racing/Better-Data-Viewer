@@ -1,5 +1,4 @@
 import { Options, XAxisOptions } from 'highcharts';
-import { ChartInformation } from '@types';
 
 const axisDefaults: Partial<XAxisOptions> = {
   // Axis lines
@@ -25,7 +24,13 @@ const axisDefaults: Partial<XAxisOptions> = {
       color: 'white',
       fontWeight: 'bold',
     }
-  }
+  },
+  dateTimeLabelFormats: {
+    day: '%H:%M', // Removes stating the date, instead only shows the time
+  },
+  // TODO: Placeholder to remember, will move to dashboard settings
+  // eslint-disable-next-line no-constant-condition
+  type: false ? 'datetime' : 'linear',
 };
 
 export const defaultChartOptions: Options = {
@@ -34,7 +39,9 @@ export const defaultChartOptions: Options = {
     zooming: {
       type: 'x'
     },
-    backgroundColor: '#222222'
+    backgroundColor: '#222222',
+    // TODO: Check if setting type on chart actually works
+    //type: chartInformation.type,
   },
   title: {
     text: ''
@@ -66,51 +73,17 @@ export const defaultChartOptions: Options = {
   },
   colorAxis: {
     showInLegend: false
-  }
+  },
+  tooltip: {
+    // TODO: Placeholder to remember, will move to dashboard settings
+    // eslint-disable-next-line no-constant-condition
+    xDateFormat: true ? '%A, %b %e, %Y %H:%M:%S.%L' : '%H:%M:%S.%L'
+  },
 };
 
-const getStandardChartConfig = (chartInformation: ChartInformation) => {
-
+// TODO: Remove this
+const getDefaultChartConfig = (parsedData, fileNames) => {
   const chartConfig = defaultChartOptions;
-
-  chartConfig.chart = {
-    type: chartInformation.type,
-    zooming: {
-      type: 'x'
-    }
-  };
-
-  chartConfig.tooltip = { 
-    xDateFormat: chartInformation.hasGPSTime ? '%A, %b %e, %Y %H:%M:%S.%L' : '%H:%M:%S.%L'
-  };
-
-  chartConfig.xAxis = {
-    ...axisDefaults,
-    title: {
-      ...axisDefaults.title,
-      text: chartInformation.files[0].x.header
-    },
-
-    dateTimeLabelFormats: {
-      day: '%H:%M', // Removes stating the date, instead only shows the time
-    },
-
-    type: chartInformation.hasTimestampX ? 'datetime' : 'linear',
-  } as Highcharts.XAxisOptions;
-
-  chartConfig.yAxis = {
-    ...axisDefaults,
-    title: {
-      ...axisDefaults.title,
-      text: chartInformation.files[0].y.header,
-    },
-  } as Highcharts.YAxisOptions;
-
-  return chartConfig;
-};
-
-const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
-  const chartConfig = getStandardChartConfig(chartInformation);
   const colours = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'black', 'grey'];
 
   chartConfig.series = parsedData.map((data, index) => {
@@ -131,12 +104,13 @@ const getDefaultChartConfig = (chartInformation, parsedData, fileNames) => {
   return chartConfig;
 };
 
-const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
-  const chartConfig = getDefaultChartConfig(chartInformation, parsedData, fileNames);
+// TODO: Remove this
+const getVideoChartConfig = (parsedData, fileNames) => {
+  const chartConfig = getDefaultChartConfig(parsedData, fileNames);
 
   chartConfig.chart = {type: 'line'};
 
-  chartConfig.boost = {enabled: chartInformation.hasTimestampX};
+  //chartConfig.boost = {enabled: chartInformation.hasTimestampX};
 
   chartConfig.xAxis = {plotLines: [{
     color: 'black',
@@ -153,8 +127,9 @@ const getVideoChartConfig = (chartInformation, parsedData, fileNames) => {
   return chartConfig;
 };
 
-const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) => {
-  const chartConfig = getStandardChartConfig(chartInformation);
+// TODO: Remove this
+const getColourChartConfig = (parsedData, fileNames, minMax) => {
+  const chartConfig = defaultChartOptions;
 
   chartConfig.series = parsedData.map((data, index) => {
     return {
@@ -180,11 +155,13 @@ const getColourChartConfig = (chartInformation, parsedData, fileNames, minMax) =
   return chartConfig;
 };
 
-export const getChartConfig = (chartInformation, parsedData, fileNames, minMax) => {
+export const getChartConfig = (parsedData, fileNames, minMax) => {
+  // TODO: Remove this
+  const chartInformation = { type: 'default' }; // Default chart type
   switch(chartInformation.type) {
-    case 'coloredline': return getColourChartConfig(chartInformation, parsedData, fileNames, minMax);
-    case 'video': return getVideoChartConfig(chartInformation, parsedData, fileNames);
-    default: return getDefaultChartConfig(chartInformation, parsedData, fileNames);
+    case 'coloredline': return getColourChartConfig(parsedData, fileNames, minMax);
+    case 'video': return getVideoChartConfig(parsedData, fileNames);
+    default: return getDefaultChartConfig(parsedData, fileNames);
   }
 };
 
