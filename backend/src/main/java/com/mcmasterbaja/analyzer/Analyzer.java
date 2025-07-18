@@ -148,6 +148,10 @@ public abstract class Analyzer {
       }
     }
     throw new InvalidColumnException(
-        "Column `" + columnName + " does not exist within []" + String.join(", ", fileHeaders) + "]");
+        "Column `"
+            + columnName
+            + " does not exist within []"
+            + String.join(", ", fileHeaders)
+            + "]");
   }
 }

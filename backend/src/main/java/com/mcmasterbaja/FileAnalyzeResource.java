@@ -78,27 +78,28 @@ public class FileAnalyzeResource {
     }
 
     Path targetPath;
-    
+
     if (smartAnalyzerService.needsPreprocessing(smartParams)) {
       // PREPROCESSING FLOW: Run INTERPOLATER_PRO first, then user's analyzer
       logger.info("Preprocessing needed - running two-stage analysis");
-      
+
       // Stage 1: Run INTERPOLATER_PRO preprocessing
       AnalyzerParams preprocessParams = smartAnalyzerService.createPreprocessingParams(smartParams);
       preprocessParams.updateInputFiles(storageService.getRootLocation());
       preprocessParams.generateOutputFileNames();
-      
+
       Analyzer preprocessAnalyzer = analyzerFactory.getAnalyzer(AnalyzerType.INTERPOLATER_PRO);
       preprocessAnalyzer.analyze(preprocessParams);
       String preprocessedFile = preprocessAnalyzer.getOutputFilename();
-      
+
       // Stage 2: Run user's analyzer on preprocessed data (if specified)
       if (smartParams.getType() != null) {
         logger.info("Running user's analyzer: " + smartParams.getType());
-        AnalyzerParams userParams = smartAnalyzerService.createUserAnalyzerParams(smartParams, preprocessedFile);
+        AnalyzerParams userParams =
+            smartAnalyzerService.createUserAnalyzerParams(smartParams, preprocessedFile);
         userParams.updateInputFiles(storageService.getRootLocation());
         userParams.generateOutputFileNames();
-        
+
         Analyzer userAnalyzer = analyzerFactory.getAnalyzer(smartParams.getType());
         userAnalyzer.analyze(userParams);
         targetPath = Path.of(userAnalyzer.getOutputFilename());
@@ -106,18 +107,19 @@ public class FileAnalyzeResource {
         // No user analyzer specified, return preprocessed file
         targetPath = Path.of(preprocessedFile);
       }
-      
+
     } else {
       // DIRECT FLOW: No preprocessing needed, run user's analyzer directly
       logger.info("No preprocessing needed - running analyzer directly");
-      
+
       String inputFile = smartAnalyzerService.getDirectInputFile(smartParams);
-      
+
       if (smartParams.getType() != null) {
-        AnalyzerParams params = smartAnalyzerService.createUserAnalyzerParams(smartParams, inputFile);
+        AnalyzerParams params =
+            smartAnalyzerService.createUserAnalyzerParams(smartParams, inputFile);
         params.updateInputFiles(storageService.getRootLocation());
         params.generateOutputFileNames();
-        
+
         Analyzer analyzer = analyzerFactory.getAnalyzer(smartParams.getType());
         analyzer.analyze(params);
         targetPath = Path.of(analyzer.getOutputFilename());

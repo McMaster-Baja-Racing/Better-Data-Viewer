@@ -76,10 +76,13 @@ public class FileFetchResource {
                         fileMetadataService.getSize(path),
                         fileMetadataService.getUploadDate(path),
                         timespan[0],
-                        timespan[1]
-                      );
+                        timespan[1]);
                   } catch (Exception e) {
-                    logger.warn("Could not get information for file: " + path + ". Error: " + e.getMessage());
+                    logger.warn(
+                        "Could not get information for file: "
+                            + path
+                            + ". Error: "
+                            + e.getMessage());
                     return null;
                   }
                 })
@@ -95,7 +98,7 @@ public class FileFetchResource {
     logger.info("Getting file information for: " + filekey);
 
     Path targetPath = Paths.get(filekey);
-    
+
     // Map of parent folders to zero times to avoid recalculating the zero time
     Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
     LocalDateTime[] timespan = getTimespanForFile(targetPath, zeroTimeMap);
@@ -107,8 +110,7 @@ public class FileFetchResource {
             fileMetadataService.getSize(targetPath),
             fileMetadataService.getUploadDate(targetPath),
             timespan[0],
-            timespan[1]
-          );
+            timespan[1]);
 
     return fileInformation;
   }
@@ -119,7 +121,7 @@ public class FileFetchResource {
     logger.info("Getting file information for folder: " + folderkey);
 
     Path folderPath = Paths.get(folderkey);
-    
+
     // Map of parent folders to zero times to avoid recalculating the zero time
     Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
 
@@ -136,10 +138,13 @@ public class FileFetchResource {
                         fileMetadataService.getSize(path),
                         fileMetadataService.getUploadDate(path),
                         timespan[0],
-                        timespan[1]
-                    );
+                        timespan[1]);
                   } catch (Exception e) {
-                    logger.warn("Could not get information for file: " + path + ". Error: " + e.getMessage());
+                    logger.warn(
+                        "Could not get information for file: "
+                            + path
+                            + ". Error: "
+                            + e.getMessage());
                     return null;
                   }
                 })
@@ -183,31 +188,43 @@ public class FileFetchResource {
                       LocalDateTime zeroTime = fileMetadataService.getZeroTime(fullFolderPath);
                       Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
                       zeroTimeMap.put(fullFolderPath, zeroTime);
-                      
+
                       // Find the earliest start and latest end times from all files in the folder
-                      List<LocalDateTime[]> timespans = storageService
-                          .loadAll(fullFolderPath)
-                          .map(path -> getTimespanForFile(path, zeroTimeMap))
-                          .filter(timespan -> timespan[0] != null && timespan[1] != null)
-                          .collect(Collectors.toList());
-                      
+                      List<LocalDateTime[]> timespans =
+                          storageService
+                              .loadAll(fullFolderPath)
+                              .map(path -> getTimespanForFile(path, zeroTimeMap))
+                              .filter(timespan -> timespan[0] != null && timespan[1] != null)
+                              .collect(Collectors.toList());
+
                       if (!timespans.isEmpty()) {
-                        start = timespans.stream().map(ts -> ts[0]).min(LocalDateTime::compareTo).orElse(null);
-                        end = timespans.stream().map(ts -> ts[1]).max(LocalDateTime::compareTo).orElse(null);
+                        start =
+                            timespans.stream()
+                                .map(ts -> ts[0])
+                                .min(LocalDateTime::compareTo)
+                                .orElse(null);
+                        end =
+                            timespans.stream()
+                                .map(ts -> ts[1])
+                                .max(LocalDateTime::compareTo)
+                                .orElse(null);
                       }
                     }
 
                     // Return a FileInformation with null headers and the aggregated size.
                     return new FileInformation(
-                      folderKey,
-                      null, 
-                      totalSize,
-                      fileMetadataService.getUploadDate(fullFolderPath),
-                      start,
-                      end
-                    );
+                        folderKey,
+                        null,
+                        totalSize,
+                        fileMetadataService.getUploadDate(fullFolderPath),
+                        start,
+                        end);
                   } catch (Exception e) {
-                    logger.warn("Could not get information for folder: " + relativeFolderPath + ". Error: " + e.getMessage());
+                    logger.warn(
+                        "Could not get information for folder: "
+                            + relativeFolderPath
+                            + ". Error: "
+                            + e.getMessage());
                     return null;
                   }
                 })
@@ -245,7 +262,8 @@ public class FileFetchResource {
                       new FileTimespan(folderPath.relativize(path), timespan[0], timespan[1]));
                 }
               } catch (Exception e) {
-                logger.warn("Could not get timespan for CSV file: " + path + ". Error: " + e.getMessage());
+                logger.warn(
+                    "Could not get timespan for CSV file: " + path + ". Error: " + e.getMessage());
               }
             });
         break;
@@ -258,7 +276,8 @@ public class FileFetchResource {
                 timespans.add(
                     new FileTimespan(folderPath.relativize(path), timespan[0], timespan[1]));
               } catch (Exception e) {
-                logger.warn("Could not get timespan for MP4 file: " + path + ". Error: " + e.getMessage());
+                logger.warn(
+                    "Could not get timespan for MP4 file: " + path + ". Error: " + e.getMessage());
               }
             });
         break;
@@ -273,7 +292,7 @@ public class FileFetchResource {
   private LocalDateTime[] getTimespanForFile(Path path, Map<Path, LocalDateTime> zeroTimeMap) {
     Path parent = path.getParent();
     String typeFolder = fileMetadataService.getTypeFolder(path);
-    
+
     switch (typeFolder) {
       case "csv":
         if (fileMetadataService.canComputeTimespan(parent)) {
@@ -287,7 +306,7 @@ public class FileFetchResource {
       default:
         break;
     }
-    return new LocalDateTime[]{null, null};
+    return new LocalDateTime[] {null, null};
   }
 
   private Path addTypeFolder(String fileKey) {
