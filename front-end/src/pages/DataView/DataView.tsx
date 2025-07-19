@@ -47,7 +47,7 @@ export const DataView = () => {
           }
           sidebarContent={
             <EditSidebar 
-              files={bins}
+              sources={bins}
             />
           }
         />

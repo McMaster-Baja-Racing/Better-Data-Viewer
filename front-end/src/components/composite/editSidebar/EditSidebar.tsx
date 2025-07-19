@@ -11,10 +11,10 @@ import { useChartQuery } from '../../../ChartQueryContext';
 import { Accordion } from '@components/ui/accordion/Accordion';
 
 interface EditSidebarProps {
-  files: string[]; // TODO: This should use the file type specified in the file browser
+  sources: string[]; // TODO: This should use the file type specified in the file browser
 }
 
-export const EditSidebar = ({ files }: EditSidebarProps) => {
+export const EditSidebar = ({ sources }: EditSidebarProps) => {
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   const { series, dispatch: chartQueryDispatch } = useChartQuery();
   const [chartType, setChartType] = useState<ChartType>(options.series?.[0]?.type || 'line');
@@ -42,7 +42,7 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
           X-Axis
         </div>
         {series[0] && <DataSelect
-          sources={files.map((file) => ({ value: file, label: file }))}
+          sources={sources.map((file) => ({ value: file, label: file }))}
           dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
           columnKey='x'
           onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
@@ -68,7 +68,7 @@ export const EditSidebar = ({ files }: EditSidebarProps) => {
               Series
             </div>
             <DataSelect
-              sources={files.map((file) => ({ value: file, label: file }))}
+              sources={sources.map((file) => ({ value: file, label: file }))}
               dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
               key={fileIndex + 'y'}
               columnKey='y'
