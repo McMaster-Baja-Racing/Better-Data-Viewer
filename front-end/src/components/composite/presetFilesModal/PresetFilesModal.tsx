@@ -22,7 +22,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
   // TODO: Adjust based on preset
   const [selectedFiles, setSelectedFiles] = useState<FileInformation[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const { data: files } = useFiles();
+  const { data: files, refetch } = useFiles();
 
   const handleSubmit = async () => {
     if (selectedFiles.length === 0 && uploadedFiles.length === 0) {
@@ -39,6 +39,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
 
     onSubmit(fileKeys, preset);
     onClose();
+    refetch(); // Refetch files after upload
   };
 
   return (

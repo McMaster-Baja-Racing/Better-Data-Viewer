@@ -16,9 +16,11 @@ import { Homepage } from '@pages/Homepage/Homepage';
 import Sidebar from '../../simple/sidebar/Sidebar';
 import { DataView } from '@pages/DataView/DataView';
 import { ToastNotification } from '@components/ui/toastNotification/ToastNotification';
+import { useFiles } from '@lib/files/useFiles';
 
 const App = () => {
   const location = useLocation();
+  useFiles(); // Fetch files on app load
 
   // State for holding which modal should be open
   const [modal, setModal] = useState('');
