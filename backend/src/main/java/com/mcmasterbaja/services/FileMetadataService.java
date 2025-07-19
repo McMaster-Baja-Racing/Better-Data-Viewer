@@ -71,4 +71,12 @@ public interface FileMetadataService {
    * @return The desired type folder.
    */
   String getTypeFolder(Path targetPath);
+
+  /**
+   * Gets the uploaded date of a file.
+   *
+   * @param targetPath The Path of the file to analyze.
+   * @return The uploaded date of the file.
+   */
+  LocalDateTime getUploadDate(Path targetPath);
 }

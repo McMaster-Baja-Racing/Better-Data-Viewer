@@ -1,0 +1,14 @@
+@use '@styles/_fonts';
+
+.editSidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  @include fonts.title-medium;
+  text-align: left;
+  color: var(--text-colour);
+  margin: 1.5rem 0 1rem 0;
+}

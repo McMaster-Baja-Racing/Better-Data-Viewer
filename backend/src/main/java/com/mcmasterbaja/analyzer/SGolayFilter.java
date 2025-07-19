@@ -107,7 +107,7 @@ public class SGolayFilter extends Analyzer {
 
     int xAxisIndex = this.getColumnIndex(inputColumns[0], headers);
     int yAxisIndex = this.getColumnIndex(inputColumns[1], headers);
-    writer.writeNext(headers);
+    writer.writeNext(new String[] {headers[xAxisIndex], headers[yAxisIndex]});
 
     String[] dataPoint;
     RealMatrix coeffMatrix = savGolCoeff(windowSize, polynomialDegree);

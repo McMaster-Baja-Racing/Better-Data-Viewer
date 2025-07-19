@@ -1,6 +1,5 @@
 import styles from './App.module.scss';
 import { CreateGraphModal } from '../modal/create/CreateGraphModal/CreateGraphModal';
-import { SimpleCreateGraphModal } from '../modal/create/SimpleCreateGraphModal/SimpleCreateGraphModal.js';
 import { UploadModal } from '../modal/upload/UploadModal';
 import { HelpModal } from '../modal/help/helpModal';
 import { DownloadModal } from '../modal/download/DownloadModal';
@@ -17,9 +16,11 @@ import { Homepage } from '@pages/Homepage/Homepage';
 import Sidebar from '../../simple/sidebar/Sidebar';
 import { DataView } from '@pages/DataView/DataView';
 import { ToastNotification } from '@components/ui/toastNotification/ToastNotification';
+import { useFiles } from '@lib/files/useFiles';
 
 const App = () => {
   const location = useLocation();
+  useFiles(); // Fetch files on app load
 
   // State for holding which modal should be open
   const [modal, setModal] = useState('');
@@ -75,14 +76,6 @@ const App = () => {
             numViews={numViews}
             video={video}
             setVideo={setVideo}
-          />
-        ) : null}
-        {modal === 'ChoosePreset' ? (
-          <SimpleCreateGraphModal
-            setModal={setModal}
-            setViewInformation={setViewInformation}
-            viewInformation={viewInformation}
-            setNumViews={setNumViews}
           />
         ) : null}
         {modal === 'Upload' ? (
