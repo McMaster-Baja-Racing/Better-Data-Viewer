@@ -1,26 +1,17 @@
 import { AnalyzerType } from '@types';
 
-export interface seriesT {
-  x: columnT;
-  y: columnT;
-  analyzer: analyzerT;
+export interface Series {
+  x: Column;
+  y: Column;
+  analyzer: Analyzer;
 }
 
-export interface columnT {
+export interface Column {
   source: string;
   dataType: string;
 }
 
-export interface analyzerT {
+export interface Analyzer {
   type: AnalyzerType | null;
   options: string[];
-}
-
-// Simplified series for smart analyzer
-export interface smartSeriesT {
-  xDataType: string;
-  yDataType: string;
-  xSource: string;
-  ySource: string;
-  analyzer: analyzerT;
 }

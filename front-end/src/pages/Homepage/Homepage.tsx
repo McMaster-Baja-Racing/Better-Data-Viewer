@@ -6,7 +6,7 @@ import { DataViewerPreset } from '@types';
 import { useModal } from '../../ModalContext';
 import { useNavigate } from 'react-router-dom';  // See if this works on Electron
 import { useChartQuery } from '../../ChartQueryContext';
-import { seriesT } from 'types/ChartQuery';
+import { Series } from 'types/ChartQuery';
 
 export const Homepage = () => {
   const { openModal } = useModal();
@@ -14,7 +14,7 @@ export const Homepage = () => {
   const { dispatch } = useChartQuery();
 
   const onSubmit = (fileKeys: string[], preset: DataViewerPreset) => {
-    const series: seriesT[] = [];
+    const series: Series[] = [];
 
     // TODO: Update fileKeys handling (bins) for multiple selected files
     preset.graphs.map((graph) => {

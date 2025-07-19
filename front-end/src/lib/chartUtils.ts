@@ -1,5 +1,5 @@
 import { FileInformation } from '@types';
-import { columnT, seriesT } from 'types/ChartQuery';
+import { Column, Series } from 'types/ChartQuery';
 
 export const HUE_MIN = 150;
 export const HUE_MAX = 0;
@@ -21,7 +21,7 @@ export const getTimestamps = async (text: string) => {
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
-export const getHeadersIndex = (headers: string[], columns: columnT[]) => {
+export const getHeadersIndex = (headers: string[], columns: Column[]) => {
   const h = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {
@@ -39,7 +39,7 @@ export const getHeadersIndex = (headers: string[], columns: columnT[]) => {
   return h;
 };
 
-export const validateChartQuery = (series: seriesT[]) => {
+export const validateChartQuery = (series: Series[]) => {
   if (!series || series.length === 0) {
     return false;
   }

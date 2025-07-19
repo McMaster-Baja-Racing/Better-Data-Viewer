@@ -1,25 +1,25 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import { seriesT, columnT, analyzerT } from 'types/ChartQuery';
+import { Series, Column, Analyzer } from 'types/ChartQuery';
 import isEqual from 'lodash.isequal';
 
 type ChartQueryAction =
-  | { type: 'SET_SERIES'; series: seriesT[] }
-  | { type: 'ADD_SERIES'; series: seriesT }
+  | { type: 'SET_SERIES'; series: Series[] }
+  | { type: 'ADD_SERIES'; series: Series }
   | { type: 'REMOVE_SERIES'; index: number }
-  | { type: 'UPDATE_SERIES'; index: number; series: Partial<seriesT> }
-  | { type: 'UPDATE_COLUMN'; index: number; columnKey: 'x' | 'y'; column: Partial<columnT> }
-  | { type: 'UPDATE_ANALYZER'; index: number; analyzer: Partial<analyzerT> }
-  | { type: 'UPDATE_X_COLUMN_ALL'; xColumn: Partial<columnT> }
-  | { type: 'UPDATE_ANALYZER_ALL'; analyzer: Partial<analyzerT> };
+  | { type: 'UPDATE_SERIES'; index: number; series: Partial<Series> }
+  | { type: 'UPDATE_COLUMN'; index: number; columnKey: 'x' | 'y'; column: Partial<Column> }
+  | { type: 'UPDATE_ANALYZER'; index: number; analyzer: Partial<Analyzer> }
+  | { type: 'UPDATE_X_COLUMN_ALL'; xColumn: Partial<Column> }
+  | { type: 'UPDATE_ANALYZER_ALL'; analyzer: Partial<Analyzer> };
 
 const ChartQueryContext = createContext<{
-  series: seriesT[];
+  series: Series[];
   dispatch: React.Dispatch<ChartQueryAction>;
 } | undefined>(undefined);
 
-const chartQueryReducer = (state: seriesT[], action: ChartQueryAction): seriesT[] => {
+const chartQueryReducer = (state: Series[], action: ChartQueryAction): Series[] => {
   //console.log('ChartQueryReducer called with action:', action);
-  let updatedState: seriesT[] = state;
+  let updatedState: Series[] = state;
 
   switch (action.type) {
     case 'SET_SERIES':

@@ -6,13 +6,13 @@ import TextField from '@components/ui/textfield/TextField';
 import { sigmaIcon, plusIcon, minusIcon } from '@assets/icons';
 import { analyzerConfig, AnalyzerKey, AnalyzerType, DataColumnKey, DataTypes } from '@types';
 import { useChartQuery } from '../../../ChartQueryContext';
-import { columnT } from 'types/ChartQuery';
+import { Column } from 'types/ChartQuery';
 
 interface DataSelectProps {
     sources: DropdownOption<string>[];
     dataTypes: DropdownOption<DataTypes>[];
     columnKey: DataColumnKey;
-    onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<columnT>) => void;
+    onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<Column>) => void;
     onAnalyzerUpdate: (analyzerType?: AnalyzerType | null, analyzerValues?: string[]) => void;
 }
 
