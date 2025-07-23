@@ -9,8 +9,8 @@ import {
   validateChartQuery
 } from '@lib/chartUtils';
 import { seriesData, MinMax } from '@types';
-import { useChartQuery } from '../../../../ChartQueryContext';
-import { useChartOptions } from '../../../../ChartOptionsContext';
+import { useChartQuery } from '@contexts/ChartQueryContext';
+import { useChartOptions } from '@contexts/ChartOptionsContext';
 import { useFileMap } from '@lib/files/useFileMap';
 
 // TODO: Clean up this file, it is a mess

@@ -4,9 +4,9 @@ import { GraphWrapper } from '@components/simple/graphWrapper/GraphWrapper';
 import { RightSidebar } from '@components/ui/rightSidebar/RightSidebar';
 import { useEffect, useState } from 'react';
 import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
-import { ChartOptionsProvider } from '../../ChartOptionsContext';
-import { DashboardProvider } from '../../DashboardContext';
-import { useChartQuery } from '../../ChartQueryContext';
+import { ChartOptionsProvider } from '@contexts/ChartOptionsContext';
+import { DashboardProvider } from '@contexts/DashboardContext';
+import { useChartQuery } from '@contexts/ChartQueryContext';
 
 export const DataView = () => {
   const { series } = useChartQuery();

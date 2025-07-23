@@ -5,7 +5,7 @@ import { Button } from '@components/ui/button/Button';
 import TextField from '@components/ui/textfield/TextField';
 import { sigmaIcon, plusIcon, minusIcon } from '@assets/icons';
 import { analyzerConfig, AnalyzerKey, AnalyzerType, DataColumnKey, DataTypes } from '@types';
-import { useChartQuery } from '../../../ChartQueryContext';
+import { useChartQuery } from '@contexts/ChartQueryContext';
 import { Column } from 'types/ChartQuery';
 
 interface DataSelectProps {

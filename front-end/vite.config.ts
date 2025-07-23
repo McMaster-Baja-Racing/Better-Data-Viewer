@@ -36,6 +36,7 @@ export default defineConfig({
       '@styles': resolve(root, 'styles'),
       '@types': resolve(root, 'types/index.ts'),
       '@pages': resolve(root, 'pages'),
+      '@contexts': resolve(root, 'contexts'),
     },
   },
   css: {

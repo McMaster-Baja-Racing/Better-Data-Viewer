@@ -1,11 +1,10 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/index.scss';
-import App from './components/legacy/App/App';
-import { ThemeProvider } from './ThemeContext';
-import { ModalProvider } from './ModalContext';
+import '@styles/index.scss';
+import App from '@components/legacy/App/App';
+import { ThemeProvider } from '@contexts/ThemeContext';
+import { ModalProvider } from '@contexts/ModalContext';
 import { RouterComponent } from '@lib/navigationUtils';
-import { ChartQueryProvider } from './ChartQueryContext';
+import { ChartQueryProvider } from '@contexts/ChartQueryContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const rootElement = document.getElementById('root');

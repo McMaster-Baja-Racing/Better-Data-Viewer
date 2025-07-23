@@ -9,12 +9,11 @@ import HighchartsColorAxis from 'highcharts/modules/coloraxis';
 import loadingImg from '@assets/loading.gif';
 import { FileTimespan } from '@types';
 import { Chart as ChartType } from 'highcharts';
-// import { useChartData } from './useChartData';
 import { useChartData } from './useChartData';
 import { useVideoSyncLines } from './useVideoSyncLines';
-import { useChartOptions } from '../../../../ChartOptionsContext';
-import { useChartQuery } from '../../../../ChartQueryContext';
-import { useDashboard } from '../../../../DashboardContext';
+import { useChartOptions } from '@contexts/ChartOptionsContext';
+import { useChartQuery } from '@contexts/ChartQueryContext';
+import { useDashboard } from '@contexts/DashboardContext';
 
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line @typescript-eslint/no-require-imports

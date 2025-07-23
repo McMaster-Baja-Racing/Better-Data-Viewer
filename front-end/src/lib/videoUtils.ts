@@ -1,7 +1,6 @@
 import { FileInformation, FileTimespan, ExtSeries } from '@types';
 
 // Computs the offsets between the videoStart and the fileStart for all series
-// TODO: 
 export const computeOffsets = (files: FileInformation[], videoTimespan: FileTimespan) => {
   return files.map(file => computeOffset(file, videoTimespan));
 };

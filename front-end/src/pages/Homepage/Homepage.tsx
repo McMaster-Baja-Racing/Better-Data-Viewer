@@ -3,9 +3,9 @@ import { PresetList } from '@components/composite/presetList/PresetList';
 import { Footer } from '@components/simple/footer/Footer';
 import styles from './Homepage.module.scss';
 import { DataViewerPreset } from '@types';
-import { useModal } from '../../ModalContext';
+import { useModal } from '@contexts/ModalContext';
 import { useNavigate } from 'react-router-dom';  // See if this works on Electron
-import { useChartQuery } from '../../ChartQueryContext';
+import { useChartQuery } from '@contexts/ChartQueryContext';
 import { Series } from 'types/ChartQuery';
 
 export const Homepage = () => {

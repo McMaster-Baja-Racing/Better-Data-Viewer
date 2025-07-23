@@ -3,11 +3,11 @@ import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
 import { useEffect, useState } from 'react';
-import { useChartOptions, getAxisTitle } from '../../../ChartOptionsContext';
+import { useChartOptions, getAxisTitle } from '@contexts/ChartOptionsContext';
 import TextField from '@components/ui/textfield/TextField';
 import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
-import { useDashboard } from '../../../DashboardContext';
-import { useChartQuery } from '../../../ChartQueryContext';
+import { useDashboard } from '@contexts/DashboardContext';
+import { useChartQuery } from '@contexts/ChartQueryContext';
 import { Accordion } from '@components/ui/accordion/Accordion';
 
 interface EditSidebarProps {

@@ -17,7 +17,7 @@ import {
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
 import { onIconClick } from '@lib/navigationUtils';
-import { useModal } from '../../../ModalContext';
+import { useModal } from '@contexts/ModalContext';
 import { ApiUtil } from '@lib/apiUtils';
 import { showErrorToast, showSuccessToast } from '@components/ui/toastNotification/ToastNotification';
 

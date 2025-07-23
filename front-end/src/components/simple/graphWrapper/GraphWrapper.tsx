@@ -2,7 +2,7 @@ import { ReactNode, useState, useRef, useEffect } from 'react';
 import styles from './GraphWrapper.module.scss';
 import {fullscreenIcon, unfullscreenIcon, writeIcon, threeDotsIcon} from '@assets/icons';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
-import { useDashboard } from '../../../DashboardContext';
+import { useDashboard } from '@contexts/DashboardContext';
 
 interface GraphWrapperProps {
   editOnClick: () => void;
