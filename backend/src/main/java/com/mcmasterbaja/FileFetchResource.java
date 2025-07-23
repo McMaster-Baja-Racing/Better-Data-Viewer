@@ -123,6 +123,7 @@ public class FileFetchResource {
     Path folderPath = Paths.get(folderkey);
 
     // Map of parent folders to zero times to avoid recalculating the zero time
+    // TODO: Store this map in a more persistent way
     Map<Path, LocalDateTime> zeroTimeMap = new HashMap<>();
 
     List<FileInformation> fileInformationList =
