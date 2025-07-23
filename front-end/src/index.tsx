@@ -1,10 +1,11 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/index.scss';
-import App from './components/legacy/App/App';
-import { ThemeProvider } from './ThemeContext';
-import { ModalProvider } from './ModalContext';
+import '@styles/index.scss';
+import App from '@components/legacy/App/App';
+import { ThemeProvider } from '@contexts/ThemeContext';
+import { ModalProvider } from '@contexts/ModalContext';
 import { RouterComponent } from '@lib/navigationUtils';
+import { ChartQueryProvider } from '@contexts/ChartQueryContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -13,15 +14,21 @@ if (!rootElement) {
 
 const root = ReactDOM.createRoot(rootElement as HTMLElement);
 
-// TODO: Re-add strict mode when we fix the API double calls
+const queryClient = new QueryClient();
+
+// TODO: Re-add strict mode when we fix the API double calls 
 root.render(
   // <React.StrictMode>
   <ThemeProvider>
-    <ModalProvider>
-      <RouterComponent>
-        <App />
-      </RouterComponent>
-    </ModalProvider>
+    <QueryClientProvider client={queryClient}>
+      <ModalProvider>
+        <ChartQueryProvider>
+          <RouterComponent>
+            <App />
+          </RouterComponent>
+        </ChartQueryProvider>
+      </ModalProvider>
+    </QueryClientProvider>
   </ThemeProvider>
   // </React.StrictMode>
 );

@@ -3,17 +3,38 @@ import { PresetList } from '@components/composite/presetList/PresetList';
 import { Footer } from '@components/simple/footer/Footer';
 import styles from './Homepage.module.scss';
 import { DataViewerPreset } from '@types';
-import { useModal } from '../../ModalContext';
+import { useModal } from '@contexts/ModalContext';
 import { useNavigate } from 'react-router-dom';  // See if this works on Electron
-import { generateChartInformation } from '@lib/chartInformation';
+import { useChartQuery } from '@contexts/ChartQueryContext';
+import { Series } from 'types/ChartQuery';
 
 export const Homepage = () => {
   const { openModal } = useModal();
   const navigate = useNavigate();
+  const { dispatch } = useChartQuery();
 
   const onSubmit = (fileKeys: string[], preset: DataViewerPreset) => {
-    const chartInformation = generateChartInformation(fileKeys, preset);
-    navigate('dataview', {state: {chartInformation}});
+    const series: Series[] = [];
+
+    // TODO: Update fileKeys handling (bins) for multiple selected files
+    preset.graphs.map((graph) => {
+      series.push({
+        x: {
+          source: fileKeys[0],
+          dataType: graph.axes[0].dataType,
+        },
+        y: {
+          source: fileKeys[0],
+          dataType: graph.axes[1].dataType,
+        },
+        analyzer: {
+          type: graph.analyzer,
+          options: graph.analyzerOptions
+        }
+      });
+    });
+    dispatch({ type: 'SET_SERIES', series});
+    navigate('dataview');
   };
 
   const handleClick = (preset: DataViewerPreset) => {

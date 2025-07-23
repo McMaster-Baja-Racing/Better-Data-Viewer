@@ -24,6 +24,7 @@
       "@styles/*": ["styles/*"],
       "@types": ["types/index.ts"],
       "@pages/*": ["pages/*"],
+      "@contexts/*": ["contexts/*"],
     },
   },
   "include": ["src"],

@@ -30,9 +30,6 @@ public class AnalyzerParams {
   @QueryParam("analyzerOptions")
   private String[] options;
 
-  @QueryParam("live")
-  private Boolean live;
-
   public List<String> getErrors() {
     ArrayList<String> errors = new ArrayList<String>();
 

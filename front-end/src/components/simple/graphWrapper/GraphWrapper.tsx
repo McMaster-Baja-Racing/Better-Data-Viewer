@@ -2,16 +2,17 @@ import { ReactNode, useState, useRef, useEffect } from 'react';
 import styles from './GraphWrapper.module.scss';
 import {fullscreenIcon, unfullscreenIcon, writeIcon, threeDotsIcon} from '@assets/icons';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
+import { useDashboard } from '@contexts/DashboardContext';
 
 interface GraphWrapperProps {
-  title: string;
   editOnClick: () => void;
   children: ReactNode;
 }
 
-export const GraphWrapper = ({ title, editOnClick, children }: GraphWrapperProps) => {
+export const GraphWrapper = ({ editOnClick, children }: GraphWrapperProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const { title } = useDashboard();
 
   const handleFullscreenToggle = async () => {
     if (!document.fullscreenElement) {

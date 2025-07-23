@@ -6,21 +6,20 @@ import { defaultChartOptions } from '@lib/chartOptions';
 import titleCardDataX from './accel_x.csv?raw';
 import titleCardDataY from './accel_y.csv?raw';
 import titleCardDataZ from './accel_z.csv?raw';
-
-import { getHeadersIndex, getTimestampOffset } from '@lib/chartUtils';
+import { getHeadersIndex } from '@lib/chartUtils';
 import { seriesData } from '@types';
 
 const parseData = (csvData: string): number[][] => {
   const lines = csvData.trim().split('\n').map(line => line.split(','));
   const headers = lines[0];
   const columns = [
-    { header: headers[0], filename: '', timespan: { start: new Date(), end: null } },
-    { header: headers[1], filename: '', timespan: { start: new Date(), end: null } }
+    { dataType: headers[0], source: '' },
+    { dataType: headers[1], source: '' }
   ];
   const headerIndices = getHeadersIndex(headers, columns);
-  const timestampOffset = getTimestampOffset(columns, lines.slice(1), headerIndices);
-  const series: seriesData = lines.slice(1).map((line) => {  
-    return [parseFloat(line[headerIndices.x]) + timestampOffset, parseFloat(line[headerIndices.y])];
+  const timestampOffset = new Date();
+  const series: seriesData = lines.slice(1).map((line) => {
+    return [parseFloat(line[headerIndices.x]) + timestampOffset.getTime(), parseFloat(line[headerIndices.y])];
   });
   return series;
 };
@@ -30,7 +29,6 @@ export const TitleCard = () => {
         
   useEffect(() => {
     setChartData([parseData(titleCardDataX), parseData(titleCardDataY), parseData(titleCardDataZ)]);
-
   }, []);
 
   const options: Highcharts.Options = {
@@ -44,13 +42,11 @@ export const TitleCard = () => {
       text: ''
     },
     xAxis: {
-      ...defaultChartOptions.xAxis,
       gridLineColor: 'transparent',
       labels: { enabled: false },
       type: 'datetime',
     },
     yAxis: {
-      ...defaultChartOptions.xAxis,
       title: {text: ''},
       gridLineColor: 'transparent',
       tickPositions: [-2.3, 2], // Needed to allow custom sizing

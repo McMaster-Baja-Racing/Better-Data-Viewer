@@ -1,9 +1,17 @@
 
 export interface FileInformation {
   key: string;
-  fileHeaders: string[];
+  name: string;
+  extension: string;
+  headers: string[];
   size: number;
+  date: Date;
+  start: Date;
+  end: Date;
 }
+
+export type RawFileInformation = Omit<FileInformation, 'date' | 'start' | 'end'> 
+  & { date: string; start: string; end: string };
 
 export interface FileTimespan {
   key: string;
@@ -45,7 +53,8 @@ export const dataTypesArray = [
   'GPS SECOND MINUTE HOUR',
   'GPS SPEED',
   'RPM PRIM',
-  'RPM SEC'
+  'RPM SEC',
+  'IMU X'
 ] as const;
 
 // Derive the union type from the array

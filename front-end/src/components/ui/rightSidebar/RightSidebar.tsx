@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './RightSidebar.module.scss';
 import cx from 'classnames';
 import {closeIcon} from '@assets/icons';
@@ -16,6 +16,16 @@ interface RightSidebarProps {
 export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }: RightSidebarProps) => {
   const [width, setWidth] = useState(MIN_WIDTH);
   const isResizing = useRef(false);
+
+  // Set global CSS variable for right sidebar width
+  useEffect(() => {
+    document.documentElement.style.setProperty('--right-sidebar-width', isOpen ? `${width}px` : '0px');
+  }, [isOpen, width]);
+
+  // Initialize the CSS variable on mount
+  useEffect(() => {
+    document.documentElement.style.setProperty('--right-sidebar-width', '0px');
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -38,7 +48,12 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
   };
 
   return (
-    <div className={styles.rightSidebarContainer}>
+    <div 
+      className={styles.rightSidebarContainer}
+      style={{ 
+        '--right-sidebar-width': isOpen ? `${width}px` : '0px' 
+      } as React.CSSProperties}
+    >
       <div className={styles.children}>
         {mainContent}
       </div>
