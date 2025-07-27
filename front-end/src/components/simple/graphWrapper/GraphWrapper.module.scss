@@ -3,6 +3,9 @@
 
 .graphWrapper {
     @include fonts.title-medium;
+    // --chart-container-padding: horizontal padding around the chart container
+    --chart-container-padding: 1rem;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -11,7 +14,7 @@
     transition: all 0.3s ease;
     width: 100%;
     height: 100%;
-    padding-left: 1rem;
+    padding-left: var(--chart-container-padding);
   
     .editBar {
       display: flex;

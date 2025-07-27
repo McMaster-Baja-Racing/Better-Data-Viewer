@@ -16,6 +16,10 @@ $arrowsWidth: 0.3rem;
 $toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $toggleLongHeight)) * 100%;
 
 .sidebar {
+    // Export SCSS variables as CSS custom properties for use across components
+    // --left-sidebar-collapsed-width: width of the left sidebar when collapsed
+    --left-sidebar-collapsed-width: #{$leftSidebarWidth};
+    
     position: relative;
     display: grid;
     grid-template-columns: $leftSidebarWidth 0rem; // 0 unit has to match rhs width

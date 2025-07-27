@@ -20,8 +20,8 @@
     }
 
     .chart {
-        // Calculate available width: 100vw - left sidebar (4rem collapsed, 18rem expanded) - right sidebar (dynamic) - padding (2rem)
-        max-width: calc(100vw - var(--left-sidebar-width, 4rem) - var(--right-sidebar-width, 0px) - 2rem);
+        // Calculate available width: 100vw - left sidebar - right sidebar - padding
+        max-width: calc(100vw - var(--left-sidebar-width, var(--left-sidebar-collapsed-width)) - var(--right-sidebar-width, 0px) - var(--chart-container-padding));
         
         :global(.highcharts-root) {
             font-family: 'Roboto', sans-serif !important;
