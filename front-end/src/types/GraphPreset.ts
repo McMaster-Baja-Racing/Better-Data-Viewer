@@ -1,13 +1,13 @@
-import { AnalyzerType } from './ApiTypes';
+import { ChartType, AnalyzerType, DataTypes } from '@types';
 
 /**
  * axes[i] is the name of a data series inside axisFiles[i]
  */
 export interface GraphPreset {
-    axes: {file: string, axis: string}[],
+    axes: {source: string, dataType: DataTypes}[],
     analyzer: AnalyzerType | null,
     analyzerOptions: string[],
-    graphType: string
+    graphType: ChartType,
 }
 
 export interface DataViewerPreset {

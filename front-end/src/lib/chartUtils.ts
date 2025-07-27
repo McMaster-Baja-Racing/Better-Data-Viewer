@@ -1,14 +1,15 @@
-import { ChartInformation, Column, HeadersIndex } from '@types';
+import { FileInformation } from '@types';
+import { Column, Series } from 'types/ChartQuery';
 
 export const HUE_MIN = 150;
 export const HUE_MAX = 0;
 export const LIVE_DATA_INTERVAL = 300;
 
-// Calculates the offset required to convert the x values to unix timestamps
+// Returns the offset in milliseconds between the start time of the file and the first timestamp in the file
 // Adding the timestampOffset results in the x value being a the start time unix millis + millis since first timestamp
-export const getTimestampOffset = (columns: Column[], lines: string[][], headerIndices: HeadersIndex): number => {
-  // Offset is the start time in unix millis minus the first timestamp in the file
-  return new Date(columns[headerIndices.x].timespan.start + 'Z').getTime() - parseFloat(lines[0][headerIndices.x]);
+export const getTimestampOffsetFromFile = (fileInfo: FileInformation, firstTimestamp: number): number => {
+  if (!fileInfo.start) return 0;
+  return new Date(fileInfo.start).getTime() - firstTimestamp;
 };
 
 export const getTimestamps = async (text: string) => {
@@ -16,16 +17,15 @@ export const getTimestamps = async (text: string) => {
   return text.trim().split('\n').slice(1).map((line) => parseFloat(line.split(',')[timestampHeaderIndex]));
 };
 
-
 /**
  * @description Matches headers to columns to get the indices of the columns in the headers array.
  * @returns {Object} An object with the indices of the columns in the headers array. The keys are 'x', 'y', and 'colour'
  */
-export const getHeadersIndex = (headers: string[], columns: Column[]): HeadersIndex => {
-  const h: HeadersIndex = { x: -1, y: -1, colour: -1 };
+export const getHeadersIndex = (headers: string[], columns: Column[]) => {
+  const h = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
     for (let j = 0; j < headers.length; j++) {
-      if (columns[i].header.trim() === headers[j].trim()) {
+      if (columns[i].dataType.trim() === headers[j].trim()) {
         if (i === 0) {
           h.x = j;
         } else if (i === 1) {
@@ -39,18 +39,17 @@ export const getHeadersIndex = (headers: string[], columns: Column[]): HeadersIn
   return h;
 };
 
-export const validateChartInformation = (chartInformation: ChartInformation): boolean => {
-  if (!chartInformation) {
+export const validateChartQuery = (series: Series[]) => {
+  if (!series || series.length === 0) {
     return false;
   }
-  if (chartInformation.files.length === 0) {
-    return false;
-  }
-  if (chartInformation.files[0].x === undefined || chartInformation.files[0].y === undefined) {
-    return false;
-  }
-  if (chartInformation.files[0].x.header === '' || chartInformation.files[0].x.filename === '') {
-    return false;
+  for (const s of series) {
+    if (!s.x || !s.y) {
+      return false;
+    }
+    if (s.x.source === '') {
+      return false;
+    }
   }
   return true;
 };

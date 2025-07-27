@@ -4,22 +4,16 @@ import { Dropdown, DropdownOption } from '@components/ui/dropdown/Dropdown';
 import { Button } from '@components/ui/button/Button';
 import TextField from '@components/ui/textfield/TextField';
 import { sigmaIcon, plusIcon, minusIcon } from '@assets/icons';
-import { unstable_batchedUpdates } from 'react-dom';
-import { analyzerConfig, AnalyzerKey, AnalyzerType, ChartFileInformation, Column, DataColumnKey } from '@types';
+import { analyzerConfig, AnalyzerKey, AnalyzerType, DataColumnKey, DataTypes } from '@types';
+import { useChartQuery } from '@contexts/ChartQueryContext';
+import { Column } from 'types/ChartQuery';
 
 interface DataSelectProps {
     sources: DropdownOption<string>[];
-    dataTypes: DropdownOption<string>[];
-    chartFileInformation: ChartFileInformation;
+    dataTypes: DropdownOption<DataTypes>[];
     columnKey: DataColumnKey;
     onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<Column>) => void;
     onAnalyzerUpdate: (analyzerType?: AnalyzerType | null, analyzerValues?: string[]) => void;
-}
-
-const TIMESTAMP_HEADER = 'Timestamp (ms)';
-
-function isJoinAnalyzer(key?: AnalyzerKey | null): key is AnalyzerType {
-  return !!key && analyzerConfig[key].isJoinBased;
 }
 
 export function DataSelect({ 
@@ -28,14 +22,15 @@ export function DataSelect({
   columnKey, 
   onAnalyzerUpdate, 
   onColumnUpdate, 
-  chartFileInformation 
 }: DataSelectProps) {
   const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
+  const { series } = useChartQuery();
+  const singleSeries = series[0]; // TODO: Handle multiple series
   const [selectedDataType, setSelectedDataType] = useState<string>(
-    chartFileInformation[columnKey]?.header || dataTypes[0].value
+    singleSeries[columnKey]?.dataType || dataTypes[0].value
   );
 
-  const [analyzerKey, setAnalyzerKey] = useState<AnalyzerKey>(chartFileInformation.analyze.type ?? 'NONE');
+  const [analyzerKey, setAnalyzerKey] = useState<AnalyzerKey>(singleSeries.analyzer.type ?? 'NONE');
   const analyzer = analyzerConfig[analyzerKey];
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -51,12 +46,12 @@ export function DataSelect({
 
   // Update analyzer type
   useEffect(() => {
-    const newKey: AnalyzerKey = chartFileInformation.analyze.type ?? 'NONE';
+    const newKey: AnalyzerKey = singleSeries.analyzer.type ?? 'NONE';
     setAnalyzerKey(newKey);
     setAnalyzerValues(analyzerConfig[newKey].parameters?.map(param => param.defaultValue) || []);
-  }, [chartFileInformation.analyze.type]);
+  }, [singleSeries.analyzer.type]);
 
-  // Wait before API call
+  // update analyzer
   useEffect(() => {
     // wait until values array matches expected length
     if (analyzer.parameters && analyzerValues.length !== (analyzer.parameters?.length || 0)) {
@@ -65,33 +60,9 @@ export function DataSelect({
     onAnalyzerUpdate(analyzerKey === 'NONE' ? null : analyzerKey, analyzerValues);
   }, [analyzerKey, analyzerValues]);
 
-  // TODO: This logic could be decoupled from this
+  // Update column
   useEffect(() => {
-    const currX = chartFileInformation.x.header;
-    const update: Partial<Column> = { header: selectedDataType };
-
-    unstable_batchedUpdates(() => {
-      if (columnKey === 'y') {
-        update.filename = `${selectedSource}/${selectedDataType}.csv`;
-        if (currX === TIMESTAMP_HEADER) {
-          onColumnUpdate('x', { filename: update.filename });
-        } else if (!isJoinAnalyzer(analyzerKey)) {
-          onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
-        }
-      } else if (columnKey === 'x') {
-        if (selectedDataType === TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
-          onAnalyzerUpdate(null, []);
-          onColumnUpdate('x', { filename: chartFileInformation.y.filename });
-        } else if (selectedDataType !== TIMESTAMP_HEADER && isJoinAnalyzer(analyzerKey)) {
-          // TODO: Implement this case
-        } else if (selectedDataType !== TIMESTAMP_HEADER) {
-          update.filename = `${selectedSource}/${selectedDataType}.csv`;
-          onAnalyzerUpdate(AnalyzerType.INTERPOLATER_PRO, []);
-        }
-      }
-  
-      onColumnUpdate(columnKey, update);
-    });
+    onColumnUpdate(columnKey, { dataType: selectedDataType, source: selectedSource });
   }, [selectedSource, selectedDataType]);
 
   const handleParameterChange = (index: number, newValue: string) => {

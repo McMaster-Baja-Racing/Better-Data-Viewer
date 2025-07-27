@@ -1,4 +1,4 @@
-import { AnalyzerType, FileInformation, FileTimespan, MinMax } from '@types';
+import { AnalyzerType, FileInformation, FileTimespan, MinMax, RawFileInformation } from '@types';
 import { isElectron } from './navigationUtils';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 
@@ -49,7 +49,17 @@ export const ApiUtil = {
   getFolder: async (folderKey: string): Promise<FileInformation[]> => {
     const response = await fetch(`${baseApiUrl}/files/information/folder/${folderKey}`);
     if (!response.ok) throw Error(response.statusText);
-    return response.json();
+
+    // Convert date strings to Date objects
+    const rawFiles: RawFileInformation[] = await response.json();
+    const files: FileInformation[] = rawFiles.map(file => ({
+      ...file,
+      date: new Date(file.date),
+      start: new Date(file.start),
+      end: new Date(file.end)
+    }));
+
+    return files;
   },
 
   /**
@@ -81,18 +91,16 @@ export const ApiUtil = {
     inputFiles: string[],
     inputColumns: string[],
     outputFiles: string[] | null,
-    type: AnalyzerType | null,
+    analyzerType: AnalyzerType | null,
     analyzerOptions: string[], // This one is weird as its dependent on which analyzer is run
-    live: boolean
   ): Promise<{ filename: string, text: string }> => {
     const params = new URLSearchParams();
 
     inputFiles.map(file => params.append('inputFiles', file));
     inputColumns.map(column => params.append('inputColumns', column));
     outputFiles?.map(file => params.append('outputFiles', file));
-    if (type) params.append('type', type);
+    if (analyzerType) params.append('type', analyzerType);
     analyzerOptions.map(option => params.append('analyzerOptions', option));
-    if (live) params.append('live', live.toString());
 
     const response = await fetch(`${baseApiUrl}/analyze?` + params.toString(), {
       method: 'POST'
@@ -109,6 +117,43 @@ export const ApiUtil = {
 
     const text = await response.text();
 
+    return { filename, text };
+  },
+
+  /**
+   * @description Sends a POST request to the server to analyze files using smart detection.
+   * Automatically detects which files contain the requested data types and selects appropriate analyzer.
+   */
+  analyzeFilesSmart: async (
+    xDataType: string,
+    yDataType: string,
+    xSource: string,
+    ySource: string,
+    analyzerType: AnalyzerType | null,
+    analyzerOptions: string[] = [],
+  ): Promise<{ filename: string, text: string }> => {
+    const params = new URLSearchParams();
+
+    params.append('xDataType', xDataType);
+    params.append('yDataType', yDataType);
+    params.append('xSource', xSource);
+    params.append('ySource', ySource);
+    if (analyzerType) params.append('type', analyzerType);
+    analyzerOptions.forEach(option => params.append('analyzerOptions', option));
+
+    const response = await fetch(`${baseApiUrl}/analyze/smart?` + params.toString(), {
+      method: 'POST'
+    });
+
+    if (!response.ok) {
+      showErrorToast(`Code: ${response.status}\n${await response.text()}`);
+    }
+
+    const contentDisposition = response.headers.get('content-disposition');
+    if (!contentDisposition) throw new Error('Content-Disposition header is missing'); 
+    const filename = contentDisposition.split('filename=')[1].slice(1, -1);
+
+    const text = await response.text();
     return { filename, text };
   },
 

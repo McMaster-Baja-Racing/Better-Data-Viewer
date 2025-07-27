@@ -16,7 +16,7 @@ import {
   downloadIcon,
   helpIcon,
 } from '@assets/icons';
-import { useTheme } from '../../../ThemeContext';
+import { useTheme } from '@contexts/ThemeContext';
 import { showErrorToast, showSuccessToast } from '@components/ui/toastNotification/ToastNotification';
 
 interface TopbarProps {

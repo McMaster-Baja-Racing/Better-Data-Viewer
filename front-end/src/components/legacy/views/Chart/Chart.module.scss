@@ -1,8 +1,6 @@
 .chartContainer {
     height: 100%;
     width: 100%;
-    resize: both;
-    overflow: hidden;
 
     .valueBox {
         position: absolute;
@@ -22,6 +20,9 @@
     }
 
     .chart {
+        // Calculate available width: 100vw - left sidebar - right sidebar - padding
+        max-width: calc(100vw - var(--left-sidebar-width, var(--left-sidebar-collapsed-width)) - var(--right-sidebar-width, 0px) - var(--chart-container-padding));
+        
         :global(.highcharts-root) {
             font-family: 'Roboto', sans-serif !important;
         }

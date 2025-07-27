@@ -8,18 +8,20 @@ export interface DropdownOption<T> {
   label: string;
 }
 
-interface DropdownProps<T> {
-  options: DropdownOption<T>[];
-  selected: T;
-  setSelected: (selected: T) => void;
+interface DropdownProps<All, Option extends All> {
+  options: DropdownOption<Option>[];
+  selected: All;
+  setSelected: (selected: Option) => void;
   width?: string;
   className?: string;
 }
 
-export const Dropdown = <T,>({ options, selected, setSelected, width, className }: DropdownProps<T>) => {
+export const Dropdown = <All,Option extends All>(
+  { options, selected, setSelected, width, className }: DropdownProps<All, Option>
+) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOptionClick = (option: T, event: React.MouseEvent) => {
+  const handleOptionClick = (option: Option, event: React.MouseEvent) => {
     event.stopPropagation();
     setSelected(option);
     setIsOpen(false);

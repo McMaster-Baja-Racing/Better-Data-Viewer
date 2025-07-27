@@ -25,6 +25,11 @@ public class InvalidArgumentException extends BajaException {
     this.errors = errors;
   }
 
+  public InvalidArgumentException(String error, Throwable cause) {
+    super(error, cause, ERROR_CODE, USER_MESSAGE_SINGLE);
+    this.errors = List.of(error);
+  }
+
   public List<String> getErrors() {
     return errors;
   }
