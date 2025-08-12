@@ -1,4 +1,4 @@
-import { dataTypesArray, chartTypeMap, ChartType } from '@types';
+import { dataTypesArray, chartTypeMap, ChartType, AnalyzerType } from '@types';
 import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
@@ -9,6 +9,7 @@ import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
 import { useDashboard } from '@contexts/DashboardContext';
 import { useChartQuery } from '@contexts/ChartQueryContext';
 import { Accordion } from '@components/ui/accordion/Accordion';
+import { plusIcon, trashIcon } from '@assets/icons';
 
 interface EditSidebarProps {
   sources: string[]; // TODO: This should use the file type specified in the file browser
@@ -22,6 +23,29 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
   useEffect(() => {
     chartOptionsDispatch({ type: 'SET_CHART_TYPE', chartType: chartType });
   }, [chartType]);
+
+  const addNewSeries = () => {
+    // Use the first available source, or empty string if none available
+    const defaultSource = sources.length > 0 ? sources[0] : '';
+    
+    // Use sensible defaults for data types
+    const defaultXDataType = 'Timestamp (ms)';
+    const defaultYDataType = dataTypesArray.find(dt => dt !== defaultXDataType) || 'GPS Speed (m/s)';
+    
+    const newSeries = {
+      x: { source: defaultSource, dataType: defaultXDataType },
+      y: { source: defaultSource, dataType: defaultYDataType },
+      analyzer: { type: AnalyzerType.INTERPOLATER_PRO, options: [] }
+    };
+    chartQueryDispatch({ type: 'ADD_SERIES', series: newSeries });
+  };
+
+  const removeSeries = (index: number) => {
+    // Prevent removing the last series
+    if (series.length > 1) {
+      chartQueryDispatch({ type: 'REMOVE_SERIES', index });
+    }
+  };
 
   return (
     <div className={styles.editSidebar}>
@@ -63,9 +87,20 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
 
       {series.map((file, fileIndex) => {
         return (
-          <div key={fileIndex}>
-            <div className={styles.title}>
-              Series
+          <div key={fileIndex} className={styles.seriesContainer}>
+            <div className={styles.seriesHeader}>
+              <div className={styles.title}>
+                Series {fileIndex + 1}
+              </div>
+              {series.length > 1 && (
+                <button 
+                  className={styles.removeSeriesButton}
+                  onClick={() => removeSeries(fileIndex)}
+                  title="Remove Series"
+                >
+                  <img src={trashIcon} alt="Remove Series" className={styles.removeSeriesIcon} />
+                </button>
+              )}
             </div>
             <DataSelect
               sources={sources.map((file) => ({ value: file, label: file }))}
@@ -84,6 +119,13 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
           </div>
         );
       })}
+
+      <div className={styles.addSeriesContainer}>
+        <button className={styles.addSeriesButton} onClick={addNewSeries}>
+          <img src={plusIcon} alt="Add Series" className={styles.addSeriesIcon} />
+          <span>Add Series</span>
+        </button>
+      </div>
 
       <div className={styles.options}>
         <div className={styles.title}>
