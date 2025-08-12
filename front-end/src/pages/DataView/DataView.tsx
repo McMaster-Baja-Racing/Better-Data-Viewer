@@ -14,17 +14,19 @@ export const DataView = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const tempBins = series.map((file) =>
-      dataColumnKeys
-        .map((key) => file[key]?.source)
-        .filter((fn): fn is string => !!fn)
-        .map((filename) => filename.split('/')[0])
-    );
+    const tempBins = series
+      .filter((file) => file?.x?.source || file?.y?.source) // Only include series with at least one source
+      .map((file) =>
+        dataColumnKeys
+          .map((key) => file[key]?.source)
+          .filter((fn): fn is string => !!fn)
+          .map((filename) => filename.split('/')[0])
+      );
     const uniqueBins = [...new Set(tempBins.flat())];
     setBins(uniqueBins);
   }, [series]);
 
-  if (!series || bins.length === 0) {
+  if (!series || series.length === 0) {
     return <div>Loading...</div>;
   }
 

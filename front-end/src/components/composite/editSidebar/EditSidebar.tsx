@@ -1,4 +1,4 @@
-import { dataTypesArray, chartTypeMap, ChartType, AnalyzerType } from '@types';
+import { dataTypesArray, chartTypeMap, ChartType } from '@types';
 import styles from './EditSidebar.module.scss';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
@@ -20,22 +20,31 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
   const { series, dispatch: chartQueryDispatch } = useChartQuery();
   const [chartType, setChartType] = useState<ChartType>(options.series?.[0]?.type || 'line');
 
+  // Create an initial empty series if none exist
+  useEffect(() => {
+    if (series.length === 0) {
+      const initialSeries = {
+        x: { source: '', dataType: '' },
+        y: { source: '', dataType: '' },
+        analyzer: { type: null, options: [] }
+      };
+      chartQueryDispatch({ type: 'ADD_SERIES', series: initialSeries });
+    }
+  }, [series.length, chartQueryDispatch]);
+
   useEffect(() => {
     chartOptionsDispatch({ type: 'SET_CHART_TYPE', chartType: chartType });
   }, [chartType]);
 
   const addNewSeries = () => {
-    // Use the first available source, or empty string if none available
-    const defaultSource = sources.length > 0 ? sources[0] : '';
-    
-    // Use sensible defaults for data types
-    const defaultXDataType = 'Timestamp (ms)';
-    const defaultYDataType = dataTypesArray.find(dt => dt !== defaultXDataType) || 'GPS Speed (m/s)';
+    // Create an empty series that won't trigger requests until configured
+    // Auto-populate x values from the first series if available
+    const firstSeriesX = series.length > 0 ? series[0].x : { source: '', dataType: '' };
     
     const newSeries = {
-      x: { source: defaultSource, dataType: defaultXDataType },
-      y: { source: defaultSource, dataType: defaultYDataType },
-      analyzer: { type: AnalyzerType.INTERPOLATER_PRO, options: [] }
+      x: { source: firstSeriesX.source, dataType: firstSeriesX.dataType },
+      y: { source: '', dataType: '' },
+      analyzer: { type: null, options: [] }
     };
     chartQueryDispatch({ type: 'ADD_SERIES', series: newSeries });
   };
@@ -65,10 +74,11 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
         <div className={styles.title}>
           X-Axis
         </div>
-        {series[0] && <DataSelect
+        {series.length > 0 && series[0] && <DataSelect
           sources={sources.map((file) => ({ value: file, label: file }))}
           dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
           columnKey='x'
+          seriesIndex={0}
           onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
             type: 'UPDATE_X_COLUMN_ALL', 
             xColumn: {dataType: updatedColumn.dataType, source: updatedColumn.source}
@@ -78,7 +88,7 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
               type: 'UPDATE_ANALYZER_ALL',
               analyzer: {
                 type: newAnalyzerType,
-                options: newAnalyzerValues
+                options: newAnalyzerValues || []
               }
             });
           }}
@@ -107,13 +117,21 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
               dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
               key={fileIndex + 'y'}
               columnKey='y'
-              onColumnUpdate={(column, updatedColumn) => chartQueryDispatch(
-                { type: 'UPDATE_COLUMN', index: fileIndex, columnKey: column, column: updatedColumn  }
-              )}
+              seriesIndex={fileIndex}
+              onColumnUpdate={(column, updatedColumn) => {
+                // Auto-populate source from x-axis if not set
+                const finalColumn = {
+                  ...updatedColumn,
+                  source: updatedColumn.source || series[0]?.x?.source || ''
+                };
+                chartQueryDispatch(
+                  { type: 'UPDATE_COLUMN', index: fileIndex, columnKey: column, column: finalColumn }
+                );
+              }}
               onAnalyzerUpdate={(newAnalyzerType, newAnalyzerValues) => chartQueryDispatch({ 
                 type: 'UPDATE_ANALYZER', 
                 index: fileIndex, 
-                analyzer: {type: newAnalyzerType, options: newAnalyzerValues}
+                analyzer: {type: newAnalyzerType, options: newAnalyzerValues || []}
               })}
             />
           </div>

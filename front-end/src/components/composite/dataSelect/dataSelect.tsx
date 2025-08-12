@@ -12,6 +12,7 @@ interface DataSelectProps {
     sources: DropdownOption<string>[];
     dataTypes: DropdownOption<DataTypes>[];
     columnKey: DataColumnKey;
+    seriesIndex?: number; // Add series index to track which series we're editing
     onColumnUpdate: (column: DataColumnKey, updatedColumn: Partial<Column>) => void;
     onAnalyzerUpdate: (analyzerType?: AnalyzerType | null, analyzerValues?: string[]) => void;
 }
@@ -20,23 +21,33 @@ export function DataSelect({
   sources, 
   dataTypes, 
   columnKey, 
+  seriesIndex = 0,
   onAnalyzerUpdate, 
   onColumnUpdate, 
 }: DataSelectProps) {
-  const [selectedSource, setSelectedSource] = useState<string>(sources[0].value);
   const { series } = useChartQuery();
-  const singleSeries = series[0]; // TODO: Handle multiple series
-  const [selectedDataType, setSelectedDataType] = useState<string>(
-    singleSeries[columnKey]?.dataType || dataTypes[0].value
-  );
+  const currentSeries = series[seriesIndex];
+  
+  // Initialize with current series values or empty strings
+  const [selectedSource, setSelectedSource] = useState<string>(currentSeries?.[columnKey]?.source || '');
+  const [selectedDataType, setSelectedDataType] = useState<string>(currentSeries?.[columnKey]?.dataType || '');
 
-  const [analyzerKey, setAnalyzerKey] = useState<AnalyzerKey>(singleSeries.analyzer.type ?? 'NONE');
+  const [analyzerKey, setAnalyzerKey] = useState<AnalyzerKey>(currentSeries?.analyzer.type ?? 'NONE');
   const analyzer = analyzerConfig[analyzerKey];
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [analyzerValues, setAnalyzerValues] = useState<string[]>(
-    analyzer.parameters?.map(param => param.defaultValue) || []
+    currentSeries?.analyzer?.options || analyzer.parameters?.map(param => param.defaultValue) || []
   );
+
+  // Only add placeholder options if current selection is empty
+  const sourceOptions = selectedSource === '' 
+    ? [{ label: 'Select a source...', value: '' }, ...sources]
+    : sources;
+  
+  const dataTypeOptions = selectedDataType === '' 
+    ? [{ label: 'Select a data type...', value: '' }, ...dataTypes]
+    : dataTypes;
 
   const analyzerOptions = (Object.entries(analyzerConfig) as [AnalyzerKey, typeof analyzer][])
     .map(([key, cfg]) => ({
@@ -44,12 +55,21 @@ export function DataSelect({
       value: key
     }));
 
+  // Sync state when series changes externally
+  useEffect(() => {
+    if (currentSeries) {
+      setSelectedSource(currentSeries[columnKey]?.source || '');
+      setSelectedDataType(currentSeries[columnKey]?.dataType || '');
+    }
+  }, [currentSeries, columnKey]);
+
   // Update analyzer type
   useEffect(() => {
-    const newKey: AnalyzerKey = singleSeries.analyzer.type ?? 'NONE';
+    if (!currentSeries) return;
+    const newKey: AnalyzerKey = currentSeries.analyzer.type ?? 'NONE';
     setAnalyzerKey(newKey);
     setAnalyzerValues(analyzerConfig[newKey].parameters?.map(param => param.defaultValue) || []);
-  }, [singleSeries.analyzer.type]);
+  }, [currentSeries?.analyzer.type]);
 
   // update analyzer
   useEffect(() => {
@@ -79,7 +99,7 @@ export function DataSelect({
         <div className={styles.column}>
           <label className={styles.label}>Source</label>
           <Dropdown
-            options={sources}
+            options={sourceOptions}
             selected={selectedSource}
             setSelected={setSelectedSource}
             className={styles.longDropDown}
@@ -88,7 +108,7 @@ export function DataSelect({
         <div className={styles.column}>
           <label className={styles.label}>Data Type</label>
           <Dropdown
-            options={dataTypes}
+            options={dataTypeOptions}
             selected={selectedDataType}
             setSelected={setSelectedDataType}
             className={styles.longDropDown}
