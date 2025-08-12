@@ -7,26 +7,35 @@ $row-height: 4.5rem;
 .dataSelect {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem; // Slightly increased gap for better breathing room
+    width: 100%;
+    max-width: 100%; // Prevent overflow
+    margin-bottom: 0.5rem; // Add consistent bottom margin
+    box-sizing: border-box; // Include any padding in width calculation
 
     .row {
         display: flex;
         gap: 1rem;
-        align-items: center;
-        width: 40rem;
+        align-items: flex-end; // Align to bottom to line up with dropdowns
+        width: 100%;
+        max-width: 100%; // Prevent row from overflowing
+        box-sizing: border-box; // Include any borders/padding in width
 
         .column {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+            flex: 1;
 
             .longDropDown {
-                width: 15.75rem;
+                width: 100%;
+                min-width: 12rem;
             }
 
             .toggle {
                 @include fonts.text-medium;
                 background-color: var(--light-grey);
+                min-width: 3rem; // Ensure toggle has minimum width
 
                 img {
                     width: 1.25rem;
@@ -34,7 +43,7 @@ $row-height: 4.5rem;
                 }
                 
                 &:hover {
-                    background-color: var(--light-grey);
+                    background-color: var(--tertiary);
                 }
             }
 
@@ -42,7 +51,7 @@ $row-height: 4.5rem;
                 color: var(--alt-text);
                 @include fonts.text-small;
                 display: block;
-                margin-bottom: 0.25rem;
+                margin-bottom: 0.5rem; // Increased for better spacing
             }
         }
     }

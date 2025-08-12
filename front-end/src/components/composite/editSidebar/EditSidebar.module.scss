@@ -3,7 +3,11 @@
 .editSidebar {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch; // Changed from center to stretch for better alignment
+  padding: 1rem 0.5rem; // Reduced side padding to prevent overflow
+  width: 100%;
+  max-width: 100%; // Prevent the container from growing too wide
+  box-sizing: border-box; // Include padding in width calculations
 }
 
 .title {
@@ -11,22 +15,50 @@
   text-align: left;
   color: var(--text-colour);
   margin: 1.5rem 0 1rem 0;
+  
+  &:first-child {
+    margin-top: 0; // Remove top margin for first title
+  }
+}
+
+.chartType {
+  margin-bottom: 2rem;
+  
+  .title {
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Style for X-Axis and individual section containers
+.section {
+  margin-bottom: 2rem;
+  
+  .title {
+    margin-bottom: 1rem;
+  }
 }
 
 .seriesContainer {
   width: 100%;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
-  border-radius: 0.5rem;
-  background-color: var(--background-sec, rgba(255, 255, 255, 0.05));
+  max-width: 100%; // Prevent overflow
+  margin-bottom: 1.5rem; // Increased spacing between series
+  padding: 1rem; // Reduced padding to give more room
+  border: 1px solid var(--light-grey);
+  border-radius: 8px;
+  background-color: var(--background-sec);
+  box-sizing: border-box; // Include padding and border in width calculation
 }
 
 .seriesHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem; // Reduced spacing to save vertical space
+  
+  .title {
+    margin: 0; // Reset margin for title inside header
+    color: var(--text-colour);
+  }
 }
 
 .removeSeriesButton {
@@ -35,15 +67,14 @@
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  background-color: var(--danger, #dc3545);
+  background-color: var(--light-grey); // Changed to match design system
   border: none;
-  border-radius: 0.25rem;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--danger-dark, #c82333);
-    transform: scale(1.05);
+    background-color: var(--tertiary); // Consistent with other buttons
   }
 
   &:active {
@@ -54,11 +85,12 @@
 .removeSeriesIcon {
   width: 1rem;
   height: 1rem;
-  filter: invert(1);
+  filter: invert(1); // Make icon white - simplified filter
+  opacity: 0.9; // Ensure visibility
 }
 
 .addSeriesContainer {
-  margin: 1rem 0;
+  margin: 1.5rem 0;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -68,29 +100,40 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--primary);
-  color: var(--background);
+  padding: 0.75rem 1.5rem;
+  background-color: var(--baja-colour); // Use primary brand color
+  color: var(--text-colour);
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 500;
+  @include fonts.title-tiny; // Consistent typography
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--primary-dark, var(--primary));
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background-color: var(--accent);
   }
 
   &:active {
-    transform: translateY(0);
+    transform: translateY(1px);
   }
 }
 
 .addSeriesIcon {
   width: 1rem;
   height: 1rem;
-  filter: invert(1);
+  filter: brightness(0) invert(1); // Make icon white
+}
+
+.options {
+  margin-top: 3rem; // Increased spacing from series
+  width: 100%;
+  
+  .title {
+    margin-bottom: 1rem;
+  }
+  
+  // Ensure proper spacing between accordion items
+  > * + * {
+    margin-top: 1rem;
+  }
 }

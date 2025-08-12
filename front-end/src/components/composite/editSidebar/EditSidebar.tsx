@@ -70,7 +70,7 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
         />
       </div>
 
-      <div>
+      <div className={styles.section}>
         <div className={styles.title}>
           X-Axis
         </div>
