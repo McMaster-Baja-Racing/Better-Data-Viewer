@@ -3,8 +3,13 @@ import { Options, Series, SeriesLineOptions, SeriesOptionsType } from 'highchart
 export type ChartType = SeriesOptionsType['type'] | 'coloredLine';
 
 export const chartTypeMap: {value: ChartType, label: string}[] = [
-  { value: 'scatter', label: 'Scatter' },
   { value: 'line', label: 'Line' },
+  { value: 'spline', label: 'Spline' },
+  { value: 'area', label: 'Area' },
+  { value: 'areaspline', label: 'Area Spline' },
+  { value: 'scatter', label: 'Scatter' },
+  { value: 'column', label: 'Column' },
+  { value: 'bar', label: 'Bar' },
   { value: 'coloredLine', label: 'Colored Line' },
 ];
 

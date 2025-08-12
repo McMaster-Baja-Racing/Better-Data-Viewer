@@ -1,0 +1,86 @@
+@use '@styles/_fonts';
+
+.colorPickerContainer {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.label {
+  @include fonts.text-small;
+  color: var(--text-colour);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.colorInput {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.colorInputField {
+  width: 50px;
+  height: 30px;
+  border: 2px solid var(--light-grey);
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+  
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+  }
+  
+  &::-moz-color-swatch {
+    border: none;
+    border-radius: 4px;
+  }
+  
+  &:hover {
+    border-color: var(--primary-colour);
+  }
+}
+
+.colorValue {
+  @include fonts.text-small;
+  color: var(--text-colour-secondary);
+  font-family: monospace;
+  font-weight: 600;
+  background-color: var(--background-sec);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.presetColors {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+}
+
+.presetColor {
+  width: 100%;
+  height: 24px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: var(--text-colour);
+    transform: scale(1.1);
+  }
+  
+  &.selected {
+    border-color: var(--primary-colour);
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px var(--primary-colour-light);
+  }
+}

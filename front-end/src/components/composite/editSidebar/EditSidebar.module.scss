@@ -137,3 +137,36 @@
     margin-top: 1rem;
   }
 }
+
+// New styles for the enhanced edit sidebar
+.subTitle {
+  @include fonts.title-small;
+  color: var(--text-colour);
+  margin: 1.5rem 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--light-grey);
+  
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.column {
+  flex: 1;
+  min-width: 0; // Prevent flex items from overflowing
+}
+
+.label {
+  @include fonts.text-small;
+  color: var(--text-colour);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
