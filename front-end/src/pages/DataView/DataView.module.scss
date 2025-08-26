@@ -6,3 +6,46 @@
   color: var(--text-colour);
   margin: 1.5rem 0 1rem 0;
 }
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-colour);
+
+  .emptyStateHeading {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+    color: var(--text-colour);
+  }
+
+  .emptyStateDescription {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+    max-width: 31.25rem;
+    line-height: 1.6;
+    color: var(--alt-text);
+  }
+
+  .editGraphButton {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background-color: var(--primary);
+    color: var(--text-colour);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+
+    &:hover {
+      background-color: var(--accent);
+    }
+  }
+}
+
