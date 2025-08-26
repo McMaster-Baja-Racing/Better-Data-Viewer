@@ -1,3 +1,5 @@
+@use '@styles/_fonts';
+
 .subTitle {
   @include fonts.title-small;
   color: var(--text-colour);
