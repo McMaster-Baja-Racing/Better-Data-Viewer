@@ -5,6 +5,7 @@ import { ThemeProvider } from '@contexts/ThemeContext';
 import { ModalProvider } from '@contexts/ModalContext';
 import { RouterComponent } from '@lib/navigationUtils';
 import { ChartQueryProvider } from '@contexts/ChartQueryContext';
+import { DashboardProvider } from '@contexts/DashboardContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const rootElement = document.getElementById('root');
@@ -23,9 +24,11 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <ModalProvider>
         <ChartQueryProvider>
-          <RouterComponent>
-            <App />
-          </RouterComponent>
+          <DashboardProvider>
+            <RouterComponent>
+              <App />
+            </RouterComponent>
+          </DashboardProvider>
         </ChartQueryProvider>
       </ModalProvider>
     </QueryClientProvider>

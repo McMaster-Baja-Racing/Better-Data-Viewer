@@ -6,6 +6,8 @@ import TextField from '@components/ui/textfield/TextField';
 import { sigmaIcon, plusIcon, minusIcon } from '@assets/icons';
 import { analyzerConfig, AnalyzerKey, AnalyzerType, DataColumnKey, DataTypes } from '@types';
 import { useChartQuery } from '@contexts/ChartQueryContext';
+import { useDashboard } from '@contexts/DashboardContext';
+import { useModal } from '@contexts/ModalContext';
 import { Column } from 'types/ChartQuery';
 
 interface DataSelectProps {
@@ -23,9 +25,11 @@ export function DataSelect({
   columnKey, 
   seriesIndex = 0,
   onAnalyzerUpdate, 
-  onColumnUpdate, 
+  onColumnUpdate,
 }: DataSelectProps) {
   const { series } = useChartQuery();
+  const { dispatch: dashboardDispatch } = useDashboard();
+  const { openModal, closeModal } = useModal();
   const currentSeries = series[seriesIndex];
   
   // Initialize with current series values or empty strings
@@ -41,9 +45,15 @@ export function DataSelect({
   );
 
   // Only add placeholder options if current selection is empty
-  const sourceOptions = selectedSource === '' 
+  const baseSourceOptions = selectedSource === '' 
     ? [{ label: 'Select a source...', value: '' }, ...sources]
     : sources;
+
+  // Add "View all sources" option at the bottom
+  const sourceOptions = [
+    ...baseSourceOptions,
+    { label: '+ View all sources', value: '___VIEW_ALL___' }
+  ];
   
   const dataTypeOptions = selectedDataType === '' 
     ? [{ label: 'Select a data type...', value: '' }, ...dataTypes]
@@ -93,6 +103,23 @@ export function DataSelect({
     });
   };
 
+  const handleSourceSelection = (value: string) => {
+    if (value === '___VIEW_ALL___') {
+      // Trigger the view all sources callback
+      openModal('preset', {
+        onSubmit: (fileKeys: string[]) => {
+          dashboardDispatch({ type: 'SET_SOURCES', sources: fileKeys });
+          closeModal();
+        },
+        currentSources: sources
+      });
+      // Don't update the selected source
+      return;
+    }
+    // Normal source selection
+    setSelectedSource(value);
+  };
+
   return (
     <div className={styles.dataSelect}>
       <div className={styles.row}>
@@ -101,7 +128,7 @@ export function DataSelect({
           <Dropdown
             options={sourceOptions}
             selected={selectedSource}
-            setSelected={setSelectedSource}
+            setSelected={handleSourceSelection}
             className={styles.longDropDown}
           />
         </div>

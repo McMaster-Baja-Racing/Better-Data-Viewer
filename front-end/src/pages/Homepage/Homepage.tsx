@@ -6,15 +6,21 @@ import { DataViewerPreset } from '@types';
 import { useModal } from '@contexts/ModalContext';
 import { useNavigate } from 'react-router-dom';  // See if this works on Electron
 import { useChartQuery } from '@contexts/ChartQueryContext';
+import { useDashboard } from '@contexts/DashboardContext';
 import { Series } from 'types/ChartQuery';
 
 export const Homepage = () => {
   const { openModal } = useModal();
   const navigate = useNavigate();
   const { dispatch } = useChartQuery();
+  const { dispatch: dashboardDispatch } = useDashboard();
 
   const onSubmit = (fileKeys: string[], preset: DataViewerPreset) => {
     const series: Series[] = [];
+
+    // Extract sources (folder names) from file keys and add to dashboard context
+    const sources = fileKeys.map(key => key.split('/')[0]);
+    dashboardDispatch({ type: 'SET_SOURCES', sources });
 
     // TODO: Update fileKeys handling (bins) for multiple selected files
     preset.graphs.map((graph) => {
@@ -38,7 +44,7 @@ export const Homepage = () => {
   };
 
   const handleClick = (preset: DataViewerPreset) => {
-    openModal('preset', {onSubmit: onSubmit, preset: preset});
+    openModal('preset', {onSubmit: (x: string[]) => onSubmit(x, preset)});
   };
 
   return (
