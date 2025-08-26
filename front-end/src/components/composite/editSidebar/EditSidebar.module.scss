@@ -3,170 +3,137 @@
 .editSidebar {
   display: flex;
   flex-direction: column;
-  align-items: stretch; // Changed from center to stretch for better alignment
-  padding: 1rem 0.5rem; // Reduced side padding to prevent overflow
+  align-items: stretch;
+  padding: 1rem 0.5rem;
   width: 100%;
-  max-width: 100%; // Prevent the container from growing too wide
-  box-sizing: border-box; // Include padding in width calculations
-}
+  box-sizing: border-box;
 
-.title {
-  @include fonts.title-medium;
-  text-align: left;
-  color: var(--text-colour);
-  margin: 1.5rem 0 1rem 0;
-  
-  &:first-child {
-    margin-top: 0; // Remove top margin for first title
-  }
-}
-
-.chartType {
-  margin-bottom: 2rem;
-  
   .title {
-    margin-bottom: 0.5rem;
-  }
-}
-
-// Style for X-Axis and individual section containers
-.section {
-  margin-bottom: 2rem;
-  
-  .title {
-    margin-bottom: 1rem;
-  }
-}
-
-.seriesContainer {
-  width: 100%;
-  max-width: 100%; // Prevent overflow
-  margin-bottom: 1.5rem; // Increased spacing between series
-  padding: 1rem; // Reduced padding to give more room
-  border: 1px solid var(--light-grey);
-  border-radius: 8px;
-  background-color: var(--background-sec);
-  box-sizing: border-box; // Include padding and border in width calculation
-}
-
-.seriesHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem; // Reduced spacing to save vertical space
-  
-  .title {
-    margin: 0; // Reset margin for title inside header
+    @include fonts.title-medium;
+    text-align: left;
     color: var(--text-colour);
-  }
-}
-
-.removeSeriesButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  background-color: var(--light-grey); // Changed to match design system
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--tertiary); // Consistent with other buttons
+    margin: 1.5rem 0 1rem 0;
+    
+    &:first-child {
+      margin-top: 0;
+    }
   }
 
-  &:active {
-    transform: scale(0.95);
-  }
-}
-
-.removeSeriesIcon {
-  width: 1rem;
-  height: 1rem;
-  filter: invert(1); // Make icon white - simplified filter
-  opacity: 0.9; // Ensure visibility
-}
-
-.addSeriesContainer {
-  margin: 1.5rem 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.addSeriesButton {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background-color: var(--baja-colour); // Use primary brand color
-  color: var(--text-colour);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  @include fonts.title-tiny; // Consistent typography
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--accent);
+  .chartType {
+    margin-bottom: 2rem;
+    
+    .title {
+      margin-bottom: 0.5rem;
+    }
   }
 
-  &:active {
-    transform: translateY(1px);
+  .section {
+    margin-bottom: 2rem;
+    
+    .title {
+      margin-bottom: 1rem;
+    }
   }
-}
 
-.addSeriesIcon {
-  width: 1rem;
-  height: 1rem;
-  filter: brightness(0) invert(1); // Make icon white
-}
+  .seriesContainer {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--light-grey);
+    border-radius: 8px;
+    background-color: var(--background-sec);
+    box-sizing: border-box;
 
-.options {
-  margin-top: 3rem; // Increased spacing from series
-  width: 100%;
+    .seriesHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      
+      .title {
+        margin: 0;
+        color: var(--text-colour);
+      }
+
+      .removeSeriesButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        background-color: var(--light-grey);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: var(--tertiary);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+
+        .removeSeriesIcon {
+          width: 1rem;
+          height: 1rem;
+          filter: invert(1);
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  .addSeriesContainer {
+    margin: 1.5rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .addSeriesButton {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--baja-colour);
+      color: var(--text-colour);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      @include fonts.title-tiny;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--accent);
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+
+      .addSeriesIcon {
+        width: 1rem;
+        height: 1rem;
+        filter: brightness(0) invert(1);
+      }
+    }
+  }
+
+  .options {
+    margin-top: 3rem;
+    width: 100%;
+    
+    .title {
+      margin-bottom: 1rem;
+    }
+
+    > * {
+      margin-top: 1rem;
+    }
+  }
+
   
-  .title {
-    margin-bottom: 1rem;
-  }
-  
-  // Ensure proper spacing between accordion items
-  > * + * {
-    margin-top: 1rem;
-  }
 }
 
-// New styles for the enhanced edit sidebar
-.subTitle {
-  @include fonts.title-small;
-  color: var(--text-colour);
-  margin: 1.5rem 0 1rem 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--light-grey);
-  
-  &:first-child {
-    margin-top: 0;
-  }
-}
-
-.row {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.column {
-  flex: 1;
-  min-width: 0; // Prevent flex items from overflowing
-}
-
-.label {
-  @include fonts.text-small;
-  color: var(--text-colour);
-  font-weight: 500;
-  display: block;
-  margin-bottom: 0.5rem;
-}

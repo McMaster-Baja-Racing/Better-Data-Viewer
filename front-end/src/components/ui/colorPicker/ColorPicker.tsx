@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './ColorPicker.module.scss';
 
 interface ColorPickerProps {
@@ -14,12 +13,12 @@ const defaultPresetColors = [
   '#0088ff', '#0000ff', '#8800ff', '#ff00ff', '#ff0088'
 ];
 
-export const ColorPicker: React.FC<ColorPickerProps> = ({
+export const ColorPicker = ({
   label,
   value,
   onChange,
   presetColors = defaultPresetColors
-}) => {
+}: ColorPickerProps) => {
   return (
     <div className={styles.colorPickerContainer}>
       <label className={styles.label}>{label}</label>

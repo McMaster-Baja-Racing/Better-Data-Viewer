@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent } from 'react';
 import styles from './Slider.module.scss';
 
 interface SliderProps {
@@ -11,7 +11,7 @@ interface SliderProps {
   unit?: string;
 }
 
-export const Slider: React.FC<SliderProps> = ({
+export const Slider = ({
   label,
   value,
   min,
@@ -19,8 +19,8 @@ export const Slider: React.FC<SliderProps> = ({
   step = 1,
   onChange,
   unit = ''
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+}: SliderProps) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(Number(e.target.value));
   };
 

@@ -7,19 +7,19 @@ $row-height: 4.5rem;
 .dataSelect {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem; // Slightly increased gap for better breathing room
+    gap: 0.75rem;
     width: 100%;
-    max-width: 100%; // Prevent overflow
-    margin-bottom: 0.5rem; // Add consistent bottom margin
-    box-sizing: border-box; // Include any padding in width calculation
+    max-width: 100%;
+    margin-bottom: 0.5rem;
+    box-sizing: border-box;
 
     .row {
         display: flex;
         gap: 1rem;
-        align-items: flex-end; // Align to bottom to line up with dropdowns
+        align-items: flex-end;
         width: 100%;
-        max-width: 100%; // Prevent row from overflowing
-        box-sizing: border-box; // Include any borders/padding in width
+        max-width: 100%;
+        box-sizing: border-box;
 
         .column {
             display: flex;
@@ -35,7 +35,7 @@ $row-height: 4.5rem;
             .toggle {
                 @include fonts.text-medium;
                 background-color: var(--light-grey);
-                min-width: 3rem; // Ensure toggle has minimum width
+                min-width: 3rem;
 
                 img {
                     width: 1.25rem;
@@ -51,7 +51,7 @@ $row-height: 4.5rem;
                 color: var(--alt-text);
                 @include fonts.text-small;
                 display: block;
-                margin-bottom: 0.5rem; // Increased for better spacing
+                margin-bottom: 0.5rem;
             }
         }
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent } from 'react';
 import styles from './NumberInput.module.scss';
 
 interface NumberInputProps {
@@ -12,7 +12,7 @@ interface NumberInputProps {
   unit?: string;
 }
 
-export const NumberInput: React.FC<NumberInputProps> = ({
+export const NumberInput = ({
   label,
   value,
   onChange,
@@ -21,8 +21,8 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   max,
   step = 1,
   unit = ''
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+}: NumberInputProps) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (val === '') {
       onChange(undefined);
