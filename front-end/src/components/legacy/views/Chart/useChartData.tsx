@@ -9,6 +9,7 @@ import {
   validateChartQuery
 } from '@lib/chartUtils';
 import { seriesData, MinMax } from '@types';
+import { Series } from 'types/ChartQuery';
 import { useChartQuery } from '@contexts/ChartQueryContext';
 import { useChartOptions } from '@contexts/ChartOptionsContext';
 import { useFileMap } from '@lib/files/useFileMap';
@@ -40,24 +41,39 @@ export const useChartData = () => {
     chartOptionsDispatch({ type: 'CLEAR_SERIES' });
   }, [chartOptionsDispatch]);
 
+  const isSeriesComplete = (series: Series) => {
+    return series.x && series.y && 
+           series.x.source && series.x.source.trim() !== '' && 
+           series.x.dataType && series.x.dataType.trim() !== '' &&
+           series.y.dataType && series.y.dataType.trim() !== '';
+  };
+
   const fetchChartData = useCallback(async () => {
     if (!validateChartQuery(series)) return;
+    
+    // Only process complete series
+    const completeSeries = series.filter(isSeriesComplete);
+    if (completeSeries.length === 0) return;
+    
     const myId = ++fetchIdRef.current;
     resetData();
     setLoading(true);
 
     try {
-      for (const file of series) {
+      for (const file of completeSeries) {
         if (fetchIdRef.current !== myId) return;
         // Build a Column[] by iterating the defined keys
         const cols = [file.x, file.y];
+
+        // Use X source for Y if Y source is empty (auto-population)
+        const ySource = file.y.source || file.x.source;
 
         // Fetch & analyze the files based on series definition
         const { filename, text } = await ApiUtil.analyzeFilesSmart(
           file.x.dataType,
           file.y.dataType,
           file.x.source,
-          file.y.source,
+          ySource,
           file.analyzer.type,
           file.analyzer.options
         );

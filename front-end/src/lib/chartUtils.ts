@@ -43,13 +43,15 @@ export const validateChartQuery = (series: Series[]) => {
   if (!series || series.length === 0) {
     return false;
   }
-  for (const s of series) {
-    if (!s.x || !s.y) {
-      return false;
-    }
-    if (s.x.source === '') {
-      return false;
-    }
-  }
-  return true;
+  
+  // Filter out incomplete series - Y source can be auto-populated from X
+  const completeSeries = series.filter(s => 
+    s.x && s.y && 
+    s.x.source && s.x.source.trim() !== '' && 
+    s.x.dataType && s.x.dataType.trim() !== '' &&
+    s.y.dataType && s.y.dataType.trim() !== ''
+  );
+  
+  // We need at least one complete series
+  return completeSeries.length > 0;
 };

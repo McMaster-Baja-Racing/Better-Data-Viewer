@@ -78,28 +78,27 @@
         left: 50%;
         transform: translate(-50%, -50%);
 
-        // Dot size & color
         width: 0.5rem;
         height: 0.5rem;
         background-color: #fff;
         border-radius: 50%;
 
-        // The top and bottom dots are created with box-shadow offsets
         box-shadow:
           0 -0.85rem 0 0 #fff,
           0 0.85rem 0 0 #fff;
       }
     }
 
-    // Actual content of the sidebar
     .sidebarContent {
       @include mixins.scrollbar-dark;
-      overflow-x: hidden;
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
+      padding: 1rem 0.75rem;
+      overflow-x: hidden;
+      box-sizing: border-box;
     }
   }
 }
