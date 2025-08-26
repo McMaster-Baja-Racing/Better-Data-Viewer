@@ -1,7 +1,7 @@
 import { Accordion } from '@components/ui/accordion/Accordion';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
 import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
-import styles from './GeneralStyles.module.scss';
+import styles from './GraphEditors.module.scss';
 import { useChartOptions } from '@contexts/ChartOptionsContext';
 import { settingsIcon } from '@assets/icons';
 

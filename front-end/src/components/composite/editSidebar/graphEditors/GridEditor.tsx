@@ -3,7 +3,7 @@ import { Accordion } from '@components/ui/accordion/Accordion';
 import { ColorPicker } from '@components/ui/colorPicker/ColorPicker';
 import { OptionSquare } from '@components/ui/optionSquare/optionSquare';
 import { useChartOptions } from '@contexts/ChartOptionsContext';
-import styles from './GeneralStyles.module.scss';
+import styles from './GraphEditors.module.scss';
 
 export const GridEditor = () => {
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
