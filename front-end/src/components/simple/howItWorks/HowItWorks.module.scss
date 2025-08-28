@@ -1,0 +1,136 @@
+@use '@styles/_fonts';
+
+.howItWorksWrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background);
+  width: 100%;
+  padding-bottom: 4rem;
+
+  .title {
+    all: unset;
+    @include fonts.title-large;
+    color: var(--text-colour);
+    text-align: left;
+    margin-left: 12.5%;
+    margin-bottom: 2rem;
+  }
+
+  .stepsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+
+    &.stepReverse {
+      flex-direction: row-reverse;
+    }
+
+    .stepContent {
+      flex: 1;
+      max-width: 500px;
+
+      .stepHeadline {
+        all: unset;
+        @include fonts.title-medium;
+        color: var(--text-colour);
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .stepText {
+        @include fonts.text-large;
+        color: var(--alt-text);
+        line-height: 1.6;
+        margin: 0;
+      }
+    }
+
+    .stepImage {
+      flex: 1;
+      max-width: 500px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: var(--background-sec);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+
+      img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+
+    .summaryText {
+      @include fonts.text-large;
+      color: var(--alt-text);
+      text-align: center;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .flowDiagram {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .flowStep {
+        @include fonts.text-medium;
+        color: var(--text-colour);
+        background-color: var(--background-sec);
+        padding: 0.75rem 1.5rem;
+        border-radius: 24px;
+        border: 1px solid var(--light-grey);
+        font-weight: 500;
+      }
+
+      .flowArrow {
+        @include fonts.text-large;
+        color: var(--alt-text);
+        font-weight: bold;
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    .step {
+      flex-direction: column !important;
+      gap: 2rem;
+
+      .stepContent, .stepImage {
+        max-width: 100%;
+      }
+    }
+
+    .flowDiagram {
+      .flowStep {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+      }
+    }
+  }
+}
