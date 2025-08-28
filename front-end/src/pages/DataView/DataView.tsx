@@ -6,6 +6,7 @@ import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
 import { ChartOptionsProvider } from '@contexts/ChartOptionsContext';
 import { useDashboard } from '@contexts/DashboardContext';
 import { useChartQuery } from '@contexts/ChartQueryContext';
+import { Button } from '@components/ui/button/Button';
 import styles from './DataView.module.scss';
 
 export const DataView = () => {
@@ -57,12 +58,12 @@ const DataViewContent = () => {
               <p className={styles.emptyStateDescription}>
                 Get started by selecting data sources from the sidebar to visualize your data.
               </p>
-              <button
-                className={styles.editGraphButton}
+              <Button
+                paddingY={'0.5rem'}
                 onClick={() => setIsOpen(true)}
               >
                 Edit Graph
-              </button>
+              </Button>
             </div>
           )}
         </GraphWrapper>

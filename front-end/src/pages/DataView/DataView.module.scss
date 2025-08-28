@@ -31,21 +31,5 @@
     line-height: 1.6;
     color: var(--alt-text);
   }
-
-  .editGraphButton {
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
-    background-color: var(--primary);
-    color: var(--text-colour);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 500;
-
-    &:hover {
-      background-color: var(--accent);
-    }
-  }
 }
 
