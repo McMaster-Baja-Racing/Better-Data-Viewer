@@ -3,26 +3,38 @@ import { BaseModal } from '@components/ui/baseModal/BaseModal';
 import { FileTable } from '@components/ui/fileTable/FileTable';
 import { UploadForm } from '@components/ui/uploadForm/UploadForm';
 import { Button } from '@components/ui/button/Button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { rightArrowIcon } from '@assets/icons';
 import { ApiUtil } from '@lib/apiUtils';
-import { DataViewerPreset, FileInformation } from '@types';
+import { FileInformation } from '@types';
 import { showWarningToast } from '@components/ui/toastNotification/ToastNotification';
 import { useFiles } from '@lib/files/useFiles';
 import { getFolders } from '@lib/files/filesHelpers';
+import { DropdownOption } from '@components/ui/dropdown/Dropdown';
 
 interface PresetFilesModalProps {
   onClose: () => void;
   isOpen: boolean;
-  onSubmit: (fileKeys: string[], preset: DataViewerPreset) => void;
-  preset: DataViewerPreset;
+  onSubmit: (fileKeys: string[]) => void;
+  currentSources?: DropdownOption<string>[];
 }
 
-export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFilesModalProps) => {
+export const PresetFilesModal = ({ onClose, isOpen, onSubmit, currentSources }: PresetFilesModalProps) => {
   // TODO: Adjust based on preset
   const [selectedFiles, setSelectedFiles] = useState<FileInformation[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const { data: files, refetch } = useFiles();
+
+  // Pre-select files based on currentSources prop
+  useEffect(() => {
+    if (!currentSources || !files?.length) return;
+
+    const sourceKeys = new Set(currentSources.map(s => s.value));
+
+    setSelectedFiles(
+      getFolders(files).filter(file => sourceKeys.has(file.key))
+    );
+  }, [currentSources, files]);
 
   const handleSubmit = async () => {
     if (selectedFiles.length === 0 && uploadedFiles.length === 0) {
@@ -37,7 +49,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, preset }: PresetFi
     const fileKeys = selectedFiles.map((file) => file.key);
     fileKeys.push(...uploadedFiles.map((file) => file.name));
 
-    onSubmit(fileKeys, preset);
+    onSubmit(fileKeys);
     onClose();
     refetch(); // Refetch files after upload
   };

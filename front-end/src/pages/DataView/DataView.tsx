@@ -1,59 +1,78 @@
-import { dataColumnKeys } from '@types';
 import Chart from '@components/legacy/views/Chart/Chart';
 import { GraphWrapper } from '@components/simple/graphWrapper/GraphWrapper';
 import { RightSidebar } from '@components/ui/rightSidebar/RightSidebar';
 import { useEffect, useState } from 'react';
 import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
 import { ChartOptionsProvider } from '@contexts/ChartOptionsContext';
-import { DashboardProvider } from '@contexts/DashboardContext';
+import { useDashboard } from '@contexts/DashboardContext';
 import { useChartQuery } from '@contexts/ChartQueryContext';
+import { Button } from '@components/ui/button/Button';
+import styles from './DataView.module.scss';
 
 export const DataView = () => {
-  const { series } = useChartQuery();
-  const [bins, setBins] = useState<string[]>([]); // TODO: Expand past bins
-  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <ChartOptionsProvider>
+      <DataViewContent />
+    </ChartOptionsProvider>
+  );
+};
 
+const DataViewContent = () => {
+  const { series } = useChartQuery();
+  const { sources } = useDashboard();
+  
+  // Open sidebar by default when there's no data to help users get started
+  const hasInitialData = series && series.length > 0 && series.some(s => s?.x?.source || s?.y?.source);
+  const [isOpen, setIsOpen] = useState(!hasInitialData);
+
+  // Update sidebar state when series changes
   useEffect(() => {
-    const tempBins = series
-      .filter((file) => file?.x?.source || file?.y?.source) // Only include series with at least one source
-      .map((file) =>
-        dataColumnKeys
-          .map((key) => file[key]?.source)
-          .filter((fn): fn is string => !!fn)
-          .map((filename) => filename.split('/')[0])
-      );
-    const uniqueBins = [...new Set(tempBins.flat())];
-    setBins(uniqueBins);
+    const hasValidData = series && series.length > 0 && series.some(s => s?.x?.source || s?.y?.source);
+    if (!hasValidData) {
+      setIsOpen(true); // Keep sidebar open when no data
+    }
   }, [series]);
 
-  if (!series || series.length === 0) {
-    return <div>Loading...</div>;
-  }
+  // Check if we have any complete series data to display
+  const hasData = series && series.length > 0 && series.some(s => s?.x?.source || s?.y?.source);
 
   return (
     // TODO: Extract this title better
-    <ChartOptionsProvider>
-      <DashboardProvider>
-        <RightSidebar
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          mainContent={
-            <GraphWrapper 
-              editOnClick={() => setIsOpen(!isOpen)}
-            >
-              <Chart
-                video={null}
-                videoTimestamp={0}
-              />
-            </GraphWrapper>
-          }
-          sidebarContent={
-            <EditSidebar 
-              sources={bins}
+    <RightSidebar
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      mainContent={
+        <GraphWrapper 
+          editOnClick={() => setIsOpen(!isOpen)}
+        >
+          {hasData ? (
+            <Chart
+              video={null}
+              videoTimestamp={0}
             />
-          }
+          ) : (
+            <div className={styles.emptyState}>
+              <h2 className={styles.emptyStateHeading}>
+                Create Your Graph
+              </h2>
+              <p className={styles.emptyStateDescription}>
+                Get started by selecting data sources from the sidebar to visualize your data.
+              </p>
+              <Button
+                paddingY={'0.5rem'}
+                onClick={() => setIsOpen(true)}
+              >
+                Edit Graph
+              </Button>
+            </div>
+          )}
+        </GraphWrapper>
+      }
+      sidebarContent={
+        <EditSidebar 
+          sources={sources}
         />
-      </DashboardProvider>
-    </ChartOptionsProvider>
+      }
+    />
   );
 };

@@ -42,15 +42,19 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
 
   useEffect(() => {
     // TODO: Don't just use the first series for axis titles
+    // Provide default titles when no series are available
+    const xTitle = series[0]?.x?.dataType || 'X Axis';
+    const yTitle = series[0]?.y?.dataType || 'Y Axis';
+    
     chartOptionsDispatch({
       type: 'SET_AXIS_TITLE',
       axis: 'xAxis',
-      title: series[0]?.x.dataType
+      title: xTitle
     });
     chartOptionsDispatch({
       type: 'SET_AXIS_TITLE',
       axis: 'yAxis',
-      title: series[0]?.y.dataType
+      title: yTitle
     });
   }, [series]);
 

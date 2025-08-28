@@ -4,18 +4,21 @@ type DashboardAction =
   | { type: 'SET_TITLE'; title: string }
   | { type: 'TOGGLE_SIDEBAR' }
   | { type: 'SET_LAYOUT'; layout: string }
-  | { type: 'TOGGLE_LIVE' };
+  | { type: 'TOGGLE_LIVE' }
+  | { type: 'SET_SOURCES'; sources: string[] }
+  | { type: 'ADD_SOURCES'; sources: string[] };
 
 const DashboardContext = createContext<{
   title: string;
   sidebarOpen: boolean;
   layout: string;
   live: boolean;
+  sources: string[];
   dispatch: React.Dispatch<DashboardAction>;
 } | undefined>(undefined);
 
 const dashboardReducer = (state: { 
-  title: string; sidebarOpen: boolean; layout: string, live: boolean 
+  title: string; sidebarOpen: boolean; layout: string; live: boolean; sources: string[]
 }, action: DashboardAction) => {
   switch (action.type) {
     case 'SET_TITLE':
@@ -26,6 +29,13 @@ const dashboardReducer = (state: {
       return { ...state, layout: action.layout };
     case 'TOGGLE_LIVE':
       return { ...state, live: !state.live };
+    case 'SET_SOURCES':
+      return { ...state, sources: action.sources };
+    case 'ADD_SOURCES': {
+      // Merge current sources with new ones, removing duplicates
+      const mergedSources = [...new Set([...state.sources, ...action.sources])];
+      return { ...state, sources: mergedSources };
+    }
     default:
       return state;
   }
@@ -36,7 +46,8 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
     title: 'Dashboard',
     sidebarOpen: false,
     layout: 'grid',
-    live: false
+    live: false,
+    sources: [] as string[]
   };
 
   const [state, dispatch] = useReducer(dashboardReducer, initialState);
