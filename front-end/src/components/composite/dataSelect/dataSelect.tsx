@@ -107,8 +107,7 @@ export function DataSelect({
     if (value === '___VIEW_ALL___') {
       // Trigger the view all sources callback
       openModal('preset', {
-        onSubmit: (fileKeys: string[]) => {
-          dashboardDispatch({ type: 'SET_SOURCES', sources: fileKeys });
+          dashboardDispatch({ type: 'SET_SOURCES', sources: fileKeys.map(key => key.split('/')[0]) });
           closeModal();
         },
         currentSources: sources
