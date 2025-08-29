@@ -1,5 +1,6 @@
 import { TitleCard } from '@components/simple/titleCard/titleCard';
 import { PresetList } from '@components/composite/presetList/PresetList';
+import { HowItWorks } from '@components/simple/howItWorks/HowItWorks';
 import { Footer } from '@components/simple/footer/Footer';
 import styles from './Homepage.module.scss';
 import { DataViewerPreset } from '@types';
@@ -52,6 +53,7 @@ export const Homepage = () => {
       <TitleCard />
       <div className={styles.body}>
         <PresetList handleClick={handleClick}/>
+        <HowItWorks />
       </div>
       <div className={styles.footerWrapper}>
         <Footer />
