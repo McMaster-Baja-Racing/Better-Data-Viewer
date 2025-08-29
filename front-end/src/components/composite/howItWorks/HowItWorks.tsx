@@ -1,29 +1,26 @@
 import styles from './HowItWorks.module.scss';
-import dataParsingImg from '@assets/homepage/dataParsing.png';
-import dashboardImg from '@assets/homepage/dashboard.png';
-import analyzerImg from '@assets/homepage/analyzers.png';
 
 export const HowItWorks = () => {
   const steps = [
     {
       headline: 'Files → Organized Data',
       text: 'Upload your files and we\'ll do the rest. Data is grouped by source and unpacked into clean, ' +
-        'time-based series (like speed, location, or acceleration). Everything lines up so it\'s easy to compare.',
-      image: dataParsingImg,
+        'time-based series (like speed, location, or heart rate). Everything lines up so it\'s easy to compare.',
+      image: '/api/placeholder/400/300', // Placeholder for raw files turning into time-series boxes
       alt: 'Raw files transforming into organized time-series data'
     },
     {
       headline: 'Presets → Instant Dashboards', 
       text: 'Presets scan your data, pick out what matters, and create dashboards automatically. ' +
         'Charts, maps, and summaries appear instantly—no setup required.',
-      image: dashboardImg,
+      image: '/api/placeholder/400/300', // Placeholder for preset dashboard mockup
       alt: 'Preset dashboard with auto-filled charts and maps'
     },
     {
       headline: 'Analyzers → Smarter Insights',
       text: 'Fine-tune any data series with a click. Smooth noise, compress large files, or rescale values—' +
         'applied automatically or manually with the Σ (Sigma) button.',
-      image: analyzerImg,
+      image: '/api/placeholder/400/300', // Placeholder for analyzer UI mockup
       alt: 'UI showing Sigma button with analyzer options'
     }
   ];
