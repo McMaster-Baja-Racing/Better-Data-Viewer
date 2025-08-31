@@ -7,9 +7,7 @@ import {
   trashIcon,
   settingsIcon,
   accountIcon,
-  newGraphIcon,
   cubeIcon,
-  historyIcon,
   mapIcon,
   sidebarToggleCollapsedIcon,
   sidebarToggleExpandedIcon,
@@ -40,11 +38,6 @@ const SidebarItem = ({ icon, text, onClick }: SidebarItemProps) => {
   );
 };
 
-// TODO: Remove these props once custom modal is reworked
-interface SidebarProps {
-    setModal: (modal: string) => void;
-}
-
 const deleteAllFiles = async () => {
   const res = await ApiUtil.deleteAllFiles();
 
@@ -55,7 +48,7 @@ const deleteAllFiles = async () => {
   }
 };
 
-const Sidebar = ({ setModal }: SidebarProps) => {
+const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const toggleSidebar = () => setIsExpanded(!isExpanded);
   const { openModal } = useModal();
@@ -94,8 +87,7 @@ const Sidebar = ({ setModal }: SidebarProps) => {
         {/* <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/> */}
         <SidebarItem icon={cubeIcon} text="Model Viewer" onClick={() => onIconClick('IMU')}/>
         <SidebarItem icon={mapIcon} text="Map" onClick={() => onIconClick('map')}/>
-        <SidebarItem icon={newGraphIcon} text="Legacy Create Graph" onClick={() => setModal('Create')}/>
-        <SidebarItem icon={historyIcon} text="Legacy UI" onClick={() => onIconClick('old')}/>
+        {/* <SidebarItem icon={historyIcon} text="Legacy UI" onClick={() => onIconClick('old')}/> */}
         <SidebarItem icon={trashIcon} text="Delete All Files" onClick={() => deleteAllFiles()}/>
       </div>
       <div className={styles.footerHeader}>

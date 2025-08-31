@@ -171,6 +171,7 @@ $toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $t
     }
 
     .sidebarItem {
+        all: unset;
         display: grid;
         grid-template-columns: inherit;
         grid-column: span 2;
