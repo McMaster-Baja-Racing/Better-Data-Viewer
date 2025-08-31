@@ -2,6 +2,21 @@ import { AnalyzerType, DataViewerPreset } from '@types';
 
 export const subteamGraphPresets: DataViewerPreset[] = [
   {
+    name: 'Speed',
+    description: 'Vehicle speed vs Timestamp (ms) with Sgolay filter',
+    graphs: [
+      {
+        axes: [
+          { source: 'GPS SPEED.csv', dataType: 'Timestamp (ms)' },
+          { source: 'GPS SPEED.csv', dataType: 'GPS SPEED' },
+        ],
+        analyzer: null,
+        analyzerOptions: [],
+        graphType: 'line',
+      },
+    ],
+  },
+  {
     name: 'Shift Curve',
     description: 'Primary RPM vs Secondary RPM',
     graphs: [
@@ -26,21 +41,6 @@ export const subteamGraphPresets: DataViewerPreset[] = [
           { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
         ],
         analyzer: AnalyzerType.ACCEL_CURVE,
-        analyzerOptions: [],
-        graphType: 'line',
-      },
-    ],
-  },
-  {
-    name: 'Speed',
-    description: 'Vehicle speed vs Timestamp (ms) with Sgolay filter',
-    graphs: [
-      {
-        axes: [
-          { source: 'GPS SPEED.csv', dataType: 'Timestamp (ms)' },
-          { source: 'GPS SPEED.csv', dataType: 'GPS SPEED' },
-        ],
-        analyzer: null,
         analyzerOptions: [],
         graphType: 'line',
       },
