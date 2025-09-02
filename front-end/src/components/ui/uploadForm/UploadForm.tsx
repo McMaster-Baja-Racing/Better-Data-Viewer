@@ -58,7 +58,6 @@ export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, 
         <p className={styles.text}><strong>Choose a file</strong> or drag it here</p>
         <p className={styles.textHover}><strong>Drop the file</strong></p>
         <input
-          id="file-upload"
           className={styles.input}
           type="file"
           accept={accept}
