@@ -16,7 +16,14 @@ public class ExceptionMappers {
 
   private Response mapBajaException(BajaException e) {
     String errorId = UUID.randomUUID().toString();
-	@@ -27,13 +28,12 @@ private Response mapSystemError(Throwable e, String errorCode, String message) {
+    logger.error("errorId[{}]", errorId, e);
+
+    ErrorResponse errorResponse = e.toErrorResponse();
+
+    return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
+  }
+
+  private Response mapSystemError(Throwable e, String errorCode, String message) {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
