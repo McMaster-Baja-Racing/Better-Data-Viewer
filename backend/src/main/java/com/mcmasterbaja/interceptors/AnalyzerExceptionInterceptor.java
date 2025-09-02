@@ -23,39 +23,46 @@ public class AnalyzerExceptionInterceptor {
 
       // if a custom exception is being passed up the chain just re throw it to avoid
       // transforming things over and over and getting big nested messages
-    } catch (AnalyzerException | InvalidColumnException | InvalidHeaderException | InvalidInputFileException
+    } catch (AnalyzerException
+        | InvalidColumnException
+        | InvalidHeaderException
+        | InvalidInputFileException
         | InvalidOutputFileException e) {
       throw e;
 
     } catch (IOException e) {
       // Convert IOException to an AnalyzerException
-      String msg = "Analyzer operation failed due to an I/O error: "
-          + context.getMethod().getName()
-          + " - "
-          + e.getMessage();
+      String msg =
+          "Analyzer operation failed due to an I/O error: "
+              + context.getMethod().getName()
+              + " - "
+              + e.getMessage();
       throw new AnalyzerException(msg, e);
 
     } catch (CsvValidationException e) {
       // Convert CsvValidationException to an AnalyzerException
-      String msg = "Analyzer operation failed due to a CSV validation error: "
-          + context.getMethod().getName()
-          + " - "
-          + e.getMessage();
+      String msg =
+          "Analyzer operation failed due to a CSV validation error: "
+              + context.getMethod().getName()
+              + " - "
+              + e.getMessage();
       throw new AnalyzerException(msg, e);
 
     } catch (CsvException e) {
       // Convert CsvException to an AnalyzerException
-      String msg = "Analyzer operation failed due to a CSV error: "
-          + context.getMethod().getName()
-          + " - "
-          + e.getMessage();
+      String msg =
+          "Analyzer operation failed due to a CSV error: "
+              + context.getMethod().getName()
+              + " - "
+              + e.getMessage();
       throw new AnalyzerException(msg, e);
 
     } catch (Exception e) {
-      String msg = "Analyzer operation failed during method: "
-          + context.getMethod().getName()
-          + " - "
-          + e.getMessage();
+      String msg =
+          "Analyzer operation failed during method: "
+              + context.getMethod().getName()
+              + " - "
+              + e.getMessage();
       throw new AnalyzerException(msg, e);
     }
   }
