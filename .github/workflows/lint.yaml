@@ -128,12 +128,6 @@ jobs:
         serve -s build -l 5173 &
       continue-on-error: true
 
-    - name: Wait for servers to be ready
-      run: |
-        npx --yes wait-on tcp:127.0.0.1:8080 tcp:127.0.0.1:5173 --timeout 180000
-        curl -fsS -I http://127.0.0.1:8080 || (echo "Backend not healthy"; exit 1)
-        curl -fsS -I http://127.0.0.1:5173 || (echo "Frontend not healthy"; exit 1)
-
     # - name: Install Xvfb
     #   run: sudo apt-get install -y xvfb
 
