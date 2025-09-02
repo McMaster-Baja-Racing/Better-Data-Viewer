@@ -65,8 +65,8 @@ export class UploadTester extends Tester {
   }
 
   async uploadFile(filePath: string) {
-    await this.page.locator('#file-upload').click();
-    await this.page.setInputFiles('#file-upload', filePath);
+    await this.page.locator('#label-file-upload').click();
+    await this.page.setInputFiles('#label-file-upload', filePath);
   }
 
   async submitFile() {
