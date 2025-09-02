@@ -21,71 +21,41 @@ public class AnalyzerExceptionInterceptor {
     try {
       return context.proceed();
 
+      // if a custom exception is being passed up the chain just re throw it to avoid
+      // transforming things over and over and getting big nested messages
+    } catch (AnalyzerException | InvalidColumnException | InvalidHeaderException | InvalidInputFileException
+        | InvalidOutputFileException e) {
+      throw e;
+
     } catch (IOException e) {
       // Convert IOException to an AnalyzerException
-      String msg =
-          "Analyzer operation failed due to an I/O error: "
-              + context.getMethod().getName()
-              + " - "
-              + e.getMessage();
+      String msg = "Analyzer operation failed due to an I/O error: "
+          + context.getMethod().getName()
+          + " - "
+          + e.getMessage();
       throw new AnalyzerException(msg, e);
 
     } catch (CsvValidationException e) {
       // Convert CsvValidationException to an AnalyzerException
-      String msg =
-          "Analyzer operation failed due to a CSV validation error: "
-              + context.getMethod().getName()
-              + " - "
-              + e.getMessage();
+      String msg = "Analyzer operation failed due to a CSV validation error: "
+          + context.getMethod().getName()
+          + " - "
+          + e.getMessage();
       throw new AnalyzerException(msg, e);
 
     } catch (CsvException e) {
       // Convert CsvException to an AnalyzerException
-      String msg =
-          "Analyzer operation failed due to a CSV error: "
-              + context.getMethod().getName()
-              + " - "
-              + e.getMessage();
+      String msg = "Analyzer operation failed due to a CSV error: "
+          + context.getMethod().getName()
+          + " - "
+          + e.getMessage();
       throw new AnalyzerException(msg, e);
 
-    } catch (InvalidInputFileException e) {
-      String msg =
-          "Analyzer operation failed due to an invalid input file: "
-              + context.getMethod().getName()
-              + " - "
-              + e.getMessage();
-      throw new InvalidInputFileException(msg, e);
-
-    } catch (InvalidOutputFileException e) {
-      String msg =
-          "Analyzer operation failed due to an invalid output file: "
-              + context.getMethod().getName()
-              + " - "
-              + e.getMessage();
-      throw new InvalidOutputFileException(msg, e);
-
-    } catch (InvalidHeaderException e) {
-      String msg =
-          "Analyzer operation failed due to a header error: "
-              + context.getMethod().getName()
-              + " - "
-              + e.getMessage();
-      throw new InvalidHeaderException(msg, e);
-
-    } catch (InvalidColumnException e) {
-      String msg =
-          "Analyzer operation failed due to an invalid column: "
-              + context.getMethod().getName()
-              + " - "
-              + e.getMessage();
-      throw new InvalidColumnException(msg, e);
-
     } catch (Exception e) {
-      String msg =
-          "Analyzer operation failed during method: "
-              + context.getMethod().getName()
-              + " - "
-              + e.getMessage();
+      String msg = "Analyzer operation failed during method: "
+          + context.getMethod().getName()
+          + " - "
+          + e.getMessage();
       throw new AnalyzerException(msg, e);
     }
   }
