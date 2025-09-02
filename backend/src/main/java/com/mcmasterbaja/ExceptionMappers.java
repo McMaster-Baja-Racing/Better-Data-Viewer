@@ -12,7 +12,8 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 // Exceptions are mapped in priority of most specific first
 public class ExceptionMappers {
 
-  @Inject Logger logger;
+  @Inject
+  Logger logger;
 
   private Response mapBajaException(BajaException e) {
     String errorId = UUID.randomUUID().toString();
@@ -27,13 +28,12 @@ public class ExceptionMappers {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
-    ErrorResponse errorResponse =
-        new ErrorResponse(
-            errorId,
-            e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
-            message,
-            errorCode,
-            e.getMessage());
+    ErrorResponse errorResponse = new ErrorResponse(
+        errorId,
+        e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
+        message,
+        errorCode,
+        e.getMessage());
 
     return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
   }

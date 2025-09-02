@@ -1,6 +1,7 @@
 import { AnalyzerType, FileInformation, FileTimespan, MinMax, RawFileInformation } from '@types';
 import { isElectron } from './navigationUtils';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
+import { extractUserMessage } from './errorUtils';
 
 const baseApiUrl = 'http://' + (isElectron ? 'localhost' : window.location.hostname) + ':8080';
 
@@ -14,7 +15,11 @@ export const ApiUtil = {
   getFileAsText: async (fileKey: string) => {
     fileKey = encodeURIComponent(fileKey);
     const response = await fetch(`${baseApiUrl}/files/${fileKey}`);
-    if (!response.ok) throw Error(response.statusText);
+    if (!response.ok) {
+      const errorText = await response.text();
+      const cleanMessage = extractUserMessage(errorText);
+      throw Error(cleanMessage);
+    }
     return response.text();
   },
 
@@ -26,7 +31,11 @@ export const ApiUtil = {
   getFileAsBlob: async (fileKey: string) => {
     fileKey = encodeURIComponent(fileKey);
     const response = await fetch(`${baseApiUrl}/files/${fileKey}`);
-    if (!response.ok) throw Error(response.statusText);
+    if (!response.ok) {
+      const errorText = await response.text();
+      const cleanMessage = extractUserMessage(errorText);
+      throw Error(cleanMessage);
+    }
     return response.blob();
   },
 
@@ -107,7 +116,9 @@ export const ApiUtil = {
     });
 
     if (!response.ok) {
-      showErrorToast(`Code: ${response.status}\n${await response.text()}`);
+      const errorText = await response.text();
+      const cleanMessage = extractUserMessage(errorText);
+      showErrorToast(`Code: ${response.status}\n${cleanMessage}`);
       throw Error(response.statusText);
     }
 
@@ -146,7 +157,9 @@ export const ApiUtil = {
     });
 
     if (!response.ok) {
-      showErrorToast(`Code: ${response.status}\n${await response.text()}`);
+      const errorText = await response.text();
+      const cleanMessage = extractUserMessage(errorText);
+      showErrorToast(`Code: ${response.status}\n${cleanMessage}`);
     }
 
     const contentDisposition = response.headers.get('content-disposition');
@@ -166,7 +179,9 @@ export const ApiUtil = {
     const response = await fetch(url);
         
     if (!response.ok) {
-      showErrorToast(`Code: ${response.status}\n${await response.text()}`);
+      const errorText = await response.text();
+      const cleanMessage = extractUserMessage(errorText);
+      showErrorToast(`Code: ${response.status}\n${cleanMessage}`);
       throw Error(response.statusText);
     }
     return response.json();
