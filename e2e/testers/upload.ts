@@ -73,7 +73,7 @@ export class UploadTester extends Tester {
   }
 
   async verifyFilesUploaded() {
-    await expect(this.page.getByRole('heading', { name: 'Files uploaded successfully' })).toBeVisible();
+    await expect(this.page.getByText('Files uploaded successfully')).toBeVisible();
   }
 
   async verifyNoFileSelectedAlert() {
