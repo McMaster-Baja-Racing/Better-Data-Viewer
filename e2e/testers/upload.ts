@@ -22,6 +22,13 @@ export class UploadTester extends Tester {
   }
 
   async testUploadBinFile() {
+    // Check backend availability before proceeding
+    try {
+      await this.checkBackendAvailability();
+    } catch (error) {
+      throw new Error(`Backend check failed before upload test: ${error.message}`);
+    }
+    
     await this.openUploadForm();
     await this.uploadFile(this.binFilePath);
     await this.submitFile();
@@ -29,6 +36,13 @@ export class UploadTester extends Tester {
   }
 
   async testUploadNoFile() {
+    // Check backend availability before proceeding
+    try {
+      await this.checkBackendAvailability();
+    } catch (error) {
+      throw new Error(`Backend check failed before no-file test: ${error.message}`);
+    }
+    
     await this.openUploadForm();
     await this.submitFile();
     await this.verifyNoFileSelectedAlert();

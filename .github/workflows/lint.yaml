@@ -118,7 +118,21 @@ jobs:
       working-directory: ./e2e
 
     - name: Start the backend server
-      run: java -jar -Dquarkus.http.host=localhost ./target/quarkus-app/quarkus-run.jar &
+      run: |
+        echo "Starting backend server on 0.0.0.0:8080..."
+        java -jar -Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=8080 ./target/quarkus-app/quarkus-run.jar > backend.log 2>&1 &
+        echo $! > backend.pid
+        
+        # Wait for backend to start
+        echo "Waiting for backend to be ready..."
+        sleep 10
+        
+        # Check if backend is running
+        curl -v http://localhost:8080/files/information || echo "Backend not responding"
+        
+        # Show backend logs for debugging
+        echo "Backend logs:"
+        cat backend.log
       working-directory: ./backend
 
     - name: Serve the frontend

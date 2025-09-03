@@ -24,7 +24,16 @@ export const getTimestamps = async (text: string) => {
 export const getHeadersIndex = (headers: string[], columns: Column[]) => {
   const h = { x: -1, y: -1, colour: -1 };
   for (let i = 0; i < columns.length; i++) {
+    if (!columns[i] || !columns[i].dataType) {
+      console.warn(`Invalid column at index ${i}:`, columns[i]);
+      continue;
+    }
+    
     for (let j = 0; j < headers.length; j++) {
+      if (!headers[j]) {
+        continue;
+      }
+      
       if (columns[i].dataType.trim() === headers[j].trim()) {
         if (i === 0) {
           h.x = j;
