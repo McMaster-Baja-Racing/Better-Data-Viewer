@@ -7,7 +7,7 @@ test.describe('Upload Form', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto(WEB_SERVER_URL);
-    await expect(page.getByRole('button', { name: 'Upload' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Icon Upload Data' })).toBeVisible();
   });
 
   test('should open upload form and submit a file', async ({ page }) => {
