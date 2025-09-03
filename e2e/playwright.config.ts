@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-export const WEB_SERVER_URL = 'http://localhost:5173/old';
+export const WEB_SERVER_URL = 'http://localhost:5173';
 
 /**
  * Read environment variables from file.
