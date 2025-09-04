@@ -7,24 +7,32 @@ import { ChartOptionsProvider } from '@contexts/ChartOptionsContext';
 import { useDashboard } from '@contexts/DashboardContext';
 import { useChartQuery } from '@contexts/ChartQueryContext';
 import { EmptyGraph } from '../../components/simple/emptyGraph/EmptyGraph';
+import { AddGraph } from '../../components/simple/addGraph/addGraph';
 import styles from './DataView.module.scss';
 
-
 export const DataView = () => {
+  const [isEditMode, setIsEditMode] = useState(false);
+
   return (
     <ChartOptionsProvider>
-      <DataViewContent />
+      <DataViewContent onEditModeChange={setIsEditMode} />
+      {!isEditMode && <AddGraph />}
     </ChartOptionsProvider>
   );
 };
 
-const DataViewContent = () => {
+const DataViewContent = ({ onEditModeChange }: { onEditModeChange: (isEdit: boolean) => void }) => {
   const { series } = useChartQuery();
   const { sources } = useDashboard();
   
   // Open sidebar by default when there's no data to help users get started
   const hasInitialData = series && series.length > 0 && series.some(s => s?.x?.source || s?.y?.source);
   const [isOpen, setIsOpen] = useState(!hasInitialData);
+
+  // Update parent about edit mode
+  useEffect(() => {
+    onEditModeChange(isOpen);
+  }, [isOpen, onEditModeChange]);
 
   // Update sidebar state when series changes
   useEffect(() => {
