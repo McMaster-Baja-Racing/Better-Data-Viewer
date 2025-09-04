@@ -1,6 +1,6 @@
 import { ReactNode, useState, useRef, useEffect } from 'react';
 import styles from './GraphWrapper.module.scss';
-import {fullscreenIcon, unfullscreenIcon, writeIcon, threeDotsIcon} from '@assets/icons';
+import {fullscreenIcon, unfullscreenIcon, writeIcon, threeDotsIcon, addIcon} from '@assets/icons';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 import { useDashboard } from '@contexts/DashboardContext';
 
@@ -55,6 +55,7 @@ export const GraphWrapper = ({ editOnClick, children }: GraphWrapperProps) => {
             className={styles.icon}
             onClick={handleFullscreenToggle}
           />
+          <img src={addIcon} className={styles.icon} alt="Add Graph icon" />
           <img src={threeDotsIcon} className={styles.icon} alt="Options icon" />
         </div>
       </div>
