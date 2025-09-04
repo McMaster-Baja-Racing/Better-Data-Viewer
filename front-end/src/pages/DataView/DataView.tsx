@@ -6,8 +6,9 @@ import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
 import { ChartOptionsProvider } from '@contexts/ChartOptionsContext';
 import { useDashboard } from '@contexts/DashboardContext';
 import { useChartQuery } from '@contexts/ChartQueryContext';
-import { Button } from '@components/ui/button/Button';
+import { EmptyGraph } from '../../components/simple/emptyGraph/EmptyGraph';
 import styles from './DataView.module.scss';
+
 
 export const DataView = () => {
   return (
@@ -51,20 +52,7 @@ const DataViewContent = () => {
               videoTimestamp={0}
             />
           ) : (
-            <div className={styles.emptyState}>
-              <h2 className={styles.emptyStateHeading}>
-                Create Your Graph
-              </h2>
-              <p className={styles.emptyStateDescription}>
-                Get started by selecting data sources from the sidebar to visualize your data.
-              </p>
-              <Button
-                paddingY={'0.5rem'}
-                onClick={() => setIsOpen(true)}
-              >
-                Edit Graph
-              </Button>
-            </div>
+            <EmptyGraph onEditClick={() => setIsOpen(true)} />
           )}
         </GraphWrapper>
       }
