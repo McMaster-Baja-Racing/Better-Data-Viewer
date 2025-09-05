@@ -1,39 +1,37 @@
 /**
- * Clean up error messages to be more user-friendly by keeping all details
- * but formatting them nicely for better readability
+ * Clean up error messages to be more user-friendly by removing technical details
+ * and keeping only the main error message and user-relevant information
  * @param errorMessage - The raw error message from the backend
- * @returns A cleaned, user-friendly error message with all details
+ * @returns A cleaned, user-friendly error message
  */
 export function cleanErrorMessage(errorMessage: string): string {
   if (!errorMessage) return errorMessage;
 
   let cleaned = errorMessage;
 
-  // Keep error IDs but make them more readable
-  cleaned = cleaned.replace(/"errorId":"([a-f0-9-]+)",?/g, '\nError ID: $1');
+  // Remove error IDs
+  cleaned = cleaned.replace(/"errorId":"[a-f0-9-]+",?/g, '');
 
-  // Keep path information but make it more readable
-  cleaned = cleaned.replace(/"path":"([^"]*)",?/g, '\nPath: $1');
+  // Remove path information
+  cleaned = cleaned.replace(/"path":"[^"]*",?/g, '');
 
-  // Keep timestamp information but make it more readable
-  cleaned = cleaned.replace(/"timestamp":"([^"]*)",?/g, '\nTime: $1');
+  // Remove timestamp information
+  cleaned = cleaned.replace(/"timestamp":"[^"]*",?/g, '');
 
-  // Keep errorType but make it more readable
-  cleaned = cleaned.replace(/"errorType":"([^"]*)",?/g, '\nType: $1');
+  // Remove errorType
+  cleaned = cleaned.replace(/"errorType":"[^"]*",?/g, '');
 
-  // Keep details field but make it more readable
-  cleaned = cleaned.replace(/"details":"([^"]*)",?/g, '\nDetails: $1');
-
-  // Keep status codes
-  cleaned = cleaned.replace(/"status":"?([^",]*)"?,?/g, '\nStatus: $1');
-  cleaned = cleaned.replace(/"statusCode":"?([^",]*)"?,?/g, '\nStatus Code: $1');
-  cleaned = cleaned.replace(/"code":"?([^",]*)"?,?/g, '\nCode: $1');
+  // Remove code field
+  cleaned = cleaned.replace(/"code":"?[^",]*"?,?/g, '');
 
   // Keep message but make it more readable
-  cleaned = cleaned.replace(/"message":"([^"]*)",?/g, '\nMessage: $1');
+  cleaned = cleaned.replace(/"message":"([^"]*)",?/g, '$1');
+
+  // Keep details field but make it more readable
+  cleaned = cleaned.replace(/"details":"([^"]*)",?/g, ' $1');
 
   // Clean up JSON-like formatting - remove quotes around field names
-  cleaned = cleaned.replace(/"([^"]+)":/g, '\n$1: ');
+  cleaned = cleaned.replace(/"([^"]+)":/g, '$1: ');
 
   // Remove escaped quotes
   cleaned = cleaned.replace(/\\"/g, '"');
@@ -44,11 +42,9 @@ export function cleanErrorMessage(errorMessage: string): string {
   // Replace commas with line breaks for better readability
   cleaned = cleaned.replace(/,\s*/g, '\n');
 
-  // Clean up multiple spaces and normalize whitespace - but don't touch newlines yet
-  cleaned = cleaned.replace(/[^\S\n]+/g, ' ');
-  
-  // Clean up spaces after newlines
-  cleaned = cleaned.replace(/\n /g, '\n');
+  // Clean up multiple spaces and normalize whitespace
+  cleaned = cleaned.replace(/\s+/g, ' ');
+  cleaned = cleaned.replace(/\n\s+/g, '\n');
 
   // Remove leading/trailing whitespace and unnecessary punctuation
   cleaned = cleaned.trim();
@@ -56,8 +52,8 @@ export function cleanErrorMessage(errorMessage: string): string {
   // Remove leading colons or commas
   cleaned = cleaned.replace(/^[,:]\s*/, '');
 
-  // Clean up multiple consecutive newlines - replace with double newlines for better spacing
-  cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+  // Clean up empty lines
+  cleaned = cleaned.replace(/\n\s*\n/g, '\n');
 
   return cleaned || 'An unexpected error occurred';
 }
