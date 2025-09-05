@@ -11,8 +11,8 @@ test.describe('Create graphs', () => {
     await uploadTester.testUploadBinFile();
   });
 
-  test('should open upload form and submit a file', async ({ page }) => {
+  test('should create a graph from preset and file', async ({ page }) => {
     const graphTester = new GraphTester(page, fileName);
-    await graphTester.testCreateGraph();
+    await graphTester.testCreateGraphWithPreset('Preset Speed 1 x New Graph', fileName);
   });
 });
