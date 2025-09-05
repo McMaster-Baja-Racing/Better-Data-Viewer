@@ -1,31 +1,39 @@
 /**
- * Clean up error messages to be more user-friendly by removing technical details,
- * extra quotes, error IDs, and improving formatting for better readability
+ * Clean up error messages to be more user-friendly by keeping all details
+ * but formatting them nicely for better readability
  * @param errorMessage - The raw error message from the backend
- * @returns A cleaned, user-friendly error message
+ * @returns A cleaned, user-friendly error message with all details
  */
 export function cleanErrorMessage(errorMessage: string): string {
   if (!errorMessage) return errorMessage;
 
   let cleaned = errorMessage;
 
-  // Remove error IDs like "errorId":"a4bd8e88-adf3-4d2e-b1c8-0f6a3e170968"
-  cleaned = cleaned.replace(/"errorId":"[a-f0-9-]+",?/g, '');
+  // Keep error IDs but make them more readable
+  cleaned = cleaned.replace(/"errorId":"([a-f0-9-]+)",?/g, '\nError ID: $1');
 
-  // Remove path information like "path":"com.mcmasterbaja.SomeClass.someMethod"
-  cleaned = cleaned.replace(/"path":"[^"]*",?/g, '');
+  // Keep path information but make it more readable
+  cleaned = cleaned.replace(/"path":"([^"]*)",?/g, '\nPath: $1');
 
-  // Remove timestamp information
-  cleaned = cleaned.replace(/"timestamp":"[^"]*",?/g, '');
+  // Keep timestamp information but make it more readable
+  cleaned = cleaned.replace(/"timestamp":"([^"]*)",?/g, '\nTime: $1');
 
-  // Remove errorType if it's just technical info
-  cleaned = cleaned.replace(/"errorType":"[^"]*",?/g, '');
+  // Keep errorType but make it more readable
+  cleaned = cleaned.replace(/"errorType":"([^"]*)",?/g, '\nType: $1');
 
-  // Remove details field if it contains technical stack trace info
-  cleaned = cleaned.replace(/"details":"[^"]*",?/g, '');
+  // Keep details field but make it more readable
+  cleaned = cleaned.replace(/"details":"([^"]*)",?/g, '\nDetails: $1');
+
+  // Keep status codes
+  cleaned = cleaned.replace(/"status":"?([^",]*)"?,?/g, '\nStatus: $1');
+  cleaned = cleaned.replace(/"statusCode":"?([^",]*)"?,?/g, '\nStatus Code: $1');
+  cleaned = cleaned.replace(/"code":"?([^",]*)"?,?/g, '\nCode: $1');
+
+  // Keep message but make it more readable
+  cleaned = cleaned.replace(/"message":"([^"]*)",?/g, '\nMessage: $1');
 
   // Clean up JSON-like formatting - remove quotes around field names
-  cleaned = cleaned.replace(/"([^"]+)":/g, '$1:');
+  cleaned = cleaned.replace(/"([^"]+)":/g, '\n$1: ');
 
   // Remove escaped quotes
   cleaned = cleaned.replace(/\\"/g, '"');
@@ -36,8 +44,11 @@ export function cleanErrorMessage(errorMessage: string): string {
   // Replace commas with line breaks for better readability
   cleaned = cleaned.replace(/,\s*/g, '\n');
 
-  // Clean up multiple spaces and normalize whitespace
-  cleaned = cleaned.replace(/\s+/g, ' ');
+  // Clean up multiple spaces and normalize whitespace - but don't touch newlines yet
+  cleaned = cleaned.replace(/[^\S\n]+/g, ' ');
+  
+  // Clean up spaces after newlines
+  cleaned = cleaned.replace(/\n /g, '\n');
 
   // Remove leading/trailing whitespace and unnecessary punctuation
   cleaned = cleaned.trim();
@@ -45,15 +56,8 @@ export function cleanErrorMessage(errorMessage: string): string {
   // Remove leading colons or commas
   cleaned = cleaned.replace(/^[,:]\s*/, '');
 
-  // If the message starts with "message:" extract just the actual message
-  const messageRegex = /message:\s*(.+)/i;
-  const messageMatch = messageRegex.exec(cleaned);
-  if (messageMatch) {
-    cleaned = messageMatch[1].trim();
-  }
-
-  // Remove any remaining field labels that might be left over
-  cleaned = cleaned.replace(/^(message|error|details|errorType|path):\s*/i, '');
+  // Clean up multiple consecutive newlines - replace with double newlines for better spacing
+  cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
 
   return cleaned || 'An unexpected error occurred';
 }
@@ -61,28 +65,14 @@ export function cleanErrorMessage(errorMessage: string): string {
 /**
  * Extract the user-friendly message from an error response JSON string
  * @param errorResponseText - The raw error response text from the API
- * @returns A cleaned user message
+ * @returns A cleaned user message with all details
  */
 export function extractUserMessage(errorResponseText: string): string {
   try {
     // Try to parse as JSON first
     const errorObj = JSON.parse(errorResponseText);
     
-    // Look for a message field
-    if (errorObj.message) {
-      return cleanErrorMessage(errorObj.message);
-    }
-    
-    // Look for other common error message fields
-    if (errorObj.userMessage) {
-      return cleanErrorMessage(errorObj.userMessage);
-    }
-    
-    if (errorObj.error) {
-      return cleanErrorMessage(errorObj.error);
-    }
-    
-    // If it's a JSON object but no clear message field, clean the whole thing
+    // Clean the whole error object to show all details
     return cleanErrorMessage(errorResponseText);
     
   } catch {
