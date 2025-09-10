@@ -4,12 +4,13 @@
   padding: 1rem;
   box-sizing: border-box;
   overflow: hidden;
+  background-color: var(--background-sec);
 }
 
 .chartContainer {
   position: relative;
-  border-radius: 8px;
   overflow: hidden;
   min-height: 0;
   min-width: 0;
+  
 }

@@ -15,7 +15,7 @@ export const EmptyGraph = ({ onEditClick }: EmptyGraphProps) => {
         Get started by selecting data sources from the sidebar to visualize your data.
       </p>
       <Button
-        paddingY={'0.5rem'}
+        paddingY={'0.2rem'}
         onClick={onEditClick}
       >
         Edit Graph
