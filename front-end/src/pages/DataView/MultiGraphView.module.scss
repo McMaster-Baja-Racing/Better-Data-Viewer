@@ -8,27 +8,8 @@
 
 .chartContainer {
   position: relative;
-  border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
   min-height: 0;
   min-width: 0;
-}
-
-.emptyState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-  
-  h2 {
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-  }
-  
-  p {
-    color: var(--text-secondary);
-  }
 }
