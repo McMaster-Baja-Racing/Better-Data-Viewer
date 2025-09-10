@@ -11,17 +11,15 @@
   color: var(--text-colour);
 
   .emptyStateHeading {
-    font-size: 3.5rem;
-    margin-bottom: 1.5rem;
+    @include fonts.title-small;
     font-weight: 300;
+    line-height: 0rem;
     color: var(--text-colour);
   }
 
   .emptyStateDescription {
-    font-size: 1.5rem;
-    margin-bottom: 3rem;
-    max-width: 31.25rem;
-    line-height: 1.6;
+    @include fonts.title-mini;
     color: var(--alt-text);
+    padding-bottom: 1rem;
   }
 }
