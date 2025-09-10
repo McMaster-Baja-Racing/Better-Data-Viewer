@@ -186,4 +186,37 @@ public class ExceptionMappers {
 
     return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
   }
+
+  
+  @ServerExceptionMapper
+  public Response portNotFound(Exception e) {
+    String errorId = UUID.randomUUID().toString();
+    logger.error("errorId[{}]", errorId, e);
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            errorId,
+            e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
+            "No suitable port detected",
+            "PORT_NOT_FOUND",
+            e.getMessage());
+
+    return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
+  }
+
+  @ServerExceptionMapper
+  public Response invalidFile (IOException e) {
+    String errorId = UUID.randomUUID().toString();
+    logger.error("errorId[{}]", errorId, e);
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            errorId,
+            e.getStackTrace()[0].getClassName() + "." + e.getStackTrace()[0].getMethodName(),
+            "File not found / could not write to file",
+            "FILE_NOT_FOUND",
+            e.getMessage());
+
+    return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
+  }
 }

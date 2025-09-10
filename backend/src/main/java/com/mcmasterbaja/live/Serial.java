@@ -13,7 +13,6 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 public class Serial implements Serializable {
   private SerialPort comPort; // converted comPort to a variable  
-  public boolean exit = false;
   private Map<Byte, FileWriter> fileWriters = new HashMap<>();
 
   @ConfigProperty(name = "quarkus.http.body.uploads-directory")
@@ -25,29 +24,40 @@ public class Serial implements Serializable {
 
   public Serial(SerialPort port) {
     this.comPort = port;
+    
   }
 
+  /* readLive() connects to an Arduino/Serial device, reads + parses binary packets,
+     and writes them to a csv file. 
+  */
   public void readLive() throws Exception { // made readLive method non-static
     String rootLocation = "./uploads"; // To be replaced with a path
+    boolean exit = false; 
 
-    while (!exit) {
-      SerialPort[] portList = SerialPort.getCommPorts();
-      for (SerialPort serialPort : portList) {
-        // check if the comport desciption contains the word arduino
-        System.out.println(serialPort.getDescriptivePortName());
-        if (serialPort.getDescriptivePortName().contains("Arduino")
-            || serialPort.getDescriptivePortName().contains("Serial")) {
-          // if it does, set the comport to the current port
-          comPort = serialPort;
-          // break out of the loop
-          exit = true;
-          break;
-        }
+    SerialPort[] portList = SerialPort.getCommPorts();
+    for (SerialPort serialPort : portList) {
+      // check if the comport description contains the word arduino or serial
+      System.out.println(serialPort.getDescriptivePortName());
+      if (serialPort.getDescriptivePortName().contains("Arduino")
+          || serialPort.getDescriptivePortName().contains("Serial")) {
+        // if it does, set the comport to the current port
+        comPort = serialPort;
+        // break out of the loop
+        exit = true;
+        break;
       }
-      if (!exit) { // throwing exception if port not found
-        throw new Exception("No suitable port found");
+
+      if (comPort == null) {
+        throw new SerialException("Could not connect to an Arduino/Serial device. Maybe check the port?");
       }
+      
     }
+    
+    Packet p;
+    int timestamp;   
+    byte packetType;
+    float value;  
+    String filename;
 
     try {
       comPort.setBaudRate(115200);
@@ -62,12 +72,12 @@ public class Serial implements Serializable {
           
           if (numBytes != 8) continue;
   
-          Packet p = new Packet(readBuffer);
-          int timestamp = p.getTimestamp();  
-          byte packetType = p.getPacketType();
-          float value = p.getFloatData();  
+          p = new Packet(readBuffer);
+          timestamp = p.getTimestamp();  
+          packetType = p.getPacketType();
+          value = p.getFloatData();  
   
-          String filename = rootLocation + "/live_" + packetType + ".csv"; 
+          filename = rootLocation + "/live_" + packetType + ".csv"; 
     
           FileWriter writer = fileWriters.get(packetType); 
           if (writer == null) {
@@ -79,15 +89,17 @@ public class Serial implements Serializable {
           writer.flush(); 
         }
       } catch (IOException e) {
-        e.printStackTrace();
+        throw new SerialException(
+          "Failed to write to " + filename + " for packet type " + packetType + " at timestamp " + timestamp
+          , e
+        ); 
       } finally {
         for (FileWriter writer : fileWriters.values()) {
           writer.close(); 
         }
       }
-    } catch (Exception E) {
-      System.out.println("Error during port setup");
-      E.printStackTrace();
+    } catch (Exception e) {
+      throw new SerialException("Error during port setup", e);
     } finally {
       if (comPort != null && comPort.isOpen()) {
         comPort.closePort();
@@ -107,7 +119,7 @@ public class Serial implements Serializable {
     try {
       serial.readLive();
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new SerialException("Failed to read serial data", e);
     }
   }
 }
