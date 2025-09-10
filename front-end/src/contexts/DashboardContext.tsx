@@ -14,7 +14,8 @@ type DashboardAction =
   | { type: 'ADD_SOURCES'; sources: string[] }
   | { type: 'ADD_CHART'; chart: ChartInstance }
   | { type: 'REMOVE_CHART'; id: string }
-  | { type: 'FOCUS_CHART'; id: string | null };
+  | { type: 'FOCUS_CHART'; id: string | null }
+  | { type: 'UPDATE_CHART_TITLE'; id: string; title: string }; 
 
 const DashboardContext = createContext<{
   title: string;
@@ -57,11 +58,18 @@ const dashboardReducer = (state: {
     case 'REMOVE_CHART':
       return { 
         ...state, 
-        charts: state.charts.filter(chart => chart.id !== action.id) ,
+        charts: state.charts.filter(chart => chart.id !== action.id),
         focusedId: state.focusedId === action.id ? null : state.focusedId
       };
     case 'FOCUS_CHART':
       return { ...state, focusedId: action.id };
+    case 'UPDATE_CHART_TITLE':
+      return {
+        ...state,
+        charts: state.charts.map(chart =>
+          chart.id === action.id ? { ...chart, title: action.title } : chart
+        )
+      };
     default:
       return state;
   }

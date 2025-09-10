@@ -11,12 +11,12 @@ export const TitleEditor = () => {
     <Accordion title={'Title Options'}>
       <TextField
         title={'Dashboard Title'}
-        value={title || ''}
-        setValue={(title) => dashboardDispatch({ type: 'SET_TITLE', title: title })}
+        value={options.title?.text || ''} 
+        setValue={(title) => chartOptionsDispatch({ type: 'UPDATE_TITLE', title: title })} 
       />
       <TextField
         title={'Chart Subtitle'}
-        value={options.title?.text || ''}
+        value={options.subtitle?.text || ''}
         setValue={(title) => chartOptionsDispatch({ type: 'SET_SUBTITLE', text: title })}
       />
       <TextField

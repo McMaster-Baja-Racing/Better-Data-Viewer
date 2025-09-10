@@ -4,7 +4,6 @@ import { defaultChartOptions } from '@lib/chartOptions';
 import isEqual from 'lodash.isequal';
 import { ChartType, CustomOptions, ExtendedSeriesOptionsType } from '@types';
 
-// Helper function to safely get axis title text
 export const getAxisTitle = (
   axis: XAxisOptions | XAxisOptions[] | YAxisOptions | YAxisOptions[] | undefined
 ): string => {
@@ -16,6 +15,7 @@ export const getAxisTitle = (
 };
 
 type ChartOptionsAction =
+  | { type: 'UPDATE_TITLE'; title: string } 
   | { type: 'SET_SUBTITLE'; text: string }
   | { type: 'TOGGLE_LEGEND' }
   | { type: 'SET_LEGEND_POSITION'; position: 'top' | 'bottom' | 'left' | 'right' }
@@ -51,10 +51,19 @@ const ChartOptionsContext = createContext<{
 } | undefined>(undefined);
 
 const chartOptionsReducer = (state: CustomOptions, action: ChartOptionsAction): CustomOptions => {
-  //console.log('ChartOptionsReducer called with action:', action);
   let updatedState: CustomOptions = state;
 
   switch (action.type) {
+    case 'UPDATE_TITLE':
+      updatedState = {
+        ...state,
+        title: { 
+          ...state.title, 
+          text: action.title,
+          style: { display: 'none' } 
+        },
+      };
+      break;
     case 'SET_SUBTITLE':
       updatedState = {
         ...state,
@@ -418,8 +427,30 @@ const chartOptionsReducer = (state: CustomOptions, action: ChartOptionsAction): 
   return isEqual(state, updatedState) ? state : updatedState;
 };
 
-export const ChartOptionsProvider = ({ children }: { children: React.ReactNode }) => {
+export const ChartOptionsProvider = ({ children, chartId }: { children: React.ReactNode; chartId?: string }) => {
+  const registry = useContext(ChartOptionsRegistry);
   const [options, dispatch] = useReducer(chartOptionsReducer, defaultChartOptions as CustomOptions);
+
+  React.useEffect(() => {
+    if (chartId && registry) {
+      const existing = registry.get(chartId);
+      if (existing) {
+        if (!isEqual(existing.options, options)) {
+          dispatch({ type: 'REPLACE_OPTIONS', options: existing.options });
+        }
+      } else {
+        // First time for this chart - register it
+        registry.set(chartId, { options, dispatch });
+      }
+    }
+  }, [chartId, registry]); 
+
+  // Update registry whenever state changes
+  React.useEffect(() => {
+    if (chartId && registry) {
+      registry.set(chartId, { options, dispatch });
+    }
+  }, [chartId, options, dispatch, registry]);
 
   return (
     <ChartOptionsContext.Provider value={{ options, dispatch }}>
@@ -428,8 +459,33 @@ export const ChartOptionsProvider = ({ children }: { children: React.ReactNode }
   );
 };
 
+const ChartOptionsRegistry = createContext<Map<string, { options: CustomOptions; dispatch: React.Dispatch<ChartOptionsAction> }>>(new Map());
+
+export const ChartOptionsRegistryProvider = ({ children }: { children: React.ReactNode }) => {
+  const [registry] = React.useState(new Map());
+  return (
+    <ChartOptionsRegistry.Provider value={registry}>
+      {children}
+    </ChartOptionsRegistry.Provider>
+  );
+};
+
 export const useChartOptions = () => {
   const context = useContext(ChartOptionsContext);
   if (!context) throw new Error('useChart must be used within ChartProvider');
   return context;
+};
+
+export const useChartOptionsById = (chartId: string) => {
+  const registry = useContext(ChartOptionsRegistry);
+  
+  if (!registry) {
+    throw new Error('useChartOptionsById must be used within ChartOptionsRegistryProvider');
+  }
+  
+  const chartData = registry.get(chartId);
+  return chartData || { 
+    options: defaultChartOptions as CustomOptions, 
+    dispatch: (() => undefined) as React.Dispatch<ChartOptionsAction> 
+  };
 };
