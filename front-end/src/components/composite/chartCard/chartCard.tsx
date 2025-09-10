@@ -23,10 +23,7 @@ export const ChartCard = ({ chart, onEditModeChange }: ChartCardProps) => {
     <ChartOptionsProvider chartId={chart.id}>
       <ChartQueryProvider chartId={chart.id}>
         <div className={styles.chartCard}>
-          <GraphWrapper 
-            editOnClick={handleEditClick}
-            title={chart.title} 
-          >
+          <GraphWrapper editOnClick={handleEditClick}>
             <ChartCardContent onEditClick={handleEditClick} />
           </GraphWrapper>
         </div>

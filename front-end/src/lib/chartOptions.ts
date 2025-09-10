@@ -40,11 +40,10 @@ export const defaultChartOptions: Options = {
       type: 'x'
     },
     backgroundColor: '#222222',
-    // TODO: Check if setting type on chart actually works
-    //type: chartInformation.type,
   },
   title: {
-    text: ''
+    text: '',
+    style: { display: 'none' } // Hide chart title completely
   },
   subtitle: {
     text: document.ontouchstart === undefined ?

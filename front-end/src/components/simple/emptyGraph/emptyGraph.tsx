@@ -1,5 +1,5 @@
 import { Button } from '@components/ui/button/Button';
-import styles from './EmptyGraph.module.scss';
+import styles from './emptyGraph.module.scss';
 
 interface EmptyGraphProps {
   onEditClick: () => void;
