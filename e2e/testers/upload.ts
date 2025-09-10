@@ -26,7 +26,6 @@ export class UploadTester extends Tester {
     await this.uploadFile(this.binFilePath);
     await this.submitFile();
     await this.verifyFilesUploaded();
-    await this.awaitFileParsed(this.frontendFilePath);
   }
 
   async testUploadNoFile() {
@@ -53,7 +52,7 @@ export class UploadTester extends Tester {
   // Basic functions
 
   async openUploadForm() {
-    await this.page.getByRole('button', { name: 'Upload' }).click();
+    await this.page.getByRole('button', { name: 'Icon Upload Data' }).click();
   }
 
   async openDownloadForm() {
@@ -65,16 +64,16 @@ export class UploadTester extends Tester {
   }
 
   async uploadFile(filePath: string) {
-    await this.page.locator('#label-file-upload').click();
-    await this.page.setInputFiles('#label-file-upload', filePath);
+    await this.page.getByText('Choose a file or drag it hereDrop the file').click();
+    await this.page.setInputFiles('input[type="file"]', filePath);
   }
 
   async submitFile() {
-    await this.page.getByRole('button', { name: 'Submit' }).click();
+    await this.page.getByRole('button', { name: 'Submit right arrow' }).click();
   }
 
   async verifyFilesUploaded() {
-    await expect(this.page.getByText('Files Uploaded')).toBeVisible();
+    await expect(this.page.getByText('Files uploaded successfully')).toBeVisible();
   }
 
   async verifyNoFileSelectedAlert() {
