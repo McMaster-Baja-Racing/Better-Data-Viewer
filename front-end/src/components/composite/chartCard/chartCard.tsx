@@ -10,9 +10,10 @@ import styles from './chartCard.module.scss';
 interface ChartCardProps {
   chart: ChartInstance;
   onEditModeChange: (isEdit: boolean) => void;
+  isMultiView?: boolean; 
 }
 
-export const ChartCard = ({ chart, onEditModeChange }: ChartCardProps) => {
+export const ChartCard = ({ chart, onEditModeChange, isMultiView = false }: ChartCardProps) => {
   const { dispatch } = useDashboard();
 
   const handleEditClick = () => {
@@ -22,7 +23,7 @@ export const ChartCard = ({ chart, onEditModeChange }: ChartCardProps) => {
   return (
     <ChartOptionsProvider chartId={chart.id}>
       <ChartQueryProvider chartId={chart.id}>
-        <div className={styles.chartCard}>
+        <div className={`${styles.chartCard} ${isMultiView ? styles.multiView : ''}`}>
           <GraphWrapper editOnClick={handleEditClick}>
             <ChartCardContent onEditClick={handleEditClick} />
           </GraphWrapper>

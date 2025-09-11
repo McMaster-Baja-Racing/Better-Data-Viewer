@@ -35,7 +35,8 @@ export const MultiGraphView = ({ onEditModeChange }: MultiGraphViewProps) => {
 
   return (
     <div 
-      className={styles.multiGraphView}
+      className={styles.multiGraphView} 
+      data-chart-count={charts.length}
       style={{
         display: 'grid',
         gridTemplateColumns: gridStyle.gridTemplateColumns,
@@ -56,6 +57,7 @@ export const MultiGraphView = ({ onEditModeChange }: MultiGraphViewProps) => {
           <ChartCard
             chart={chart}
             onEditModeChange={onEditModeChange}
+            isMultiView={charts.length > 1} 
           />
         </div>
       ))}

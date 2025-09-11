@@ -4,4 +4,10 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+
+  &.multiView {
+    :global(.highcharts-subtitle) {
+      display: none !important; // hide subtitle in multiview to save space 
+    }
+  }
 }
