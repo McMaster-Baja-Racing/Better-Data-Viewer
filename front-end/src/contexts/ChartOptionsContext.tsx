@@ -439,11 +439,21 @@ export const ChartOptionsProvider = ({ children, chartId }: { children: React.Re
           dispatch({ type: 'REPLACE_OPTIONS', options: existing.options });
         }
       } else {
-        // First time for this chart - register it
+        // First time for this chart - register it with smart defaults
         registry.set(chartId, { options, dispatch });
       }
     }
   }, [chartId, registry]); 
+
+  // Auto-hide legend if only one series
+  React.useEffect(() => {
+    const seriesCount = options.series?.length || 0;
+    const shouldShowLegend = seriesCount > 1;
+    
+    if (options.legend?.enabled !== shouldShowLegend) {
+      dispatch({ type: 'TOGGLE_LEGEND' }); 
+    }
+  }, [options.series?.length]);
 
   // Update registry whenever state changes
   React.useEffect(() => {
