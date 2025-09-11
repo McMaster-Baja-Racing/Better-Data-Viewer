@@ -31,8 +31,13 @@ export const SingleGraphView = ({ chartId, onEditModeChange }: SingleGraphViewPr
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => {
+    if (!chart) {
+      handleClose();
+    }
+  }, [chart]);
+
   if (!chart) {
-    handleClose();
     return null;
   }
 
