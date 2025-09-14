@@ -3,6 +3,7 @@ package com.mcmasterbaja.live;
 
 import com.fazecast.jSerialComm.*;
 import com.mcmasterbaja.binary_csv.Packet;
+import com.mcmasterbaja.exceptions.SerialException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 public class Serial implements Serializable {
   private SerialPort comPort; // converted comPort to a variable  
   private Map<Byte, FileWriter> fileWriters = new HashMap<>();
+  public boolean exit = false; 
 
   @ConfigProperty(name = "quarkus.http.body.uploads-directory")
   private Path rootLocation;
@@ -32,7 +34,6 @@ public class Serial implements Serializable {
   */
   public void readLive() throws Exception { // made readLive method non-static
     String rootLocation = "./uploads"; // To be replaced with a path
-    boolean exit = false; 
 
     SerialPort[] portList = SerialPort.getCommPorts();
     for (SerialPort serialPort : portList) {
@@ -53,11 +54,11 @@ public class Serial implements Serializable {
       
     }
     
-    Packet p;
-    int timestamp;   
-    byte packetType;
-    float value;  
-    String filename;
+    Packet p = null;
+    int timestamp = 0;   
+    byte packetType = 0;
+    float value = 0.0f;  
+    String filename = null;
 
     try {
       comPort.setBaudRate(115200);
