@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext } from 'react';
+import React, { createContext, useReducer, useContext, useState, useEffect } from 'react';
 import { XAxisOptions, YAxisOptions } from 'highcharts';
 import { defaultChartOptions } from '@lib/chartOptions';
 import isEqual from 'lodash.isequal';
@@ -431,7 +431,7 @@ export const ChartOptionsProvider = ({ children, chartId }: { children: React.Re
   const registry = useContext(ChartOptionsRegistry);
   const [options, dispatch] = useReducer(chartOptionsReducer, defaultChartOptions as CustomOptions);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (chartId && registry) {
       const existing = registry.get(chartId);
       if (existing) {
@@ -446,7 +446,7 @@ export const ChartOptionsProvider = ({ children, chartId }: { children: React.Re
   }, [chartId, registry]); 
 
   // Auto-hide legend if only one series
-  React.useEffect(() => {
+  useEffect(() => {
     const seriesCount = options.series?.length || 0;
     const shouldShowLegend = seriesCount > 1;
     
@@ -456,7 +456,7 @@ export const ChartOptionsProvider = ({ children, chartId }: { children: React.Re
   }, [options.series?.length]);
 
   // Update registry whenever state changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (chartId && registry) {
       registry.set(chartId, { options, dispatch });
     }
@@ -472,7 +472,7 @@ export const ChartOptionsProvider = ({ children, chartId }: { children: React.Re
 const ChartOptionsRegistry = createContext<Map<string, { options: CustomOptions; dispatch: React.Dispatch<ChartOptionsAction> }>>(new Map());
 
 export const ChartOptionsRegistryProvider = ({ children }: { children: React.ReactNode }) => {
-  const [registry] = React.useState(new Map());
+  const [registry] = useState(new Map());
   return (
     <ChartOptionsRegistry.Provider value={registry}>
       {children}
