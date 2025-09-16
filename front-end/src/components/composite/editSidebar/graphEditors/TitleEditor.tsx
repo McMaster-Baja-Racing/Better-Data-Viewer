@@ -16,13 +16,13 @@ export const TitleEditor = () => {
       />
       <TextField
         title={'Chart Subtitle'}
-        value={options.title?.text || ''}
-        setValue={(title) => chartOptionsDispatch({ type: 'SET_SUBTITLE', text: title })}
+        value={options.subtitle?.text || ''}
+        setValue={(subtitle) => chartOptionsDispatch({ type: 'SET_SUBTITLE', text: subtitle })}
       />
       <TextField
         title={'Chart X-Axis Title'}
         value={getAxisTitle(options.xAxis)}
-        setValue={(title) => chartOptionsDispatch({ type: 'SET_AXIS_TITLE', axis: 'xAxis',title: title })}
+        setValue={(title) => chartOptionsDispatch({ type: 'SET_AXIS_TITLE', axis: 'xAxis', title: title })}
       />
       <TextField
         title={'Chart Y-Axis Title'}
