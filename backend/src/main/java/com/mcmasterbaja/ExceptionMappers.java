@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.UUID;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import java.io.IOException;
 
 // Exceptions are mapped in priority of most specific first
 public class ExceptionMappers {
