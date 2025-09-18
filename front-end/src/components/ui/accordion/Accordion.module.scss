@@ -13,6 +13,8 @@
 
 .accordion {
     position: relative;
+    background-color: var(--background);
+    border-radius: 0.5rem;
 
     &::before {
         content: '';
@@ -31,8 +33,6 @@
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
-        background-color: #3d3d3d;
-        border-radius: 0.5rem;
 
         &.expanded {
             padding-bottom: 2rem;
@@ -45,17 +45,20 @@
 
     .header {
         @include fonts.title-tiny;
-        color: #B3B3B3;
+        color: var(--alt-text);
         display: flex;
         justify-content: flex-start;
         align-items: center;
         width: 100%;
         padding: 1rem;
         background: none;
-        cursor: pointer;
-        border-radius: .5rem;
+        cursor: pointer;    
+        border:none;
+
         &:hover {
-            background-color: #333333;
+            background-color: var(--tertiary);
+            border-top-left-radius: .5rem;
+            border-top-right-radius: .5rem;
         }
 
         .arrow {
