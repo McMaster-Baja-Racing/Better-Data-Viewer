@@ -9,20 +9,19 @@ const MIN_WIDTH = 700;
 interface RightSidebarProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  onClose?: () => void; 
   mainContent: React.ReactNode;
   sidebarContent: React.ReactNode;
 }
 
-export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }: RightSidebarProps) => {
+export const RightSidebar = ({ isOpen, setIsOpen, onClose, mainContent, sidebarContent }: RightSidebarProps) => {
   const [width, setWidth] = useState(MIN_WIDTH);
   const isResizing = useRef(false);
 
-  // Set global CSS variable for right sidebar width
   useEffect(() => {
     document.documentElement.style.setProperty('--right-sidebar-width', isOpen ? `${width}px` : '0px');
   }, [isOpen, width]);
 
-  // Initialize the CSS variable on mount
   useEffect(() => {
     document.documentElement.style.setProperty('--right-sidebar-width', '0px');
   }, []);
@@ -47,6 +46,14 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
     window.addEventListener('mouseup', handleMouseUp);
   };
 
+  const handleClose = () => {
+    if (onClose) {
+      onClose(); // returns to multi-view
+    } else {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <div 
       className={styles.rightSidebarContainer}
@@ -65,7 +72,7 @@ export const RightSidebar = ({ isOpen, setIsOpen, mainContent, sidebarContent }:
         style={{ width: `${isOpen ? width : 0}px` }}
       >
         <div className={styles.resizer} onMouseDown={handleMouseDown} />
-        <button className={styles.closeButton} onClick={() => setIsOpen(false)}>
+        <button className={styles.closeButton} onClick={handleClose}>
           <img src={closeIcon} alt="Close sidebar" />
         </button>
         <div className={styles.sidebarContent}>

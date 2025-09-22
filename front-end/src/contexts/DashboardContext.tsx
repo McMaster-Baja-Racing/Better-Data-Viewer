@@ -1,12 +1,21 @@
 import React, { createContext, useReducer, useContext } from 'react';
 
+export interface ChartInstance {
+  id: string;
+  title: string;
+}
+
 type DashboardAction = 
   | { type: 'SET_TITLE'; title: string }
   | { type: 'TOGGLE_SIDEBAR' }
   | { type: 'SET_LAYOUT'; layout: string }
   | { type: 'TOGGLE_LIVE' }
   | { type: 'SET_SOURCES'; sources: string[] }
-  | { type: 'ADD_SOURCES'; sources: string[] };
+  | { type: 'ADD_SOURCES'; sources: string[] }
+  | { type: 'ADD_CHART'; chart: ChartInstance }
+  | { type: 'REMOVE_CHART'; id: string }
+  | { type: 'FOCUS_CHART'; id: string | null }
+  | { type: 'UPDATE_CHART_TITLE'; id: string; title: string }; 
 
 const DashboardContext = createContext<{
   title: string;
@@ -14,11 +23,19 @@ const DashboardContext = createContext<{
   layout: string;
   live: boolean;
   sources: string[];
+  charts: ChartInstance[];
+  focusedId: string | null;
   dispatch: React.Dispatch<DashboardAction>;
 } | undefined>(undefined);
 
 const dashboardReducer = (state: { 
-  title: string; sidebarOpen: boolean; layout: string; live: boolean; sources: string[]
+  title: string; 
+  sidebarOpen: boolean; 
+  layout: string; 
+  live: boolean; 
+  sources: string[]
+  charts: ChartInstance[];
+  focusedId: string | null;
 }, action: DashboardAction) => {
   switch (action.type) {
     case 'SET_TITLE':
@@ -36,6 +53,23 @@ const dashboardReducer = (state: {
       const mergedSources = [...new Set([...state.sources, ...action.sources])];
       return { ...state, sources: mergedSources };
     }
+    case 'ADD_CHART':
+      return { ...state, charts: [...state.charts, action.chart] };
+    case 'REMOVE_CHART':
+      return { 
+        ...state, 
+        charts: state.charts.filter(chart => chart.id !== action.id),
+        focusedId: state.focusedId === action.id ? null : state.focusedId
+      };
+    case 'FOCUS_CHART':
+      return { ...state, focusedId: action.id };
+    case 'UPDATE_CHART_TITLE':
+      return {
+        ...state,
+        charts: state.charts.map(chart =>
+          chart.id === action.id ? { ...chart, title: action.title } : chart
+        )
+      };
     default:
       return state;
   }
@@ -47,6 +81,8 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
     sidebarOpen: false,
     layout: 'grid',
     live: false,
+    charts: [] as ChartInstance[],
+    focusedId: null as string | null,
     sources: [] as string[]
   };
 
