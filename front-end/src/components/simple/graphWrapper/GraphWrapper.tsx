@@ -2,7 +2,7 @@ import { ReactNode, useState, useRef, useEffect } from 'react';
 import styles from './GraphWrapper.module.scss';
 import {fullscreenIcon, unfullscreenIcon, writeIcon, threeDotsIcon} from '@assets/icons';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
-import { useChartOptions } from '@contexts/ChartOptionsContext';
+import { useDashboard } from '@contexts/DashboardContext';
 
 interface GraphWrapperProps {
   editOnClick: () => void;
@@ -12,7 +12,7 @@ interface GraphWrapperProps {
 export const GraphWrapper = ({ editOnClick, children }: GraphWrapperProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { options } = useChartOptions(); 
+  const { title } = useDashboard();
 
   const handleFullscreenToggle = async () => {
     if (!document.fullscreenElement) {
@@ -47,7 +47,7 @@ export const GraphWrapper = ({ editOnClick, children }: GraphWrapperProps) => {
   return (
     <div className={styles.graphWrapper} ref={wrapperRef}>
       <div className={styles.editBar}>
-        <div className={styles.title}>{options.title?.text || 'Dashboard'}</div>
+        <div className={styles.title}>{title}</div>
         <div className={styles.iconGroup}>
           <img src={writeIcon} className={styles.icon} alt="Edit Graph" onClick={editOnClick} />
           <img
