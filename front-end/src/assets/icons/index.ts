@@ -1,4 +1,3 @@
-import addIcon from '@assets/icons/add.svg';
 import deleteIcon from '@assets/icons/delete.svg';
 import downloadIcon from '@assets/icons/download.svg';
 import folderIcon from '@assets/icons/folder.svg';
@@ -38,7 +37,6 @@ import folderOpenIcon from '@assets/icons/folderOpen.svg';
 import checkMarkIcon from '@assets/icons/checkmark.svg';
 
 export {
-  addIcon,
   deleteIcon,
   downloadIcon,
   folderIcon,
