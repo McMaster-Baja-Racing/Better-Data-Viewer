@@ -11,10 +11,10 @@ import com.mcmasterbaja.model.ErrorResponse;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.UUID;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
-import java.io.IOException;
 
 // Exceptions are mapped in priority of most specific first
 public class ExceptionMappers {
@@ -188,7 +188,6 @@ public class ExceptionMappers {
     return Response.status(500).entity(errorResponse).type(MediaType.APPLICATION_JSON).build();
   }
 
-  
   @ServerExceptionMapper
   public Response portNotFound(Exception e) {
     String errorId = UUID.randomUUID().toString();
@@ -206,7 +205,7 @@ public class ExceptionMappers {
   }
 
   @ServerExceptionMapper
-  public Response invalidFile (IOException e) {
+  public Response invalidFile(IOException e) {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
