@@ -17,30 +17,15 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     ],
   },
   {
-    name: 'Shift Curve',
-    description: 'Primary RPM vs Secondary RPM',
+    name: 'Strict Timestamp (Zany Outlier Removal) GPS SPEED',
+    description: 'GPS Speed vs Timestamp (ms) with strict timestamp outlier removal',
     graphs: [
       {
         axes: [
-          { source: 'RPM SEC.csv', dataType: 'RPM SEC' },
-          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
-        ],
-        analyzer: AnalyzerType.ACCEL_CURVE,
-        analyzerOptions: [],
-        graphType: 'line',
-      },
-    ],
-  },
-  {
-    name: 'Shift Curve with GPS',
-    description: 'Primary RPM vs GPS Speed',
-    graphs: [
-      {
-        axes: [
+          { source: 'GPS SPEED.csv', dataType: 'Timestamp (ms)' },
           { source: 'GPS SPEED.csv', dataType: 'GPS SPEED' },
-          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
         ],
-        analyzer: AnalyzerType.ACCEL_CURVE,
+        analyzer: AnalyzerType.STRICT_TIMESTAMP,
         analyzerOptions: [],
         graphType: 'line',
       },
