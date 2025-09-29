@@ -18,7 +18,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
   },
   {
     name: 'Strict Timestamp (Zany Outlier Removal) GPS SPEED',
-    description: 'Primary RPM vs Time',
+    description: 'GPS Speed vs Timestamp (ms) with strict timestamp outlier removal',
     graphs: [
       {
         axes: [
