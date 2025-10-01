@@ -231,4 +231,28 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
     },
     links: [{ title: 'Cubic Function (Wiki)', url: 'https://en.wikipedia.org/wiki/Cubic_function' }],
   },
-};  
+
+  [AnalyzerType.SMOOTH_STRICT_PRIM]: {
+    title: 'Smooth Strict PRIM',
+    description:
+        'Runs StrictTimstamp and Sgolay for RPM PRIM',
+    isJoinBased: false,
+    image: {
+      src: placeholderImage,
+      alt: 'Strict timestamp demo',
+    },
+    links: [{ title: 'Timestamp (Wiki)', url: 'https://en.wikipedia.org/wiki/Timestamp' }],
+  },
+
+  [AnalyzerType.SMOOTH_STRICT_SEC]: {
+    title: 'Smooth Strict SEC',
+    description:
+        'Runs StrictTimstamp and Sgolay for RPM SEC',
+    isJoinBased: false,
+    image: {
+      src: placeholderImage,
+      alt: 'Strict timestamp demo',
+    },
+    links: [{ title: 'Timestamp (Wiki)', url: 'https://en.wikipedia.org/wiki/Timestamp' }],
+  },
+};

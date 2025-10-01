@@ -32,6 +32,30 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     ],
   },
   {
+    name: 'Smooth Strict RPM',
+    description: 'Primary and Secondary RPM vs Timestamp (ms) smoothened with strict timestamp outlier removal',
+    graphs: [
+      {
+        axes: [
+          { source: 'RPM PRIM.csv', dataType: 'Timestamp (ms)' },
+          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
+        ],
+        analyzer: AnalyzerType.SMOOTH_STRICT_PRIM,
+        analyzerOptions: [],
+        graphType: 'line',
+      },
+      {
+        axes: [
+          { source: 'RPM SEC.csv', dataType: 'Timestamp (ms)' },
+          { source: 'RPM SEC.csv', dataType: 'RPM SEC' },
+        ],
+        analyzer: AnalyzerType.SMOOTH_STRICT_SEC,
+        analyzerOptions: [],
+        graphType: 'line',
+      },
+    ],
+  },
+  {
     name: 'Goated Shift Curve',
     description: 'Primary RPM vs Secondary RPM with GPS Speed',
     graphs: [
@@ -60,5 +84,35 @@ export const subteamGraphPresets: DataViewerPreset[] = [
         graphType: 'line',
       },
     ]
-  }
+  },
+  {
+    name: 'Smooth Primary RPM with Strict Timestamp',
+    description: 'Smooths PRIM RPM with strict timestamp outlier removal',
+    graphs: [
+      {
+        axes: [
+          { source: 'RPM PRIM.csv', dataType: 'Timestamp (ms)' },
+          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
+        ],
+        analyzer: AnalyzerType.SMOOTH_STRICT_PRIM,
+        analyzerOptions: [],
+        graphType: 'line',
+      },
+    ],
+  },
+  {
+    name: 'Smooth Secondary RPM with Strict Timestamp',
+    description: 'Smooths SEC RPM with strict timestamp outlier removal',
+    graphs: [
+      {
+        axes: [
+          { source: 'RPM SEC.csv', dataType: 'Timestamp (ms)' },
+          { source: 'RPM SEC.csv', dataType: 'RPM SEC' },
+        ],
+        analyzer: AnalyzerType.SMOOTH_STRICT_SEC,
+        analyzerOptions: [],
+        graphType: 'line',
+      },
+    ],
+  },
 ];

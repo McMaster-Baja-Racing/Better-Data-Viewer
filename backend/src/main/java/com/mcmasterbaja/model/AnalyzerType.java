@@ -13,7 +13,9 @@ public enum AnalyzerType {
   SPLIT,
   CONSTANT_ADDER,
   STRICT_TIMESTAMP,
-  SHIFT_CURVE;
+  SHIFT_CURVE,
+  SMOOTH_STRICT_PRIM,
+  SMOOTH_STRICT_SEC;
 
   public String toString() {
     return this.name();
