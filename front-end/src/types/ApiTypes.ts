@@ -1,4 +1,3 @@
-
 export interface FileInformation {
   key: string;
   name: string;
@@ -38,6 +37,8 @@ export enum AnalyzerType {
   DELETE_OUTLIER = 'DELETE_OUTLIER',
   STRICT_TIMESTAMP = 'STRICT_TIMESTAMP',
   SHIFT_CURVE = 'SHIFT_CURVE',
+  SMOOTH_STRICT_PRIM = 'SMOOTH_STRICT_PRIM',
+  SMOOTH_STRICT_SEC = 'SMOOTH_STRICT_SEC',
 }
 
 // Define the constant array with all valid values
