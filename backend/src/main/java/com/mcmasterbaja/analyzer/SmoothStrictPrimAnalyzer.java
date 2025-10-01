@@ -47,6 +47,5 @@ public class SmoothStrictPrimAnalyzer extends Analyzer {
     sg.setOutputFiles(params.getOutputFiles());
     sGolay.analyze(sg);
 
-    logger.info("Completed pipeline: StrictTimestamp -> sGolay for single file RPM");
   }
 }
