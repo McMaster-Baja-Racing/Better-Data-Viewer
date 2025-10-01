@@ -46,7 +46,5 @@ public class SmoothStrictSecAnalyzer extends Analyzer {
     sg.setOptions(new String[] {"101", "3"});
     sg.setOutputFiles(params.getOutputFiles());
     sGolay.analyze(sg);
-
-    logger.info("Completed pipeline: StrictTimestamp -> sGolay for single file RPM");
   }
 }
