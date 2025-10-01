@@ -33,7 +33,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
   },
   {
     name: 'Smooth Strict RPM',
-    description: 'Primary and Secondary RPM vs Timestamp (ms) smoothened with strict timestamp outlier removal',
+    description: 'Primary and Secondary RPM vs Timestamp (ms) smoothened + outlier removal + strict timestamp',
     graphs: [
       {
         axes: [
@@ -86,8 +86,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     ]
   },
   {
-    name: 'Smooth Primary RPM with Strict Timestamp',
-    description: 'Smooths PRIM RPM with strict timestamp outlier removal',
+    name: 'Smooth Strict PRIM RPM',
+    description: 'Smooths PRIM RPM with strict timestamp + outlier removal',
     graphs: [
       {
         axes: [
@@ -101,8 +101,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     ],
   },
   {
-    name: 'Smooth Secondary RPM with Strict Timestamp',
-    description: 'Smooths SEC RPM with strict timestamp outlier removal',
+    name: 'Smooth Strict SEC RPM',
+    description: 'Smooths SEC RPM with strict timestamp + outlier removal',
     graphs: [
       {
         axes: [
