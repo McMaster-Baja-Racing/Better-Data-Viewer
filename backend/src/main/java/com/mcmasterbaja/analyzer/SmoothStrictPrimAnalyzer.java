@@ -46,6 +46,5 @@ public class SmoothStrictPrimAnalyzer extends Analyzer {
     sg.setOptions(new String[] {"101", "3"});
     sg.setOutputFiles(params.getOutputFiles());
     sGolay.analyze(sg);
-
   }
 }
