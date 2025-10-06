@@ -1,9 +1,16 @@
-
 export interface FileInformation {
   key: string;
-  fileHeaders: string[];
+  name: string;
+  extension: string;
+  headers: string[];
   size: number;
+  date: Date;
+  start: Date;
+  end: Date;
 }
+
+export type RawFileInformation = Omit<FileInformation, 'date' | 'start' | 'end'> 
+  & { date: string; start: string; end: string };
 
 export interface FileTimespan {
   key: string;
@@ -26,5 +33,30 @@ export enum AnalyzerType {
   RDP_COMPRESSION = 'RDP_COMPRESSION',
   ROLL_AVG = 'ROLL_AVG',
   SGOLAY = 'SGOLAY',
-  SPLIT = 'SPLIT'
+  SPLIT = 'SPLIT',
+  DELETE_OUTLIER = 'DELETE_OUTLIER',
+  STRICT_TIMESTAMP = 'STRICT_TIMESTAMP',
+  SHIFT_CURVE = 'SHIFT_CURVE',
+  SMOOTH_STRICT_PRIM = 'SMOOTH_STRICT_PRIM',
+  SMOOTH_STRICT_SEC = 'SMOOTH_STRICT_SEC',
 }
+
+// Define the constant array with all valid values
+export const dataTypesArray = [
+  'Timestamp (ms)',
+  'BATT PERC',
+  'BATT VOLT',
+  'BRAKE PRESS',
+  'GPS ANGLE',
+  'GPS DAY MONTH YEAR',
+  'GPS LATITUDE',
+  'GPS LONGITUDE',
+  'GPS SECOND MINUTE HOUR',
+  'GPS SPEED',
+  'RPM PRIM',
+  'RPM SEC',
+  'IMU X'
+] as const;
+
+// Derive the union type from the array
+export type DataTypes = typeof dataTypesArray[number];

@@ -1,0 +1,62 @@
+@use '@styles/_fonts';
+@use '@styles/_variables';
+
+.titleCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9rem;
+    padding: 0 auto;
+    width: 100%;
+    height: 21.69rem;
+    background: linear-gradient(0deg, #222222 0%, #525252 98.5%);
+
+    .textContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 100%;
+        width: 27.83rem;
+        height: 12.63rem;
+        margin-left: 3rem;
+
+    .title {
+                @include fonts.title-huge;
+                text-align: center;
+                width: 90%;
+                color: white;
+                .highlight1 {
+                    background: linear-gradient(270.17deg, #B3FFAD -20%, #D28407 62.95%, #DD2F2F 95.06%);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                .highlight2 {
+                    background: linear-gradient(270.17deg, #B3FFAD 0%, #D28407 110.95%);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+        
+
+        .description {
+            @include fonts.text-large;
+            text-align: center;
+            width: 80%;
+            color: white;
+            margin-top: 0.6rem;
+        }
+    }
+
+    .graphContainer {
+        display: flex;
+        justify-content: center;
+        background: 'transparent';
+        align-items: center;
+        margin-right: 5rem;
+        margin-bottom: 1.5rem; // Subtle shift up
+        border-bottom: 1px solid grey;
+    }
+}

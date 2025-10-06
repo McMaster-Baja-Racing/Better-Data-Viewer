@@ -15,7 +15,8 @@ import org.jboss.logging.Logger;
 @AnalyzerQualifier(AnalyzerType.AVERAGE)
 @OnAnalyzerException
 public class AverageAnalyzer extends Analyzer {
-  // This class takes the average of a range of a column and returns it as a double
+  // This class takes the average of a range of a column and returns it as a
+  // double
   @Inject Logger logger;
 
   @SneakyThrows
@@ -34,9 +35,19 @@ public class AverageAnalyzer extends Analyzer {
             + " to "
             + range[1]);
 
-    CSVReader reader = getReader(params.getInputFiles()[0]);
-    ICSVWriter writer = getWriter(params.getOutputFiles()[0]);
+    getReader(
+        params.getInputFiles()[0],
+        reader -> {
+          getWriter(
+              params.getOutputFiles()[0],
+              writer -> {
+                averageIO(reader, writer, range);
+              });
+        });
+  }
 
+  @SneakyThrows
+  public void averageIO(CSVReader reader, ICSVWriter writer, int[] range) {
     String[] headers = {"TempColumn", "Average"};
     writer.writeNext(headers);
 
@@ -45,7 +56,6 @@ public class AverageAnalyzer extends Analyzer {
     writer.writeNext(dataPoint);
 
     logger.info("Average: " + dataPoint[1]);
-    writer.close();
   }
 
   // Takes average at found indices of second column
@@ -60,7 +70,8 @@ public class AverageAnalyzer extends Analyzer {
     return sum / (endIndex - startIndex + 1);
   }
 
-  // Binary search finds index relative to first column. It should find the closest value
+  // Binary search finds index relative to first column. It should find the
+  // closest value
   public int binarySearch(List<String[]> data, int target) {
     int low = 0;
     int high = data.size() - 1;

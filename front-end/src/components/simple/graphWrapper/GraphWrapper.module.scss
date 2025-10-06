@@ -1,0 +1,66 @@
+@use '@styles/_fonts';
+@use '@styles/_variables';
+
+.graphWrapper {
+    @include fonts.title-medium;
+    // --chart-container-padding: horizontal padding around the chart container
+    --chart-container-padding: 1rem;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--background);
+    transition: all 0.3s ease;
+    width: 100%;
+    height: 100%;
+    padding-left: var(--chart-container-padding);
+  
+    .editBar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0.5rem 3.75rem;
+      width: calc(100% - 2 * 3.75rem);
+      flex: 0 0 auto; 
+      
+      .title {
+        text-align: center;
+        display: flex;
+        color: var(--text-colour);
+      }
+  
+      .iconGroup {
+        display: flex;
+        justify-content: center;
+        gap: 1.87rem;
+  
+          .icon {
+              cursor: pointer;
+              transition: opacity 0.2s ease;
+  
+              &:hover {
+                  opacity: 0.8;
+              }
+          }
+      }
+    }
+
+  .graphContainer {
+    flex: 1 1 auto;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    box-sizing: border-box;
+  }
+}
+
+/* Optional: styles applied when in native fullscreen mode */
+// Look into this when full-screening a thing bigger than your page
+// .graphWrapper:fullscreen {
+    // Fullscreen styles
+// }

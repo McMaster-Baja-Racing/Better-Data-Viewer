@@ -1,15 +1,14 @@
-import { FileInformation, FileTimespan, ChartInformation, ExtSeries } from '@types';
+import { FileInformation, FileTimespan, ExtSeries } from '@types';
 
 // Computs the offsets between the videoStart and the fileStart for all series
-export const computeOffsets = (chartInformation: ChartInformation, videoTimespan: FileTimespan) => {
-  const videoStart = new Date(videoTimespan.start).getTime();
-  
-  const tempOffsets: number[] = [];
-  chartInformation.files.forEach(file => {
-    const fileStart = new Date(file.columns[0].timespan.start).getTime(); // Unix date of first timestamp in file
-    tempOffsets.push(videoStart - fileStart);
-  });
-  return tempOffsets;
+export const computeOffsets = (files: FileInformation[], videoTimespan: FileTimespan) => {
+  return files.map(file => computeOffset(file, videoTimespan));
+};
+
+const computeOffset = (file: FileInformation, videoTimespan: FileTimespan) => {
+  const videoStart = videoTimespan.start.getTime();
+  const fileStart = file.start.getTime();
+  return videoStart - fileStart;
 };
 
 export const getPointIndex = (series: ExtSeries, videoTimestamp: number, offset: number, timestamps: number[]) => {
@@ -20,11 +19,10 @@ export const getPointIndex = (series: ExtSeries, videoTimestamp: number, offset:
   return pointIndex;
 };
 
-// TODO: Error handling instead of null return here?
 export const getFileTimestamp = (videoTimestamp: number, offset: number, timestamps: number[]) => {
   const fileTimestamp = videoTimestamp + offset + timestamps[0];
   if (fileTimestamp < timestamps[0] || fileTimestamp > timestamps[timestamps.length - 1]) {
-    throw new Error('Timestamp out of bounds');
+    return undefined;
   }
   return fileTimestamp;
 };

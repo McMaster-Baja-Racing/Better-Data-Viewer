@@ -195,6 +195,18 @@ public class DefaultFileMetadataService implements FileMetadataService {
     }
   }
 
+  public LocalDateTime getUploadDate(Path targetPath) {
+    try {
+      return Files.getLastModifiedTime(storageService.load(targetPath))
+          .toInstant()
+          .atZone(ZoneId.of("GMT"))
+          .toLocalDateTime();
+    } catch (IOException e) {
+      throw new FileNotFoundException(
+          "Failed to get upload date of file: " + targetPath.toString(), e);
+    }
+  }
+
   // Returns all the metadata in the file as string with commas between each value
   // Each value will be in the format "key - value"
   private String extractMetadata(Path targetPath) {
@@ -237,6 +249,10 @@ public class DefaultFileMetadataService implements FileMetadataService {
       BufferedReader reader =
           new BufferedReader(Files.newBufferedReader(storageService.load(targetPath)));
       int timestampIndex = Arrays.asList(reader.readLine().split(",")).indexOf("Timestamp (ms)");
+      if (timestampIndex == -1) {
+        throw new InvalidColumnException(
+            "Timestamp (ms) column not found in file: " + targetPath.toString());
+      }
       firstTimestamp = reader.readLine().split(",")[timestampIndex];
       reader.close();
       lastTimestamp = getLast(targetPath, timestampIndex);

@@ -1,40 +1,27 @@
-import { AnalyzerType } from '@types';
-import { Series } from 'highcharts';
+import { Options, Series, SeriesLineOptions, SeriesOptionsType } from 'highcharts';
 
-export interface ChartInformation {
-  files: {
-    columns: Column[];
-    analyze: {
-      type: AnalyzerType;
-      analyzerValues: string[];
-    }
-  }[];
-  live: boolean;
-  type: string;
-  hasGPSTime: boolean;
-  hasTimestampX: boolean;
-}
+export type ChartType = SeriesOptionsType['type'] | 'coloredLine';
 
-export interface Column {
-  header: string;
-  filename: string;
-  timespan: {
-    start: Date;
-    end: Date;
-  }
-}
+export const chartTypeMap: {value: ChartType, label: string}[] = [
+  { value: 'line', label: 'Line' },
+  { value: 'spline', label: 'Spline' },
+  { value: 'area', label: 'Area' },
+  { value: 'areaspline', label: 'Area Spline' },
+  { value: 'scatter', label: 'Scatter' },
+  { value: 'column', label: 'Column' },
+  { value: 'bar', label: 'Bar' },
+  { value: 'coloredLine', label: 'Colored Line' },
+];
+
+export const dataColumnKeys = ['x', 'y'] as const;
+
+export type DataColumnKey = typeof dataColumnKeys[number];
 
 export interface ColourSeriesData {
   x: number;
   y: number;
   colorValue: number;
   segmentColor: string;
-}
-
-export interface HeadersIndex {
-  x: number;
-  y: number;
-  colour: number;
 }
 
 export type seriesData = ColourSeriesData[] | number[][];
@@ -44,4 +31,18 @@ export type seriesData = ColourSeriesData[] | number[][];
 export interface ExtSeries extends Series {
   xData: number[];
   yData: number[];
+}
+
+// More highcharts stuff, adding colour series
+// Custom coloredLine series type
+export interface ColoredLineSeriesOptions extends Omit<SeriesLineOptions, 'type'> {
+  type: 'coloredLine';
+}
+
+// Extended series type that includes our custom coloredLine type
+export type ExtendedSeriesOptionsType = SeriesOptionsType | ColoredLineSeriesOptions;
+
+// Extended Options type that uses our custom series type
+export interface CustomOptions extends Omit<Options, 'series'> {
+  series?: ExtendedSeriesOptionsType[];
 }

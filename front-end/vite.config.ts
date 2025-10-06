@@ -6,7 +6,17 @@ import commonjs from 'vite-plugin-commonjs';
 const root = resolve(__dirname, 'src');
 
 export default defineConfig({
-  assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp', '**/*.avif', '**/*.obj'],
+  assetsInclude: [
+    '**/*.svg', 
+    '**/*.png', 
+    '**/*.jpg', 
+    '**/*.jpeg', 
+    '**/*.gif', 
+    '**/*.webp', 
+    '**/*.avif', 
+    '**/*.obj', 
+    '**/*.csv'
+  ],
   server: {
     strictPort: true,
   },
@@ -25,6 +35,8 @@ export default defineConfig({
       '@lib': resolve(root, 'lib'),
       '@styles': resolve(root, 'styles'),
       '@types': resolve(root, 'types/index.ts'),
+      '@pages': resolve(root, 'pages'),
+      '@contexts': resolve(root, 'contexts'),
     },
   },
   css: {

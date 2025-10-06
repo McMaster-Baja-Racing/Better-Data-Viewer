@@ -1,0 +1,226 @@
+@use '@styles/_variables';
+@use '@styles/_fonts';
+@use "sass:map";
+
+$leftSidebarWidth: 4rem;
+$rightSidebarWidth: 14rem;
+$logoWidth: 3rem;
+$iconSize: 1.75rem;
+$toggleLongHeight: 5.5rem;
+$toggleShortHeight: 4rem;
+$toggleWidth: 1.25rem;
+$arrowsHeight: 0.6rem;
+$arrowsWidth: 0.3rem;
+
+// Compute the position of the clip-path for the short side of the toggle
+$toggleHeightPercentage: calc(($toggleLongHeight - $toggleShortHeight) / (2 * $toggleLongHeight)) * 100%;
+
+.sidebar {
+    // Export SCSS variables as CSS custom properties for use across components
+    // --left-sidebar-collapsed-width: width of the left sidebar when collapsed
+    --left-sidebar-collapsed-width: #{$leftSidebarWidth};
+    
+    position: relative;
+    display: grid;
+    grid-template-columns: $leftSidebarWidth 0rem; // 0 unit has to match rhs width
+    grid-template-rows: auto auto 1fr auto auto;
+    background-color: var(--background);
+    grid-template-areas: 
+    "sidebarHeader sidebarHeader"
+    "bodyHeader bodyHeader"
+    "bodyItems bodyItems"
+    "footerHeader footerHeader"
+    "footerItems footerItems";
+    transition: grid-template-columns 0.4s ease-in-out;
+
+    &.expanded {
+        grid-template-columns: $leftSidebarWidth $rightSidebarWidth;
+
+        .sectionTitle {
+            color: var(--text-colour);
+            transition: color 0.3s ease-out;
+        }
+
+        .toggleExpanded {
+            opacity: 1;
+        }
+
+        .toggleCollapsed {
+            opacity: 0;
+        }
+    }
+
+    .sectionTitle {
+        @include fonts.title-mini;
+        justify-self: center;
+        transition: color 0.3s ease-in;
+        padding-left: 1.25rem;
+    }
+
+    .sectionHeader {
+        display: grid;
+        grid-template-columns: inherit;
+        padding-top: 1.5rem;
+        padding-bottom: 1rem;
+        text-transform: uppercase;
+        height: 1rem;
+        height: fit-content;
+        align-items: center;
+    }
+
+    .sectionItems {
+        display: grid;
+        grid-template-columns: inherit;
+        grid-auto-rows: min-content;
+        align-items: center;
+    }
+
+    .logo {
+        grid-area: sidebarHeader;
+        grid-row: 1;
+        grid-column: 1;
+        width: $logoWidth;
+        height: auto;
+        justify-self: center;
+        align-self: center;
+    }
+
+    .title {
+        @include fonts.nav-title;
+        grid-area: sidebarHeader;
+        grid-row: 1;
+        grid-column: 2;
+        color: var(--text-colour);
+        white-space: nowrap;
+        text-align: center;
+        text-transform: uppercase;
+        margin-right: $logoWidth;
+        overflow: hidden;
+    }
+
+    .sidebarHeader {
+        display: grid;
+        grid-area: sidebarHeader;
+        grid-template-columns: inherit;
+    }
+
+    .bodyTitle {
+        @extend .sectionTitle;
+        grid-area: bodyHeader;
+        grid-row: 2;
+        grid-column: 1;
+        color: var(--tertiary);
+    }
+
+    .bodyHeader {
+        @extend .sectionHeader;
+        grid-area: bodyHeader;
+        background-color: var(--tertiary);
+        overflow: hidden;
+    }
+
+    .bodyItems {
+        @extend .sectionItems;
+        grid-area: bodyItems;
+        background-color: var(--tertiary);
+    }
+
+    .iconContainer {
+        justify-self: center;
+        height: $iconSize;
+        width: $iconSize;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .icon {
+            height: 100%;
+            width: fit-content;
+            fill: var(--text-colour);
+            object-fit: cover;
+        }
+    }
+
+    .text {
+        @include fonts.text-medium;
+        white-space: nowrap;
+        overflow: hidden;
+        color: var(--text-colour);
+        text-align: start;
+        align-self: center;
+    }
+
+    .footerTitle {
+        @extend .sectionTitle;
+        grid-area: footerHeader;
+        grid-column: 1;
+        color: var(--background);
+    }
+
+    .footerHeader {
+        @extend .sectionHeader;
+        grid-area: footerHeader;
+        overflow: hidden;
+    }
+
+    .footerItems {
+        @extend .sectionItems;
+        grid-area: footerItems;
+        padding-bottom: 2rem;
+        background-color: inherit;
+    }
+
+    .sidebarItem {
+        all: unset;
+        display: grid;
+        grid-template-columns: inherit;
+        grid-column: span 2;
+        cursor: pointer;
+        gap: 2rem;
+        padding: 1rem 0rem;
+        background: none;
+
+        &:hover {
+            backdrop-filter: brightness(0.75);
+
+            .text {
+                filter: brightness(0.9);
+            }
+
+            .icon {
+                filter: brightness(0.9);
+            }
+        }
+
+        .icon {
+            grid-column: 1;
+        }
+
+        .text {
+            grid-column: 2;
+        }
+    }
+
+    .toggle {
+        height: $toggleLongHeight;
+        width: $toggleWidth;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: map.get(variables.$z-index, sidebarToggle);
+        cursor: pointer;
+    }
+
+    .toggleExpanded {
+        @extend .toggle;
+        left: calc(100% - #{$toggleWidth});
+        opacity: 0;
+    }
+
+    .toggleCollapsed {
+        @extend .toggle;
+        left: 99%;
+    }
+}
+
+

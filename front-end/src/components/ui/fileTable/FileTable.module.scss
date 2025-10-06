@@ -1,0 +1,62 @@
+@use '@styles/_variables';
+@use '@styles/_fonts';
+
+$border-thickness: 10px;
+
+.tableContainer {
+  display: flex;
+  flex-direction: column;
+  background: var(--tertiary);
+  min-height: calc(100% - $border-thickness / 2);
+  border: 2px solid var(--light-grey);
+  border-radius: $border-thickness;
+
+  .fileTable {
+    @include fonts.text-large;
+    width: 100%;
+    color: var(--text-colour);
+    text-align: left;
+    border-collapse: collapse;
+    table-layout: fixed;
+    word-break: break-all;
+  
+    thead {
+      tr {
+        th {
+          padding: 0.75rem 0.5rem 0.75rem 0.5rem;
+          border-bottom: 2px solid var(--light-grey);
+          white-space: nowrap;
+        }
+  
+        .fileDate {
+          text-align: right;
+        }
+      }
+    }
+  
+    tbody {
+      tr {
+        td {
+          padding: 0.75rem 0.5rem 0.75rem 0.5rem;
+          vertical-align: top;
+        }
+  
+        .folderName {
+          align-items: center;
+          display: flex;
+  
+          img {
+            height: 1.5rem;
+            padding-right: 0.5rem;
+          }
+        }
+  
+        &.selected {
+          background: var(--accent);
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+

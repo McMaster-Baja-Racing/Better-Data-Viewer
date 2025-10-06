@@ -44,13 +44,19 @@ $base-font-size: 16px;
 }
 
 // Now for some titles and special sizes
+@mixin title-mini {
+  font-size: $base-font-size * 1.25;
+  line-height: $base-font-size * 1.5;
+  font-weight: 400;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
 @mixin title-tiny {
   font-size: $base-font-size * 1.5;
   line-height: $base-font-size * 2.5;
   font-weight: 400;
   font-family: 'Bebas Neue', sans-serif;
 }
-
 
 @mixin title-small {
   font-size: $base-font-size * 2;
@@ -75,9 +81,14 @@ $base-font-size: 16px;
 
 @mixin title-huge {
   font-size: $base-font-size * 4;
-  line-height: $base-font-size * 6.25;
+  line-height: $base-font-size * 4.25;
   font-weight: 400;
   font-family: 'Bebas Neue', sans-serif;
 }
 
-
+@mixin nav-title {
+  font-size: $base-font-size * 1.625;
+  line-height: $base-font-size * 3.125;
+  font-weight: 400;
+  font-family: 'Bebas Neue', sans-serif;
+}
