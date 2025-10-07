@@ -163,11 +163,7 @@ public class FileAnalyzeResource {
     } else {
       new Thread(
               () -> {
-                try {
-                  serial.readLive();
-                } catch (Exception e) {
-                  e.printStackTrace();
-                }
+                serial.readLive();
               })
           .start();
     }
