@@ -56,7 +56,12 @@ export const dataTypesArray = [
   'RPM PRIM',
   'RPM SEC',
   'IMU X',
-  'STRAIN1'
+  'STRAIN1',
+  'STRAIN2',
+  'STRAIN3',
+  'STRAIN4',
+  'STRAIN5',
+  'STRAIN6'
 ] as const;
 
 // Derive the union type from the array
