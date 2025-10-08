@@ -57,4 +57,4 @@ export const getDataTypes = (files?: FileInformation[], selectedSource?: string)
   return uniqueDataTypes.sort();
 };
 
-export type DataTypes = string[];
+export type DataTypes = string;
