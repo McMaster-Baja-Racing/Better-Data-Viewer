@@ -127,10 +127,8 @@ public class SmartAnalyzerService {
       String headerLine = lines.get(0);
       String[] headers = headerLine.split(",");
 
-      String trimmedHeader = header.trim(); 
-
       for (String h : headers) {
-        if (h.trim().equals(trimmedHeader)) { 
+        if (h.trim().equals(header.trim())) { 
           return true;
         }
       }
