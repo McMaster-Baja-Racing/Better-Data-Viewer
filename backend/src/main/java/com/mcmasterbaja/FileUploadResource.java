@@ -49,6 +49,9 @@ public class FileUploadResource {
 
     switch (fileExtension) {
       case "csv":
+        Path csvPath = Paths.get("csv", fileName);
+        storageService.store(fileData, csvPath);
+        break;
       case "mp4":
         storageService.store(fileData, Paths.get(fileExtension + "/" + fileName));
         break;
@@ -125,15 +128,12 @@ public class FileUploadResource {
         }
 
         // Store the CSV files
-        try (InputStream latStream =
-                new java.io.ByteArrayInputStream(
-                    latCsv.toString().getBytes(StandardCharsets.UTF_8));
-            InputStream lonStream =
-                new java.io.ByteArrayInputStream(
-                    lonCsv.toString().getBytes(StandardCharsets.UTF_8));
-            InputStream speedStream =
-                new java.io.ByteArrayInputStream(
-                    speedCsv.toString().getBytes(StandardCharsets.UTF_8))) {
+        try (InputStream latStream = new java.io.ByteArrayInputStream(
+            latCsv.toString().getBytes(StandardCharsets.UTF_8));
+            InputStream lonStream = new java.io.ByteArrayInputStream(
+                lonCsv.toString().getBytes(StandardCharsets.UTF_8));
+            InputStream speedStream = new java.io.ByteArrayInputStream(
+                speedCsv.toString().getBytes(StandardCharsets.UTF_8))) {
           storageService.store(latStream, fitDir.resolve("GPS LATITUDE.csv"));
           storageService.store(lonStream, fitDir.resolve("GPS LONGITUDE.csv"));
           storageService.store(speedStream, fitDir.resolve("GPS SPEED.csv"));
