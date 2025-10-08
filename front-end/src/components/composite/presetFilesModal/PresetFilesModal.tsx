@@ -45,13 +45,17 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, currentSources }: 
     const uploadPromises = uploadedFiles.map((file) => ApiUtil.uploadFile(file));
     await Promise.all(uploadPromises);
 
-    // TODO: Clean up this mess of file types
     const fileKeys = selectedFiles.map((file) => file.key);
-    fileKeys.push(...uploadedFiles.map((file) => file.name));
+    
+    const uploadedFolderNames = uploadedFiles.map((file) => {
+      return file.name.substring(0, file.name.lastIndexOf('.'));
+    });
+    
+    fileKeys.push(...uploadedFolderNames);
 
     onSubmit(fileKeys);
     onClose();
-    refetch(); // Refetch files after upload
+    refetch(); 
   };
 
   return (
