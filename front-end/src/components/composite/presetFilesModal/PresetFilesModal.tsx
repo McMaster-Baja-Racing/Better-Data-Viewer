@@ -55,7 +55,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, currentSources }: 
 
     onSubmit(fileKeys);
     onClose();
-    refetch(); 
+    refetch(); // Refetch files after upload
   };
 
   return (
