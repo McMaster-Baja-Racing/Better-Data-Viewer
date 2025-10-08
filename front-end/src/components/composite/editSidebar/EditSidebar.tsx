@@ -24,7 +24,6 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
   const { series, dispatch: chartQueryDispatch } = useChartQuery();
   const [chartType, setChartType] = useState<ChartType>(options.series?.[0]?.type ?? 'line');
   
-  // Fetch files
   const { data: files } = useFiles();
 
   // Create an initial empty series if none exist

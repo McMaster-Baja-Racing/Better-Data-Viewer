@@ -54,17 +54,15 @@ const fallbackDataTypes = [
   'GPS SPEED',
   'RPM PRIM',
   'RPM SEC',
-  'IMU X',
+  'IMU X'
 ] as const;
 
 export const getDataTypes = (files?: FileInformation[], selectedSource?: string): string[] => {
   if (!files || files.length === 0) {
-    console.log('No files available, returning fallback');
     return [...fallbackDataTypes];
   }
   
   if (!selectedSource || selectedSource.trim() === '') {
-    console.log('No source selected, returning empty array');
     return [];
   }
   
@@ -75,7 +73,6 @@ export const getDataTypes = (files?: FileInformation[], selectedSource?: string)
   }
   
   if (selectedFile) {
-    console.log('Found single file:', selectedFile);
     return selectedFile.headers.sort();
   }
   
@@ -85,14 +82,11 @@ export const getDataTypes = (files?: FileInformation[], selectedSource?: string)
   );
   
   if (sourceFiles.length > 0) {
-    console.log('Found source files for bin:', sourceFiles);
-
     const allDataTypes = sourceFiles.flatMap(file => file.headers);
     const uniqueDataTypes = [...new Set(allDataTypes)];
     return uniqueDataTypes.sort();
   }
   
-  console.log('Selected source not found');
   return [];
 };
 
