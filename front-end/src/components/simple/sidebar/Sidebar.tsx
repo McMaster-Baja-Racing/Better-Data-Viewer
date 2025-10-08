@@ -11,7 +11,7 @@ import {
   mapIcon,
   sidebarToggleCollapsedIcon,
   sidebarToggleExpandedIcon,
-  newGraphIcon, 
+  newGraphIcon,
 } from '@assets/icons';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
