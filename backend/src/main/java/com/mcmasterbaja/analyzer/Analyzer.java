@@ -142,16 +142,15 @@ public abstract class Analyzer {
   }
 
   public int getColumnIndex(String columnName, String[] fileHeaders) {
-    String trimmedColumnName = columnName.trim(); 
     
     for (int i = 0; i < fileHeaders.length; i++) {
-      if (fileHeaders[i].trim().equals(trimmedColumnName)) { 
+      if (fileHeaders[i].trim().equals(columnName.trim())) { 
         return i;
       }
     }
     throw new InvalidColumnException(
         "Column `"
-            + trimmedColumnName
+            + columnName.trim()
             + "` does not exist within ["
             + String.join(", ", fileHeaders)
             + "]");
