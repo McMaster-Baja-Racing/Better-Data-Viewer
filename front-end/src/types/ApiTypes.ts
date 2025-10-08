@@ -41,8 +41,7 @@ export enum AnalyzerType {
   SMOOTH_STRICT_SEC = 'SMOOTH_STRICT_SEC',
 }
 
-// Define the constant array with all valid values
-export const dataTypesArray = [
+const fallbackDataTypes = [
   'Timestamp (ms)',
   'BATT PERC',
   'BATT VOLT',
@@ -56,13 +55,47 @@ export const dataTypesArray = [
   'RPM PRIM',
   'RPM SEC',
   'IMU X',
-  'STRAIN1',
-  'STRAIN2',
-  'STRAIN3',
-  'STRAIN4',
-  'STRAIN5',
-  'STRAIN6'
 ] as const;
 
-// Derive the union type from the array
-export type DataTypes = typeof dataTypesArray[number];
+export const getDataTypes = (files?: FileInformation[], selectedSource?: string): string[] => {
+  if (!files || files.length === 0) {
+    console.log('No files available, returning fallback');
+    return [...fallbackDataTypes];
+  }
+  
+  if (!selectedSource || selectedSource.trim() === '') {
+    console.log('No source selected, returning empty array');
+    return [];
+  }
+  
+  let selectedFile = files.find(file => file.name === selectedSource);
+  
+  if (!selectedFile) {
+    selectedFile = files.find(file => file.name === `${selectedSource}.csv`);
+  }
+  
+  if (selectedFile) {
+    console.log('Found single file:', selectedFile);
+    return selectedFile.headers.sort();
+  }
+  
+  const sourceFiles = files.filter(file => 
+    file.name.startsWith(selectedSource) || 
+    file.key?.includes(selectedSource)  
+  );
+  
+  if (sourceFiles.length > 0) {
+    console.log('Found source files for bin:', sourceFiles);
+
+    const allDataTypes = sourceFiles.flatMap(file => file.headers);
+    const uniqueDataTypes = [...new Set(allDataTypes)];
+    return uniqueDataTypes.sort();
+  }
+  
+  console.log('Selected source not found');
+  return [];
+};
+
+export const dataTypesArray = [...fallbackDataTypes];
+
+export type DataTypes = string;

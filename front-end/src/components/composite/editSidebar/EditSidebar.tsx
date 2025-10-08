@@ -1,5 +1,5 @@
-import { dataTypesArray, chartTypeMap, ChartType } from '@types';
-import styles from './EditSidebar.module.scss';
+import { getDataTypes, chartTypeMap, ChartType } from '@types';
+import { useFiles } from '@lib/files/useFiles';
 import { DataSelect } from '../dataSelect/dataSelect';
 import { Dropdown } from '@components/ui/dropdown/Dropdown';
 import { useEffect, useState } from 'react';
@@ -13,6 +13,7 @@ import { GridEditor } from './graphEditors/GridEditor';
 import { InteractionEditor } from './graphEditors/InteractionEditor';
 import { AppearanceEditor } from './graphEditors/AppearanceEditor';
 import { SeriesStyleEditor } from './graphEditors/SeriesStyleEditor';
+import styles from './EditSidebar.module.scss';
 
 interface EditSidebarProps {
   sources: string[]; // TODO: This should use the file type specified in the file browser
@@ -22,6 +23,9 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
   const { options, dispatch: chartOptionsDispatch } = useChartOptions();
   const { series, dispatch: chartQueryDispatch } = useChartQuery();
   const [chartType, setChartType] = useState<ChartType>(options.series?.[0]?.type ?? 'line');
+  
+  // Fetch files
+  const { data: files } = useFiles();
 
   // Create an initial empty series if none exist
   useEffect(() => {
@@ -79,7 +83,7 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
         </div>
         {series.length > 0 && series[0] && <DataSelect
           sources={sources.map((file) => ({ value: file, label: file }))}
-          dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
+          dataTypes={getDataTypes(files, series[0]?.x?.source).map((dataType) => ({ value: dataType, label: dataType }))}
           columnKey='x'
           seriesIndex={0}
           onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
@@ -117,7 +121,7 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
             </div>
             <DataSelect
               sources={sources.map((file) => ({ value: file, label: file }))}
-              dataTypes={dataTypesArray.map((dataType) => ({ value: dataType, label: dataType }))}
+              dataTypes={getDataTypes(files, series[fileIndex]?.y?.source).map((dataType) => ({ value: dataType, label: dataType }))}
               key={fileIndex + 'y'}
               columnKey='y'
               seriesIndex={fileIndex}
