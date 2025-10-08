@@ -29,10 +29,8 @@ import org.jboss.resteasy.reactive.RestForm;
 @jakarta.ws.rs.Path("/upload")
 public class FileUploadResource {
 
-  @Inject
-  Logger logger;
-  @Inject
-  StorageService storageService;
+  @Inject Logger logger;
+  @Inject StorageService storageService;
 
   @POST
   @jakarta.ws.rs.Path("/file")
