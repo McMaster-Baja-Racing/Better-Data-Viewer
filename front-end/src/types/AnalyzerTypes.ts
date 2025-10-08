@@ -235,7 +235,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
   [AnalyzerType.SMOOTH_STRICT_PRIM]: {
     title: 'Smooth Strict PRIM',
     description:
-        'Runs StrictTimstamp and Sgolay for RPM PRIM',
+        'Runs StrictTimestamp and Sgolay for RPM PRIM',
     isJoinBased: false,
     image: {
       src: placeholderImage,
@@ -247,7 +247,7 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
   [AnalyzerType.SMOOTH_STRICT_SEC]: {
     title: 'Smooth Strict SEC',
     description:
-        'Runs StrictTimstamp and Sgolay for RPM SEC',
+        'Runs StrictTimestamp and Sgolay for RPM SEC',
     isJoinBased: false,
     image: {
       src: placeholderImage,
