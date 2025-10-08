@@ -11,6 +11,7 @@ import {
   mapIcon,
   sidebarToggleCollapsedIcon,
   sidebarToggleExpandedIcon,
+  newGraphIcon,
 } from '@assets/icons';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
@@ -84,6 +85,7 @@ const Sidebar = () => {
         {/* <SidebarItem icon={bookmarkIcon} text="Bookmarked" onClick={() => console.log('bookmarked')}/> */}
         <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => openModal('upload')}/>
         <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => openModal('download')}/>
+        <SidebarItem icon={newGraphIcon} text="View Data" onClick={() => onIconClick('dataview')}/>
         {/* <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/> */}
         <SidebarItem icon={cubeIcon} text="Model Viewer" onClick={() => onIconClick('IMU')}/>
         <SidebarItem icon={mapIcon} text="Map" onClick={() => onIconClick('map')}/>
