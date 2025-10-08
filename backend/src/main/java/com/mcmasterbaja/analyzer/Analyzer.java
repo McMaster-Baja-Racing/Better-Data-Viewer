@@ -142,9 +142,9 @@ public abstract class Analyzer {
   }
 
   public int getColumnIndex(String columnName, String[] fileHeaders) {
-    
+
     for (int i = 0; i < fileHeaders.length; i++) {
-      if (fileHeaders[i].trim().equals(columnName.trim())) { 
+      if (fileHeaders[i].trim().equals(columnName.trim())) {
         return i;
       }
     }
