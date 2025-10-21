@@ -1,4 +1,5 @@
 // Written by Gavin, history of pain on this one
+
 package com.mcmasterbaja.live;
 
 import com.fazecast.jSerialComm.*;
@@ -32,7 +33,7 @@ public class Serial implements Serializable {
   /* readLive() connects to an Arduino/Serial device, reads + parses binary packets,
      and writes them to a csv file. 
   */
-  public void readLive() throws Exception { // made readLive method non-static
+  public void readLive() throws SerialException { // made readLive method non-static
     SerialPort[] portList = SerialPort.getCommPorts();
     for (SerialPort serialPort : portList) {
       // check if the comport description contains the word arduino or serial
@@ -47,7 +48,7 @@ public class Serial implements Serializable {
       }
 
       if (comPort == null) {
-        throw new SerialException("Could not connect to an Arduino/Serial device. Maybe check the port?");
+        return;
       }
       
     }
@@ -87,22 +88,14 @@ public class Serial implements Serializable {
           writer.write(timestamp + ","  + value + "\n"); 
           writer.flush(); 
         }
-      } catch (IOException e) {
-        throw new SerialException(
-          "Failed to write to " + filename + " for packet type " + packetType + " at timestamp " + timestamp
-          , e
-        ); 
       } finally {
-        for (FileWriter writer : fileWriters.values()) {
-          writer.close(); 
-        }
+          for (FileWriter writer : fileWriters.values()) {
+            writer.close(); 
+          }
       }
-    } catch (Exception e) {
-      throw new SerialException("Error during port setup", e);
     } finally {
       if (comPort != null && comPort.isOpen()) {
         comPort.closePort();
-        System.out.println("Port closed");
       }
     }
   }

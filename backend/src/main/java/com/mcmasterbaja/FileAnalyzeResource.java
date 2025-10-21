@@ -161,11 +161,7 @@ public class FileAnalyzeResource {
     if (!serial.exit) {
       serial.exit = true;
     } else {
-      new Thread(
-              () -> {
-                serial.readLive();
-              })
-          .start();
+      new Thread(() -> serial.readLive()).start();
     }
 
     return exit;
