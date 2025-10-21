@@ -33,7 +33,7 @@ public class Serial implements Serializable {
   /* readLive() connects to an Arduino/Serial device, reads + parses binary packets,
      and writes them to a csv file. 
   */
-  public void readLive() throws SerialException { // made readLive method non-static
+  public void readLive() throws IOException { // made readLive method non-static
     SerialPort[] portList = SerialPort.getCommPorts();
     for (SerialPort serialPort : portList) {
       // check if the comport description contains the word arduino or serial
