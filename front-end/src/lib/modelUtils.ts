@@ -91,6 +91,7 @@ export class ModelReplayController {
   private objRef: THREE.Group;
   private isPlaying = false;
   private currentIndex = 0;
+  private firstTimestamp = 0;
   private lastTimestamp = 0;
   private startTime = 0;
   private angleMode: 'quaternion' | 'euler';
@@ -146,9 +147,10 @@ export class ModelReplayController {
     // Initialize start time if playing from the beginning
     if (this.currentIndex === 0) {
       this.startTime = performance.now();
+      this.firstTimestamp = this.data[0]?.timestamp || 0;
     } else {
       // Adjust the start time for resuming from the current index
-      this.startTime = performance.now() - this.lastTimestamp / this.speed;
+      this.startTime = performance.now() - (this.lastTimestamp - this.firstTimestamp) / this.speed;
     }
 
     this.loop();
@@ -184,7 +186,7 @@ export class ModelReplayController {
     if (!this.isPlaying) return;
 
     const now = performance.now();
-    const elapsed = (now - this.startTime) * this.speed;
+    const elapsed = (now - this.startTime) * this.speed + this.firstTimestamp;
 
     while (
       this.currentIndex < this.data.length &&
