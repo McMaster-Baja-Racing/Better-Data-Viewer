@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { GridHelper, AxesHelper, BoxHelper } from 'three';
+import { GridHelper } from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as THREE from 'three';
 import EeveeObj from '@assets/Eevee.obj';
@@ -13,14 +13,6 @@ interface EeveeProps {
 
 export function Eevee({ objRef, onLoad }: EeveeProps) {
   const { scene } = useThree();
-  const boxHelperRef = useRef<BoxHelper | null>(null);
-
-  // Execute every frame
-  useFrame(() => {
-    if (boxHelperRef.current) {
-      boxHelperRef.current.update();
-    }
-  });
 
   // Load the objects into the scene
   useEffect(() => {
