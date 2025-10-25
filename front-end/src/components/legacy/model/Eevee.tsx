@@ -31,9 +31,6 @@ export function Eevee({ objRef, onLoad }: EeveeProps) {
       scene.add(object);
       objRef.current = object;
 
-      // const boxHelper = boxHelperRef.current = new BoxHelper(object, 0xffff00);
-      // scene.add(boxHelper);
-
       if (onLoad) onLoad();
     });
 
@@ -41,20 +38,12 @@ export function Eevee({ objRef, onLoad }: EeveeProps) {
     gridHelper.position.y = -11;
     scene.add(gridHelper);
 
-    // const axesHelper = new AxesHelper(40);
-    // scene.add(axesHelper);
-
     // Cleanup on component unmount
     return () => {
       if (objRef.current) {
         scene.remove(objRef.current);
       }
-      // if (boxHelperRef.current) {
-      //   scene.remove(boxHelperRef.current);
-      // }
       scene.remove(gridHelper);
-      // scene.remove(axesHelper);
-
     };
   }, [scene]);
 
