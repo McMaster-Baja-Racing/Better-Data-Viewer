@@ -72,7 +72,8 @@ export const fetchData = async (bin: string) => {
 
 const updateQuaternion = (quat: Quaternion, objRef: THREE.Group) => {
   if (objRef) {
-    objRef.quaternion.set(quat.x, quat.y, quat.z, quat.w);
+    quat.normalize();
+    objRef.quaternion.copy(quat);
   }
 };
 
