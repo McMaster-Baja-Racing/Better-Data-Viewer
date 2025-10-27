@@ -1,6 +1,6 @@
 import { replayData, ReplayEvent, ReplayEventType, StateType } from '@types';
 import { ApiUtil } from './apiUtils';
-import { Quaternion, Euler, ArrowHelper, Vector3 } from 'three';
+import { Quaternion, Euler, ArrowHelper, Vector3, Box3, Sphere} from 'three';
 
 const extractColumnData = (data: string[][], columnIndex = 1) => {
   return data.map(row => row[columnIndex]);
@@ -71,12 +71,60 @@ export const fetchData = async (bin: string) => {
 };
 
 const updateQuaternion = (quat: Quaternion, objRef: THREE.Group) => {
-  if (objRef) {
-    quat.normalize();
-    objRef.quaternion.copy(quat);
-  }
+  if (!objRef) return;
+
+  quat.normalize();
+  objRef.quaternion.copy(quat);
 };
 
+export const getBoundingRadius = (objRef: THREE.Group | undefined) => {
+  if (!objRef) return;
+  const box = new Box3().setFromObject(objRef);
+  const sphere = new Sphere();
+  box.getBoundingSphere(sphere);
+  return sphere.radius;
+};
+
+const makeArrow = (dir: Vector3, length: number, radius: number, color: number) => {
+  const origin = dir.clone().normalize().multiplyScalar(radius);
+  return new ArrowHelper(dir.clone().normalize(), origin, length, color);
+};
+
+const updateArrow = (arrow: ArrowHelper, vec: Vector3, length: number, radius: number) => {
+  const magnitude = vec.length();
+  const dir = vec.clone().normalize();
+  const origin = dir.clone().multiplyScalar(radius);
+
+  arrow.position.copy(origin);
+  arrow.setDirection(dir);
+  arrow.setLength(magnitude * length);
+};
+
+const updateAccelArrows = (
+  accelX: number,
+  accelY: number,
+  accelZ: number,
+  length: number,
+  radius: number,
+  accelVectors: {
+    x: ArrowHelper;
+    y: ArrowHelper;
+    z: ArrowHelper;
+    net: ArrowHelper;
+  }
+) => {
+  if (!accelVectors) return;
+
+  const xVec = new Vector3(accelX, 0, 0);
+  const yVec = new Vector3(0, accelY, 0);
+  const zVec = new Vector3(0, 0, accelZ);
+  const netVec = new Vector3(accelX, accelY, accelZ);
+
+  updateArrow(accelVectors.x, xVec, length, radius);
+  updateArrow(accelVectors.y, yVec, length, radius);
+  updateArrow(accelVectors.z, zVec, length, radius);
+  updateArrow(accelVectors.net, netVec, length, radius);
+}
 
 // TODO: useEuler or remove
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -99,6 +147,7 @@ export class ModelReplayController {
   private listeners: ((event: ReplayEvent) => void)[] = [];
   private accelVectors: {x: ArrowHelper; y: ArrowHelper; z: ArrowHelper; net: ArrowHelper;};
   private ARROW_LENGTH = 50;
+  private boundingRadius: number;
 
   constructor(
     data: replayData,
@@ -109,13 +158,17 @@ export class ModelReplayController {
     this.objRef = objRef;
     this.angleMode = angleMode;
 
+    // Calculate bounding radius for arrow placement
+    this.boundingRadius = getBoundingRadius(objRef) || 1;
+
     // Set up acceleration vectors
     this.accelVectors = {
-      x: new ArrowHelper(new Vector3(1, 0, 0), new Vector3(0, 0, 0), this.ARROW_LENGTH, 0xff0000),
-      y: new ArrowHelper(new Vector3(0, 1, 0), new Vector3(0, 0, 0), this.ARROW_LENGTH, 0x00ff00),
-      z: new ArrowHelper(new Vector3(0, 0, 1), new Vector3(0, 0, 0), this.ARROW_LENGTH, 0x0000ff),
-      net: new ArrowHelper((new Vector3(1, 1, 1)).normalize(), new Vector3(0, 0, 0), this.ARROW_LENGTH, 0x000000),
+      x: makeArrow(new Vector3(1, 0, 0), this.ARROW_LENGTH, this.boundingRadius, 0xff0000),
+      y: makeArrow(new Vector3(0, 1, 0), this.ARROW_LENGTH, this.boundingRadius, 0x00ff00),
+      z: makeArrow(new Vector3(0, 0, 1), this.ARROW_LENGTH, this.boundingRadius, 0x0000ff),
+      net: makeArrow((new Vector3(1, 1, 1)), this.ARROW_LENGTH, this.boundingRadius, 0x000000),
     };
+    
     const scene = objRef.parent || objRef;
     Object.values(this.accelVectors).forEach(vec => scene.add(vec));
   }
@@ -194,24 +247,7 @@ export class ModelReplayController {
     ) {
       const { x, y, z, w, timestamp, accelX, accelY, accelZ } = this.data[this.currentIndex];
       updateQuaternion(new Quaternion(x, y, z, w), this.objRef);
-
-      // Update acceleration arrows
-      const xVec = new Vector3(accelX, 0, 0);
-      const yVec = new Vector3(0, accelY, 0);
-      const zVec = new Vector3(0, 0, accelZ);
-      const netVec = new Vector3(accelX, accelY, accelZ);
-
-      this.accelVectors.x.setDirection(xVec.clone().normalize());
-      this.accelVectors.x.setLength(xVec.length() * this.ARROW_LENGTH);
-
-      this.accelVectors.y.setDirection(yVec.clone().normalize());
-      this.accelVectors.y.setLength(yVec.length() * this.ARROW_LENGTH);
-
-      this.accelVectors.z.setDirection(zVec.clone().normalize());
-      this.accelVectors.z.setLength(zVec.length() * this.ARROW_LENGTH);
-
-      this.accelVectors.net.setDirection(netVec.clone().normalize());
-      this.accelVectors.net.setLength(netVec.length() * this.ARROW_LENGTH);
+      updateAccelArrows(accelX, accelY, accelZ, this.ARROW_LENGTH, this.boundingRadius, this.accelVectors);
 
 
       this.emit({
