@@ -16,7 +16,7 @@ export const PresetCard = ({ image, name, description, fileCount, onClick }: Pre
       <img src={image ?? defaultImage} alt="Preset" className={styles.image} />
       <div className={styles.content}>
         <div className={styles['title-container']}>
-          <div>{name}</div>
+          <div className={styles.title}>{name}</div>
           <div className={styles.fileCount}>
             <span>{fileCount} x</span>
             <img src={newGraphIcon} alt="New Graph" />
