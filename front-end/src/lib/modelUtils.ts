@@ -171,6 +171,7 @@ export class ModelReplayController {
   private MAX_ARROW_LENGTH = 100;
   private max_accel: number;
   private boundingRadius: number;
+  private scene: THREE.Object3D | null;
 
   constructor(
     data: replayData,
@@ -195,8 +196,8 @@ export class ModelReplayController {
       net: makeArrow((new Vector3(1, 1, 1)), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0x000000),
     };
     
-    const scene = objRef.parent || objRef;
-    Object.values(this.accelVectors).forEach(vec => scene.add(vec));
+    this.scene = objRef.parent;
+    Object.values(this.accelVectors).forEach(vec => this.scene?.add(vec));
   }
 
   // Here we setup event listeners to allow other components to listen in on the state of the replaying
@@ -302,6 +303,21 @@ export class ModelReplayController {
 
     // Continue the loop
     requestAnimationFrame(this.loop.bind(this));
+  }
+
+  /** Clean up arrows, listeners, and animation frame */
+  dispose() {
+    this.stop();
+    this.listeners = [];
+
+    if (this.scene) {
+      Object.values(this.accelVectors).forEach(vec => {
+        this.scene?.remove(vec);
+        vec.dispose();
+      });
+    }
+
+    this.scene = null;
   }
 }
 

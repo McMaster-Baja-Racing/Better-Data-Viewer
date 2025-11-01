@@ -30,31 +30,37 @@ export function Eevee({ objRef, onLoad }: EeveeProps) {
   // Load the objects into the scene
   useEffect(() => {
     const loader = new OBJLoader();
+    
+    let object: THREE.Group | null = null;
+    let sphereMesh: Mesh | null = null;
+    let gridHelper: GridHelper | null = null;
 
-    loader.load(EeveeObj, (object) => {
-      // Add the loaded object to the scene
+    loader.load(EeveeObj, (loaded) => {
+      object = loaded;
       scene.add(object);
       objRef.current = object;
 
-      // Create sphere mesh and grid for reference
       const boundingRadius = getBoundingRadius(object) || 1;
-      const sphereMesh = createSphereMesh(boundingRadius);
+      sphereMesh = createSphereMesh(boundingRadius);
       scene.add(sphereMesh);
 
-      const gridHelper = new GridHelper(1000, 100);
+      gridHelper = new GridHelper(1000, 100);
       gridHelper.position.y = -(boundingRadius + 10);
       scene.add(gridHelper);
 
-      if (onLoad) onLoad();
+      onLoad?.();
     });
-
-
 
     // Cleanup on component unmount
     return () => {
-      if (objRef.current) {
-        scene.remove(objRef.current);
+      if (object) scene.remove(object);
+      if (sphereMesh) {
+        scene.remove(sphereMesh);
+        sphereMesh.geometry.dispose();
+        (sphereMesh.material as MeshBasicMaterial).dispose();
       }
+      if (gridHelper) scene.remove(gridHelper);
+      objRef.current = undefined;
     };
   }, [scene]);
 
