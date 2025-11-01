@@ -70,6 +70,26 @@ export const fetchData = async (bin: string) => {
   return data;
 };
 
+const computeAccelRange = (data: { accelX: number; accelY: number; accelZ: number }[]) => {
+  let minVal = Infinity;
+  let maxVal = -Infinity;
+
+  for (const { accelX, accelY, accelZ } of data) {
+    if (accelX < minVal) minVal = Math.abs(accelX);
+    if (accelY < minVal) minVal = Math.abs(accelY);
+    if (accelZ < minVal) minVal = Math.abs(accelZ);
+
+    if (accelX > maxVal) maxVal = Math.abs(accelX);
+    if (accelY > maxVal) maxVal = Math.abs(accelY);
+    if (accelZ > maxVal) maxVal = Math.abs(accelZ);
+  }
+
+  // Avoid zero range
+  if (maxVal === minVal) maxVal += 1e-6;
+
+  return { min: minVal, max: maxVal };
+};
+
 const updateQuaternion = (quat: Quaternion, objRef: THREE.Group) => {
   if (!objRef) return;
 
@@ -90,21 +110,29 @@ const makeArrow = (dir: Vector3, length: number, radius: number, color: number) 
   return new ArrowHelper(dir.clone().normalize(), origin, length, color);
 };
 
+const getScaledLength = (value: number, minAccel: number, maxAccel: number, minLength: number, maxLength: number) => {
+  const scale = (value - minAccel) / (maxAccel - minAccel);
+  // console.log('Scale:', scale);
+  return minLength + scale * (maxLength - minLength);
+};
+
 const updateArrow = (arrow: ArrowHelper, vec: Vector3, length: number, radius: number) => {
-  const magnitude = vec.length();
   const dir = vec.clone().normalize();
   const origin = dir.clone().multiplyScalar(radius);
 
   arrow.position.copy(origin);
   arrow.setDirection(dir);
-  arrow.setLength(magnitude * length);
+  arrow.setLength(length);
 };
 
 const updateAccelArrows = (
   accelX: number,
   accelY: number,
   accelZ: number,
-  length: number,
+  minAccel: number,
+  maxAccel: number,
+  minLength: number,
+  maxLength: number,
   radius: number,
   accelVectors: {
     x: ArrowHelper;
@@ -120,11 +148,16 @@ const updateAccelArrows = (
   const zVec = new Vector3(0, 0, accelZ);
   const netVec = new Vector3(accelX, accelY, accelZ);
 
-  updateArrow(accelVectors.x, xVec, length, radius);
-  updateArrow(accelVectors.y, yVec, length, radius);
-  updateArrow(accelVectors.z, zVec, length, radius);
-  updateArrow(accelVectors.net, netVec, length, radius);
-}
+  const xLength = getScaledLength(accelX, minAccel, maxAccel, minLength, maxLength);
+  const yLength = getScaledLength(accelY, minAccel, maxAccel, minLength, maxLength);
+  const zLength = getScaledLength(accelZ, minAccel, maxAccel, minLength, maxLength);
+  const netLength = getScaledLength(netVec.length(), minAccel, maxAccel, minLength, maxLength);
+
+  updateArrow(accelVectors.x, xVec, xLength, radius);
+  updateArrow(accelVectors.y, yVec, yLength, radius);
+  updateArrow(accelVectors.z, zVec, zLength, radius);
+  updateArrow(accelVectors.net, netVec, netLength, radius);
+};
 
 // TODO: useEuler or remove
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -146,7 +179,10 @@ export class ModelReplayController {
   private speed = 1;
   private listeners: ((event: ReplayEvent) => void)[] = [];
   private accelVectors: {x: ArrowHelper; y: ArrowHelper; z: ArrowHelper; net: ArrowHelper;};
-  private ARROW_LENGTH = 50;
+  private MIN_ARROW_LENGTH = 1;
+  private MAX_ARROW_LENGTH = 100;
+  private min_accel: number;
+  private max_accel: number;
   private boundingRadius: number;
 
   constructor(
@@ -161,12 +197,19 @@ export class ModelReplayController {
     // Calculate bounding radius for arrow placement
     this.boundingRadius = getBoundingRadius(objRef) || 1;
 
+    // Compute acceleration range for scaling arrows
+    const { min, max } = computeAccelRange(data);
+    console.log('Acceleration range:', min, max);
+    this.min_accel = min;
+    this.max_accel = max;
+
     // Set up acceleration vectors
+    const avg_arrow_length = (this.MIN_ARROW_LENGTH + this.MAX_ARROW_LENGTH) / 2;
     this.accelVectors = {
-      x: makeArrow(new Vector3(1, 0, 0), this.ARROW_LENGTH, this.boundingRadius, 0xff0000),
-      y: makeArrow(new Vector3(0, 1, 0), this.ARROW_LENGTH, this.boundingRadius, 0x00ff00),
-      z: makeArrow(new Vector3(0, 0, 1), this.ARROW_LENGTH, this.boundingRadius, 0x0000ff),
-      net: makeArrow((new Vector3(1, 1, 1)), this.ARROW_LENGTH, this.boundingRadius, 0x000000),
+      x: makeArrow(new Vector3(1, 0, 0), this.MIN_ARROW_LENGTH, this.boundingRadius, 0xff0000),
+      y: makeArrow(new Vector3(0, 1, 0), this.MIN_ARROW_LENGTH, this.boundingRadius, 0x00ff00),
+      z: makeArrow(new Vector3(0, 0, 1), this.MIN_ARROW_LENGTH, this.boundingRadius, 0x0000ff),
+      net: makeArrow((new Vector3(1, 1, 1)), this.MIN_ARROW_LENGTH, this.boundingRadius, 0x000000),
     };
     
     const scene = objRef.parent || objRef;
@@ -247,7 +290,17 @@ export class ModelReplayController {
     ) {
       const { x, y, z, w, timestamp, accelX, accelY, accelZ } = this.data[this.currentIndex];
       updateQuaternion(new Quaternion(x, y, z, w), this.objRef);
-      updateAccelArrows(accelX, accelY, accelZ, this.ARROW_LENGTH, this.boundingRadius, this.accelVectors);
+      updateAccelArrows(
+        accelX,
+        accelY,
+        accelZ,
+        this.min_accel,
+        this.max_accel,
+        this.MIN_ARROW_LENGTH,
+        this.MAX_ARROW_LENGTH,
+        this.boundingRadius,
+        this.accelVectors
+      );
 
 
       this.emit({
