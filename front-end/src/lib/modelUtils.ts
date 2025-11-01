@@ -74,9 +74,7 @@ const computeMaxAccel = (data: { accelX: number; accelY: number; accelZ: number 
   let maxVal = -Infinity;
 
   for (const { accelX, accelY, accelZ } of data) {
-    if (accelX > maxVal) maxVal = Math.abs(accelX);
-    if (accelY > maxVal) maxVal = Math.abs(accelY);
-    if (accelZ > maxVal) maxVal = Math.abs(accelZ);
+    maxVal = Math.max(maxVal, Math.abs(accelX), Math.abs(accelY), Math.abs(accelZ));
   }
 
   // Avoid zero range
