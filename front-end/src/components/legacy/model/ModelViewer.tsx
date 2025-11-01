@@ -6,34 +6,17 @@ import { useRef } from 'react';
 import { fetchData, ModelReplayController } from '@lib/modelUtils';
 import './modelViewer.css';
 import { ApiUtil } from '@lib/apiUtils';
-import { ReplayEvent, ReplayEventType, StateType, quatReplayData } from '@types';
+import {ReplayEventType, quatReplayData } from '@types';
 import { showInfoToast } from '@components/ui/toastNotification/ToastNotification';
+import { Playbar } from '@components/ui/playbar/Playbar';
 
 const ModelViewer = () => {
   const objRef = useRef<THREE.Group>(undefined);
   const [data, setData] = useState<quatReplayData>([]);
   const [objectLoaded, setObjectLoaded] = useState(false);
   const [bins, setBins] = useState<string[]>([]);
-  const replayControllerRef = useRef<ModelReplayController | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentTimestamp, setCurrentTimestamp] = useState(0);
-  const [currentState, setCurrentState] = useState(StateType.Stopped);
-
-  // Handle replay events
-  const handleEvent = (event: ReplayEvent) => {
-    switch (event.type) {
-      case ReplayEventType.StateChanged:
-        setCurrentState(event.state);
-        break;
-      case ReplayEventType.Progress:
-        setCurrentIndex(event.currentIndex);
-        setCurrentTimestamp(event.timestamp);
-        break;
-      case ReplayEventType.Finished:
-        showInfoToast('Replay finished!', JSON.stringify(event));
-        break;
-    }
-  };
+  const [replayController, setReplayController] = useState<ModelReplayController | null>(null);
+  const [times, setTimes] = useState<number[]>([]);
 
   useEffect(() => {
     ApiUtil.getBins().then(bins => setBins(bins.map(bin => bin.key)));
@@ -41,24 +24,36 @@ const ModelViewer = () => {
 
   // Setup the replay controller
   useEffect(() => {
-    if (!objRef.current || !objectLoaded || data.length <= 0) return;
-    replayControllerRef.current = new ModelReplayController(data, objRef.current, 'quaternion');
+    if (!objectLoaded || !objRef.current || data.length === 0) return;
 
-    replayControllerRef.current.on(handleEvent);
+    const controller = new ModelReplayController(data, objRef.current);
+    setReplayController(controller);
+
+    const cleanup = controller.on((event) => {
+      if (event.type === ReplayEventType.Finished) {
+        showInfoToast('Replay finished!');
+      }
+    });
 
     return () => {
-      replayControllerRef.current?.off(handleEvent);
+      cleanup();
+      controller.dispose();
     };
-  }, [data, objectLoaded]);
+  }, [objectLoaded, data]);
 
-  const handleBinChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleBinChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (!event.target.value) return;
-    fetchData(event.target.value).then(setData);
+    const loaded = await fetchData(event.target.value);
+
+    // Normalize timestamps to start at 0
+    const offset = loaded[0]?.timestamp || 0;
+    const shifted = loaded.map(d => ({ ...d, timestamp: d.timestamp - offset }));
+    setData(shifted);
+    setTimes(shifted.map(d => d.timestamp / 1000)); // convert to seconds for Playbar
   };
 
   return (
     <div className="modelContainer">
-      
       <div className={'control-bar'}>
         <select className="model_bin_select" defaultValue="none" onChange={handleBinChange}>
           <option value="none" disabled hidden>Select a file to analyze</option>
@@ -66,32 +61,7 @@ const ModelViewer = () => {
             return (<option key={bin} value={bin}>{bin}</option>);
           })}
         </select>
-        <button onClick={() => replayControllerRef.current?.play()}>Play</button>
-        <button onClick={() => replayControllerRef.current?.stop()}>Stop</button>
-        <button onClick={() => replayControllerRef.current?.pause()}>Pause</button>
-        <button onClick={() => replayControllerRef.current?.reset()}>Reset</button>
-        <div>
-          <label>Speed:</label>
-          <input 
-            type="number" 
-            min="0" 
-            step="0.1"
-            defaultValue="1" 
-            onChange={(e) => replayControllerRef.current?.setSpeed(parseFloat(e.target.value))} 
-          />
-        </div>
-        <div>
-          <label>Current Index: </label>
-          <span>{currentIndex}</span>
-        </div>
-        <div>
-          <label>Current Timestamp: </label>
-          <span>{currentTimestamp}</span>
-        </div>
-        <div>
-          <label>Current State: </label>
-          <span>{currentState}</span>
-        </div>
+
       </div>
       <Canvas shadows dpr={[1, 2]} camera={{ fov: 40, position: [40, 0, 0] }}>
         <Suspense fallback={null}>
@@ -104,6 +74,11 @@ const ModelViewer = () => {
         </Suspense>
         <OrbitControls/> {/* autoRotate */}
       </Canvas>
+      <div className="playbarContainer">
+        {replayController && times.length > 0 && (
+          <Playbar replayController={replayController} times={times} />
+        )}
+      </div>
     </div>
     
   );

@@ -22,5 +22,5 @@ export enum StateType {
 
 export type ReplayEvent =
   | { type: ReplayEventType.StateChanged; state: StateType }
-  | { type: ReplayEventType.Progress; currentIndex: number; timestamp: number }
+  | { type: ReplayEventType.Progress; currentIndex: number; data: quatReplayData[number] }
   | { type: ReplayEventType.Finished };

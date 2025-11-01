@@ -1,6 +1,6 @@
 import { quatReplayData, ReplayEvent, ReplayEventType, StateType } from '@types';
 import { ApiUtil } from './apiUtils';
-import { Quaternion, Euler } from 'three';
+import { Quaternion } from 'three';
 
 const extractColumnData = (data: string[][], columnIndex = 1) => {
   return data.map(row => row[columnIndex]);
@@ -49,20 +49,6 @@ export const fetchData = async (bin: string) => {
   return data;
 };
 
-const updateQuaternion = (quat: Quaternion, objRef: THREE.Group) => {
-  if (objRef) {
-    objRef.quaternion.set(quat.x, quat.y, quat.z, quat.w);
-  }
-};
-
-// TODO: useEuler or remove
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const updateEuler = (euler: Euler, objRef: THREE.Group) => {
-  if (objRef) {
-    objRef.rotation.set(euler.x, euler.y, euler.z);
-  }
-};
-
 export class ModelReplayController {
   private data: quatReplayData;
   private objRef: THREE.Group;
@@ -70,112 +56,134 @@ export class ModelReplayController {
   private currentIndex = 0;
   private lastTimestamp = 0;
   private startTime = 0;
-  private angleMode: 'quaternion' | 'euler';
   private speed = 1;
   private listeners: ((event: ReplayEvent) => void)[] = [];
 
-  constructor(
-    data: quatReplayData,
-    objRef: THREE.Group,
-    angleMode: 'quaternion' | 'euler' = 'quaternion',
-  ) {
+  private rafId: number | null = null;
+  private loopBound = (now: number) => this.loop(now);
+
+  constructor(data: quatReplayData, objRef: THREE.Group) {
     this.data = data;
     this.objRef = objRef;
-    this.angleMode = angleMode;
   }
 
-  // Here we setup event listeners to allow other components to listen in on the state of the replaying
-
-  // This allows users to subscribe to events
   on(eventHandler: (event: ReplayEvent) => void) {
     this.listeners.push(eventHandler);
+    return () => this.off(eventHandler);
   }
 
-  // This allows users to unsubscribe from events
   off(eventHandler: (event: ReplayEvent) => void) {
-    this.listeners = this.listeners.filter((handler) => handler !== eventHandler);
+    this.listeners = this.listeners.filter(h => h !== eventHandler);
   }
 
-  // This allows us to set the state of the replaying
   private emit(event: ReplayEvent) {
-    this.listeners.forEach((handler) => handler(event));
+    this.listeners.forEach(handler => handler(event));
   }
-
-  // Below is the state machine functionality for the replaying
 
   play() {
     if (this.isPlaying) return;
-    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Playing });
-    this.isPlaying = true;
 
-    // Initialize start time if playing from the beginning
     if (this.currentIndex === 0) {
       this.startTime = performance.now();
+    } else if (this.currentIndex >= this.data.length) {
+      this.reset();
+      this.startTime = performance.now();
     } else {
-      // Adjust the start time for resuming from the current index
-      this.startTime = performance.now() - this.lastTimestamp / this.speed;
+      this.startTime = performance.now() - (this.lastTimestamp / this.speed);
     }
 
-    this.loop();
+    this.isPlaying = true;
+    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Playing });
+
+    if (this.rafId != null) cancelAnimationFrame(this.rafId);
+    this.rafId = requestAnimationFrame(this.loopBound);
   }
 
-  pause() {   
+  pause() {
     this.isPlaying = false;
+    if (this.rafId != null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
     this.emit({ type: ReplayEventType.StateChanged, state: StateType.Paused });
   }
 
-  stop() {
-    this.isPlaying = false;
-    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Stopped });
-  }
-
   reset() {
-    this.pause();
     this.currentIndex = 0;
     this.lastTimestamp = 0;
   }
 
   setSpeed(newSpeed: number) {
-    if (newSpeed <= 0) {
-      // TODO: Remove debugging statement
-      // eslint-disable-next-line no-console
-      console.warn('Speed must be positive. Ignoring invalid value:', newSpeed);
-      return;
+    if (newSpeed <= 0) return;
+    if (this.isPlaying) {
+      const now = performance.now();
+      const elapsed = ((now - this.startTime) * this.speed);
+      this.startTime = now - (elapsed / newSpeed);
     }
     this.speed = newSpeed;
   }
 
-  private loop() {
-    if (!this.isPlaying) return;
+  setCurrentIndex(index: number) {
+    if (index < 0 || index >= this.data.length) return;
+    this.currentIndex = index;
+    this.lastTimestamp = this.data[index]?.timestamp || 0;
 
-    const now = performance.now();
-    const elapsed = (now - this.startTime) * this.speed;
+    if (!this.isPlaying) {
+      this.emit({
+        type: ReplayEventType.Progress,
+        currentIndex: index,
+        data: this.data[index],
+      });
+      this.updateModel(this.data[index]);
+    }
+  }
 
+  private stepUntil(elapsedMs: number): quatReplayData[number] | null {
+    let latest: quatReplayData[number] | null = null;
     while (
       this.currentIndex < this.data.length &&
-      this.data[this.currentIndex].timestamp <= elapsed
+      this.data[this.currentIndex].timestamp <= elapsedMs
     ) {
-      const { x, y, z, w, timestamp } = this.data[this.currentIndex];
-      updateQuaternion(new Quaternion(x, y, z, w), this.objRef);
+      latest = this.data[this.currentIndex];
+      this.lastTimestamp = latest.timestamp;
+      this.currentIndex++;
+    }
+    return latest;
+  }
 
+  private loop(now: number) {
+    if (!this.isPlaying) return;
+    const elapsedMs = (now - this.startTime) * this.speed;
+    const latest = this.stepUntil(elapsedMs);
+
+    if (latest) {
+      this.updateModel(latest);
       this.emit({
         type: ReplayEventType.Progress,
         currentIndex: this.currentIndex,
-        timestamp,
+        data: latest,
       });
-
-      this.lastTimestamp = timestamp;
-      this.currentIndex++;
     }
 
     if (this.currentIndex >= this.data.length) {
-      this.stop();
+      this.pause();
       this.emit({ type: ReplayEventType.Finished });
       return;
     }
 
-    // Continue the loop
-    requestAnimationFrame(this.loop.bind(this));
+    this.rafId = requestAnimationFrame(this.loopBound);
+  }
+
+  private updateModel(point: quatReplayData[number]) {
+    if (this.objRef) {
+      const q = new Quaternion(point.x, point.y, point.z, point.w);
+      this.objRef.quaternion.copy(q);
+    }
+  }
+
+  dispose() {
+    this.pause();
+    this.listeners = [];
   }
 }
 

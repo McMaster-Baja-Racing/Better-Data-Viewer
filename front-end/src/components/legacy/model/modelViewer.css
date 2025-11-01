@@ -18,3 +18,10 @@
     gap: 1rem;
 }
 
+.playbarContainer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: black;
+}
+

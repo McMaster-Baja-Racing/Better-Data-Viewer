@@ -1,0 +1,39 @@
+.playbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  width: 100%;
+
+  .playPause {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding-left: 3px; /* to center the play icon visually */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    filter: invert(1);
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: currentColor;
+    }
+  }
+
+  .slider {
+    flex: 1;
+    margin: 0 1rem;
+  }
+
+  .indexLabel {
+    text-align: center;
+    white-space: nowrap;
+    color: var(--text-colour);
+  }
+
+
+}
