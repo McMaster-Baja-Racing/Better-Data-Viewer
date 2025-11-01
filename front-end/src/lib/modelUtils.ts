@@ -1,6 +1,6 @@
 import { replayData, ReplayEvent, ReplayEventType, StateType } from '@types';
 import { ApiUtil } from './apiUtils';
-import { Quaternion, Euler, ArrowHelper, Vector3, Box3, Sphere} from 'three';
+import { Quaternion, Euler, ArrowHelper, Vector3, Box3, Sphere } from 'three';
 
 const extractColumnData = (data: string[][], columnIndex = 1) => {
   return data.map(row => row[columnIndex]);

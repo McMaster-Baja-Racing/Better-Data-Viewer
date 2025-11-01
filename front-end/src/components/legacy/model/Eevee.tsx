@@ -1,6 +1,6 @@
-import { useRef, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { Box3, GridHelper, Mesh, MeshBasicMaterial, Sphere, SphereGeometry } from 'three';
+import { useEffect } from 'react';
+import { useThree } from '@react-three/fiber';
+import { GridHelper, Mesh, MeshBasicMaterial, SphereGeometry } from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as THREE from 'three';
 import EeveeObj from '@assets/Eevee.obj';
