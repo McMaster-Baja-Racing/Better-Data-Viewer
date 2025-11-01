@@ -199,17 +199,16 @@ export class ModelReplayController {
 
     // Compute acceleration range for scaling arrows
     const { min, max } = computeAccelRange(data);
-    console.log('Acceleration range:', min, max);
     this.min_accel = min;
     this.max_accel = max;
 
     // Set up acceleration vectors
     const avg_arrow_length = (this.MIN_ARROW_LENGTH + this.MAX_ARROW_LENGTH) / 2;
     this.accelVectors = {
-      x: makeArrow(new Vector3(1, 0, 0), this.MIN_ARROW_LENGTH, this.boundingRadius, 0xff0000),
-      y: makeArrow(new Vector3(0, 1, 0), this.MIN_ARROW_LENGTH, this.boundingRadius, 0x00ff00),
-      z: makeArrow(new Vector3(0, 0, 1), this.MIN_ARROW_LENGTH, this.boundingRadius, 0x0000ff),
-      net: makeArrow((new Vector3(1, 1, 1)), this.MIN_ARROW_LENGTH, this.boundingRadius, 0x000000),
+      x: makeArrow(new Vector3(1, 0, 0), avg_arrow_length, this.boundingRadius, 0xff0000),
+      y: makeArrow(new Vector3(0, 1, 0), avg_arrow_length, this.boundingRadius, 0x00ff00),
+      z: makeArrow(new Vector3(0, 0, 1), avg_arrow_length, this.boundingRadius, 0x0000ff),
+      net: makeArrow((new Vector3(1, 1, 1)), avg_arrow_length, this.boundingRadius, 0x000000),
     };
     
     const scene = objRef.parent || objRef;
