@@ -1,9 +1,10 @@
-import { useRef, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { GridHelper, AxesHelper, BoxHelper } from 'three';
+import { useEffect } from 'react';
+import { useThree } from '@react-three/fiber';
+import { GridHelper, Mesh, MeshBasicMaterial, SphereGeometry } from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import * as THREE from 'three';
 import EeveeObj from '@assets/Eevee.obj';
+import { getBoundingRadius } from '@lib/modelUtils';
 
 //props to pass in rotation through euler angles
 interface EeveeProps {
@@ -11,50 +12,55 @@ interface EeveeProps {
   onLoad?: () => void;
 }
 
+const createSphereMesh = (radius: number): Mesh => {
+  const geometry = new SphereGeometry(radius, 24, 24);
+  const material = new MeshBasicMaterial({
+    color: 0x00ffff,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.3,
+    depthWrite: false,
+  });
+  return new Mesh(geometry, material);
+};
+
 export function Eevee({ objRef, onLoad }: EeveeProps) {
   const { scene } = useThree();
-  const boxHelperRef = useRef<BoxHelper | null>(null);
-
-  // Execute every frame
-  useFrame(() => {
-    if (boxHelperRef.current) {
-      boxHelperRef.current.update();
-    }
-  });
 
   // Load the objects into the scene
   useEffect(() => {
     const loader = new OBJLoader();
+    
+    let object: THREE.Group | null = null;
+    let sphereMesh: Mesh | null = null;
+    let gridHelper: GridHelper | null = null;
 
-    loader.load(EeveeObj, (object) => {
-      // Add the loaded object to the scene
+    loader.load(EeveeObj, (loaded) => {
+      object = loaded;
       scene.add(object);
       objRef.current = object;
 
-      const boxHelper = boxHelperRef.current = new BoxHelper(object, 0xffff00);
-      scene.add(boxHelper);
+      const boundingRadius = getBoundingRadius(object) || 1;
+      sphereMesh = createSphereMesh(boundingRadius);
+      scene.add(sphereMesh);
 
-      if (onLoad) onLoad();
+      gridHelper = new GridHelper(1000, 100);
+      gridHelper.position.y = -(boundingRadius + 10);
+      scene.add(gridHelper);
+
+      onLoad?.();
     });
-
-    const gridHelper = new GridHelper(1000, 100);
-    gridHelper.position.y = -11;
-    scene.add(gridHelper);
-
-    const axesHelper = new AxesHelper(40);
-    scene.add(axesHelper);
 
     // Cleanup on component unmount
     return () => {
-      if (objRef.current) {
-        scene.remove(objRef.current);
+      if (object) scene.remove(object);
+      if (sphereMesh) {
+        scene.remove(sphereMesh);
+        sphereMesh.geometry.dispose();
+        (sphereMesh.material as MeshBasicMaterial).dispose();
       }
-      if (boxHelperRef.current) {
-        scene.remove(boxHelperRef.current);
-      }
-      scene.remove(gridHelper);
-      scene.remove(axesHelper);
-
+      if (gridHelper) scene.remove(gridHelper);
+      objRef.current = undefined;
     };
   }, [scene]);
 

@@ -6,12 +6,12 @@ import { useRef } from 'react';
 import { fetchData, ModelReplayController } from '@lib/modelUtils';
 import './modelViewer.css';
 import { ApiUtil } from '@lib/apiUtils';
-import { ReplayEvent, ReplayEventType, StateType, quatReplayData } from '@types';
+import { ReplayEvent, ReplayEventType, StateType, replayData } from '@types';
 import { showInfoToast } from '@components/ui/toastNotification/ToastNotification';
 
 const ModelViewer = () => {
   const objRef = useRef<THREE.Group>(undefined);
-  const [data, setData] = useState<quatReplayData>([]);
+  const [data, setData] = useState<replayData>([]);
   const [objectLoaded, setObjectLoaded] = useState(false);
   const [bins, setBins] = useState<string[]>([]);
   const replayControllerRef = useRef<ModelReplayController | null>(null);
@@ -93,7 +93,7 @@ const ModelViewer = () => {
           <span>{currentState}</span>
         </div>
       </div>
-      <Canvas shadows dpr={[1, 2]} camera={{ fov: 40, position: [40, 0, 0] }}>
+      <Canvas shadows dpr={[1, 2]} camera={{ fov: 40, position: [20, 20, 20] }}>
         <Suspense fallback={null}>
           <Stage preset="rembrandt" intensity={1} environment="lobby">
             <directionalLight position={[-5, 10, -35]} intensity={2.0} color="red" />
