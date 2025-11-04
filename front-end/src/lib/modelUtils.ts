@@ -280,6 +280,15 @@ export class ModelReplayController {
 
     if (latest) {
       this.updateModel(latest);
+      updateAccelArrows(
+        latest.accelX,
+        latest.accelY,
+        latest.accelZ,
+        this.max_accel,
+        this.MAX_ARROW_LENGTH,
+        this.boundingRadius,
+        this.accelVectors
+      );
       this.emit({
         type: ReplayEventType.Progress,
         currentIndex: this.currentIndex,
@@ -298,8 +307,9 @@ export class ModelReplayController {
 
   private updateModel(point: replayData[number]) {
     if (this.objRef) {
-      const q = new Quaternion(point.x, point.y, point.z, point.w);
-      this.objRef.quaternion.copy(q);
+      const quat = new Quaternion(point.x, point.y, point.z, point.w);
+      quat.normalize();
+      this.objRef.quaternion.copy(quat);
     }
   }
 
