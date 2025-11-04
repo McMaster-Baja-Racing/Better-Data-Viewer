@@ -18,6 +18,8 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
+import com.mcmasterbaja.exceptions.SerialException;
+import java.io.IOException;
 import jakarta.ws.rs.QueryParam;
 import java.io.File;
 import java.nio.file.Path;
@@ -153,18 +155,21 @@ public class FileAnalyzeResource {
 
   @PATCH
   @jakarta.ws.rs.Path("togglelive")
-  public Boolean toggleLive() {
-    logger.info("Toggling live data to: " + Serial.exit);
-    Boolean exit = Serial.exit;
+  public Boolean toggleLive() throws IOException {
+    Serial serial = new Serial();
+    logger.info("Toggling live data to: " + serial.exit);
+    Boolean exit = serial.exit;
 
-    if (!Serial.exit) {
-      Serial.exit = true;
+    if (!serial.exit) {
+      serial.exit = true;
     } else {
-      new Thread(
-              () -> {
-                Serial.readLive();
-              })
-          .start();
+      new Thread(() -> {
+          try {
+            serial.readLive();
+          } catch (IOException e) {
+            throw new SerialException("Failed to read serial data");
+          }
+        }).start();
     }
 
     return exit;
