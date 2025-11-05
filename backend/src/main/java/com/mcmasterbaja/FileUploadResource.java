@@ -14,8 +14,12 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.core.MediaType;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,6 +50,7 @@ public class FileUploadResource {
     }
 
     String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+    Path csvRoot = storageService.load(Paths.get("csv"));
 
     switch (fileExtension) {
       case "csv":
@@ -69,7 +74,6 @@ public class FileUploadResource {
 
       case "fit":
         // Prepare output directory csv/<FitName>
-        Path csvRoot = storageService.load(Paths.get("csv"));
         String fitName = fileName.substring(0, fileName.lastIndexOf('.'));
         Path fitDir = csvRoot.resolve(fitName);
         try {
@@ -140,6 +144,82 @@ public class FileUploadResource {
         } catch (IOException e) {
           throw new StorageException("Failed to store CSV files for FIT: " + fileName, e);
         }
+        break;
+
+      case "txt":
+        // Prepare output directory csv/<FitName>
+        String txtName = fileName.substring(0, fileName.lastIndexOf('.'));
+        Path txtDir = csvRoot.resolve(txtName);
+
+        // Create directory if it doesn't exist
+        try {
+          Files.createDirectories(txtDir);
+        } catch (IOException e) {
+          throw new StorageException("Failed to store TXT file: " + fileName, e);
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(fileData))) {
+
+          // Parse header
+          String headerLine = reader.readLine();
+          if (headerLine == null || headerLine.trim().isEmpty()) {
+            throw new InvalidInputFileException("TXT file is empty or missing header: " + fileName);
+          }
+
+           String[] headers = headerLine.trim().split(", ");
+           int columnCount = headers.length;
+           if (columnCount < 2) {
+             throw new InvalidInputFileException("TXT file must have at least two columns: " + fileName);
+           }
+
+          // Prepare StringBuilders for each column/CSV
+          List<StringBuilder> columnCSVs = new ArrayList<>(columnCount - 1);
+          for (int i = 1; i < columnCount; i++) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Timestamp (ms), ").append(headers[i]).append("\n");
+            columnCSVs.add(sb);
+          }
+
+          // Time conversion setup
+          long baseTimeMs = -1;
+          String line;
+          while ((line = reader.readLine()) != null) {
+            line = line.trim();
+            if (line.isEmpty()) continue;
+
+            String[] parts = line.split("\\s*,\\s*|\\s+");
+            if (parts.length != columnCount) continue;
+
+            try {
+              java.time.LocalTime time = java.time.LocalTime.parse(parts[0]);
+              long currentMs = time.toSecondOfDay() * 1000L + time.getNano() / 1_000_000L;
+
+              if (baseTimeMs == -1) baseTimeMs = currentMs;
+              long relativeMs = currentMs - baseTimeMs;
+
+              for (int c = 1; c < columnCount; c++) {
+                columnCSVs.get(c - 1).append(relativeMs).append(',').append(parts[c]).append('\n');
+              }
+
+            } catch (Exception e) {
+              logger.warn("Skipping malformed line: " + line);
+            }
+          }
+
+          // Write to each CSV file
+          for (int i = 1; i < columnCount; i++) {
+            Path outputPath = txtDir.resolve(headers[i] + ".csv");
+            try (InputStream in = new ByteArrayInputStream(
+                columnCSVs.get(i - 1).toString().getBytes(StandardCharsets.UTF_8))) {
+              storageService.store(in, outputPath);
+            }
+          }
+
+
+        } catch (IOException e) {
+          throw new StorageException("Failed to read TXT file: " + fileName, e);
+        }
+
         break;
 
       default:
