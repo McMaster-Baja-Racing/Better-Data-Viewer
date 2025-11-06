@@ -1,4 +1,4 @@
-import { dataPoint, replayData, ReplayEvent, ReplayEventType, StateType } from '@types';
+import { replayData, ReplayEvent, ReplayEventType, StateType } from '@types';
 import { ApiUtil } from './apiUtils';
 import { Quaternion, ArrowHelper, Vector3, Box3, Sphere } from 'three';
 
@@ -70,7 +70,7 @@ export const fetchData = async (bin: string) => {
   return data;
 };
 
-const computeMaxAccel = (data: dataPoint[]) => {
+const computeMaxAccel = (data: replayData) => {
   let maxVal = -Infinity;
 
   for (const { accelX, accelY, accelZ } of data) {

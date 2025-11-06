@@ -13,7 +13,8 @@ interface PlaybarProps {
 }
 
 // Be aware that this places the times evenly along the slider, not according to their actual values.
-// This is because the slider only supports linear scales. If we want a non-linear scale, we would need to implement a custom slider.
+// This is because the slider only supports linear scales. 
+// If we want a non-linear scale, we would need to implement a custom slider.
 export const Playbar = ({ replayController, times }: PlaybarProps) => {
   // Format seconds to m:ss:ss (minutes:seconds:hundredths). Handles undefined and negatives gracefully.
   const formatTime = (sec?: number) => {
