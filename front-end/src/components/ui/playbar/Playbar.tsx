@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import styles from './Playbar.module.scss';
+import { FaPlay, FaPause } from 'react-icons/fa';
 import { DiscreteSlider } from '@components/ui/playSlider/PlaySlider';
 import { SpeedSelector } from '@components/ui/speedSelector/SpeedSelector';
 import { ModelReplayController } from '@lib/modelUtils';
@@ -87,7 +88,7 @@ export const Playbar = ({ replayController, times }: PlaybarProps) => {
         onClick={handlePlayPause}
         aria-label={isPlaying ? 'Pause' : 'Play'}
       >
-        {isPlaying ? '❚❚' : '▶'}
+        {isPlaying ? <FaPause /> : <FaPlay />}
       </button>
       <span className={styles.indexLabel}>
         {formatTime(times[currentIndex])} / {formatTime(times[times.length - 1])}
