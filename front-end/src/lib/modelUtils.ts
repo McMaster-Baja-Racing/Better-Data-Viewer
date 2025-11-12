@@ -1,6 +1,6 @@
 import { replayData, ReplayEvent, ReplayEventType, StateType } from '@types';
 import { ApiUtil } from './apiUtils';
-import { Quaternion, Euler, ArrowHelper, Vector3, Box3, Sphere } from 'three';
+import { Quaternion, ArrowHelper, Vector3, Box3, Sphere } from 'three';
 
 const extractColumnData = (data: string[][], columnIndex = 1) => {
   return data.map(row => row[columnIndex]);
@@ -70,7 +70,7 @@ export const fetchData = async (bin: string) => {
   return data;
 };
 
-const computeMaxAccel = (data: { accelX: number; accelY: number; accelZ: number }[]) => {
+const computeMaxAccel = (data: replayData) => {
   let maxVal = -Infinity;
 
   for (const { accelX, accelY, accelZ } of data) {
@@ -83,77 +83,12 @@ const computeMaxAccel = (data: { accelX: number; accelY: number; accelZ: number 
   return maxVal;
 };
 
-const updateQuaternion = (quat: Quaternion, objRef: THREE.Group) => {
-  if (!objRef) return;
-
-  quat.normalize();
-  objRef.quaternion.copy(quat);
-};
-
 export const getBoundingRadius = (objRef: THREE.Group | undefined) => {
   if (!objRef) return;
   const box = new Box3().setFromObject(objRef);
   const sphere = new Sphere();
   box.getBoundingSphere(sphere);
   return sphere.radius;
-};
-
-const makeArrow = (dir: Vector3, length: number, radius: number, color: number) => {
-  const origin = dir.clone().normalize().multiplyScalar(radius);
-  return new ArrowHelper(dir.clone().normalize(), origin, length, color);
-};
-
-const getScaledLength = (value: number, maxAccel: number, maxLength: number) => {
-  return (Math.abs(value) / maxAccel) * maxLength;
-};
-
-const updateArrow = (arrow: ArrowHelper, vec: Vector3, length: number, radius: number) => {
-  const dir = vec.clone().normalize();
-  const origin = dir.clone().multiplyScalar(radius);
-
-  arrow.position.copy(origin);
-  arrow.setDirection(dir);
-  arrow.setLength(length);
-};
-
-const updateAccelArrows = (
-  accelX: number,
-  accelY: number,
-  accelZ: number,
-  maxAccel: number,
-  maxLength: number,
-  radius: number,
-  accelVectors: {
-    x: ArrowHelper;
-    y: ArrowHelper;
-    z: ArrowHelper;
-    net: ArrowHelper;
-  }
-) => {
-  if (!accelVectors) return;
-
-  const xVec = new Vector3(accelX, 0, 0);
-  const yVec = new Vector3(0, accelY, 0);
-  const zVec = new Vector3(0, 0, accelZ);
-  const netVec = new Vector3(accelX, accelY, accelZ);
-
-  const xLength = getScaledLength(accelX, maxAccel, maxLength);
-  const yLength = getScaledLength(accelY, maxAccel, maxLength);
-  const zLength = getScaledLength(accelZ, maxAccel, maxLength);
-  const netLength = getScaledLength(netVec.length(), maxAccel, maxLength);
-
-  updateArrow(accelVectors.x, xVec, xLength, radius);
-  updateArrow(accelVectors.y, yVec, yLength, radius);
-  updateArrow(accelVectors.z, zVec, zLength, radius);
-  updateArrow(accelVectors.net, netVec, netLength, radius);
-};
-
-// TODO: useEuler or remove
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const updateEuler = (euler: Euler, objRef: THREE.Group) => {
-  if (objRef) {
-    objRef.rotation.set(euler.x, euler.y, euler.z);
-  }
 };
 
 export class ModelReplayController {
@@ -164,7 +99,6 @@ export class ModelReplayController {
   private firstTimestamp = 0;
   private lastTimestamp = 0;
   private startTime = 0;
-  private angleMode: 'quaternion' | 'euler';
   private speed = 1;
   private listeners: ((event: ReplayEvent) => void)[] = [];
   private accelVectors: {x: ArrowHelper; y: ArrowHelper; z: ArrowHelper; net: ArrowHelper;};
@@ -173,14 +107,12 @@ export class ModelReplayController {
   private boundingRadius: number;
   private scene: THREE.Object3D | null;
 
-  constructor(
-    data: replayData,
-    objRef: THREE.Group,
-    angleMode: 'quaternion' | 'euler' = 'quaternion',
-  ) {
+  private rafId: number | null = null;
+  private loopBound = (now: number) => this.loop(now);
+
+  constructor(data: replayData, objRef: THREE.Group) {
     this.data = data;
     this.objRef = objRef;
-    this.angleMode = angleMode;
 
     // Calculate bounding radius for arrow placement
     this.boundingRadius = getBoundingRadius(objRef) || 1;
@@ -190,134 +122,178 @@ export class ModelReplayController {
 
     // Set up acceleration vectors
     this.accelVectors = {
-      x: makeArrow(new Vector3(1, 0, 0), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0xff0000),
-      y: makeArrow(new Vector3(0, 1, 0), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0x00ff00),
-      z: makeArrow(new Vector3(0, 0, 1), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0x0000ff),
-      net: makeArrow((new Vector3(1, 1, 1)), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0x000000),
+      x: this.makeArrow(new Vector3(1, 0, 0), 0xff0000),
+      y: this.makeArrow(new Vector3(0, 1, 0), 0x00ff00),
+      z: this.makeArrow(new Vector3(0, 0, 1), 0x0000ff),
+      net: this.makeArrow(new Vector3(1, 1, 1), 0x000000),
     };
     
     this.scene = objRef.parent;
     Object.values(this.accelVectors).forEach(vec => this.scene?.add(vec));
   }
 
-  // Here we setup event listeners to allow other components to listen in on the state of the replaying
-
-  // This allows users to subscribe to events
   on(eventHandler: (event: ReplayEvent) => void) {
     this.listeners.push(eventHandler);
+    return () => this.off(eventHandler);
   }
 
-  // This allows users to unsubscribe from events
   off(eventHandler: (event: ReplayEvent) => void) {
-    this.listeners = this.listeners.filter((handler) => handler !== eventHandler);
+    this.listeners = this.listeners.filter(h => h !== eventHandler);
   }
 
-  // This allows us to set the state of the replaying
   private emit(event: ReplayEvent) {
-    this.listeners.forEach((handler) => handler(event));
+    this.listeners.forEach(handler => handler(event));
   }
-
-  // Below is the state machine functionality for the replaying
 
   play() {
     if (this.isPlaying) return;
-    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Playing });
-    this.isPlaying = true;
 
-    // Initialize start time if playing from the beginning
     if (this.currentIndex === 0) {
       this.startTime = performance.now();
-      this.firstTimestamp = this.data[0]?.timestamp || 0;
+    } else if (this.currentIndex >= this.data.length) {
+      this.reset();
+      this.startTime = performance.now();
     } else {
-      // Adjust the start time for resuming from the current index
-      this.startTime = performance.now() - (this.lastTimestamp - this.firstTimestamp) / this.speed;
+      this.startTime = performance.now() - (this.lastTimestamp / this.speed);
     }
 
-    this.loop();
+    this.isPlaying = true;
+    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Playing });
+
+    if (this.rafId != null) cancelAnimationFrame(this.rafId);
+    this.rafId = requestAnimationFrame(this.loopBound);
   }
 
-  pause() {   
+  pause() {
     this.isPlaying = false;
+    if (this.rafId != null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
     this.emit({ type: ReplayEventType.StateChanged, state: StateType.Paused });
   }
 
-  stop() {
-    this.isPlaying = false;
-    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Stopped });
-  }
-
   reset() {
-    this.pause();
     this.currentIndex = 0;
     this.lastTimestamp = 0;
   }
 
   setSpeed(newSpeed: number) {
-    if (newSpeed <= 0) {
-      // TODO: Remove debugging statement
-      // eslint-disable-next-line no-console
-      console.warn('Speed must be positive. Ignoring invalid value:', newSpeed);
-      return;
+    if (newSpeed <= 0) return;
+    if (this.isPlaying) {
+      const now = performance.now();
+      const elapsed = ((now - this.startTime) * this.speed);
+      this.startTime = now - (elapsed / newSpeed);
     }
     this.speed = newSpeed;
   }
 
-  private loop() {
-    if (!this.isPlaying) return;
+  setCurrentIndex(index: number) {
+    if (index < 0 || index >= this.data.length) return;
+    this.currentIndex = index;
+    this.lastTimestamp = this.data[index]?.timestamp || 0;
 
-    const now = performance.now();
-    const elapsed = (now - this.startTime) * this.speed + this.firstTimestamp;
+    if (!this.isPlaying) {
+      this.emit({
+        type: ReplayEventType.Progress,
+        currentIndex: index,
+        data: this.data[index],
+      });
+      this.updateModel(this.data[index]);
+    }
+  }
 
+  private stepUntil(elapsedMs: number): replayData[number] | null {
+    let latest: replayData[number] | null = null;
     while (
       this.currentIndex < this.data.length &&
-      this.data[this.currentIndex].timestamp <= elapsed
+      this.data[this.currentIndex].timestamp <= elapsedMs
     ) {
-      const { x, y, z, w, timestamp, accelX, accelY, accelZ } = this.data[this.currentIndex];
-      updateQuaternion(new Quaternion(x, y, z, w), this.objRef);
-      updateAccelArrows(
-        accelX,
-        accelY,
-        accelZ,
-        this.max_accel,
-        this.MAX_ARROW_LENGTH,
-        this.boundingRadius,
-        this.accelVectors
-      );
+      latest = this.data[this.currentIndex];
+      this.lastTimestamp = latest.timestamp;
+      this.currentIndex++;
+    }
+    return latest;
+  }
 
+  private loop(now: number) {
+    if (!this.isPlaying) return;
+    const elapsedMs = (now - this.startTime) * this.speed;
+    const latest = this.stepUntil(elapsedMs);
 
+    if (latest) {
+      this.updateModel(latest);
       this.emit({
         type: ReplayEventType.Progress,
         currentIndex: this.currentIndex,
-        timestamp,
+        data: latest,
       });
-
-      this.lastTimestamp = timestamp;
-      this.currentIndex++;
     }
 
     if (this.currentIndex >= this.data.length) {
-      this.stop();
+      this.pause();
       this.emit({ type: ReplayEventType.Finished });
       return;
     }
 
-    // Continue the loop
-    requestAnimationFrame(this.loop.bind(this));
+    this.rafId = requestAnimationFrame(this.loopBound);
   }
 
-  /** Clean up arrows, listeners, and animation frame */
+  private makeArrow = (dir: Vector3, color: number) => {
+    const origin = dir.clone().normalize().multiplyScalar(this.boundingRadius);
+    return new ArrowHelper(dir.clone().normalize(), origin, this.MAX_ARROW_LENGTH / 2, color);
+  };
+
+  private updateModel(point: replayData[number]) {
+    this.updateQuaternion(point.x, point.y, point.z, point.w);
+    this.updateAccelArrows(point.accelX, point.accelY, point.accelZ);
+  }
+
+  private updateQuaternion = (x: number, y: number, z: number, w: number) => {
+    if (this.objRef) {
+      const quat = new Quaternion(x, y, z, w);
+      quat.normalize();
+      this.objRef.quaternion.copy(quat);
+    }
+  };
+
+  private updateArrow = (arrow: ArrowHelper, vec: Vector3, length: number) => {
+    const dir = vec.clone().normalize();
+    const origin = dir.clone().multiplyScalar(this.boundingRadius);
+    arrow.setDirection(dir);
+    arrow.position.copy(origin);
+    arrow.setLength(length);
+  };
+
+  private updateAccelArrows = (accelX: number, accelY: number, accelZ: number) => {
+    if (!this.accelVectors) return;
+
+    const xVec = new Vector3(accelX, 0, 0);
+    const yVec = new Vector3(0, accelY, 0);
+    const zVec = new Vector3(0, 0, accelZ);
+    const netVec = new Vector3(accelX, accelY, accelZ);
+
+    const xLength = this.getScaledLength(accelX);
+    const yLength = this.getScaledLength(accelY);
+    const zLength = this.getScaledLength(accelZ);
+    const netLength = this.getScaledLength(netVec.length());
+
+    this.updateArrow(this.accelVectors.x, xVec, xLength);
+    this.updateArrow(this.accelVectors.y, yVec, yLength);
+    this.updateArrow(this.accelVectors.z, zVec, zLength);
+    this.updateArrow(this.accelVectors.net, netVec, netLength);
+  };
+
+  private getScaledLength = (value: number) => {
+    return (Math.abs(value) / this.max_accel) * this.MAX_ARROW_LENGTH;
+  };
+
   dispose() {
-    this.stop();
+    this.pause();
     this.listeners = [];
 
-    if (this.scene) {
-      Object.values(this.accelVectors).forEach(vec => {
-        this.scene?.remove(vec);
-        vec.dispose();
-      });
-    }
-
-    this.scene = null;
+    // Continue the loop
+    requestAnimationFrame(this.loop.bind(this));
   }
 }
 
