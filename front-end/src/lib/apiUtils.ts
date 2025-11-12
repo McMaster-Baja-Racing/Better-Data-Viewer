@@ -123,7 +123,7 @@ export const ApiUtil = {
     }
 
     const contentDisposition = response.headers.get('content-disposition');
-    if (!contentDisposition) throw new Error('Content-Disposition header is missing'); 
+    if (!contentDisposition) throw new Error('Content-Disposition header is missing');
     const filename = contentDisposition.split('filename=')[1].slice(1, -1);
 
     const text = await response.text();
@@ -163,7 +163,7 @@ export const ApiUtil = {
     }
 
     const contentDisposition = response.headers.get('content-disposition');
-    if (!contentDisposition) throw new Error('Content-Disposition header is missing'); 
+    if (!contentDisposition) throw new Error('Content-Disposition header is missing');
     const filename = contentDisposition.split('filename=')[1].slice(1, -1);
 
     const text = await response.text();
@@ -177,7 +177,7 @@ export const ApiUtil = {
   getMinMax: async (filename: string, header: string): Promise<MinMax> => {
     const url = `${baseApiUrl}/minMax/${encodeURIComponent(filename)}?column=${header}`;
     const response = await fetch(url);
-        
+
     if (!response.ok) {
       const errorText = await response.text();
       const cleanMessage = extractUserMessage(errorText);
@@ -192,7 +192,7 @@ export const ApiUtil = {
      */
   deleteAllFiles: async (): Promise<Response> => {
     const response = await fetch(`${baseApiUrl}/delete/all`, {
-      method: 'DELETE' 
+      method: 'DELETE'
     });
 
     if (!response.ok) throw Error(response.statusText);
@@ -218,7 +218,7 @@ export const ApiUtil = {
     if (!response.ok) throw Error(response.statusText);
     return response.json();
   },
-    
+
   /**
      * @description Sends a POST request to the server to upload a file.
      */
@@ -234,4 +234,16 @@ export const ApiUtil = {
 
     if (!response.ok) throw Error(response.statusText);
   },
+
+  withLoading: async function <T>(
+    setLoading: (b: boolean) => void,
+    asyncFunc: () => Promise<T>
+  ): Promise<T> {
+    setLoading(true);
+    try {
+      return await asyncFunc();
+    } finally {
+      setLoading(false);
+    }
+  }
 };
