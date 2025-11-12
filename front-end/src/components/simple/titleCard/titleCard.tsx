@@ -64,7 +64,7 @@ export const TitleCard = () => {
     <div className={styles.titleCard}>
       <div className={styles.textContainer}>
         <div className={styles.title}>
-          <span className={styles.highlight1}>VISUALIZE</span> YOUR <br/>
+          <span className={styles.highlight1}>VIZOUALISE</span> YOUR <br/>
             DATA, YOUR <span className={styles.highlight2}>WAY </span>
         </div>
         <div className={styles.description}>
