@@ -73,6 +73,13 @@ export function DataSelect({
     }
   }, [currentSeries, columnKey]);
 
+  // Select a default source (once uploaded)
+  useEffect(() => {
+    if (!selectedSource && sources.length > 0) {
+      setSelectedSource(sources[0].value);
+    }
+  }, [sources, selectedSource]);
+  
   // Update analyzer type
   useEffect(() => {
     if (!currentSeries) return;
