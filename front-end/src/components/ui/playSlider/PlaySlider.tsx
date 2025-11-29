@@ -6,7 +6,7 @@ import cx from 'classnames';
 interface PlaySliderProps {
     values: (string | number)[];
     selectedIndex: number;
-    onIndexChange: (index: number, value: string | number) => void;
+    onIndexChange: (index: number) => void;
     className?: string;
     disabled?: boolean;
     showLabels?: boolean;
@@ -29,7 +29,7 @@ export const DiscreteSlider = ({
     const newIndex = newValues[0];
         
     if (values[newIndex] !== undefined) {
-      onIndexChange(newIndex, values[newIndex]);
+      onIndexChange(newIndex);
     }
   }, [values, onIndexChange]);
 
@@ -46,7 +46,7 @@ export const DiscreteSlider = ({
     const clampedIndex = Math.max(0, Math.min(values.length - 1, targetIndex));
         
     if (values[clampedIndex] !== undefined) {
-      onIndexChange(clampedIndex, values[clampedIndex]);
+      onIndexChange(clampedIndex);
     }
   }, [disabled, values, onIndexChange]);
 
@@ -103,7 +103,7 @@ export const DiscreteSlider = ({
                 }}
                 onClick={() => {
                   if (!disabled) {
-                    onIndexChange(index, value);
+                    onIndexChange(index);
                   }
                 }}
               >

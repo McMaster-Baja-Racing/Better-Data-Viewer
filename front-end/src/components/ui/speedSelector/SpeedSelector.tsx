@@ -28,7 +28,9 @@ export const SpeedSelector = ({
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      if (isDropdownOpen) {
+        document.addEventListener('mousedown', handleClickOutside);
+      }
     };
   }, [isDropdownOpen]);
 

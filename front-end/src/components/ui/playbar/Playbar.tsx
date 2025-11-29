@@ -78,7 +78,6 @@ export const Playbar = ({ replayController, times }: PlaybarProps) => {
     if (isPlaying) {
       replayController.pause();
     }
-    setCurrentIndex(index);
     replayController.setCurrentIndex(index);
   };
 

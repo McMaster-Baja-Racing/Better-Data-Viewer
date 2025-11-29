@@ -259,6 +259,8 @@ export class ReplayModelSubscriber {
   private maxAccel: number;
   private MAX_ARROW_LENGTH = 100;
 
+  private unsubscribe: () => void;
+
   constructor(objRef: Group, controller: ModelReplayController, data: replayData) {
     this.obj = objRef;
 
@@ -275,14 +277,18 @@ export class ReplayModelSubscriber {
 
     // Add to scene
     const parent = objRef.parent as Object3D;
+    if (!parent) {
+      throw new Error('Object must have a parent to add arrows');
+    }
     Object.values(this.accelVectors).forEach(a => parent.add(a));
 
     // Subscribe immediately
-    controller.on(this.handleEvent);
+    this.unsubscribe = controller.on(this.handleEvent);
   }
 
   private handleEvent = (event: ReplayEvent) => {
     if (event.type !== ReplayEventType.Progress) return;
+
 
     const p = event.data;
 
@@ -300,7 +306,7 @@ export class ReplayModelSubscriber {
   }
 
   private updateArrow(arrow: ArrowHelper, vec: Vector3, length: number) {
-    const dir = vec.clone().normalize();
+    const dir = vec.lengthSq() === 0 ? new Vector3(1, 0, 0) : vec.clone().normalize();
     const origin = dir.clone().multiplyScalar(this.boundingRadius);
 
     arrow.setDirection(dir);
@@ -315,7 +321,9 @@ export class ReplayModelSubscriber {
     const netVec = new Vector3(ax, ay, az);
 
     const scale = (v: number) =>
-      (Math.abs(v) / this.maxAccel) * this.MAX_ARROW_LENGTH;
+      this.maxAccel === 0
+        ? 0
+        : (Math.abs(v) / this.maxAccel) * this.MAX_ARROW_LENGTH;
 
     this.updateArrow(this.accelVectors.x, xVec, scale(ax));
     this.updateArrow(this.accelVectors.y, yVec, scale(ay));
@@ -327,5 +335,6 @@ export class ReplayModelSubscriber {
     Object.values(this.accelVectors).forEach(a => {
       a.parent?.remove(a);
     });
+    this.unsubscribe();
   }
 }
