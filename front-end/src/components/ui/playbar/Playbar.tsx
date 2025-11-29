@@ -41,7 +41,7 @@ export const Playbar = ({ replayController, times }: PlaybarProps) => {
         setCurrentIndex(event.currentIndex);
       } else if (event.type === ReplayEventType.Finished) {
         setIsPlaying(false);
-        setCurrentIndex(times.length - 1);
+        setCurrentIndex(replayController.data.length - 1);
       }
     });
     return cleanup;
