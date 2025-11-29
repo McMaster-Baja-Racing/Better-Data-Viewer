@@ -96,12 +96,11 @@ export class ModelReplayController {
   private objRef: THREE.Group;
   private isPlaying = false;
   private currentIndex = 0;
-  private firstTimestamp = 0;
   private lastTimestamp = 0;
   private startTime = 0;
   private speed = 1;
   private listeners: ((event: ReplayEvent) => void)[] = [];
-  private accelVectors: {x: ArrowHelper; y: ArrowHelper; z: ArrowHelper; net: ArrowHelper;};
+  private accelVectors: {x: ArrowHelper; y: ArrowHelper; z: ArrowHelper; net: ArrowHelper;} | null = null;
   private MAX_ARROW_LENGTH = 100;
   private max_accel: number;
   private boundingRadius: number;
@@ -292,8 +291,15 @@ export class ModelReplayController {
     this.pause();
     this.listeners = [];
 
-    // Continue the loop
-    requestAnimationFrame(this.loop.bind(this));
+    // Remove acceleration arrows from the scene
+    if (this.accelVectors) {
+      Object.values(this.accelVectors).forEach(arrow => {
+        if (arrow && arrow.parent) {
+          arrow.parent.remove(arrow);
+        }
+      });
+      this.accelVectors = null;
+    }
   }
 }
 
