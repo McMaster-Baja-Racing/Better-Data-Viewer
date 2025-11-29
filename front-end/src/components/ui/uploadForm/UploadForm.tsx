@@ -89,7 +89,7 @@ export const UploadForm = ({ files, setFiles, allowFolder = false, accept = '.cs
         [styles.dragover]: isDragging
       })}>
         <img className={styles.icon} src={uploadIcon} alt="upload icon" />
-        <p className={styles.text}><strong>Choose a file</strong> or drag it here</p>
+        <p className={styles.text}><strong>Choose a {allowFolder ? "folder" : "file"}</strong> or drag it here</p>
         <p className={styles.textHover}><strong>Drop the file</strong></p>
         <input
           className={styles.input}

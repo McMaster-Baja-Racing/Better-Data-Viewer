@@ -29,7 +29,7 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <div className={styles.uploadModal}>
-        <h2 className={styles.title}>Upload your file</h2>
+        <h2 className={styles.title}>Upload your files</h2>
 
         <UploadForm files={files} setFiles={setFiles} allowFolder={allowFolder} />
         
