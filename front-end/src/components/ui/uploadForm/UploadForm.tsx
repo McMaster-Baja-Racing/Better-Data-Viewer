@@ -4,15 +4,34 @@ import {uploadIcon, closeIcon} from '@assets/icons';
 import cx from 'classnames';
 import daytime from '@assets/upload_form_daytime.png';
 import nighttime from '@assets/upload_form_nighttime.png';
+//
+//import { useRef, useEffect } from "react";
 
 interface UploadFormProps {
   files: File[];
   setFiles: (files: File[]) => void;
   accept?: string;
+ // allowFolder?: boolean;
 }
 
-export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, .fit' }: UploadFormProps) => {
+
+export const UploadForm = ({ files, setFiles,/*allowFolder = false,*/ accept = '.csv, .bin, .mp4, .mov, .fit' }: UploadFormProps) => {
   const [isDragging, setIsDragging] = React.useState(false);
+
+//  const inputRef = useRef<HTMLInputElement>(null);
+//
+//  useEffect(() => {
+//    const input = inputRef.current;
+//    if (!input) return;
+//  
+//    if (allowFolder) {
+//      input.setAttribute("webkitdirectory", "");
+//      input.setAttribute("directory", "");
+//    } else {
+//      input.removeAttribute("webkitdirectory");
+//      input.removeAttribute("directory");
+//    }
+//  }, [allowFolder]);
 
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
@@ -21,7 +40,39 @@ export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, 
 
   const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
-    if (e.dataTransfer.files) {
+	if(e.dataTransfer.items) {
+
+	  const newFiles: File[] = [];
+
+      const traverseFileTree = (item: any, path = ""): Promise<void> => {
+        return new Promise((resolve) => {
+          if (item.isFile) {
+            item.file((file: File) => {
+              const f = new File([file], file.name, { type: file.type });
+              newFiles.push(f);
+              resolve();
+            });
+          } else if (item.isDirectory) {
+            const dirReader = item.createReader();
+            dirReader.readEntries((entries: any[]) => {
+              Promise.all(entries.map((entry) => traverseFileTree(entry, path + item.name + "/"))).then(() => resolve());
+            });
+          } else {
+            resolve();
+          }
+        });
+      };
+
+      const promises: Promise<void>[] = [];
+      for (let i = 0; i < e.dataTransfer.items.length; i++) {
+        const entry = e.dataTransfer.items[i].webkitGetAsEntry();
+        if (entry) promises.push(traverseFileTree(entry));
+      }
+  
+      Promise.all(promises).then(() => {
+        setFiles([...files, ...newFiles]);
+      });
+	} else if (e.dataTransfer.files) {
       setFiles([...files, ...Array.from(e.dataTransfer.files)]);
     }
     setIsDragging(false);
@@ -63,6 +114,8 @@ export const UploadForm = ({ files, setFiles, accept = '.csv, .bin, .mp4, .mov, 
           accept={accept}
           multiple={true}
           onChange={(e) => {handleFileChange(e);}}
+		///* @ts-expect-error */
+		//  webkitdirectory=""
         />
       </div>
       {files.length > 0 && (
