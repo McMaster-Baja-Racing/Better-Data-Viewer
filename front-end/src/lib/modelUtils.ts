@@ -276,10 +276,10 @@ export class ReplayModelSubscriber {
     };
 
     // Add to scene
-    const parent = objRef.parent as Object3D;
-    if (!parent) {
+    if (!objRef.parent) {
       throw new Error('Object must have a parent to add arrows');
     }
+    const parent = objRef.parent;
     Object.values(this.accelVectors).forEach(a => parent.add(a));
 
     // Subscribe immediately
