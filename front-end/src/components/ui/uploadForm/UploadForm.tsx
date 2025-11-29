@@ -4,34 +4,17 @@ import {uploadIcon, closeIcon} from '@assets/icons';
 import cx from 'classnames';
 import daytime from '@assets/upload_form_daytime.png';
 import nighttime from '@assets/upload_form_nighttime.png';
-//
-//import { useRef, useEffect } from "react";
 
 interface UploadFormProps {
   files: File[];
   setFiles: (files: File[]) => void;
   accept?: string;
- // allowFolder?: boolean;
+ allowFolder: boolean;
 }
 
 
-export const UploadForm = ({ files, setFiles,/*allowFolder = false,*/ accept = '.csv, .bin, .mp4, .mov, .fit' }: UploadFormProps) => {
+export const UploadForm = ({ files, setFiles, allowFolder = false, accept = '.csv, .bin, .mp4, .mov, .fit' }: UploadFormProps) => {
   const [isDragging, setIsDragging] = React.useState(false);
-
-//  const inputRef = useRef<HTMLInputElement>(null);
-//
-//  useEffect(() => {
-//    const input = inputRef.current;
-//    if (!input) return;
-//  
-//    if (allowFolder) {
-//      input.setAttribute("webkitdirectory", "");
-//      input.setAttribute("directory", "");
-//    } else {
-//      input.removeAttribute("webkitdirectory");
-//      input.removeAttribute("directory");
-//    }
-//  }, [allowFolder]);
 
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
@@ -114,8 +97,8 @@ export const UploadForm = ({ files, setFiles,/*allowFolder = false,*/ accept = '
           accept={accept}
           multiple={true}
           onChange={(e) => {handleFileChange(e);}}
-		///* @ts-expect-error */
-		//  webkitdirectory=""
+		  /* @ts-expect-error */
+		  webkitdirectory={allowFolder ? "" : undefined}
         />
       </div>
       {files.length > 0 && (

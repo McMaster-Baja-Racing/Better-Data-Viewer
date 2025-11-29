@@ -16,4 +16,11 @@
   .submitButton {
     margin-top: 1.25rem;
   }
+.buttonRow {
+  display: flex;
+  gap: 1rem; /* space between buttons */
+  justify-content: flex-start; /* or center, or flex-end */
+  margin-top: 1rem; /* optional spacing from form */
+}
+
 }
