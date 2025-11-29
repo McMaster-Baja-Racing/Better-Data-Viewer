@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stage } from '@react-three/drei';
 import { Eevee } from './Eevee';
 import { useRef } from 'react';
-import { fetchData, ModelReplayController } from '@lib/modelUtils';
+import { fetchData, ModelReplayController, ReplayModelSubscriber } from '@lib/modelUtils';
 import './modelViewer.css';
 import { ApiUtil } from '@lib/apiUtils';
 import {ReplayEventType, replayData } from '@types';
@@ -26,17 +26,21 @@ const ModelViewer = () => {
   useEffect(() => {
     if (!objectLoaded || !objRef.current || data.length === 0) return;
 
-    const controller = new ModelReplayController(data, objRef.current);
+    const controller = new ModelReplayController(data);
     setReplayController(controller);
 
-    const cleanup = controller.on((event) => {
+    const subscriber = new ReplayModelSubscriber(objRef.current, controller, data);
+
+    const cleanupController = controller.on((event) => {
       if (event.type === ReplayEventType.Finished) {
         showInfoToast('Replay finished!');
       }
     });
 
+    // Cleanup
     return () => {
-      cleanup();
+      cleanupController();
+      subscriber.dispose();
       controller.dispose();
     };
   }, [objectLoaded, data]);
