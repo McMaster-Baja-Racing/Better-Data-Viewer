@@ -3,7 +3,7 @@ import {
   ReplayEvent,
   ReplayEventType,
   StateType
-} from "@types";
+} from '@types';
 import {
   Quaternion,
   ArrowHelper,
@@ -12,8 +12,8 @@ import {
   Sphere,
   Group,
   Object3D
-} from "three";
-import { ApiUtil } from "./apiUtils";
+} from 'three';
+import { ApiUtil } from './apiUtils';
 
 const extractColumnData = (data: string[][], col = 1) =>
   data.map(row => row[col]);
@@ -21,9 +21,9 @@ const extractColumnData = (data: string[][], col = 1) =>
 const parseCSV = (data: string) =>
   data
     .trim()
-    .split("\n")
+    .split('\n')
     .slice(1)
-    .map(row => row.split(","));
+    .map(row => row.split(','));
 
 const combineData = (
   timestamps: string[],
