@@ -1,18 +1,29 @@
-import { replayData, ReplayEvent, ReplayEventType, StateType } from '@types';
+import {
+  replayData,
+  ReplayEvent,
+  ReplayEventType,
+  StateType
+} from '@types';
+import {
+  Quaternion,
+  ArrowHelper,
+  Vector3,
+  Box3,
+  Sphere,
+  Group,
+  Object3D
+} from 'three';
 import { ApiUtil } from './apiUtils';
-import { Quaternion, Euler, ArrowHelper, Vector3, Box3, Sphere } from 'three';
 
-const extractColumnData = (data: string[][], columnIndex = 1) => {
-  return data.map(row => row[columnIndex]);
-};
+const extractColumnData = (data: string[][], col = 1) =>
+  data.map(row => row[col]);
 
-const parseCSV = (data: string) => {
-  return data
+const parseCSV = (data: string) =>
+  data
     .trim()
     .split('\n')
     .slice(1)
-    .map(row => row.split(',')); 
-};
+    .map(row => row.split(','));
 
 const combineData = (
   timestamps: string[],
@@ -22,9 +33,9 @@ const combineData = (
   w: string[],
   accelX: string[],
   accelY: string[],
-  accelZ: string[],
-) => {
-  return timestamps.map((timestamp, i) => ({
+  accelZ: string[]
+): replayData =>
+  timestamps.map((timestamp, i) => ({
     timestamp: Number(timestamp),
     x: Number(x[i]),
     y: Number(y[i]),
@@ -32,292 +43,298 @@ const combineData = (
     w: Number(w[i]),
     accelX: Number(accelX[i]),
     accelY: Number(accelY[i]),
-    accelZ: Number(accelZ[i]),
+    accelZ: Number(accelZ[i])
   }));
-};
 
-// TODO: Handle errors better
 export const fetchData = async (bin: string) => {
   let data: replayData = [];
-  await Promise.all([
+
+  const [
+    wRaw,
+    xRaw,
+    yRaw,
+    zRaw,
+    axRaw,
+    ayRaw,
+    azRaw
+  ] = await Promise.all([
     ApiUtil.getFileAsText(`${bin}/IMU QUAT W.csv`),
     ApiUtil.getFileAsText(`${bin}/IMU QUAT X.csv`),
     ApiUtil.getFileAsText(`${bin}/IMU QUAT Y.csv`),
     ApiUtil.getFileAsText(`${bin}/IMU QUAT Z.csv`),
     ApiUtil.getFileAsText(`${bin}/IMU ACCEL X.csv`),
     ApiUtil.getFileAsText(`${bin}/IMU ACCEL Y.csv`),
-    ApiUtil.getFileAsText(`${bin}/IMU ACCEL Z.csv`),
-  ]).then(([wDataRaw, xDataRaw, yDataRaw, zDataRaw, accelXDataRaw, accelYDataRaw, accelZDataRaw]) => {
-    const wData = parseCSV(wDataRaw);
-    const xData = parseCSV(xDataRaw);
-    const yData = parseCSV(yDataRaw);
-    const zData = parseCSV(zDataRaw);
-    const accelXData = parseCSV(accelXDataRaw);
-    const accelYData = parseCSV(accelYDataRaw);
-    const accelZData = parseCSV(accelZDataRaw);
+    ApiUtil.getFileAsText(`${bin}/IMU ACCEL Z.csv`)
+  ]);
 
-    const w = extractColumnData(wData);
-    const x = extractColumnData(xData);
-    const y = extractColumnData(yData);
-    const z = extractColumnData(zData);
-    const timestamps = extractColumnData(wData, 0);
-    const accelX = extractColumnData(accelXData);
-    const accelY = extractColumnData(accelYData);
-    const accelZ = extractColumnData(accelZData);
+  const wData = parseCSV(wRaw);
+  const xData = parseCSV(xRaw);
+  const yData = parseCSV(yRaw);
+  const zData = parseCSV(zRaw);
+  const axData = parseCSV(axRaw);
+  const ayData = parseCSV(ayRaw);
+  const azData = parseCSV(azRaw);
 
-    data = combineData(timestamps, x, y, z, w, accelX, accelY, accelZ);
-  });
+  const timestamps = extractColumnData(wData, 0);
+  const w = extractColumnData(wData);
+  const x = extractColumnData(xData);
+  const y = extractColumnData(yData);
+  const z = extractColumnData(zData);
+  const ax = extractColumnData(axData);
+  const ay = extractColumnData(ayData);
+  const az = extractColumnData(azData);
+
+  data = combineData(timestamps, x, y, z, w, ax, ay, az);
   return data;
 };
 
-const computeMaxAccel = (data: { accelX: number; accelY: number; accelZ: number }[]) => {
-  let maxVal = -Infinity;
-
-  for (const { accelX, accelY, accelZ } of data) {
-    maxVal = Math.max(maxVal, Math.abs(accelX), Math.abs(accelY), Math.abs(accelZ));
+const computeMaxAccel = (data: replayData): number => {
+  let max = 0;
+  for (const p of data) {
+    max = Math.max(
+      max,
+      Math.abs(p.accelX),
+      Math.abs(p.accelY),
+      Math.abs(p.accelZ)
+    );
   }
-
-  // Avoid zero range
-  if (maxVal === 0) maxVal = 1;
-
-  return maxVal;
+  return max === 0 ? 1 : max;
 };
 
-const updateQuaternion = (quat: Quaternion, objRef: THREE.Group) => {
-  if (!objRef) return;
-
-  quat.normalize();
-  objRef.quaternion.copy(quat);
-};
-
-export const getBoundingRadius = (objRef: THREE.Group | undefined) => {
-  if (!objRef) return;
-  const box = new Box3().setFromObject(objRef);
+export const getBoundingRadius = (obj: Group | undefined) => {
+  if (!obj) return 1;
+  const box = new Box3().setFromObject(obj);
   const sphere = new Sphere();
   box.getBoundingSphere(sphere);
   return sphere.radius;
 };
 
-const makeArrow = (dir: Vector3, length: number, radius: number, color: number) => {
-  const origin = dir.clone().normalize().multiplyScalar(radius);
-  return new ArrowHelper(dir.clone().normalize(), origin, length, color);
-};
-
-const getScaledLength = (value: number, maxAccel: number, maxLength: number) => {
-  return (Math.abs(value) / maxAccel) * maxLength;
-};
-
-const updateArrow = (arrow: ArrowHelper, vec: Vector3, length: number, radius: number) => {
-  const dir = vec.clone().normalize();
-  const origin = dir.clone().multiplyScalar(radius);
-
-  arrow.position.copy(origin);
-  arrow.setDirection(dir);
-  arrow.setLength(length);
-};
-
-const updateAccelArrows = (
-  accelX: number,
-  accelY: number,
-  accelZ: number,
-  maxAccel: number,
-  maxLength: number,
-  radius: number,
-  accelVectors: {
-    x: ArrowHelper;
-    y: ArrowHelper;
-    z: ArrowHelper;
-    net: ArrowHelper;
-  }
-) => {
-  if (!accelVectors) return;
-
-  const xVec = new Vector3(accelX, 0, 0);
-  const yVec = new Vector3(0, accelY, 0);
-  const zVec = new Vector3(0, 0, accelZ);
-  const netVec = new Vector3(accelX, accelY, accelZ);
-
-  const xLength = getScaledLength(accelX, maxAccel, maxLength);
-  const yLength = getScaledLength(accelY, maxAccel, maxLength);
-  const zLength = getScaledLength(accelZ, maxAccel, maxLength);
-  const netLength = getScaledLength(netVec.length(), maxAccel, maxLength);
-
-  updateArrow(accelVectors.x, xVec, xLength, radius);
-  updateArrow(accelVectors.y, yVec, yLength, radius);
-  updateArrow(accelVectors.z, zVec, zLength, radius);
-  updateArrow(accelVectors.net, netVec, netLength, radius);
-};
-
-// TODO: useEuler or remove
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const updateEuler = (euler: Euler, objRef: THREE.Group) => {
-  if (objRef) {
-    objRef.rotation.set(euler.x, euler.y, euler.z);
-  }
-};
-
 export class ModelReplayController {
+  private listeners = new Set<(event: ReplayEvent) => void>();
+
   private data: replayData;
-  private objRef: THREE.Group;
   private isPlaying = false;
+  private speed = 1;
+
   private currentIndex = 0;
-  private firstTimestamp = 0;
   private lastTimestamp = 0;
   private startTime = 0;
-  private angleMode: 'quaternion' | 'euler';
-  private speed = 1;
-  private listeners: ((event: ReplayEvent) => void)[] = [];
-  private accelVectors: {x: ArrowHelper; y: ArrowHelper; z: ArrowHelper; net: ArrowHelper;};
-  private MAX_ARROW_LENGTH = 100;
-  private max_accel: number;
-  private boundingRadius: number;
-  private scene: THREE.Object3D | null;
 
-  constructor(
-    data: replayData,
-    objRef: THREE.Group,
-    angleMode: 'quaternion' | 'euler' = 'quaternion',
-  ) {
+  private rafId: number | null = null;
+  private loopBound = (t: number) => this.loop(t);
+
+  constructor(data: replayData) {
     this.data = data;
-    this.objRef = objRef;
-    this.angleMode = angleMode;
-
-    // Calculate bounding radius for arrow placement
-    this.boundingRadius = getBoundingRadius(objRef) || 1;
-
-    // Compute max acceleration for scaling arrows
-    this.max_accel = computeMaxAccel(data);
-
-    // Set up acceleration vectors
-    this.accelVectors = {
-      x: makeArrow(new Vector3(1, 0, 0), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0xff0000),
-      y: makeArrow(new Vector3(0, 1, 0), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0x00ff00),
-      z: makeArrow(new Vector3(0, 0, 1), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0x0000ff),
-      net: makeArrow((new Vector3(1, 1, 1)), this.MAX_ARROW_LENGTH / 2, this.boundingRadius, 0x000000),
-    };
-    
-    this.scene = objRef.parent;
-    Object.values(this.accelVectors).forEach(vec => this.scene?.add(vec));
   }
 
-  // Here we setup event listeners to allow other components to listen in on the state of the replaying
-
-  // This allows users to subscribe to events
-  on(eventHandler: (event: ReplayEvent) => void) {
-    this.listeners.push(eventHandler);
+  on(listener: (event: ReplayEvent) => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 
-  // This allows users to unsubscribe from events
-  off(eventHandler: (event: ReplayEvent) => void) {
-    this.listeners = this.listeners.filter((handler) => handler !== eventHandler);
-  }
-
-  // This allows us to set the state of the replaying
   private emit(event: ReplayEvent) {
-    this.listeners.forEach((handler) => handler(event));
+    for (const h of this.listeners) {
+      h(event);
+    }
   }
-
-  // Below is the state machine functionality for the replaying
 
   play() {
     if (this.isPlaying) return;
-    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Playing });
-    this.isPlaying = true;
 
-    // Initialize start time if playing from the beginning
     if (this.currentIndex === 0) {
       this.startTime = performance.now();
-      this.firstTimestamp = this.data[0]?.timestamp || 0;
+    } else if (this.currentIndex >= this.data.length) {
+      this.reset();
+      this.startTime = performance.now();
     } else {
-      // Adjust the start time for resuming from the current index
-      this.startTime = performance.now() - (this.lastTimestamp - this.firstTimestamp) / this.speed;
+      this.startTime =
+        performance.now() - this.lastTimestamp / this.speed;
     }
 
-    this.loop();
+    this.isPlaying = true;
+    this.emit({
+      type: ReplayEventType.StateChanged,
+      state: StateType.Playing
+    });
+
+    this.rafId = requestAnimationFrame(this.loopBound);
   }
 
-  pause() {   
+  pause() {
     this.isPlaying = false;
-    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Paused });
-  }
-
-  stop() {
-    this.isPlaying = false;
-    this.emit({ type: ReplayEventType.StateChanged, state: StateType.Stopped });
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+    }
+    this.emit({
+      type: ReplayEventType.StateChanged,
+      state: StateType.Paused
+    });
   }
 
   reset() {
-    this.pause();
     this.currentIndex = 0;
     this.lastTimestamp = 0;
   }
 
-  setSpeed(newSpeed: number) {
-    if (newSpeed <= 0) {
-      // TODO: Remove debugging statement
-      // eslint-disable-next-line no-console
-      console.warn('Speed must be positive. Ignoring invalid value:', newSpeed);
-      return;
+  setSpeed(s: number) {
+    if (s <= 0) return;
+
+    if (this.isPlaying) {
+      const now = performance.now();
+      const elapsedOriginal = (now - this.startTime) * this.speed;
+      this.startTime = now - elapsedOriginal / s;
     }
-    this.speed = newSpeed;
+    this.speed = s;
   }
 
-  private loop() {
-    if (!this.isPlaying) return;
+  setCurrentIndex(i: number) {
+    if (i < 0 || i >= this.data.length) return;
+    this.currentIndex = i;
+    this.lastTimestamp = this.data[i].timestamp;
 
-    const now = performance.now();
-    const elapsed = (now - this.startTime) * this.speed + this.firstTimestamp;
+    if (!this.isPlaying) {
+      this.emit({
+        type: ReplayEventType.Progress,
+        currentIndex: i,
+        data: this.data[i]
+      });
+    }
+  }
+
+  private stepUntil(elapsedMs: number) {
+    let latest: replayData[number] | null = null;
 
     while (
       this.currentIndex < this.data.length &&
-      this.data[this.currentIndex].timestamp <= elapsed
+      this.data[this.currentIndex].timestamp <= elapsedMs
     ) {
-      const { x, y, z, w, timestamp, accelX, accelY, accelZ } = this.data[this.currentIndex];
-      updateQuaternion(new Quaternion(x, y, z, w), this.objRef);
-      updateAccelArrows(
-        accelX,
-        accelY,
-        accelZ,
-        this.max_accel,
-        this.MAX_ARROW_LENGTH,
-        this.boundingRadius,
-        this.accelVectors
-      );
-
-
-      this.emit({
-        type: ReplayEventType.Progress,
-        currentIndex: this.currentIndex,
-        timestamp,
-      });
-
-      this.lastTimestamp = timestamp;
+      latest = this.data[this.currentIndex];
+      this.lastTimestamp = latest.timestamp;
       this.currentIndex++;
     }
 
+    return latest;
+  }
+
+  private loop(now: number) {
+    if (!this.isPlaying) return;
+    const elapsedMs = (now - this.startTime) * this.speed;
+
+    const latest = this.stepUntil(elapsedMs);
+
+    if (latest) {
+      this.emit({
+        type: ReplayEventType.Progress,
+        currentIndex: this.currentIndex,
+        data: latest
+      });
+    }
+
     if (this.currentIndex >= this.data.length) {
-      this.stop();
+      this.pause();
       this.emit({ type: ReplayEventType.Finished });
       return;
     }
 
-    // Continue the loop
-    requestAnimationFrame(this.loop.bind(this));
+    this.rafId = requestAnimationFrame(this.loopBound);
   }
 
-  /** Clean up arrows, listeners, and animation frame */
   dispose() {
-    this.stop();
-    this.listeners = [];
-
-    if (this.scene) {
-      Object.values(this.accelVectors).forEach(vec => {
-        this.scene?.remove(vec);
-        vec.dispose();
-      });
-    }
-
-    this.scene = null;
+    this.pause();
+    this.listeners.clear();
   }
 }
 
+export class ReplayModelSubscriber {
+  private obj: Group;
+
+  private accelVectors: {
+    x: ArrowHelper;
+    y: ArrowHelper;
+    z: ArrowHelper;
+    net: ArrowHelper;
+  };
+
+  private boundingRadius: number;
+  private maxAccel: number;
+  private MAX_ARROW_LENGTH = 100;
+
+  private unsubscribe: () => void;
+
+  constructor(objRef: Group, controller: ModelReplayController, data: replayData) {
+    this.obj = objRef;
+
+    this.boundingRadius = getBoundingRadius(objRef);
+    this.maxAccel = computeMaxAccel(data);
+
+    // Create arrows
+    this.accelVectors = {
+      x: this.buildArrow(new Vector3(1, 0, 0), 0xff0000),
+      y: this.buildArrow(new Vector3(0, 1, 0), 0x00ff00),
+      z: this.buildArrow(new Vector3(0, 0, 1), 0x0000ff),
+      net: this.buildArrow(new Vector3(1, 1, 1), 0x000000)
+    };
+
+    // Add to scene
+    if (!objRef.parent) {
+      throw new Error('Object must have a parent to add arrows');
+    }
+    const parent = objRef.parent;
+    Object.values(this.accelVectors).forEach(a => parent.add(a));
+
+    // Subscribe immediately
+    this.unsubscribe = controller.on(this.handleEvent);
+  }
+
+  private handleEvent = (event: ReplayEvent) => {
+    if (event.type !== ReplayEventType.Progress) return;
+
+
+    const p = event.data;
+
+    // quaternion
+    const q = new Quaternion(p.x, p.y, p.z, p.w).normalize();
+    this.obj.quaternion.copy(q);
+
+    // accel arrows
+    this.updateAccel(p.accelX, p.accelY, p.accelZ);
+  };
+
+  private buildArrow(dir: Vector3, color: number) {
+    const origin = dir.clone().normalize().multiplyScalar(this.boundingRadius);
+    return new ArrowHelper(dir.clone().normalize(), origin, 50, color);
+  }
+
+  private updateArrow(arrow: ArrowHelper, vec: Vector3, length: number) {
+    const dir = vec.lengthSq() === 0 ? new Vector3(1, 0, 0) : vec.clone().normalize();
+    const origin = dir.clone().multiplyScalar(this.boundingRadius);
+
+    arrow.setDirection(dir);
+    arrow.position.copy(origin);
+    arrow.setLength(length);
+  }
+
+  private updateAccel(ax: number, ay: number, az: number) {
+    const xVec = new Vector3(ax, 0, 0);
+    const yVec = new Vector3(0, ay, 0);
+    const zVec = new Vector3(0, 0, az);
+    const netVec = new Vector3(ax, ay, az);
+
+    const scale = (v: number) =>
+      this.maxAccel === 0
+        ? 0
+        : (Math.abs(v) / this.maxAccel) * this.MAX_ARROW_LENGTH;
+
+    this.updateArrow(this.accelVectors.x, xVec, scale(ax));
+    this.updateArrow(this.accelVectors.y, yVec, scale(ay));
+    this.updateArrow(this.accelVectors.z, zVec, scale(az));
+    this.updateArrow(this.accelVectors.net, netVec, scale(netVec.length()));
+  }
+
+  dispose() {
+    Object.values(this.accelVectors).forEach(a => {
+      a.parent?.remove(a);
+    });
+    this.unsubscribe();
+  }
+}
