@@ -33,15 +33,15 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
 
         <UploadForm files={files} setFiles={setFiles} allowFolder={allowFolder} />
         
-		<div className={styles.buttonRow}>
+        <div className={styles.buttonRow}>
 
           <Button 
             onClick={() => setAllowFolder(prev => !prev)} 
             textSize={'2rem'}
             className={styles.submitButton}
           >
-            <span>{allowFolder ? "Folder Upload" : "File Upload"}</span>
-            <img src={allowFolder ? folderIcon : cubeIcon} alt="right arrow"/>
+            <span>{allowFolder ? 'Folder Upload' : 'File Upload'}</span>
+            <img src={allowFolder ? folderIcon : cubeIcon} alt='right arrow'/>
           </Button>
 
 		  <Button 
@@ -53,7 +53,7 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
             <img src={rightArrowIcon} alt="right arrow"/>
           </Button>
   
-		</div>
+        </div>
 
       </div>
     </BaseModal>

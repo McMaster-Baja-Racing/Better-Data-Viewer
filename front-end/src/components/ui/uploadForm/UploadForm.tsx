@@ -13,7 +13,9 @@ interface UploadFormProps {
 }
 
 
-export const UploadForm = ({ files, setFiles, allowFolder = false, accept = '.csv, .bin, .mp4, .mov, .fit' }: UploadFormProps) => {
+export const UploadForm = ({ files, setFiles, allowFolder = false,
+  accept = '.csv, .bin, .mp4, .mov, .fit' }:UploadFormProps) => {
+  
   const [isDragging, setIsDragging] = React.useState(false);
 
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
@@ -23,22 +25,22 @@ export const UploadForm = ({ files, setFiles, allowFolder = false, accept = '.cs
 
   const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
-	if(e.dataTransfer.items) {
+    if(e.dataTransfer.items) {
 
 	  const newFiles: File[] = [];
 
-      const traverseFileTree = (item: any, path = ""): Promise<void> => {
+      const traverseFileTree = (item: FileSystemEntry, path = ''): Promise<void> => {
         return new Promise((resolve) => {
           if (item.isFile) {
-            item.file((file: File) => {
+            (item as FileSystemFileEntry).file((file: File) => {
               const f = new File([file], file.name, { type: file.type });
               newFiles.push(f);
               resolve();
             });
           } else if (item.isDirectory) {
-            const dirReader = item.createReader();
-            dirReader.readEntries((entries: any[]) => {
-              Promise.all(entries.map((entry) => traverseFileTree(entry, path + item.name + "/"))).then(() => resolve());
+            const dirReader = (item as FileSystemDirectoryEntry).createReader();
+            dirReader.readEntries((entries: FileSystemEntry[]) => {
+              Promise.all(entries.map((entry) => traverseFileTree(entry, path+item.name + '/'))).then(() => resolve());
             });
           } else {
             resolve();
@@ -47,15 +49,15 @@ export const UploadForm = ({ files, setFiles, allowFolder = false, accept = '.cs
       };
 
       const promises: Promise<void>[] = [];
-      for (let i = 0; i < e.dataTransfer.items.length; i++) {
-        const entry = e.dataTransfer.items[i].webkitGetAsEntry();
+	  for (const item of Array.from(e.dataTransfer.items)) {
+        const entry = item.webkitGetAsEntry();
         if (entry) promises.push(traverseFileTree(entry));
       }
   
       Promise.all(promises).then(() => {
         setFiles([...files, ...newFiles]);
       });
-	} else if (e.dataTransfer.files) {
+    } else if (e.dataTransfer.files) {
       setFiles([...files, ...Array.from(e.dataTransfer.files)]);
     }
     setIsDragging(false);
@@ -81,24 +83,24 @@ export const UploadForm = ({ files, setFiles, allowFolder = false, accept = '.cs
     >
       <div className={styles.daytimeBg}/>
       <div className={styles.nighttimeBg}/>
-      <img className={styles.nighttimeImage} src={nighttime} alt="nighttime"/>
-      <img className={styles.daytimeImage} src={daytime} alt="daytime"/>
+      <img className={styles.nighttimeImage} src={nighttime} alt='nighttime'/>
+      <img className={styles.daytimeImage} src={daytime} alt='daytime'/>
 
       <div className={cx(styles.uploadFormContent, {
         [styles.disabled]: files.length > 0,
         [styles.dragover]: isDragging
       })}>
-        <img className={styles.icon} src={uploadIcon} alt="upload icon" />
-        <p className={styles.text}><strong>Choose a {allowFolder ? "folder" : "file"}</strong> or drag it here</p>
+        <img className={styles.icon} src={uploadIcon} alt='upload icon' />
+        <p className={styles.text}><strong>Choose a {allowFolder ? 'folder' : 'file'}</strong> or drag it here</p>
         <p className={styles.textHover}><strong>Drop the file</strong></p>
         <input
           className={styles.input}
-          type="file"
+          type='file'
           accept={accept}
           multiple={true}
           onChange={(e) => {handleFileChange(e);}}
-		  /* @ts-expect-error */
-		  webkitdirectory={allowFolder ? "" : undefined}
+		  /* @ts-expect-error – webkitdirectory is a non-standard attribute but required for folder upload  */
+		  webkitdirectory={allowFolder ? '' : undefined}
         />
       </div>
       {files.length > 0 && (
