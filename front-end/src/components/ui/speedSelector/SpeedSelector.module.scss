@@ -1,0 +1,92 @@
+@use '@styles/_fonts';
+@use '@styles/_variables';
+
+.speedContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+
+  .speedLabel {
+    white-space: nowrap;
+    color: var(--text-colour);
+  }
+
+  .customDropdown {
+    position: relative;
+
+    .speedButton {
+      @include fonts.text-medium;
+      background: transparent;
+      border: none;
+      color: var(--text-colour);
+      cursor: pointer;
+      padding: 0;
+      min-width: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: var(--alt-text);
+      }
+
+      &:focus {
+        outline: none;
+        color: var(--alt-text);
+      }
+    }
+
+    .dropdownMenu {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--background-sec);
+      border-radius: 0.375rem;
+      z-index: 2;
+      margin-bottom: 0.5rem;
+      min-width: 4rem;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);
+      border: 1px solid var(--border-color);
+
+      .dropdownOption {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        text-align: center;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--text-colour);
+        transition: background-color 0.15s ease;
+
+        &:hover {
+          background: var(--dark-background);
+          color: var(--alt-text);
+        }
+
+        &:focus {
+          outline: none;
+          background: var(--dark-background);
+          color: var(--alt-text);
+        }
+
+        &.selected {
+          background: var(--dark-background);
+          color: var(--alt-text);
+        }
+
+        &:first-child {
+          border-top-left-radius: 0.375rem;
+          border-top-right-radius: 0.375rem;
+        }
+
+        &:last-child {
+          border-bottom-left-radius: 0.375rem;
+          border-bottom-right-radius: 0.375rem;
+        }
+      }
+    }
+  }
+}
