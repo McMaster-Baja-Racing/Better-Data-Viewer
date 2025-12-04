@@ -59,6 +59,13 @@ const ModelViewer = () => {
     setTimes(shifted.map(d => d.timestamp / 1000)); // convert to seconds for Playbar
   };
 
+  const accelItems = [
+    { label: 'Accel X:', value: accelDisplay.ax },
+    { label: 'Accel Y:', value: accelDisplay.ay },
+    { label: 'Accel Z:', value: accelDisplay.az },
+    { label: 'Net Accel:', value: accelDisplay.net }
+  ];
+
   return (
     <div className="modelContainer">
       <div className="control-bar">
@@ -69,31 +76,14 @@ const ModelViewer = () => {
           })}
         </select>
         <div className="accelDisplay">
-          <div className="accelItem">
-            <span>Accel X:</span>
-            <span className="accelValue">{accelDisplay.ax.toFixed(2)}</span>
-            <span>m/s²</span>
-          </div>
-
-          <div className="accelItem">
-            <span>Accel Y:</span>
-            <span className="accelValue">{accelDisplay.ay.toFixed(2)}</span>
-            <span>m/s²</span>
-          </div>
-
-          <div className="accelItem">
-            <span>Accel Z:</span>
-            <span className="accelValue">{accelDisplay.az.toFixed(2)}</span>
-            <span>m/s²</span>
-          </div>
-
-          <div className="accelItem">
-            <span>Net Accel:</span>
-            <span className="accelValue">{accelDisplay.net.toFixed(2)}</span>
-            <span>m/s²</span>
-          </div>
+          {accelItems.map((item) => (
+            <div className="accelItem" key={item.label}>
+              <span>{item.label}</span>
+              <span className="accelValue">{item.value.toFixed(2)}</span>
+              <span>m/s²</span>
+            </div>
+          ))}
         </div>
-
       </div>
       <Canvas shadows dpr={[1, 2]} camera={{ fov: 40, position: [20, 20, 20] }}>
         <Suspense fallback={null}>
