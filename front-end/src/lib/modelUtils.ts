@@ -11,7 +11,6 @@ import {
   Box3,
   Sphere,
   Group,
-  Object3D
 } from 'three';
 import { ApiUtil } from './apiUtils';
 
@@ -338,3 +337,34 @@ export class ReplayModelSubscriber {
     this.unsubscribe();
   }
 }
+
+export class ReplayAccelSubscriber {
+  private unsubscribe: () => void;
+
+  constructor(controller: ModelReplayController, onUpdate: (vals: {
+    ax: number;
+    ay: number;
+    az: number;
+    net: number;
+  }) => void) {
+
+    this.unsubscribe = controller.on(event => {
+      if (event.type !== ReplayEventType.Progress) return;
+
+      const p = event.data;
+      const net = Math.sqrt(p.accelX**2 + p.accelY**2 + p.accelZ**2);
+
+      onUpdate({
+        ax: p.accelX,
+        ay: p.accelY,
+        az: p.accelZ,
+        net
+      });
+    });
+  }
+
+  dispose() {
+    this.unsubscribe();
+  }
+}
+
