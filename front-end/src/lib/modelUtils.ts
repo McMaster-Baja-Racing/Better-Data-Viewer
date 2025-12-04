@@ -11,6 +11,7 @@ import {
   Box3,
   Sphere,
   Group,
+  Mesh,
 } from 'three';
 import { ApiUtil } from './apiUtils';
 
@@ -101,10 +102,19 @@ const computeMaxAccel = (data: replayData): number => {
 };
 
 export const getBoundingRadius = (obj: Group | undefined) => {
-  if (!obj) return 1;
-  const box = new Box3().setFromObject(obj);
+  const geomBox = new Box3();
+
+  obj?.traverse(child => {
+    if (child instanceof Mesh) {
+      child.geometry.computeBoundingBox();
+      const childBox = child.geometry.boundingBox.clone();
+      childBox.applyMatrix4(child.matrixWorld);
+      geomBox.union(childBox);
+    }
+  });
+
   const sphere = new Sphere();
-  box.getBoundingSphere(sphere);
+  geomBox.getBoundingSphere(sphere);
   return sphere.radius;
 };
 
