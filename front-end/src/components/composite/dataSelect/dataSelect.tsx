@@ -75,7 +75,9 @@ export function DataSelect({
 
   // Select a default source (once uploaded)
   useEffect(() => {
-    if (!selectedSource && sources.length > 0) {
+    const sourceValues = sources.map(s => s.value);
+    const validSource = selectedSource && sourceValues.includes(selectedSource);
+    if ((!selectedSource || !validSource) && sources.length > 0) {
       setSelectedSource(sources[0].value);
     }
   }, [sources, selectedSource]);
