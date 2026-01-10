@@ -24,7 +24,7 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
   const { series, dispatch: chartQueryDispatch } = useChartQuery();
   const [chartType, setChartType] = useState<ChartType>(options.series?.[0]?.type ?? 'line');
   
-  const { data: files } = useFiles();
+  const { data: files, dataTypeMap } = useFiles();
 
   // Create an initial empty series if none exist
   useEffect(() => {
@@ -82,7 +82,7 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
         </div>
         {series.length > 0 && series[0] && <DataSelect
           sources={sources.map((file) => ({ value: file, label: file }))}
-          dataTypes={getDataTypes(files, series[0]?.x?.source).map((dataType) => ({ value: dataType, label: dataType }))}
+          dataTypes={(dataTypeMap.get(series[0]?.x?.source) || []).map((dataType) => ({ value: dataType, label: dataType }))}
           columnKey='x'
           seriesIndex={0}
           onColumnUpdate={(_, updatedColumn) => chartQueryDispatch({ 
@@ -120,7 +120,7 @@ export const EditSidebar = ({ sources }: EditSidebarProps) => {
             </div>
             <DataSelect
               sources={sources.map((file) => ({ value: file, label: file }))}
-              dataTypes={getDataTypes(files, series[fileIndex]?.y?.source).map((dataType) => ({ value: dataType, label: dataType }))}
+              dataTypes={(dataTypeMap.get(series[fileIndex]?.y?.source) || []).map((dataType) => ({ value: dataType, label: dataType }))}
               key={fileIndex + 'y'}
               columnKey='y'
               seriesIndex={fileIndex}
