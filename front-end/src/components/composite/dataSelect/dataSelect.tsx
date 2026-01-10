@@ -82,8 +82,10 @@ export function DataSelect({
     }
     // Do the same for data type
     const dataTypeValues = dataTypes.map(dt => dt.value);
-    const validDataType = selectedDataType && dataTypeValues.includes(selectedDataType);
-    if ((!selectedDataType || !validDataType) && dataTypes.length > 0) {
+    // TODO: Since this dataTypeValues is hard-coded, this check in not required
+    // Will be needed when it is fixed on backend
+    // const validDataType = selectedDataType && dataTypeValues.includes(selectedDataType);
+    if (!selectedDataType && dataTypes.length > 0) {
       setSelectedDataType(dataTypes[0].value);
     }
   }, [sources, selectedSource, dataTypes, selectedDataType]);
