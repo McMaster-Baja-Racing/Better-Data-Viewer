@@ -31,7 +31,7 @@ export function DataSelect({
   const { dispatch: dashboardDispatch } = useDashboard();
   const { openModal, closeModal } = useModal();
   const currentSeries = series[seriesIndex];
-  
+    
   // Initialize with current series values or empty strings
   const [selectedSource, setSelectedSource] = useState<string>(currentSeries?.[columnKey]?.source || '');
   const [selectedDataType, setSelectedDataType] = useState<string>(currentSeries?.[columnKey]?.dataType || '');
@@ -73,6 +73,23 @@ export function DataSelect({
     }
   }, [currentSeries, columnKey]);
 
+  // Select a default source (once uploaded)
+  useEffect(() => {
+    const sourceValues = sources.map(s => s.value);
+    const validSource = selectedSource && sourceValues.includes(selectedSource);
+    if ((!selectedSource || !validSource) && sources.length > 0) {
+      setSelectedSource(sources[0].value);
+    }
+    // Do the same for data type
+    const dataTypeValues = dataTypes.map(dt => dt.value);
+    // TODO: Since this dataTypeValues is hard-coded, this check in not required
+    // Will be needed when it is fixed on backend
+    // const validDataType = selectedDataType && dataTypeValues.includes(selectedDataType);
+    if (!selectedDataType && dataTypes.length > 0) {
+      setSelectedDataType(dataTypes[0].value);
+    }
+  }, [sources, selectedSource, dataTypes, selectedDataType]);
+  
   // Update analyzer type
   useEffect(() => {
     if (!currentSeries) return;
