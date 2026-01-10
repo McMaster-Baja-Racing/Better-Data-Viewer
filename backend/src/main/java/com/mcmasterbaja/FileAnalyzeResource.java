@@ -101,6 +101,9 @@ public class FileAnalyzeResource {
         userParams.generateOutputFileNames();
 
         Analyzer userAnalyzer = analyzerFactory.getAnalyzer(smartParams.getType());
+
+        logger.info("User stupid analyzer params: " + userParams.toString());
+
         userAnalyzer.analyze(userParams);
         targetPath = Path.of(userAnalyzer.getOutputFilename());
       } else {
