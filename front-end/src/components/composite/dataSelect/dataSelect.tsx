@@ -31,7 +31,7 @@ export function DataSelect({
   const { dispatch: dashboardDispatch } = useDashboard();
   const { openModal, closeModal } = useModal();
   const currentSeries = series[seriesIndex];
-  
+    
   // Initialize with current series values or empty strings
   const [selectedSource, setSelectedSource] = useState<string>(currentSeries?.[columnKey]?.source || '');
   const [selectedDataType, setSelectedDataType] = useState<string>(currentSeries?.[columnKey]?.dataType || '');
@@ -80,7 +80,13 @@ export function DataSelect({
     if ((!selectedSource || !validSource) && sources.length > 0) {
       setSelectedSource(sources[0].value);
     }
-  }, [sources, selectedSource]);
+    // Do the same for data type
+    const dataTypeValues = dataTypes.map(dt => dt.value);
+    const validDataType = selectedDataType && dataTypeValues.includes(selectedDataType);
+    if ((!selectedDataType || !validDataType) && dataTypes.length > 0) {
+      setSelectedDataType(dataTypes[0].value);
+    }
+  }, [sources, selectedSource, dataTypes, selectedDataType]);
   
   // Update analyzer type
   useEffect(() => {
