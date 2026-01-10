@@ -29,6 +29,7 @@
       padding-left: 1rem;
       text-align: left;
       width: 100%;
+      min-width: 1.75rem;
 
       &::placeholder {
         color: var(--alt-text);
