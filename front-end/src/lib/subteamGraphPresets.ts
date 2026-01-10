@@ -11,7 +11,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
           { source: 'RPM SEC.csv', dataType: 'RPM SEC' },
         ],
         analyzer: AnalyzerType.SGOLAY,
-        analyzerOptions: [100, 3],
+        analyzerOptions: ['100', '3'],
         graphType: 'line',
       }
     ]

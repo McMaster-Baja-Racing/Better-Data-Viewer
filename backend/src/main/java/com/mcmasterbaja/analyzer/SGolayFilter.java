@@ -83,7 +83,8 @@ public class SGolayFilter extends Analyzer {
             + this.windowSize
             + " and polynomial degree "
             + this.polynomialDegree
-            + " on columns: " + String.join(", ", inputColumns));
+            + " on columns: "
+            + String.join(", ", inputColumns));
 
     getReader(
         this.inputFiles[0],
