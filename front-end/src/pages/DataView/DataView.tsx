@@ -4,6 +4,7 @@ import { RightSidebar } from '@components/ui/rightSidebar/RightSidebar';
 import { useEffect, useState } from 'react';
 import { EditSidebar } from '@components/composite/editSidebar/EditSidebar';
 import { ChartOptionsProvider } from '@contexts/ChartOptionsContext';
+import { DropdownProvider } from '@contexts/DropdownContext';
 import { useDashboard } from '@contexts/DashboardContext';
 import { useChartQuery } from '@contexts/ChartQueryContext';
 import { Button } from '@components/ui/button/Button';
@@ -69,9 +70,11 @@ const DataViewContent = () => {
         </GraphWrapper>
       }
       sidebarContent={
-        <EditSidebar 
-          sources={sources}
-        />
+        <DropdownProvider>
+          <EditSidebar 
+            sources={sources}
+          />
+        </DropdownProvider>
       }
     />
   );
