@@ -4,6 +4,7 @@ import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
+import com.mcmasterbaja.exceptions.SerialException;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
@@ -20,6 +21,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.jboss.logging.Logger;
@@ -156,16 +158,21 @@ public class FileAnalyzeResource {
 
   @PATCH
   @jakarta.ws.rs.Path("togglelive")
-  public Boolean toggleLive() {
-    logger.info("Toggling live data to: " + Serial.exit);
-    Boolean exit = Serial.exit;
+  public Boolean toggleLive() throws IOException {
+    Serial serial = new Serial();
+    logger.info("Toggling live data to: " + serial.exit);
+    Boolean exit = serial.exit;
 
-    if (!Serial.exit) {
-      Serial.exit = true;
+    if (!serial.exit) {
+      serial.exit = true;
     } else {
       new Thread(
               () -> {
-                Serial.readLive();
+                try {
+                  serial.readLive();
+                } catch (IOException e) {
+                  throw new SerialException("Failed to read serial data");
+                }
               })
           .start();
     }
