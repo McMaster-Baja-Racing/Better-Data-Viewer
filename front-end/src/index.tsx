@@ -7,6 +7,7 @@ import { RouterComponent } from '@lib/navigationUtils';
 import { ChartQueryProvider } from '@contexts/ChartQueryContext';
 import { DashboardProvider } from '@contexts/DashboardContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { LoadingProvider } from '@contexts/LoadingContext';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -20,19 +21,21 @@ const queryClient = new QueryClient();
 // TODO: Re-add strict mode when we fix the API double calls 
 root.render(
   // <React.StrictMode>
-  <ThemeProvider>
-    <QueryClientProvider client={queryClient}>
-      <ModalProvider>
-        <ChartQueryProvider>
-          <DashboardProvider>
-            <RouterComponent>
-              <App />
-            </RouterComponent>
-          </DashboardProvider>
-        </ChartQueryProvider>
-      </ModalProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
+  <LoadingProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ModalProvider>
+          <ChartQueryProvider>
+            <DashboardProvider>
+              <RouterComponent>
+                <App />
+              </RouterComponent>
+            </DashboardProvider>
+          </ChartQueryProvider>
+        </ModalProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  </LoadingProvider>
   // </React.StrictMode>
 );
 

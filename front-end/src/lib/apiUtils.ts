@@ -233,6 +233,15 @@ export const ApiUtil = {
       body: formData,
     });
 
-    if (!response.ok) throw Error(response.statusText);
+    if (!response.ok) {
+      let errorMessage = response.statusText;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.details || errorData.message || response.statusText;
+      } catch {
+        // If JSON parsing fails, keep the default errorMessage
+      }
+      throw Error(errorMessage);
+    }
   },
 };

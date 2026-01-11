@@ -14,6 +14,7 @@ import { useVideoSyncLines } from './useVideoSyncLines';
 import { useChartOptions } from '@contexts/ChartOptionsContext';
 import { useChartQuery } from '@contexts/ChartQueryContext';
 import { useDashboard } from '@contexts/DashboardContext';
+import { useLoading } from '@contexts/LoadingContext';
 
 // TODO: Fix this import (Why is it different?) . Currently no ECMA module Womp Womp
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -33,12 +34,18 @@ const Chart = ({ video, videoTimestamp }: ChartProps) => {
   const { series } = useChartQuery();
   const { live } = useDashboard();
   const { timestamps, loading, refetch } = useChartData();
+  const { setLoading } = useLoading();
   const { lineX, lineY, syncedDataPoints } = useVideoSyncLines(
     chartRef.current, 
     videoTimestamp, 
     video,
     timestamps
   );
+
+  // Sync loading state with LoadingContext
+  useEffect(() => {
+    setLoading(loading, loading ? 'Loading chart data...' : '');
+  }, [loading, setLoading]);
 
   useEffect(() => {
     // TODO: Don't just use the first series for axis titles
