@@ -18,14 +18,13 @@ $row-height: 4.5rem;
         gap: 1rem;
         align-items: flex-end;
         width: 100%;
-        max-width: 100%;
         box-sizing: border-box;
 
         .column {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            flex: 1;
+            flex: 0 1 auto;
 
             .longDropDown {
                 width: 100%;
@@ -61,8 +60,12 @@ $row-height: 4.5rem;
         opacity: 0;
         transition: height $transition-duration ease, opacity $transition-duration ease;
 
+        .row {
+            flex-wrap: wrap;
+        }
+
         &.expanded {
-            height: $row-height;
+            height: auto;
             opacity: 1;
         }
     }
