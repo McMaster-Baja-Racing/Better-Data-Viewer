@@ -15,7 +15,7 @@ import {
 } from '@assets/icons';
 import styles from './Sidebar.module.scss'; 
 import cx from 'classnames';
-import { onIconClick } from '@lib/navigationUtils';
+import { useAppNavigate } from '@lib/navigationUtils';
 import { useModal } from '@contexts/ModalContext';
 import { ApiUtil } from '@lib/apiUtils';
 import { showErrorToast, showSuccessToast } from '@components/ui/toastNotification/ToastNotification';
@@ -53,6 +53,7 @@ const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const toggleSidebar = () => setIsExpanded(!isExpanded);
   const { openModal } = useModal();
+  const navigate = useAppNavigate();
 
   // Set global CSS variable for left sidebar width
   useEffect(() => {
@@ -81,15 +82,15 @@ const Sidebar = () => {
         <span className={styles.bodyTitle}>Overview</span>
       </div>
       <div className={styles.bodyItems}>
-        <SidebarItem icon={homeIcon} text="Home" onClick={() => onIconClick('')}/>
+        <SidebarItem icon={homeIcon} text="Home" onClick={() => navigate('')}/>
         {/* <SidebarItem icon={bookmarkIcon} text="Bookmarked" onClick={() => console.log('bookmarked')}/> */}
         <SidebarItem icon={uploadIcon} text="Upload Data" onClick={() => openModal('upload')}/>
         <SidebarItem icon={downloadIcon} text="Download Data" onClick={() => openModal('download')}/>
-        <SidebarItem icon={newGraphIcon} text="View Data" onClick={() => onIconClick('dataview')}/>
+        <SidebarItem icon={newGraphIcon} text="View Data" onClick={() => navigate('dataview')}/>
         {/* <SidebarItem icon={folderIcon} text="File Browser" onClick={() => console.log('file browser')}/> */}
-        <SidebarItem icon={cubeIcon} text="Model Viewer" onClick={() => onIconClick('IMU')}/>
-        <SidebarItem icon={mapIcon} text="Map" onClick={() => onIconClick('map')}/>
-        {/* <SidebarItem icon={historyIcon} text="Legacy UI" onClick={() => onIconClick('old')}/> */}
+        <SidebarItem icon={cubeIcon} text="Model Viewer" onClick={() => navigate('IMU')}/>
+        <SidebarItem icon={mapIcon} text="Map" onClick={() => navigate('map')}/>
+        {/* <SidebarItem icon={historyIcon} text="Legacy UI" onClick={() => navigate('old')}/> */}
         <SidebarItem icon={trashIcon} text="Delete All Files" onClick={() => deleteAllFiles()}/>
       </div>
       <div className={styles.footerHeader}>
