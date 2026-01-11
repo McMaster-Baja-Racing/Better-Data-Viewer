@@ -60,12 +60,13 @@ export const ApiUtil = {
     if (!response.ok) throw Error(response.statusText);
 
     // Convert date strings to Date objects
+    // Append Z to parse as UTC (backend sends GMT)
     const rawFiles: RawFileInformation[] = await response.json();
     const files: FileInformation[] = rawFiles.map(file => ({
       ...file,
-      date: new Date(file.date),
-      start: new Date(file.start),
-      end: new Date(file.end)
+      date: new Date(file.date + 'Z'),
+      start: new Date(file.start + 'Z'),
+      end: new Date(file.end + 'Z')
     }));
 
     return files;
