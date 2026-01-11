@@ -19,5 +19,6 @@ export const DropdownProvider = ({ children }: { children: ReactNode }) => {
 
 export const useDropdown = () => {
   const context = useContext(DropdownContext);
-  return context!;
+  if (!context) throw new Error('useDropdown must be used within DropdownProvider');
+  return context;
 };
