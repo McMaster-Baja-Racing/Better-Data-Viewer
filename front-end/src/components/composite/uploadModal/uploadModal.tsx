@@ -30,7 +30,6 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
     if (files.length === 0) return;
     
     setLoading(true, `Uploading ${files.length} file${files.length !== 1 ? 's' : ''}...`);
-    await new Promise(resolve => setTimeout(resolve, 0));
     
     type UploadResult = 
       | { success: true; fileName: string }
