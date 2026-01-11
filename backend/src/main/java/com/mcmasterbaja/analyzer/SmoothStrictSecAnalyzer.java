@@ -20,7 +20,7 @@ public class SmoothStrictSecAnalyzer extends Analyzer {
   @SneakyThrows
   public void analyze(AnalyzerParams params) {
     extractParams(params);
-    logger.info("Running pipeline: StrictTimestamp -> sGolay (single file RPM)");
+    logger.info("Running pipeline: StrictTimestamp -> Outlier Removal -> sGolay (SEC RPM)");
 
     // Single file and column
     String file = params.getInputFiles()[0];
@@ -37,14 +37,33 @@ public class SmoothStrictSecAnalyzer extends Analyzer {
     strict.analyze(sp);
     String strictOut = sp.getOutputFiles()[0];
 
-    // 2) Savitzky-Golay for the strict timestamp output
+    // 2) Outlier removal for RPM > 20000
+    Analyzer outlierRemoval = factory.getAnalyzer(AnalyzerType.DELETE_OUTLIER);
+    AnalyzerParams or = new AnalyzerParams();
+    or.setInputFiles(new String[] {strictOut});
+    or.setInputColumns(new String[] {"Timestamp (ms)", "RPM SEC"});
+    or.setType(AnalyzerType.DELETE_OUTLIER);
+    or.setOptions(
+        new String[] {
+          "0", // minX (minimum timestamp - keep all)
+          "999999999", // maxX (maximum timestamp - keep all)
+          "0", // minY (minimum RPM - keep all above 0)
+          "20000" // maxY (maximum RPM - remove above 20000)
+        });
+    or.generateOutputFileNames();
+    outlierRemoval.analyze(or);
+    String outlierOut = or.getOutputFiles()[0];
+
+    // 3) Savitzky-Golay for the outlier-removed output
     Analyzer sGolay = factory.getAnalyzer(AnalyzerType.SGOLAY);
     AnalyzerParams sg = new AnalyzerParams();
-    sg.setInputFiles(new String[] {strictOut, strictOut});
+    sg.setInputFiles(new String[] {outlierOut, outlierOut});
     sg.setInputColumns(new String[] {"Timestamp (ms)", "RPM SEC"});
     sg.setType(AnalyzerType.SGOLAY);
     sg.setOptions(new String[] {"101", "3"});
     sg.setOutputFiles(params.getOutputFiles());
     sGolay.analyze(sg);
+
+    logger.info("Completed pipeline: StrictTimestamp -> Outlier Removal -> sGolay for SEC RPM");
   }
 }
