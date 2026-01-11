@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useId } from 'react';
 import styles from './Dropdown.module.scss';
 import {chevronDownIcon} from '@assets/icons';
 import cx from 'classnames';
+import { useDropdown } from '@contexts/DropdownContext';
 
 export interface DropdownOption<T> {
   value: T;
@@ -19,37 +20,34 @@ interface DropdownProps<All, Option extends All> {
 export const Dropdown = <All,Option extends All>(
   { options, selected, setSelected, width, className }: DropdownProps<All, Option>
 ) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleOptionClick = (option: Option, event: React.MouseEvent) => {
-    event.stopPropagation();
-    setSelected(option);
-    setIsOpen(false);
-  };
-
+  const { openDropdownId, setOpenDropdown } = useDropdown();
+  const id = useId();
+  const isOpen = openDropdownId === id;
   const selectedOption = options.find(option => option.value === selected);
 
   return (
     <button 
-      className={cx(styles.dropdown, {[styles.open]: isOpen}, className)} 
+      className={cx(styles.dropdown, { [styles.open]: isOpen }, className)} 
       style={{ width }}
-      onClick={() => setIsOpen((prev) => !prev)}
+      onClick={() => setOpenDropdown(isOpen ? null : id)}
     >
       <div className={styles.dropdownContent}>
         {selectedOption?.label || 'Select an option'}
         <img src={chevronDownIcon} alt="dropdown arrow" className={styles.icon} />
       </div>
 
-      <div className={`${styles.options} ${isOpen ? styles.open : ''}`}>
+      <div className={cx(styles.options, { [styles.open]: isOpen })}>
         {options
-          .filter(option => option.value !== selected) // Filter out the selected option, since its already displayed
+          .filter(option => option.value !== selected)
           .map((option, index) => (
             <div
               key={index}
-              className={`${styles.option} ${
-                option.value === selected ? styles.selected : ''
-              }`}
-              onClick={(e) => handleOptionClick(option.value, e)}
+              className={styles.option}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelected(option.value);
+                setOpenDropdown(null);
+              }}
             >
               {option.label}
             </div>
