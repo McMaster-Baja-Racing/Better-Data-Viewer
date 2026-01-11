@@ -14,24 +14,21 @@ import java.util.Map;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 public class Serial implements Serializable {
-  private SerialPort comPort; // converted comPort to a variable  
+  private SerialPort comPort; // converted comPort to a variable
   private Map<Byte, FileWriter> fileWriters = new HashMap<>();
-  public boolean exit = false; 
+  public boolean exit = false;
 
   @ConfigProperty(name = "quarkus.http.body.uploads-directory")
   private Path rootLocation;
 
-  public Serial() {
-
-  }
+  public Serial() {}
 
   public Serial(SerialPort port) {
     this.comPort = port;
-    
   }
 
   /* readLive() connects to an Arduino/Serial device, reads + parses binary packets,
-     and writes them to a csv file. 
+     and writes them to a csv file.
   */
   public void readLive() throws IOException { // made readLive method non-static
     SerialPort[] portList = SerialPort.getCommPorts();
@@ -50,13 +47,12 @@ public class Serial implements Serializable {
       if (comPort == null) {
         return;
       }
-      
     }
-    
+
     Packet p = null;
-    int timestamp = 0;   
+    int timestamp = 0;
     byte packetType = 0;
-    float value = 0.0f;  
+    float value = 0.0f;
     String filename = null;
 
     try {
@@ -64,34 +60,34 @@ public class Serial implements Serializable {
       if (comPort.openPort()) {
         System.out.println("Connected to port");
         comPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 2000, 0);
-      } 
+      }
       try {
         while (true) {
           byte[] readBuffer = new byte[8];
-          int numBytes = comPort.readBytes(readBuffer, 8); 
-          
+          int numBytes = comPort.readBytes(readBuffer, 8);
+
           if (numBytes != 8) continue;
-  
+
           p = new Packet(readBuffer);
-          timestamp = p.getTimestamp();  
+          timestamp = p.getTimestamp();
           packetType = p.getPacketType();
-          value = p.getFloatData();  
-  
-          filename = "/csv/live/" + packetType + ".csv"; 
-    
-          FileWriter writer = fileWriters.get(packetType); 
+          value = p.getFloatData();
+
+          filename = "/csv/live/" + packetType + ".csv";
+
+          FileWriter writer = fileWriters.get(packetType);
           if (writer == null) {
-            writer = new FileWriter(filename); 
-            fileWriters.put(packetType, writer); 
-            writer.write("Timestamp (ms),Value\n"); 
-          } 
-          writer.write(timestamp + ","  + value + "\n"); 
-          writer.flush(); 
+            writer = new FileWriter(filename);
+            fileWriters.put(packetType, writer);
+            writer.write("Timestamp (ms),Value\n");
+          }
+          writer.write(timestamp + "," + value + "\n");
+          writer.flush();
         }
       } finally {
-          for (FileWriter writer : fileWriters.values()) {
-            writer.close(); 
-          }
+        for (FileWriter writer : fileWriters.values()) {
+          writer.close();
+        }
       }
     } finally {
       if (comPort != null && comPort.isOpen()) {

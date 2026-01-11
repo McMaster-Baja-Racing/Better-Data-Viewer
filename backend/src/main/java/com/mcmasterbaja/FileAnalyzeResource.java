@@ -4,6 +4,7 @@ import com.mcmasterbaja.analyzer.Analyzer;
 import com.mcmasterbaja.analyzer.AnalyzerFactory;
 import com.mcmasterbaja.annotations.OnAnalyzerException;
 import com.mcmasterbaja.exceptions.InvalidArgumentException;
+import com.mcmasterbaja.exceptions.SerialException;
 import com.mcmasterbaja.live.Serial;
 import com.mcmasterbaja.model.AnalyzerParams;
 import com.mcmasterbaja.model.AnalyzerType;
@@ -18,10 +19,9 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
-import com.mcmasterbaja.exceptions.SerialException;
-import java.io.IOException;
 import jakarta.ws.rs.QueryParam;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.jboss.logging.Logger;
@@ -163,13 +163,15 @@ public class FileAnalyzeResource {
     if (!serial.exit) {
       serial.exit = true;
     } else {
-      new Thread(() -> {
-          try {
-            serial.readLive();
-          } catch (IOException e) {
-            throw new SerialException("Failed to read serial data");
-          }
-        }).start();
+      new Thread(
+              () -> {
+                try {
+                  serial.readLive();
+                } catch (IOException e) {
+                  throw new SerialException("Failed to read serial data");
+                }
+              })
+          .start();
     }
 
     return exit;
