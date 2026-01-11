@@ -65,7 +65,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, currentSources }: 
         <div className={styles.formWrapper}>
           <div className={styles.uploadForm}>
             <h2 className={styles.title}>Upload your files</h2>
-            <UploadForm files={uploadedFiles} setFiles={setUploadedFiles} accept={'.bin'}/>
+            <UploadForm files={uploadedFiles} setFiles={setUploadedFiles} allowFolder={false} accept={'.bin'}/>
           </div>
 
           <div className={styles.selectFiles}>
