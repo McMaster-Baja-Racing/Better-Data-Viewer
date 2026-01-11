@@ -16,10 +16,15 @@ export const getFolders = (files: FileInformation[]): FileInformation[] => {
           extension: '',
           size: 0,
           headers: [],
-          date: new Date(),
-          start: new Date(),
-          end: new Date()
+          date: file.date,
+          start: new Date(0),
+          end: new Date(0)
         });
+      } else {
+        const folder = folderMap.get(folderKey);
+        if (folder && file.date < folder.date) {
+          folder.date = file.date;
+        }
       }
     }
     // Add file size to all parent folders

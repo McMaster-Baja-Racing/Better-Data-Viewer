@@ -28,9 +28,9 @@ const buildHierarchy = (files: FileInformation[]): Folder => {
     key: '',
     name: 'Root',
     size: 0,
-    date: new Date(),
-    start: new Date(),
-    end: new Date(),
+    date: new Date(0),
+    start: new Date(0),
+    end: new Date(0),
     children: [],
   };
 
@@ -58,9 +58,9 @@ const buildHierarchy = (files: FileInformation[]): Folder => {
             key: folderKey,
             name: part,
             size: 0,
-            date: new Date(),
-            start: new Date(),
-            end: new Date(),
+            date: new Date(0),
+            start: new Date(0),
+            end: new Date(0),
             children: [],
           };
           currentFolder.children.push(folder);
@@ -88,7 +88,8 @@ const buildHierarchy = (files: FileInformation[]): Folder => {
 
     if (folder.key) {
       folder.size = sizeMap[folder.key] || 0;
-      folder.date = [...dateMap[folder.key]].sort()[0] || ''; // Earliest date
+      const dates = dateMap[folder.key] || [];
+      folder.date = dates.length > 0 ? [...dates].sort((a, b) => a.getTime() - b.getTime())[0] : new Date(0);
     }
   };
 
@@ -164,7 +165,9 @@ const FolderRenderer = ({ folder, depth = 0, selectedFiles, setSelectedFiles }: 
               </td>
               <td className={styles.folderSize}>{formatSize(folder.size)}</td>
               <td className={styles.folderDate}>{
-                folder.date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
+                folder.date.getTime() === 0 
+                  ? '---' 
+                  : folder.date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
               </td>
             </tr>}
       {(isOpen || depth == 0) &&
@@ -217,7 +220,9 @@ const FileRenderer = ({ file, depth, selectedFiles, setSelectedFiles }: FileRend
       <td className={styles.fileName} style={depthPadding(depth)}>{file.name}</td>
       <td className={styles.fileSize}>{formatSize(file.size)}</td>
       <td className={styles.fileDate}>{
-        file.date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })
+        file.date.getTime() === 0
+          ? '---'
+          : file.date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })
       }</td>
     </tr>
   );
