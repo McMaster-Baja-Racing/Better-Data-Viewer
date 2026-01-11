@@ -19,5 +19,5 @@ export const DropdownProvider = ({ children }: { children: ReactNode }) => {
 
 export const useDropdown = () => {
   const context = useContext(DropdownContext);
-  return context; // Returns undefined if provider not present
+  return context!;
 };
