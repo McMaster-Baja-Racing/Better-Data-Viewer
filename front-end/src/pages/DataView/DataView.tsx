@@ -7,6 +7,8 @@ import { ChartOptionsProvider } from '@contexts/ChartOptionsContext';
 import { useDashboard } from '@contexts/DashboardContext';
 import { useChartQuery } from '@contexts/ChartQueryContext';
 import { Button } from '@components/ui/button/Button';
+import { LoadingOverlay } from '@components/ui/loadingOverlay/LoadingOverlay';
+import { useLoading } from '@contexts/LoadingContext';
 import styles from './DataView.module.scss';
 
 export const DataView = () => {
@@ -20,6 +22,7 @@ export const DataView = () => {
 const DataViewContent = () => {
   const { series } = useChartQuery();
   const { sources } = useDashboard();
+  const { isLoading, loadingMessage } = useLoading();
   
   // Open sidebar by default when there's no data to help users get started
   const hasInitialData = series && series.length > 0 && series.some(s => s?.x?.source || s?.y?.source);
@@ -44,7 +47,11 @@ const DataViewContent = () => {
       mainContent={
         <GraphWrapper 
           editOnClick={() => setIsOpen(!isOpen)}
-        >
+        ><LoadingOverlay 
+            message={loadingMessage} 
+            isVisible={isLoading} 
+          />
+          
           {hasData ? (
             <Chart
               video={null}
