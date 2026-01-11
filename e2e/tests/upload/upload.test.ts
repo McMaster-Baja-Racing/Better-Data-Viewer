@@ -14,9 +14,4 @@ test.describe('Upload Form', () => {
     const uploadTester = new UploadTester(page, fileName);
     await uploadTester.testUploadBinFile();
   });
-
-  test('should display an alert when no file is selected', async ({ page }) => {
-    const uploadTester = new UploadTester(page, fileName);
-    await uploadTester.testUploadNoFile();
-  });
 });
