@@ -49,6 +49,10 @@ public class FileUploadResource {
 
     switch (fileExtension) {
       case "csv":
+        String csvFolderName = fileName.substring(0, fileName.lastIndexOf('.'));
+        Path csvPath = Paths.get("csv", csvFolderName, fileName);
+        storageService.store(fileData, csvPath);
+        break;
       case "mp4":
         storageService.store(fileData, Paths.get(fileExtension + "/" + fileName));
         break;

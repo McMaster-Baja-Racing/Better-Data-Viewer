@@ -41,22 +41,20 @@ export enum AnalyzerType {
   SMOOTH_STRICT_SEC = 'SMOOTH_STRICT_SEC',
 }
 
-// Define the constant array with all valid values
-export const dataTypesArray = [
-  'Timestamp (ms)',
-  'BATT PERC',
-  'BATT VOLT',
-  'BRAKE PRESS',
-  'GPS ANGLE',
-  'GPS DAY MONTH YEAR',
-  'GPS LATITUDE',
-  'GPS LONGITUDE',
-  'GPS SECOND MINUTE HOUR',
-  'GPS SPEED',
-  'RPM PRIM',
-  'RPM SEC',
-  'IMU X'
-] as const;
+export const getDataTypes = (files?: FileInformation[], selectedSource?: string): string[] => {
+  if (!files || files.length === 0 || !selectedSource?.trim()) {
+    return [];  
+  }
+  
+  const sourceFiles = files.filter(file => file.key?.includes(selectedSource));
+  
+  if (sourceFiles.length === 0) {
+    return [];  
+  }
+  
+  const allDataTypes = sourceFiles.flatMap(file => file.headers);
+  const uniqueDataTypes = [...new Set(allDataTypes)];
+  return uniqueDataTypes.sort();
+};
 
-// Derive the union type from the array
-export type DataTypes = typeof dataTypesArray[number];
+export type DataTypes = string;
