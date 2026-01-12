@@ -1,5 +1,6 @@
 package com.mcmasterbaja.services;
 
+import jakarta.ws.rs.core.StreamingOutput;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -54,6 +55,26 @@ public interface StorageService {
    * @return A Stream of Paths representing the directories.
    */
   Stream<Path> loadDirectories(Path dir);
+
+  /**
+   * Creates a temporary directory for request-scoped file processing, executes the action, and
+   * automatically cleans up the directory afterwards.
+   *
+   * @param requestId The unique identifier for the request.
+   * @param action The action to execute with the temporary directory.
+   */
+  void withTempDirectory(String requestId, java.util.function.Consumer<Path> action);
+
+  /**
+   * Creates a temporary directory, executes function to get a StreamingOutput, wraps it with
+   * cleanup logic that runs after streaming completes.
+   *
+   * @param requestId The unique identifier for the request.
+   * @param function Function that takes temp directory and returns StreamingOutput.
+   * @return StreamingOutput that includes cleanup after streaming.
+   */
+  StreamingOutput withTempDirectoryForStreaming(
+      String requestId, java.util.function.Function<Path, StreamingOutput> function);
 
   /**
    * Deletes a file.
