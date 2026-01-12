@@ -127,7 +127,7 @@ public class FileAnalyzeResource {
                   logger.info("Running user's analyzer: " + smartParams.getType());
                   AnalyzerParams userParams =
                       smartAnalyzerService.createUserAnalyzerParams(smartParams, preprocessedFile);
-                  userParams.updateInputFiles(storageService.getRootLocation());
+                  // Don't call updateInputFiles - preprocessedFile is already an absolute path
                   userParams.generateOutputFileNames(tempDir);
 
                   Analyzer userAnalyzer = analyzerFactory.getAnalyzer(smartParams.getType());
