@@ -33,13 +33,13 @@ public class AnalyzerFactory {
     for (Analyzer analyzer : analyzers) {
       Class<?> originalClass = getOriginalClass(analyzer.getClass());
       AnalyzerQualifier qualifier = originalClass.getAnnotation(AnalyzerQualifier.class);
-      
+
       if (qualifier != null && qualifier.value() == type) {
         // Return this fresh instance from CDI
         return analyzer;
       }
     }
-    
+
     logger.errorf("No Analyzer found for type: %s", type);
     throw new IllegalArgumentException("No Analyzer found for type: " + type);
   }

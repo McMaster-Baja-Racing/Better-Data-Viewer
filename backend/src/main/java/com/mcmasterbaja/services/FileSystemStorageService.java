@@ -81,6 +81,7 @@ public class FileSystemStorageService implements StorageService {
           "Could not list files inside directory: " + dir.toString(), e);
     }
   }
+
   public void withTempDirectory(String requestId, java.util.function.Consumer<Path> action) {
     Path tempDir = rootLocation.resolve("temp").resolve(requestId);
     try {
@@ -95,17 +96,16 @@ public class FileSystemStorageService implements StorageService {
   }
 
   public StreamingOutput withTempDirectoryForStreaming(
-      String requestId,
-      java.util.function.Function<Path, StreamingOutput> function) {
+      String requestId, java.util.function.Function<Path, StreamingOutput> function) {
     Path tempDir = rootLocation.resolve("temp").resolve(requestId);
     try {
       Files.createDirectories(tempDir);
       logger.info("Created temp directory: " + tempDir);
-      
+
       // Execute with 1 minute timeout
-      CompletableFuture<StreamingOutput> future = 
+      CompletableFuture<StreamingOutput> future =
           CompletableFuture.supplyAsync(() -> function.apply(tempDir));
-      
+
       StreamingOutput userStream;
       try {
         userStream = future.get(1, TimeUnit.MINUTES);
@@ -157,6 +157,7 @@ public class FileSystemStorageService implements StorageService {
       logger.error("Failed to cleanup temp directory: " + tempDir, e);
     }
   }
+
   public Stream<Path> loadAll() {
     return loadAll(rootLocation);
   }

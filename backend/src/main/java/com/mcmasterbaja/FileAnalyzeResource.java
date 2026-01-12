@@ -64,7 +64,11 @@ public class FileAnalyzeResource {
               if (params.getType() != null) {
                 Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
                 analyzer.analyze(params);
-                logger.info("Analyzer completed: " + params.getType() + " -> " + analyzer.getOutputFilename());
+                logger.info(
+                    "Analyzer completed: "
+                        + params.getType()
+                        + " -> "
+                        + analyzer.getOutputFilename());
                 targetPath = Path.of(analyzer.getOutputFilename());
               }
 
@@ -92,7 +96,8 @@ public class FileAnalyzeResource {
   @POST
   @jakarta.ws.rs.Path("analyze/smart")
   @OnAnalyzerException
-  public RestResponse<StreamingOutput> runSmartAnalyzer(@BeanParam SmartAnalyzerParams smartParams) {
+  public RestResponse<StreamingOutput> runSmartAnalyzer(
+      @BeanParam SmartAnalyzerParams smartParams) {
     logger.info("Running smart analyzer with params: " + smartParams.toString());
 
     if (!smartParams.getErrors().isEmpty()) {
@@ -135,7 +140,11 @@ public class FileAnalyzeResource {
                   logger.info("User analyzer params: " + userParams.toString());
 
                   userAnalyzer.analyze(userParams);
-                  logger.info("User analyzer completed: " + smartParams.getType() + " -> " + userAnalyzer.getOutputFilename());
+                  logger.info(
+                      "User analyzer completed: "
+                          + smartParams.getType()
+                          + " -> "
+                          + userAnalyzer.getOutputFilename());
                   targetPath = Path.of(userAnalyzer.getOutputFilename());
                 } else {
                   // No user analyzer specified, return preprocessed file
@@ -156,7 +165,11 @@ public class FileAnalyzeResource {
 
                   Analyzer analyzer = analyzerFactory.getAnalyzer(smartParams.getType());
                   analyzer.analyze(params);
-                  logger.info("Analyzer completed: " + smartParams.getType() + " -> " + analyzer.getOutputFilename());
+                  logger.info(
+                      "Analyzer completed: "
+                          + smartParams.getType()
+                          + " -> "
+                          + analyzer.getOutputFilename());
                   targetPath = Path.of(analyzer.getOutputFilename());
                 } else {
                   // No analyzer specified, return input file directly
