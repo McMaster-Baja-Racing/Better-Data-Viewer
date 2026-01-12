@@ -1,6 +1,7 @@
 package com.mcmasterbaja;
 
 import com.mcmasterbaja.exceptions.BajaException;
+import com.mcmasterbaja.exceptions.SerialException;
 import com.mcmasterbaja.model.ErrorResponse;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
@@ -62,7 +63,7 @@ public class ExceptionMappers {
   }
 
   @ServerExceptionMapper
-  public Response portNotFound(Exception e) {
+  public Response portNotFound(SerialException e) {
     String errorId = UUID.randomUUID().toString();
     logger.error("errorId[{}]", errorId, e);
 
