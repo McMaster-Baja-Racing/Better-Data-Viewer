@@ -59,14 +59,32 @@ public class AnalyzerParams {
     }
   }
 
-  /** If output files are empty, auto-populates them with the format: inputFile_type.csv */
-  public void generateOutputFileNames() {
+  /**
+   * If output files are empty, auto-populates them in the request-scoped temp directory. Files are
+   * placed in uploads/temp/{requestId}/ to isolate concurrent requests and prevent file conflicts.
+   *
+   * @param tempDirPath the temporary directory path where output files should be placed
+   */
+  public void generateOutputFileNames(Path tempDirPath) {
     if (outputFiles == null || outputFiles.length == 0) {
       outputFiles = new String[inputFiles.length];
       for (int i = 0; i < inputFiles.length; i++) {
+        // Extract just the filename from the full path
+        Path inputPath = Paths.get(inputFiles[i]);
+        String fileName = inputPath.getFileName().toString();
+
+        String outputFileName;
         if (type == null) {
-          outputFiles[i] = inputFiles[i];
+          outputFileName = fileName;
         } else {
+          outputFileName = fileName.replace(".csv", "_" + type.toString() + ".csv");
+        }
+
+        // Place output in the request-scoped temp directory
+        if (tempDirPath != null) {
+          outputFiles[i] = tempDirPath.resolve(outputFileName).toString();
+        } else {
+          // Fallback to old behavior if no temp directory (shouldn't happen)
           outputFiles[i] = inputFiles[i].replace(".csv", "_" + type.toString() + ".csv");
         }
       }

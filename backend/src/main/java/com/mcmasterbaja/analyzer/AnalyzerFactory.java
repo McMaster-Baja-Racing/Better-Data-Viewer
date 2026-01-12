@@ -6,8 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
-import java.util.EnumMap;
-import java.util.Map;
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
@@ -16,20 +14,14 @@ public class AnalyzerFactory {
 
   @Inject @Any Instance<Analyzer> analyzers;
 
-  private Map<AnalyzerType, Analyzer> analyzerMap;
-
   @PostConstruct
   public void init() {
-    analyzerMap = new EnumMap<>(AnalyzerType.class);
+    // Just validate that all analyzers have qualifiers at startup
     for (Analyzer analyzer : analyzers) {
-      // Get the original class (not the proxy subclass caused by interceptor)
       Class<?> originalClass = getOriginalClass(analyzer.getClass());
       AnalyzerQualifier qualifier = originalClass.getAnnotation(AnalyzerQualifier.class);
 
-      if (qualifier != null) {
-        // logger.infof("Found qualifier: %s for %s", qualifier.value(), originalClass.getName());
-        analyzerMap.put(qualifier.value(), analyzer);
-      } else {
+      if (qualifier == null) {
         logger.warnf(
             "Analyzer %s does not have an AnalyzerQualifier annotation", originalClass.getName());
       }
@@ -37,12 +29,19 @@ public class AnalyzerFactory {
   }
 
   public Analyzer getAnalyzer(AnalyzerType type) {
-    Analyzer analyzer = analyzerMap.get(type);
-    if (analyzer == null) {
-      logger.errorf("No Analyzer found for type: %s", type);
-      throw new IllegalArgumentException("No Analyzer found for type: " + type);
+    // Create a new instance for each request by finding and instantiating the matching analyzer
+    for (Analyzer analyzer : analyzers) {
+      Class<?> originalClass = getOriginalClass(analyzer.getClass());
+      AnalyzerQualifier qualifier = originalClass.getAnnotation(AnalyzerQualifier.class);
+
+      if (qualifier != null && qualifier.value() == type) {
+        // Return this fresh instance from CDI
+        return analyzer;
+      }
     }
-    return analyzer;
+
+    logger.errorf("No Analyzer found for type: %s", type);
+    throw new IllegalArgumentException("No Analyzer found for type: " + type);
   }
 
   private Class<?> getOriginalClass(Class<?> clazz) {

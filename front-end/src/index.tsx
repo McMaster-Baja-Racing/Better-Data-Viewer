@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@styles/index.scss';
 import App from '@pages/App/App';
@@ -20,23 +21,23 @@ const queryClient = new QueryClient();
 
 // TODO: Re-add strict mode when we fix the API double calls 
 root.render(
-  // <React.StrictMode>
-  <LoadingProvider>
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <ModalProvider>
-          <ChartQueryProvider>
-            <DashboardProvider>
-              <RouterComponent>
-                <App />
-              </RouterComponent>
-            </DashboardProvider>
-          </ChartQueryProvider>
-        </ModalProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
-  </LoadingProvider>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <LoadingProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ModalProvider>
+            <ChartQueryProvider>
+              <DashboardProvider>
+                <RouterComponent>
+                  <App />
+                </RouterComponent>
+              </DashboardProvider>
+            </ChartQueryProvider>
+          </ModalProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </LoadingProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

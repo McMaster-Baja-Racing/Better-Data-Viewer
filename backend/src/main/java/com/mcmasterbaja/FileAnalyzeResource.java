@@ -20,10 +20,12 @@ import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
-import java.io.File;
+import jakarta.ws.rs.core.StreamingOutput;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
@@ -41,29 +43,51 @@ public class FileAnalyzeResource {
   @POST
   @jakarta.ws.rs.Path("analyze")
   @OnAnalyzerException
-  public RestResponse<File> runAnalyzer(@BeanParam AnalyzerParams params) {
+  public RestResponse<StreamingOutput> runAnalyzer(@BeanParam AnalyzerParams params) {
     logger.info("Running analyzer with params: " + params.toString());
 
     if (!params.getErrors().isEmpty()) {
       throw new InvalidArgumentException(params.getErrors());
     }
 
-    // Update input files with rootLocation/csv
-    params.updateInputFiles(storageService.getRootLocation());
-    params.generateOutputFileNames();
-    // Default to returning the input file, will be overwritten if an analyzer is found later
-    Path targetPath = Path.of(params.getInputFiles()[0]);
+    String requestId = UUID.randomUUID().toString();
 
-    if (params.getType() != null) {
-      Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
-      analyzer.analyze(params);
-      targetPath = Path.of(analyzer.getOutputFilename());
-    }
+    StreamingOutput stream =
+        storageService.withTempDirectoryForStreaming(
+            requestId,
+            tempDir -> {
+              // Update input files with rootLocation/csv
+              params.updateInputFiles(storageService.getRootLocation());
+              params.generateOutputFileNames(tempDir);
+              Path targetPath = Path.of(params.getInputFiles()[0]);
 
-    File file = storageService.load(targetPath).toFile();
-    Path relativePath = storageService.load(Paths.get("csv")).relativize(targetPath);
+              if (params.getType() != null) {
+                Analyzer analyzer = analyzerFactory.getAnalyzer(params.getType());
+                analyzer.analyze(params);
+                logger.info(
+                    "Analyzer completed: "
+                        + params.getType()
+                        + " -> "
+                        + analyzer.getOutputFilename());
+                targetPath = Path.of(analyzer.getOutputFilename());
+              }
 
-    return ResponseBuilder.ok(file, "application/octet-stream")
+              Path finalTargetPath = targetPath;
+
+              // Return StreamingOutput that will be wrapped with cleanup
+              return output -> {
+                try (FileInputStream fis = new FileInputStream(finalTargetPath.toFile())) {
+                  fis.transferTo(output);
+                }
+              };
+            });
+
+    Path relativePath =
+        storageService
+            .load(Paths.get("csv"))
+            .relativize(Path.of(params.getInputFiles()[0]).getFileName());
+
+    return ResponseBuilder.ok(stream, "application/octet-stream")
         .header("Content-Disposition", "attachment; filename=\"" + relativePath.toString() + "\"")
         .header("Access-Control-Expose-Headers", "Content-Disposition")
         .build();
@@ -72,73 +96,100 @@ public class FileAnalyzeResource {
   @POST
   @jakarta.ws.rs.Path("analyze/smart")
   @OnAnalyzerException
-  public RestResponse<File> runSmartAnalyzer(@BeanParam SmartAnalyzerParams smartParams) {
+  public RestResponse<StreamingOutput> runSmartAnalyzer(
+      @BeanParam SmartAnalyzerParams smartParams) {
     logger.info("Running smart analyzer with params: " + smartParams.toString());
 
     if (!smartParams.getErrors().isEmpty()) {
       throw new InvalidArgumentException(smartParams.getErrors());
     }
 
-    Path targetPath;
+    String requestId = UUID.randomUUID().toString();
 
-    if (smartAnalyzerService.needsPreprocessing(smartParams)) {
-      // PREPROCESSING FLOW: Run INTERPOLATER_PRO first, then user's analyzer
-      logger.info("Preprocessing needed - running two-stage analysis");
+    StreamingOutput stream =
+        storageService.withTempDirectoryForStreaming(
+            requestId,
+            tempDir -> {
+              Path targetPath;
 
-      // Stage 1: Run INTERPOLATER_PRO preprocessing
-      AnalyzerParams preprocessParams = smartAnalyzerService.createPreprocessingParams(smartParams);
-      preprocessParams.updateInputFiles(storageService.getRootLocation());
-      preprocessParams.generateOutputFileNames();
+              if (smartAnalyzerService.needsPreprocessing(smartParams)) {
+                // PREPROCESSING FLOW: Run INTERPOLATER_PRO first, then user's analyzer
+                logger.info("Preprocessing needed - running two-stage analysis");
 
-      Analyzer preprocessAnalyzer = analyzerFactory.getAnalyzer(AnalyzerType.INTERPOLATER_PRO);
-      preprocessAnalyzer.analyze(preprocessParams);
-      String preprocessedFile = preprocessAnalyzer.getOutputFilename();
+                // Stage 1: Run INTERPOLATER_PRO preprocessing
+                AnalyzerParams preprocessParams =
+                    smartAnalyzerService.createPreprocessingParams(smartParams);
+                preprocessParams.updateInputFiles(storageService.getRootLocation());
+                preprocessParams.generateOutputFileNames(tempDir);
 
-      // Stage 2: Run user's analyzer on preprocessed data (if specified)
-      if (smartParams.getType() != null) {
-        logger.info("Running user's analyzer: " + smartParams.getType());
-        AnalyzerParams userParams =
-            smartAnalyzerService.createUserAnalyzerParams(smartParams, preprocessedFile);
-        userParams.updateInputFiles(storageService.getRootLocation());
-        userParams.generateOutputFileNames();
+                Analyzer preprocessAnalyzer =
+                    analyzerFactory.getAnalyzer(AnalyzerType.INTERPOLATER_PRO);
+                preprocessAnalyzer.analyze(preprocessParams);
+                String preprocessedFile = preprocessAnalyzer.getOutputFilename();
 
-        Analyzer userAnalyzer = analyzerFactory.getAnalyzer(smartParams.getType());
+                // Stage 2: Run user's analyzer on preprocessed data (if specified)
+                if (smartParams.getType() != null) {
+                  logger.info("Running user's analyzer: " + smartParams.getType());
+                  AnalyzerParams userParams =
+                      smartAnalyzerService.createUserAnalyzerParams(smartParams, preprocessedFile);
+                  // Don't call updateInputFiles - preprocessedFile is already an absolute path
+                  userParams.generateOutputFileNames(tempDir);
 
-        logger.info("User stupid analyzer params: " + userParams.toString());
+                  Analyzer userAnalyzer = analyzerFactory.getAnalyzer(smartParams.getType());
 
-        userAnalyzer.analyze(userParams);
-        targetPath = Path.of(userAnalyzer.getOutputFilename());
-      } else {
-        // No user analyzer specified, return preprocessed file
-        targetPath = Path.of(preprocessedFile);
-      }
+                  logger.info("User analyzer params: " + userParams.toString());
 
-    } else {
-      // DIRECT FLOW: No preprocessing needed, run user's analyzer directly
-      logger.info("No preprocessing needed - running analyzer directly");
+                  userAnalyzer.analyze(userParams);
+                  logger.info(
+                      "User analyzer completed: "
+                          + smartParams.getType()
+                          + " -> "
+                          + userAnalyzer.getOutputFilename());
+                  targetPath = Path.of(userAnalyzer.getOutputFilename());
+                } else {
+                  // No user analyzer specified, return preprocessed file
+                  targetPath = Path.of(preprocessedFile);
+                }
 
-      String inputFile = smartAnalyzerService.getDirectInputFile(smartParams);
+              } else {
+                // DIRECT FLOW: No preprocessing needed, run user's analyzer directly
+                logger.info("No preprocessing needed - running analyzer directly");
 
-      if (smartParams.getType() != null) {
-        AnalyzerParams params =
-            smartAnalyzerService.createUserAnalyzerParams(smartParams, inputFile);
-        params.updateInputFiles(storageService.getRootLocation());
-        params.generateOutputFileNames();
+                String inputFile = smartAnalyzerService.getDirectInputFile(smartParams);
 
-        Analyzer analyzer = analyzerFactory.getAnalyzer(smartParams.getType());
-        analyzer.analyze(params);
-        targetPath = Path.of(analyzer.getOutputFilename());
-      } else {
-        // No analyzer specified, return input file directly
-        targetPath = storageService.getRootLocation().resolve("csv").resolve(inputFile);
-      }
-    }
+                if (smartParams.getType() != null) {
+                  AnalyzerParams params =
+                      smartAnalyzerService.createUserAnalyzerParams(smartParams, inputFile);
+                  params.updateInputFiles(storageService.getRootLocation());
+                  params.generateOutputFileNames(tempDir);
 
-    File file = storageService.load(targetPath).toFile();
-    Path relativePath = storageService.load(Paths.get("csv")).relativize(targetPath);
+                  Analyzer analyzer = analyzerFactory.getAnalyzer(smartParams.getType());
+                  analyzer.analyze(params);
+                  logger.info(
+                      "Analyzer completed: "
+                          + smartParams.getType()
+                          + " -> "
+                          + analyzer.getOutputFilename());
+                  targetPath = Path.of(analyzer.getOutputFilename());
+                } else {
+                  // No analyzer specified, return input file directly
+                  targetPath = storageService.getRootLocation().resolve("csv").resolve(inputFile);
+                }
+              }
 
-    return ResponseBuilder.ok(file, "application/octet-stream")
-        .header("Content-Disposition", "attachment; filename=\"" + relativePath.toString() + "\"")
+              Path finalTargetPath = targetPath;
+
+              // Return StreamingOutput that will be wrapped with cleanup
+              return output -> {
+                try (FileInputStream fis = new FileInputStream(finalTargetPath.toFile())) {
+                  fis.transferTo(output);
+                }
+              };
+            });
+
+    String filename = smartAnalyzerService.getDirectInputFile(smartParams);
+    return ResponseBuilder.ok(stream, "application/octet-stream")
+        .header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
         .header("Access-Control-Expose-Headers", "Content-Disposition")
         .build();
   }

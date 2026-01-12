@@ -5,11 +5,16 @@ import com.mcmasterbaja.exceptions.StorageException;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
@@ -74,6 +79,82 @@ public class FileSystemStorageService implements StorageService {
     } catch (IOException e) {
       throw new FileNotFoundException(
           "Could not list files inside directory: " + dir.toString(), e);
+    }
+  }
+
+  public void withTempDirectory(String requestId, java.util.function.Consumer<Path> action) {
+    Path tempDir = rootLocation.resolve("temp").resolve(requestId);
+    try {
+      Files.createDirectories(tempDir);
+      logger.info("Created temp directory: " + tempDir);
+      action.accept(tempDir);
+    } catch (IOException e) {
+      throw new StorageException("Failed to create temp directory for request: " + requestId, e);
+    } finally {
+      cleanupTempDirectory(tempDir);
+    }
+  }
+
+  public StreamingOutput withTempDirectoryForStreaming(
+      String requestId, java.util.function.Function<Path, StreamingOutput> function) {
+    Path tempDir = rootLocation.resolve("temp").resolve(requestId);
+    try {
+      Files.createDirectories(tempDir);
+      logger.info("Created temp directory: " + tempDir);
+
+      // Execute with 1 minute timeout
+      CompletableFuture<StreamingOutput> future =
+          CompletableFuture.supplyAsync(() -> function.apply(tempDir));
+
+      StreamingOutput userStream;
+      try {
+        userStream = future.get(1, TimeUnit.MINUTES);
+      } catch (TimeoutException e) {
+        future.cancel(true);
+        logger.error("Analyzer operation timed out after 1 minute for request: " + requestId);
+        cleanupTempDirectory(tempDir);
+        throw new StorageException("Operation timed out after 1 minute", e);
+      } catch (ExecutionException e) {
+        logger.error("Analyzer operation failed for request: " + requestId, e.getCause());
+        cleanupTempDirectory(tempDir);
+        throw new StorageException("Operation failed: " + e.getCause().getMessage(), e.getCause());
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        cleanupTempDirectory(tempDir);
+        throw new StorageException("Operation interrupted", e);
+      }
+
+      // Wrap the user's StreamingOutput to add cleanup after streaming
+      return output -> {
+        try {
+          userStream.write(output);
+        } finally {
+          cleanupTempDirectory(tempDir);
+        }
+      };
+    } catch (IOException e) {
+      throw new StorageException("Failed to create temp directory for request: " + requestId, e);
+    }
+  }
+
+  private void cleanupTempDirectory(Path tempDir) {
+    try {
+      if (Files.exists(tempDir)) {
+        try (Stream<Path> walk = Files.walk(tempDir)) {
+          walk.sorted(Comparator.reverseOrder())
+              .forEach(
+                  path -> {
+                    try {
+                      Files.delete(path);
+                    } catch (IOException e) {
+                      logger.warn("Failed to delete temp file: " + path, e);
+                    }
+                  });
+        }
+        logger.info("Cleaned up temp directory: " + tempDir);
+      }
+    } catch (IOException e) {
+      logger.error("Failed to cleanup temp directory: " + tempDir, e);
     }
   }
 
