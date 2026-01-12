@@ -7,7 +7,7 @@ import { rightArrowIcon } from '@assets/icons';
 import { ApiUtil } from '@lib/apiUtils';
 import { FileInformation } from '@types';
 import JSZip from 'jszip';
-import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
+import { showErrorToast, showSuccessToast } from '@components/ui/toastNotification/ToastNotification';
 import { useFiles } from '@lib/files/useFiles';
 
 interface DownloadModalProps {
@@ -38,6 +38,12 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
+      
+      showSuccessToast(
+        `${selectedFiles.length} file${selectedFiles.length !== 1 ? 's' : ''} downloaded successfully`,
+        selectedFiles.map(f => f.key).join('\n')
+      );
+      
       onClose();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
