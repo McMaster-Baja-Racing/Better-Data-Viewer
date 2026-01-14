@@ -59,18 +59,6 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
     links: [{ title: 'CVT Shifting Stages', url: 'CVT_Tutorial-part-2.pdf' }],
   },
   
-  [AnalyzerType.SHIFT_CURVE]: {
-    title: 'Shift Curve',
-    description:
-        'Aligns primary and secondary RPM into the same range for easy comparison.',
-    isJoinBased: true,
-    image: {
-      src: accelImage,
-      alt: 'Shift curve graphic',
-    },
-    links: [{ title: 'Shift Curve (Wiki)', url: 'https://en.wikipedia.org/wiki/Shift_curve' }],
-  },
-  
   [AnalyzerType.SGOLAY]: {
     title: 'Savitzky-Golay Smoother',
     description:
