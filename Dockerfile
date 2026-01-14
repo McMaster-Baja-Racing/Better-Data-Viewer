@@ -10,7 +10,7 @@ COPY front-end/package*.json ./
 RUN npm install --force
 
 COPY front-end/ ./
-RUN npm run build
+RUN npm run build:frontend
 
 # Stage 2: Build Backend
 FROM maven:3.9-eclipse-temurin-21 AS backend-builder

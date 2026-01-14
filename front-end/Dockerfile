@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install --force
 
 COPY . ./
-RUN npm run build
+RUN npm run build:frontend
 
 # Install serve to host the built static files
 RUN npm install -g serve
