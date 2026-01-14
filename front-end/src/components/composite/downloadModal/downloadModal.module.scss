@@ -14,11 +14,60 @@
   }
 
   .tableWrapper {
-    height: 35rem;
+    height: 30rem;
     @include mixins.scrollbar-dark;
   }
 
   .submitButton {
     margin-top: 1.25rem;
+  }
+}
+
+/* Responsive styles for smaller desktop windows */
+@media screen and (max-width: 1400px) {
+  .downloadModal {
+    width: 60rem;
+
+    .tableWrapper {
+      height: 32rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .downloadModal {
+    width: 50rem;
+    padding: 0 1.5rem;
+
+    .tableWrapper {
+      height: 30rem;
+    }
+
+    .submitButton {
+      margin-top: 1rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .downloadModal {
+    width: 40rem;
+    padding: 0 1rem;
+
+    .tableWrapper {
+      height: 25rem;
+    }
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .downloadModal {
+    width: 90vw;
+    max-width: 35rem;
+    padding: 0 1rem;
+
+    .tableWrapper {
+      height: 20rem;
+    }
   }
 }

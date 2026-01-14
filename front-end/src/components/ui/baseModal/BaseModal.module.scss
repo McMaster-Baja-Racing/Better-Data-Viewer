@@ -36,6 +36,16 @@
   &.close {
     animation: fadeOut 0.3s ease-in-out forwards;
   }
+
+  /* Responsive adjustments for smaller windows */
+  @media screen and (max-width: 1200px) {
+    padding: 0.75rem;
+  }
+
+  @media screen and (max-width: 850px) {
+    max-width: calc(100vw - 2 * 1rem);
+    padding: 0.5rem;
+  }
 }
 
 .closeButton {
