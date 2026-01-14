@@ -79,7 +79,7 @@ export const subteamGraphPresets: DataViewerPreset[] = [
           { source: 'GPS LATITUDE.csv', dataType: 'GPS LATITUDE' },
           { source: 'GPS LONGITUDE.csv', dataType: 'GPS LONGITUDE' },
         ],
-        analyzer: AnalyzerType.SHIFT_CURVE,
+        analyzer: null,
         analyzerOptions: [],
         graphType: 'line',
       },
