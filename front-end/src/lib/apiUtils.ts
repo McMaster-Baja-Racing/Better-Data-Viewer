@@ -3,10 +3,10 @@ import { isElectron } from './navigationUtils';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 import { extractUserMessage } from './errorUtils';
 
-// For Electron: use localhost. For web: use relative URLs (same origin, works with reverse proxy)
-const baseApiUrl = isElectron 
-  ? 'http://localhost:8080' 
-  : '';
+// Determine API base URL based on environment
+const baseApiUrl = isElectron || window.location.hostname === 'localhost'
+  ? 'http://localhost:8080'  // Local dev or Electron
+  : '';  // Production (relative URLs work with reverse proxy)
 
 export const ApiUtil = {
 
