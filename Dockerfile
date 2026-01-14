@@ -36,8 +36,9 @@ COPY --from=backend-builder --chown=185 /app/target/quarkus-app/*.jar /deploymen
 COPY --from=backend-builder --chown=185 /app/target/quarkus-app/app/ /deployments/app/
 COPY --from=backend-builder --chown=185 /app/target/quarkus-app/quarkus/ /deployments/quarkus/
 
-# Copy frontend build to be served by Quarkus
-COPY --from=frontend-builder --chown=185 /app/build/ /deployments/static/
+# Copy frontend build to Quarkus static resources directory (served from classpath)
+RUN mkdir -p /deployments/app/META-INF/resources && chown -R 185:185 /deployments/app/META-INF
+COPY --from=frontend-builder --chown=185 /app/build/ /deployments/app/META-INF/resources/
 
 # Create uploads directory (mount this as a volume!)
 RUN mkdir -p /deployments/uploads && chown -R 185:185 /deployments/uploads
