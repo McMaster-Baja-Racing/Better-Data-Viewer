@@ -75,18 +75,6 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
     links: [{ title: 'Savitzky–Golay filter (Wiki)', url: 'https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter' }],
   },
 
-  [AnalyzerType.LINEAR_INTERPOLATE]: {
-    title: 'Linear Interpolator',
-    description:
-        'Applies linear interpolation to fill in gaps in data.',
-    isJoinBased: true,
-    image: {
-      src: interpolateImage,
-      alt: 'Linear interpolation demo',
-    },
-    links: [{ title: 'Linear Interpolation (Wiki)', url: 'https://en.wikipedia.org/wiki/Linear_interpolation' }],
-  },
-
   [AnalyzerType.LINEAR_MULTIPLY]: {
     title: 'Linear Multiplier',
     description:
@@ -177,18 +165,6 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
       alt: 'Split demo',
     },
     links: [{ title: 'Split (Wiki)', url: 'https://en.wikipedia.org/wiki/Split' }],
-  },
-
-  [AnalyzerType.INTERPOLATER_PRO]: {
-    title: 'Interpolation Pro',
-    description:
-        'Advanced interpolation tool for more complex data sets.',
-    isJoinBased: true,
-    image: {
-      src: placeholderImage,
-      alt: 'Interpolation Pro demo',
-    },
-    links: [{ title: 'Interpolation (Wiki)', url: 'https://en.wikipedia.org/wiki/Interpolation' }],
   },
 
   [AnalyzerType.AVERAGE]: {
