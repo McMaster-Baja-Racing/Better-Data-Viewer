@@ -1,8 +1,6 @@
 /* eslint-disable max-len */
 import { AnalyzerType } from '@types';
 import {
-  accelImage,
-  interpolateImage,
   linearMultiplierImage,
   RdpGif,
   rollAvgImage,
