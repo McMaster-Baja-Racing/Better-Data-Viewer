@@ -118,7 +118,7 @@ jobs:
       working-directory: ./e2e
 
     - name: Start the backend server
-      run: java -jar -Dquarkus.http.host=localhost ./target/quarkus-app/quarkus-run.jar &
+      run: java -jar -Dquarkus.http.host=localhost -Dquarkus.http.cors.origins=http://localhost:5173 ./target/quarkus-app/quarkus-run.jar &
       working-directory: ./backend
 
     - name: Serve the frontend
