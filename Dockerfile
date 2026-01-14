@@ -22,7 +22,13 @@ COPY backend/.mvn ./.mvn
 
 RUN mvn dependency:go-offline
 
+# Copy backend source
 COPY backend/src ./src
+
+# Copy frontend build into backend resources BEFORE building
+COPY --from=frontend-builder /app/build/ ./src/main/resources/META-INF/resources/
+
+# Now build backend with frontend included
 RUN mvn package -DskipTests
 
 # Stage 3: Runtime - Single Service
@@ -30,23 +36,20 @@ FROM registry.access.redhat.com/ubi8/openjdk-21:1.18
 
 ENV LANGUAGE='en_US:en'
 
+# Run as root to avoid permission issues with mounted volumes
+USER root
+
 # Copy backend application
-COPY --from=backend-builder --chown=185 /app/target/quarkus-app/lib/ /deployments/lib/
-COPY --from=backend-builder --chown=185 /app/target/quarkus-app/*.jar /deployments/
-COPY --from=backend-builder --chown=185 /app/target/quarkus-app/app/ /deployments/app/
-COPY --from=backend-builder --chown=185 /app/target/quarkus-app/quarkus/ /deployments/quarkus/
+COPY --from=backend-builder /app/target/quarkus-app/lib/ /deployments/lib/
+COPY --from=backend-builder /app/target/quarkus-app/*.jar /deployments/
+COPY --from=backend-builder /app/target/quarkus-app/app/ /deployments/app/
+COPY --from=backend-builder /app/target/quarkus-app/quarkus/ /deployments/quarkus/
 
-# Copy frontend build to Quarkus static resources directory (served from classpath)
-RUN mkdir -p /deployments/app/META-INF/resources && chown -R 185:185 /deployments/app/META-INF
-COPY --from=frontend-builder --chown=185 /app/build/ /deployments/app/META-INF/resources/
-
-# Create uploads directory (mount this as a volume!)
-RUN mkdir -p /deployments/uploads && chown -R 185:185 /deployments/uploads
+# Create uploads directory
+RUN mkdir -p /deployments/uploads
 
 # Expose single port for both frontend and backend
 EXPOSE 8080
-
-USER 185
 
 ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
 
