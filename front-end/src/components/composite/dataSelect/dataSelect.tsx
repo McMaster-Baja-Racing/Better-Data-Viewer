@@ -41,7 +41,7 @@ export function DataSelect({
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [analyzerValues, setAnalyzerValues] = useState<string[]>(
-    currentSeries?.analyzer?.options || analyzer.parameters?.map(param => param.defaultValue) || []
+    (currentSeries?.analyzer?.options?.length ? currentSeries.analyzer.options : analyzer.parameters?.map(param => param.defaultValue)) || []
   );
 
   // Only add placeholder options if current selection is empty
@@ -97,6 +97,11 @@ export function DataSelect({
     setAnalyzerKey(newKey);
     setAnalyzerValues(analyzerConfig[newKey].parameters?.map(param => param.defaultValue) || []);
   }, [currentSeries?.analyzer.type]);
+
+  // Pre-populate with defaults when analyzer type changes
+  useEffect(() => {
+    setAnalyzerValues(analyzer.parameters?.map(param => param.defaultValue) || []);
+  }, [analyzerKey]);
 
   // update analyzer
   useEffect(() => {
