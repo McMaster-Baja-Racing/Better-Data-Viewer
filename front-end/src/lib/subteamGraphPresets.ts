@@ -71,21 +71,6 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     ],
   },
   {
-    name: 'Goated Shift Curve',
-    description: 'Primary RPM vs Secondary RPM with GPS Speed',
-    graphs: [
-      {
-        axes: [
-          { source: 'RPM SEC.csv', dataType: 'RPM SEC' },
-          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
-        ],
-        analyzer: AnalyzerType.SHIFT_CURVE,
-        analyzerOptions: [],
-        graphType: 'line',
-      },
-    ]
-  },
-  {
     name: 'Map',
     description: 'Map of GPS coordinates',
     graphs: [
