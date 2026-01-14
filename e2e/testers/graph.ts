@@ -7,7 +7,7 @@ export class GraphTester extends Tester {
   }
 
   async selectPreset(presetButtonName: string) {
-    await this.page.getByRole('button', { name: presetButtonName }).click();
+    await this.page.locator('button').filter({ hasText: presetButtonName }).click();
   }
 
   async selectExistingFile(fileName: string) {
