@@ -1,0 +1,43 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+UML.drawio
+
+# Build outputs
+backend/target
+front-end/build
+front-end/node_modules
+e2e/node_modules
+e2e/test-results
+e2e/playwright-report
+
+# Test files
+e2e/
+backend/src/test
+
+# IDE
+.vscode
+.idea
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local scripts
+start.ps1
+build.ps1
+package.ps1
+
+# Uploads (don't include in image, should be mounted as volume)
+backend/uploads
+
+# Rust build artifacts
+binary-to-csv-lib/target
+
+# Logs
+*.log
