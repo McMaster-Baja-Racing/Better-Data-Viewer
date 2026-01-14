@@ -3,7 +3,10 @@ import { isElectron } from './navigationUtils';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 import { extractUserMessage } from './errorUtils';
 
-const baseApiUrl = 'http://' + (isElectron ? 'localhost' : window.location.hostname) + ':8080';
+// Use same protocol as the page (http or https) and match the hostname
+const baseApiUrl = isElectron 
+  ? 'http://localhost:8080' 
+  : window.location.protocol + '//' + window.location.host;
 
 export const ApiUtil = {
 
