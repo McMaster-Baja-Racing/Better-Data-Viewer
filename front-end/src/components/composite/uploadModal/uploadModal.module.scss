@@ -1,11 +1,11 @@
 @use '@styles/_fonts';
 
+
 .uploadModal {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 40rem;
-  height: 34rem;
   padding: 0 2rem;
 
   .title {
@@ -15,17 +15,18 @@
 
   .submitButton {
     margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
   }
 }
 
 @media screen and (max-width: 1200px) {
   .uploadModal {
     width: 35rem;
-    height: 32rem;
     padding: 0 1.5rem;
 
     .submitButton {
       margin-top: 1rem;
+      margin-bottom: 0.5rem;
     }
   }
 }
@@ -33,7 +34,6 @@
 @media screen and (max-width: 1000px) {
   .uploadModal {
     width: 30rem;
-    height: 30rem;
     padding: 0 1rem;
   }
 }
@@ -42,8 +42,6 @@
   .uploadModal {
     width: 90vw;
     max-width: 26rem;
-    height: auto;
-    min-height: 26rem;
     padding: 0 1rem;
   }
 }
