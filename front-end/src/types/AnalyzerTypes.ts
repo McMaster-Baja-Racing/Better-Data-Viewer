@@ -47,18 +47,6 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
     defaultChecked: true,
   },
   
-  [AnalyzerType.ACCEL_CURVE]: {
-    title: 'Acceleration Curve Tool',
-    description:
-        'Given both primary (y-axis) and secondary (x-axis) RPM values, applies noise reduction then interpolates to show the shift curve.',
-    isJoinBased: true,
-    image: {
-      src: accelImage,
-      alt: 'Acceleration curve demo',
-    },
-    links: [{ title: 'CVT Shifting Stages', url: 'CVT_Tutorial-part-2.pdf' }],
-  },
-  
   [AnalyzerType.SGOLAY]: {
     title: 'Savitzky-Golay Smoother',
     description:

@@ -24,7 +24,6 @@ export interface MinMax {
 }
 
 export enum AnalyzerType {
-  ACCEL_CURVE = 'ACCEL_CURVE',
   AVERAGE = 'AVERAGE',
   CUBIC = 'CUBIC',
   LINEAR_MULTIPLY = 'LINEAR_MULTIPLY',
