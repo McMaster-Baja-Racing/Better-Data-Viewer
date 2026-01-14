@@ -167,18 +167,6 @@ export const analyzerConfig: Record<AnalyzerKey, AnalyzerConfigItem> = {
     links: [{ title: 'Split (Wiki)', url: 'https://en.wikipedia.org/wiki/Split' }],
   },
 
-  [AnalyzerType.INTERPOLATER_PRO]: {
-    title: 'Interpolation Pro',
-    description:
-        'Advanced interpolation tool for more complex data sets.',
-    isJoinBased: true,
-    image: {
-      src: placeholderImage,
-      alt: 'Interpolation Pro demo',
-    },
-    links: [{ title: 'Interpolation (Wiki)', url: 'https://en.wikipedia.org/wiki/Interpolation' }],
-  },
-
   [AnalyzerType.AVERAGE]: {
     title: 'Average',
     description:
