@@ -1,10 +1,6 @@
 name: Build and Publish Docker Image
 
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:  # Allow manual triggering
+on: [pull_request]
 
 env:
   REGISTRY: ghcr.io
