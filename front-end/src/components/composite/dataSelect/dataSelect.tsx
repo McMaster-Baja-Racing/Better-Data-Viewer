@@ -100,7 +100,7 @@ export function DataSelect({
 
   // Pre-populate with defaults when analyzer type changes
   useEffect(() => {
-    setAnalyzerValues(analyzer.parameters?.map(param => param.defaultValue) || []);
+    setAnalyzerValues(analyzerConfig[analyzerKey].parameters?.map(param => param.defaultValue) || []);
   }, [analyzerKey]);
 
   // update analyzer
