@@ -26,6 +26,11 @@
         :global(.highcharts-root) {
             font-family: 'Roboto', sans-serif !important;
         }
+
+        // Remove width constraint in fullscreen mode
+        :fullscreen & {
+            max-width: none;
+        }
     }
 
     .loading {
