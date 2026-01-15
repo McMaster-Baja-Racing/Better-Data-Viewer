@@ -31,12 +31,6 @@ jobs:
       
       - name: Checkout LFS objects
         run: git lfs pull
-      
-      - name: Verify CSV files are actual data (not LFS pointers)
-        run: |
-          echo "Checking CSV file contents:"
-          head -n 2 front-end/public/data/accel_x.csv
-          wc -l front-end/public/data/accel_x.csv
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

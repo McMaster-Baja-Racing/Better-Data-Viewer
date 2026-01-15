@@ -12,7 +12,7 @@ public class BinaryToCSV {
   static {
     // Get library path from environment variable (set in Dockerfile for production)
     String libraryPath = System.getenv("NATIVE_LIBRARY_PATH");
-    
+
     // Fall back to dev path if not set
     if (libraryPath == null || libraryPath.isEmpty()) {
       libraryPath = System.getProperty("user.dir") + "/src/main/java/com/mcmasterbaja/binary_csv";
