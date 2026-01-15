@@ -18,6 +18,12 @@ jobs:
       packages: write
 
     steps:
+      - name: Install Git LFS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-lfs
+          git lfs install
+      
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -25,6 +31,12 @@ jobs:
       
       - name: Checkout LFS objects
         run: git lfs pull
+      
+      - name: Verify CSV files are actual data (not LFS pointers)
+        run: |
+          echo "Checking CSV file contents:"
+          head -n 2 front-end/public/data/accel_x.csv
+          wc -l front-end/public/data/accel_x.csv
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
