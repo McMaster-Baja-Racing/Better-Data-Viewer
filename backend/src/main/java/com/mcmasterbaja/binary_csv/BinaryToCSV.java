@@ -1,6 +1,7 @@
 package com.mcmasterbaja.binary_csv;
 
 import java.nio.file.Paths;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 public class BinaryToCSV {
 
@@ -9,26 +10,27 @@ public class BinaryToCSV {
   public static native void bytesToCSV(
       byte[] bytes, String outputDir, String fileName, boolean folder);
 
-  private static final String relativePath = "/src/main/java/com/mcmasterbaja/binary_csv/";
-
   static {
-    String resourcePath = System.getenv("RESOURCE_PATH");
+    // Get library path from configuration (application.properties)
+    String libraryPath =
+        ConfigProvider.getConfig()
+            .getOptionalValue("native.library.path", String.class)
+            .orElse(System.getProperty("user.dir") + "/binary-to-csv-lib/target/release");
 
-    // Use environment variable if given or default to hardcoded path
-    String path = (System.getProperty("user.dir") + relativePath);
-    if (resourcePath != null) path = resourcePath;
-
-    // Determine the appropriate library extension based on the OS
+    // Determine the appropriate library name based on the OS
     String osName = System.getProperty("os.name").toLowerCase();
+    String libraryName;
     if (osName.contains("mac")) {
-      path += "libbinary_to_csv_lib.dylib";
+      libraryName = "libbinary_to_csv_lib.dylib";
     } else if (osName.contains("linux")) {
-      path += "libbinary_to_csv_lib.so";
+      libraryName = "libbinary_to_csv_lib.so";
     } else { // Default to Windows
-      path += "binary_to_csv_lib.dll";
+      libraryName = "binary_to_csv_lib.dll";
     }
 
-    System.load(path);
+    String fullPath = Paths.get(libraryPath, libraryName).toString();
+    System.out.println("Loading native library from: " + fullPath);
+    System.load(fullPath);
   }
 
   public static void main(String[] args) {

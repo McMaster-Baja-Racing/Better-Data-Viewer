@@ -3,11 +3,9 @@ import styles from './titleCard.module.scss';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { defaultChartOptions } from '@lib/chartOptions';
-import titleCardDataX from './accel_x.csv?raw';
-import titleCardDataY from './accel_y.csv?raw';
-import titleCardDataZ from './accel_z.csv?raw';
 import { getHeadersIndex } from '@lib/chartUtils';
 import { seriesData } from '@types';
+import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 
 const parseData = (csvData: string): number[][] => {
   const lines = csvData.trim().split('\n').map(line => line.split(','));
@@ -28,7 +26,19 @@ export const TitleCard = () => {
   const [chartData, setChartData] = useState<number[][][]>([]);
         
   useEffect(() => {
-    setChartData([parseData(titleCardDataX), parseData(titleCardDataY), parseData(titleCardDataZ)]);
+    const loadData = async () => {
+      try {
+        const [dataX, dataY, dataZ] = await Promise.all([
+          fetch('/data/accel_x.csv').then(r => r.text()),
+          fetch('/data/accel_y.csv').then(r => r.text()),
+          fetch('/data/accel_z.csv').then(r => r.text())
+        ]);
+        setChartData([parseData(dataX), parseData(dataY), parseData(dataZ)]);
+      } catch {
+        showErrorToast('Failed to load title card data.');
+      }
+    };
+    loadData();
   }, []);
 
   const options: Highcharts.Options = {
