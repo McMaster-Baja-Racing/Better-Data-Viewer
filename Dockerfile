@@ -13,13 +13,12 @@ COPY front-end/ ./
 RUN npm run build:frontend
 
 # Stage 2: Build Rust Library
-FROM rust:alpine AS rust-builder
+FROM rust:slim AS rust-builder
 
 WORKDIR /app
 COPY binary-to-csv-lib/ ./
 
-RUN apk add --no-cache musl-dev && \
-    cargo build --release
+RUN cargo build --release
 
 # Stage 3: Build Backend
 FROM maven:3.9-eclipse-temurin-21 AS backend-builder
