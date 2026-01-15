@@ -13,7 +13,7 @@ COPY front-end/ ./
 RUN npm run build:frontend
 
 # Stage 2: Build Rust Library
-FROM rust:1.75-alpine AS rust-builder
+FROM rust:alpine AS rust-builder
 
 WORKDIR /app
 COPY binary-to-csv-lib/ ./
