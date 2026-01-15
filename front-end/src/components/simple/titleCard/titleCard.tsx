@@ -8,21 +8,17 @@ import { seriesData } from '@types';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 
 const parseData = (csvData: string): number[][] => {
-  console.log('Parsing CSV data, length:', csvData.length, 'first 100 chars:', csvData.substring(0, 100));
   const lines = csvData.trim().split('\n').map(line => line.split(','));
-  console.log('CSV lines:', lines.length, 'headers:', lines[0]);
   const headers = lines[0];
   const columns = [
     { dataType: headers[0], source: '' },
     { dataType: headers[1], source: '' }
   ];
   const headerIndices = getHeadersIndex(headers, columns);
-  console.log('Header indices:', headerIndices);
   const timestampOffset = new Date();
   const series: seriesData = lines.slice(1).map((line) => {
     return [parseFloat(line[headerIndices.x]) + timestampOffset.getTime(), parseFloat(line[headerIndices.y])];
   });
-  console.log('Parsed series points:', series.length);
   return series;
 };
 
@@ -33,25 +29,12 @@ export const TitleCard = () => {
     const loadData = async () => {
       try {
         const [dataX, dataY, dataZ] = await Promise.all([
-          fetch('/data/accel_x.csv').then(r => {
-            if (!r.ok) throw new Error(`Failed to fetch accel_x.csv: ${r.status}`);
-            return r.text();
-          }),
-          fetch('/data/accel_y.csv').then(r => {
-            if (!r.ok) throw new Error(`Failed to fetch accel_y.csv: ${r.status}`);
-            return r.text();
-          }),
-          fetch('/data/accel_z.csv').then(r => {
-            if (!r.ok) throw new Error(`Failed to fetch accel_z.csv: ${r.status}`);
-            return r.text();
-          })
+          fetch('/data/accel_x.csv').then(r => r.text()),
+          fetch('/data/accel_y.csv').then(r => r.text()),
+          fetch('/data/accel_z.csv').then(r => r.text())
         ]);
-        console.log('All CSV files loaded successfully');
-        const parsed = [parseData(dataX), parseData(dataY), parseData(dataZ)];
-        console.log('Setting chart data with', parsed.map(p => p.length), 'points for X, Y, Z');
-        setChartData(parsed);
-      } catch (error) {
-        console.error('Failed to load title card data:', error);
+        setChartData([parseData(dataX), parseData(dataY), parseData(dataZ)]);
+      } catch {
         showErrorToast('Failed to load title card data.');
       }
     };
