@@ -64,5 +64,6 @@ RUN mkdir -p /deployments/uploads
 EXPOSE 8080
 
 ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+ENV NATIVE_LIBRARY_PATH="/deployments/lib/native"
 
 ENTRYPOINT [ "/opt/jboss/container/java/run/run-java.sh" ]

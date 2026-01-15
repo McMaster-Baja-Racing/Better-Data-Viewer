@@ -1,7 +1,6 @@
 package com.mcmasterbaja.binary_csv;
 
 import java.nio.file.Paths;
-import org.eclipse.microprofile.config.ConfigProvider;
 
 public class BinaryToCSV {
 
@@ -11,11 +10,13 @@ public class BinaryToCSV {
       byte[] bytes, String outputDir, String fileName, boolean folder);
 
   static {
-    // Get library path from configuration (application.properties)
-    String libraryPath =
-        ConfigProvider.getConfig()
-            .getOptionalValue("native.library.path", String.class)
-            .orElse(System.getProperty("user.dir") + "/binary-to-csv-lib/target/release");
+    // Get library path from environment variable (set in Dockerfile for production)
+    String libraryPath = System.getenv("NATIVE_LIBRARY_PATH");
+    
+    // Fall back to dev path if not set
+    if (libraryPath == null || libraryPath.isEmpty()) {
+      libraryPath = System.getProperty("user.dir") + "/src/main/java/com/mcmasterbaja/binary_csv";
+    }
 
     // Determine the appropriate library name based on the OS
     String osName = System.getProperty("os.name").toLowerCase();
