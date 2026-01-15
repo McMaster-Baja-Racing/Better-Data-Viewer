@@ -34,7 +34,7 @@ RUN mvn dependency:go-offline
 COPY backend/src ./src
 
 # Copy frontend build into backend resources BEFORE building
-COPY --from=frontend-builder /app/front-end/build/ ./src/main/resources/META-INF/resources/
+COPY --from=frontend-builder /app/build/ ./src/main/resources/META-INF/resources/
 
 # Now build backend with frontend included
 RUN mvn package -DskipTests
