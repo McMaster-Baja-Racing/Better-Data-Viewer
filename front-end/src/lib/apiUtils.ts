@@ -8,6 +8,13 @@ const baseApiUrl = isElectron || window.location.hostname === 'localhost'
   ? 'http://localhost:8080'  // Local dev or Electron
   : '';  // Production (relative URLs work with reverse proxy)
 
+console.log('API Config:', {
+  isElectron,
+  hostname: window.location.hostname,
+  baseApiUrl,
+  fullUrl: window.location.href
+});
+
 export const ApiUtil = {
 
   /**
