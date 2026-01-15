@@ -7,8 +7,8 @@ export const subteamGraphPresets: DataViewerPreset[] = [
     graphs: [
       {
         axes: [
-          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
           { source: 'RPM SEC.csv', dataType: 'RPM SEC' },
+          { source: 'RPM PRIM.csv', dataType: 'RPM PRIM' },
         ],
         analyzer: AnalyzerType.SGOLAY,
         analyzerOptions: ['100', '3'],
