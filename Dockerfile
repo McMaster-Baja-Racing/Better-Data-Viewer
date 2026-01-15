@@ -47,6 +47,9 @@ ENV LANGUAGE='en_US:en'
 # Run as root to avoid permission issues with mounted volumes
 USER root
 
+# Set working directory
+WORKDIR /deployments
+
 # Copy backend application
 COPY --from=backend-builder /app/target/quarkus-app/lib/ /deployments/lib/
 COPY --from=backend-builder /app/target/quarkus-app/*.jar /deployments/
