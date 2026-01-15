@@ -3,7 +3,7 @@ name: Build and Publish Docker Image
 on:
   push:
     branches:
-      - '**'  # Run on all branches
+      - main # Set to '**' for testing on all branches
   workflow_dispatch:  # Allow manual triggering
 
 env:
