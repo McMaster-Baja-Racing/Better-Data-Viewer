@@ -18,6 +18,7 @@ export default defineConfig({
     '**/*.csv'
   ],
   server: {
+    host: true,
     strictPort: true,
   },
   base: './',

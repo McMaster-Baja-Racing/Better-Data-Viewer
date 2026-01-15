@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  better-data-viewer:
+    image: ghcr.io/mcmaster-baja-racing/better-data-viewer:latest
+    container_name: better-data-viewer
+    ports:
+      - "8080:8080"  # 🔌 Change the first port to expose on a different host port (e.g., "3000:8080")
+    volumes:
+      - ./uploads:/deployments/uploads  # 💾 Change "./uploads" to your preferred data directory
+    restart: unless-stopped

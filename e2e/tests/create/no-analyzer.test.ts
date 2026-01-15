@@ -13,6 +13,6 @@ test.describe('Create graphs', () => {
 
   test('should create a graph from preset and file', async ({ page }) => {
     const graphTester = new GraphTester(page, fileName);
-    await graphTester.testCreateGraphWithPreset('Preset Speed 1 x New Graph', fileName);
+    await graphTester.testCreateGraphWithPreset('Speed1 xVehicle speed vs', fileName);
   });
 });

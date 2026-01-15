@@ -3,7 +3,9 @@ import { isElectron } from './navigationUtils';
 import { showErrorToast } from '@components/ui/toastNotification/ToastNotification';
 import { extractUserMessage } from './errorUtils';
 
-const baseApiUrl = 'http://' + (isElectron ? 'localhost' : window.location.hostname) + ':8080';
+// Determine API base URL based on environment
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const baseApiUrl = (isElectron || isLocalhost) ? 'http://localhost:8080' : '';
 
 export const ApiUtil = {
 
