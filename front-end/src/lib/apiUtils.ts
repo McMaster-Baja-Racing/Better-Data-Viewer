@@ -4,16 +4,8 @@ import { showErrorToast } from '@components/ui/toastNotification/ToastNotificati
 import { extractUserMessage } from './errorUtils';
 
 // Determine API base URL based on environment
-const baseApiUrl = isElectron || window.location.hostname === 'localhost'
-  ? 'http://localhost:8080'  // Local dev or Electron
-  : '';  // Production (relative URLs work with reverse proxy)
-
-console.log('API Config:', {
-  isElectron,
-  hostname: window.location.hostname,
-  baseApiUrl,
-  fullUrl: window.location.href
-});
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const baseApiUrl = (isElectron || isLocalhost) ? 'http://localhost:8080' : '';
 
 export const ApiUtil = {
 
