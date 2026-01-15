@@ -40,7 +40,7 @@ COPY --from=frontend-builder /app/build/ ./src/main/resources/META-INF/resources
 RUN mvn package -DskipTests
 
 # Stage 4: Runtime - Single Service
-FROM registry.access.redhat.com/ubi8/openjdk-21:1.18
+FROM eclipse-temurin:21-jre-jammy
 
 ENV LANGUAGE='en_US:en'
 
