@@ -5,22 +5,12 @@
 # Stage 1: Build Frontend
 FROM node:20-alpine AS frontend-builder
 
-# Install git and git-lfs
-RUN apk add --no-cache git git-lfs
-
 WORKDIR /app
+COPY front-end/package*.json ./
+RUN npm install --force
 
-# Clone the repository with LFS files
-ARG GITHUB_REPO=https://github.com/McMaster-Baja-Racing/Better-Data-Viewer.git
-ARG GITHUB_REF=main
-
-RUN git lfs install && \
-    git clone --single-branch --branch ${GITHUB_REF} ${GITHUB_REPO} . && \
-    git lfs pull
-
-# Build frontend
-WORKDIR /app/front-end
-RUN npm install --force && npm run build:frontend
+COPY front-end/ ./
+RUN npm run build:frontend
 
 # Stage 2: Build Rust Library
 FROM rust:slim AS rust-builder
