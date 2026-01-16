@@ -17,13 +17,15 @@ export const UploadForm = ({ files, setFiles, allowFolder = false,
   accept = '.csv, .bin, .mp4, .mov, .fit' }:UploadFormProps) => {
   
   const [isDragging, setIsDragging] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const folderInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if(e.dataTransfer.items) {
 
@@ -74,8 +76,18 @@ export const UploadForm = ({ files, setFiles, allowFolder = false,
     setFiles(files.filter((_, i) => i !== index));
   };
 
+  const handleFolderClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    folderInputRef.current?.click();
+  };
+
+  const handleContentClick = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
-    <label 
+    <div 
       className={cx(styles.uploadForm, {[styles.dragover]: isDragging})}
       onDragOver={(e) => handleDragOver(e)}
       onDragLeave={() => setIsDragging(false)}
@@ -86,22 +98,41 @@ export const UploadForm = ({ files, setFiles, allowFolder = false,
       <img className={styles.nighttimeImage} src={nighttime} alt='nighttime'/>
       <img className={styles.daytimeImage} src={daytime} alt='daytime'/>
 
-      <div className={cx(styles.uploadFormContent, {
-        [styles.disabled]: files.length > 0,
-        [styles.dragover]: isDragging
-      })}>
-        <img className={styles.icon} src={uploadIcon} alt='upload icon' />
-        <p className={styles.text}><strong>Choose a {allowFolder ? 'folder' : 'file'}</strong> or drag it here</p>
+      <div 
+        className={cx(styles.uploadFormContent, {
+          [styles.disabled]: files.length > 0,
+          [styles.dragover]: isDragging
+        })}
+      >
+        <div onClick={handleContentClick} className={styles.clickableArea}>
+          <img className={styles.icon} src={uploadIcon} alt='upload icon' />
+          <p className={styles.text}><strong>Choose a file</strong> or drag it here</p>
+        </div>
+        {allowFolder && (
+          <button type="button" className={styles.folderLink} onClick={handleFolderClick}>
+            or click here for a folder
+          </button>
+        )}
         <p className={styles.textHover}><strong>Drop the file</strong></p>
         <input
+          ref={fileInputRef}
           className={styles.input}
           type='file'
           accept={accept}
           multiple={true}
           onChange={(e) => {handleFileChange(e);}}
-		  /* @ts-expect-error – webkitdirectory is a non-standard attribute but required for folder upload  */
-		  webkitdirectory={allowFolder ? '' : undefined}
         />
+        {allowFolder && (
+          <input
+            ref={folderInputRef}
+            className={styles.input}
+            type='file'
+            multiple={true}
+            onChange={(e) => {handleFileChange(e);}}
+            /* @ts-expect-error – webkitdirectory is a non-standard attribute but required for folder upload  */
+            webkitdirectory=''
+          />
+        )}
       </div>
       {files.length > 0 && (
         <ul className={styles.fileList}>
@@ -116,6 +147,6 @@ export const UploadForm = ({ files, setFiles, allowFolder = false,
         </ul>
       )}
       
-    </label>
+    </div>
   );
 };

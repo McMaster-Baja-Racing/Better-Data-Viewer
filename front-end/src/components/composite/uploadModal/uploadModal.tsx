@@ -31,7 +31,7 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
       <div className={styles.uploadModal}>
         <h2 className={styles.title}>Upload your files</h2>
 
-        <UploadForm files={files} setFiles={setFiles} allowFolder={allowFolder} />
+        <UploadForm files={files} setFiles={setFiles} allowFolder={true} />
         
         <div className={styles.buttonRow}>
 
