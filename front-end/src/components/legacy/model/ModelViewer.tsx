@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stage } from '@react-three/drei';
 import { Eevee } from './Eevee';
 import { useRef } from 'react';
-import { fetchData, ModelReplayController, ReplayModelSubscriber } from '@lib/modelUtils';
+import { fetchData, ModelReplayController, ReplayAccelSubscriber, ReplayModelSubscriber } from '@lib/modelUtils';
 import './modelViewer.css';
 import { ApiUtil } from '@lib/apiUtils';
 import {ReplayEventType, replayData } from '@types';
@@ -17,6 +17,7 @@ const ModelViewer = () => {
   const [bins, setBins] = useState<string[]>([]);
   const [replayController, setReplayController] = useState<ModelReplayController | null>(null);
   const [times, setTimes] = useState<number[]>([]);
+  const [accelDisplay, setAccelDisplay] = useState({ax: 0, ay: 0, az: 0, net: 0});
 
   useEffect(() => {
     ApiUtil.getBins().then(bins => setBins(bins.map(bin => bin.key)));
@@ -29,7 +30,8 @@ const ModelViewer = () => {
     const controller = new ModelReplayController(data);
     setReplayController(controller);
 
-    const subscriber = new ReplayModelSubscriber(objRef.current, controller, data);
+    const modelSubscriber = new ReplayModelSubscriber(objRef.current, controller, data);
+    const accelSubscriber = new ReplayAccelSubscriber(controller, (vals) => {setAccelDisplay(vals);});
 
     const cleanupController = controller.on((event) => {
       if (event.type === ReplayEventType.Finished) {
@@ -40,7 +42,8 @@ const ModelViewer = () => {
     // Cleanup
     return () => {
       cleanupController();
-      subscriber.dispose();
+      accelSubscriber.dispose();
+      modelSubscriber.dispose();
       controller.dispose();
     };
   }, [objectLoaded, data]);
@@ -56,16 +59,31 @@ const ModelViewer = () => {
     setTimes(shifted.map(d => d.timestamp / 1000)); // convert to seconds for Playbar
   };
 
+  const accelItems = [
+    { label: 'Accel X:', value: accelDisplay.ax },
+    { label: 'Accel Y:', value: accelDisplay.ay },
+    { label: 'Accel Z:', value: accelDisplay.az },
+    { label: 'Net Accel:', value: accelDisplay.net }
+  ];
+
   return (
     <div className="modelContainer">
-      <div className={'control-bar'}>
+      <div className="control-bar">
         <select className="model_bin_select" defaultValue="none" onChange={handleBinChange}>
           <option value="none" disabled hidden>Select a file to analyze</option>
           {bins.map((bin) => {
             return (<option key={bin} value={bin}>{bin}</option>);
           })}
         </select>
-
+        <div className="accelDisplay">
+          {accelItems.map((item) => (
+            <div className="accelItem" key={item.label}>
+              <span>{item.label}</span>
+              <span className="accelValue">{item.value.toFixed(2)}</span>
+              <span>m/s²</span>
+            </div>
+          ))}
+        </div>
       </div>
       <Canvas shadows dpr={[1, 2]} camera={{ fov: 40, position: [20, 20, 20] }}>
         <Suspense fallback={null}>
