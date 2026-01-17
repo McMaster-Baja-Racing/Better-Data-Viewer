@@ -10,6 +10,7 @@
     width: 100%;
     height: 21.69rem;
     background: linear-gradient(0deg, #222222 0%, #525252 98.5%);
+    padding-right: 1rem;
 
     .textContainer {
         display: flex;
@@ -59,4 +60,75 @@
         margin-bottom: 1.5rem; // Subtle shift up
         border-bottom: 1px solid grey;
     }
+}
+
+/* Responsive styles for smaller desktop windows */
+@media screen and (max-width: 1400px) {
+  .titleCard {
+    gap: 6rem;
+    height: 20rem;
+
+    .textContainer {
+      width: 25rem;
+      height: 12rem;
+      margin-left: 2rem;
+
+      .title {
+        width: 95%;
+      }
+
+      .description {
+        width: 85%;
+      }
+    }
+
+    .graphContainer {
+      margin-right: 3rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .titleCard {
+    gap: 4rem;
+    height: 18rem;
+    padding-right: 0.75rem;
+
+    .textContainer {
+      width: 22rem;
+      height: 11rem;
+      margin-left: 1.5rem;
+    }
+
+    .graphContainer {
+      margin-right: 2rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .titleCard {
+    gap: 2rem;
+    height: 16rem;
+    padding-right: 0.5rem;
+
+    .textContainer {
+      width: 18rem;
+      height: 20rem;
+      margin-left: 1rem;
+
+      .title {
+        font-size: 3.5rem;
+      }
+
+      .description {
+        display: none;
+      }
+    }
+
+    .graphContainer {
+      margin-right: 1rem;
+      display: none;
+    }
+  }
 }

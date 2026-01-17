@@ -7,6 +7,7 @@
   background-color: var(--background);
   width: 100%;
   padding-bottom: 4rem;
+  padding-right: 1rem;
 
   .title {
     all: unset;
@@ -23,5 +24,51 @@
     width: max-content;
     margin: 0 auto;
   }
+}
 
+/* Responsive styles for smaller desktop windows */
+@media screen and (max-width: 1200px) {
+  .presetListWrapper {
+    padding-right: 0.75rem;
+
+    .title {
+      margin-left: 10%;
+    }
+    
+    .presetList {
+      gap: 1.25rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .presetListWrapper {
+    padding-right: 0.5rem;
+
+    .title {
+      margin-left: 5%;
+    }
+    
+    .presetList {
+      grid-template-columns: repeat(2, auto);
+      gap: 1rem;
+    }
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .presetListWrapper {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+    .title {
+      margin-left: 0.5rem;
+    }
+    
+    .presetList {
+      grid-template-columns: 1fr;
+      width: 100%;
+      gap: 1rem;
+    }
+  }
 }
