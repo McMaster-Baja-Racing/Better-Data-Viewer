@@ -9,7 +9,7 @@ If you encounter bugs or have suggestions for improvements, please help us by op
 - Steps to reproduce the issue (if applicable).
 - Any relevant screenshots or error logs.
 
-You can [open a new issue](https://github.com/gr812b/CVT-Simulator/issues) to get started.
+You can [open a new issue](https://github.com/McMaster-Baja-Racing/Better-Data-Viewer/issues) to get started.
 
 ## Submitting Pull Requests
 
@@ -21,7 +21,7 @@ We use a standard GitHub workflow for contributions. To submit a pull request:
 2. **Clone Your Fork**  
    Clone your forked repository to your local machine:
    ```bash
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/McMaster-Baja-Racing/Better-Data-Viewer.git
    ```
 
 3. **Create a New Branch**  
@@ -56,6 +56,6 @@ We use a standard GitHub workflow for contributions. To submit a pull request:
 
 ## Additional Resources
 
-For more detailed information on contributing, check out our [Developer Documentation](https://github.com/your-repo/docs) and the [Mozilla Science Lab article on CONTRIBUTING.md](https://mozillascience.github.io/working-open-workshop/contributing/).
+For more detailed information on contributing, check out our [Developer Documentation](http://wiki.mcmasterbaja.ca/en/DAQ/Data-Viewer) and the [Mozilla Science Lab article on CONTRIBUTING.md](https://mozillascience.github.io/working-open-workshop/contributing/).
 
 Thank you for helping to make this project better!
