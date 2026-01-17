@@ -12,11 +12,30 @@
 
   .body {
     padding-top: 2rem;
+    padding-right: 1rem;
     flex-grow: 1;
-    
   }
 
   .footerWrapper {
     margin-top: auto;
+  }
+}
+
+/* Responsive styles for smaller desktop windows */
+@media screen and (max-width: 1200px) {
+  .homepage {
+    .body {
+      padding-right: 0.75rem;
+      padding-left: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .homepage {
+    .body {
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+    }
   }
 }
