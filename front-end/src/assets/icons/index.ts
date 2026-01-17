@@ -15,6 +15,7 @@ import instagramIcon from '@assets/icons/instagram.svg';
 import linkedinIcon from '@assets/icons/linkedin.svg';
 import twitterIcon from '@assets/icons/twitter.svg';
 import youtubeIcon from '@assets/icons/youtube.svg';
+import githubIcon from '@assets/icons/github.svg';
 import settingsIcon from '@assets/icons/settings.svg';
 import chevronDownIcon from '@assets/icons/chevronDown.svg';
 import sigmaIcon from '@assets/icons/sigma.svg';
@@ -54,6 +55,7 @@ export {
   linkedinIcon,
   twitterIcon,
   youtubeIcon,
+  githubIcon,
   settingsIcon,
   chevronDownIcon,
   sigmaIcon,

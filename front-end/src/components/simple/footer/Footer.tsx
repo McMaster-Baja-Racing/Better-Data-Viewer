@@ -6,6 +6,7 @@ import {
   facebookIcon,
   linkedinIcon,
   twitterIcon,
+  githubIcon
 } from '@assets/icons';
 
 export function Footer() { 
@@ -68,6 +69,16 @@ export function Footer() {
           className={styles.iconLink}
         >
           <img className={styles.icon} src={twitterIcon} alt="Twitter" />
+        </a>
+
+        <a 
+          href="https://github.com/McMaster-Baja-Racing" 
+          title="Github" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className={styles.iconLink}
+        >
+          <img className={styles.icon} src={githubIcon} alt="Github" />
         </a>
       </div>
     </div>
