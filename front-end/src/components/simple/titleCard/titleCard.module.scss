@@ -98,6 +98,14 @@
       width: 22rem;
       height: 11rem;
       margin-left: 1.5rem;
+
+      .title {
+        font-size: 3.25rem;
+      }
+
+      .description {
+        display: none;
+      }
     }
 
     .graphContainer {

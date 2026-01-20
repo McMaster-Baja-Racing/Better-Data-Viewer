@@ -5,45 +5,63 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 1rem;
-  max-width: 90rem;
+  padding: 0 2rem;
+  max-width: 50rem;
 
-  .formWrapper {
-    display: flex;
-    gap: 2rem;
+  .title {
+    all: unset;
+    @include fonts.title-large;
+    margin-bottom: 1rem;
+  }
 
-    .uploadForm {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 50%;
-
-      .title {
-        all: unset;
-        @include fonts.title-large;
-      }
-    }
-
-    .selectFiles {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 50%;
-
-      .title {
-        all: unset;
-        @include fonts.title-large;
-      }
-
-      .tableWrapper {
-        height: 35rem;
-        @include mixins.scrollbar-dark;
-      }
-    }
+  .tableWrapper {
+    height: 28rem;
+    width: 100%;
+    @include mixins.scrollbar-dark;
   }
 
   .submitButton {
     margin-top: 1.25rem;
   }
+}
 
+/* Responsive styles for smaller desktop windows */
+@media screen and (max-width: 1200px) {
+  .presetFilesModal {
+    padding: 0 1.5rem;
+    max-width: 40rem;
+
+    .tableWrapper {
+      height: 28rem;
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .presetFilesModal {
+    padding: 0 1rem;
+    max-width: 100vw;
+
+    .tableWrapper {
+      height: 18rem;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .presetFilesModal {
+    padding: 0 0.5rem;
+
+    .title {
+      margin-bottom: 0.75rem;
+    }
+
+    .tableWrapper {
+      height: 18rem;
+    }
+
+    .submitButton {
+      margin-top: 0.75rem;
+    }
+  }
 }

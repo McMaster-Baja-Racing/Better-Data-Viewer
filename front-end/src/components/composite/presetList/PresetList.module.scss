@@ -36,6 +36,7 @@
     }
     
     .presetList {
+      grid-template-columns: repeat(2, auto);
       gap: 1.25rem;
     }
   }
@@ -56,7 +57,7 @@
   }
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 800px) {
   .presetListWrapper {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
