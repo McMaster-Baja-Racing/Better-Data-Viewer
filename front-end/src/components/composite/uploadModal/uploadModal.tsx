@@ -9,6 +9,7 @@ import { useFiles } from '@lib/files/useFiles';
 import { showErrorToast, showSuccessToast } from '@components/ui/toastNotification/ToastNotification';
 import { rightArrowIcon } from '@assets/icons';
 import styles from './uploadModal.module.scss';
+import baseModalStyles from '@components/ui/baseModal/BaseModal.module.scss';
 
 interface UploadModalProps {
   isOpen: boolean;
@@ -80,7 +81,7 @@ export const UploadModal = ({ isOpen, onClose }: UploadModalProps) => {
         <Button 
           onClick={submitFiles} 
           textSize={'2rem'}
-          className={styles.submitButton}
+          className={baseModalStyles.submitButton}
           disabled={files.length === 0}
         >
           <span>Submit</span>

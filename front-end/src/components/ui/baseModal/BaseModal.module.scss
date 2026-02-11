@@ -38,11 +38,11 @@
   }
 
   /* Responsive adjustments for smaller windows */
-  @media screen and (max-width: 1200px) {
+  @media screen and (max-width: 1024px) {
     padding: 0.75rem;
   }
 
-  @media screen and (max-width: 850px) {
+  @media screen and (max-width: 768px) {
     max-width: calc(100vw - 2 * 1rem);
     padding: 0.5rem;
   }
@@ -110,5 +110,26 @@
   }
   to {
     opacity: 0;
+  }
+}
+
+/* Styling for submit buttons within modals */
+.submitButton {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive button styling for modals */
+@media screen and (max-width: 1024px) {
+  .submitButton {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .submitButton {
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
   }
 }

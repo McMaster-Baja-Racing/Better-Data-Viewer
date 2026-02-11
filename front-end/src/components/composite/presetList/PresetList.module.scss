@@ -1,5 +1,5 @@
 @use '@styles/_fonts';
-
+@use '@styles/_mixins';
 
 .presetListWrapper {
   display: flex;
@@ -19,15 +19,36 @@
   
   .presetList {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(4, auto);
     gap: 1.5rem;
     width: max-content;
     margin: 0 auto;
   }
 }
 
+/* Responsive styles for larger screens */
+@include mixins.respond-to(ultrawide) {
+  .presetListWrapper {
+    .presetList {
+      grid-template-columns: repeat(3, auto);
+      gap: 1.5rem;
+    }
+  }
+}
+
 /* Responsive styles for smaller desktop windows */
-@media screen and (max-width: 1200px) {
+@include mixins.respond-to(desktop) {
+  .presetListWrapper {
+    padding-right: 1rem;
+
+    .presetList {
+      grid-template-columns: repeat(2, auto);
+      gap: 1.5rem;
+    }
+  }
+}
+
+@include mixins.respond-to(tablet) {
   .presetListWrapper {
     padding-right: 0.75rem;
 
@@ -42,22 +63,7 @@
   }
 }
 
-@media screen and (max-width: 1000px) {
-  .presetListWrapper {
-    padding-right: 0.5rem;
-
-    .title {
-      margin-left: 5%;
-    }
-    
-    .presetList {
-      grid-template-columns: repeat(2, auto);
-      gap: 1rem;
-    }
-  }
-}
-
-@media screen and (max-width: 800px) {
+@include mixins.respond-to(mobile) {
   .presetListWrapper {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -68,7 +74,8 @@
     
     .presetList {
       grid-template-columns: 1fr;
-      width: 100%;
+      width: fit-content;
+      margin: 0 auto;
       gap: 1rem;
     }
   }

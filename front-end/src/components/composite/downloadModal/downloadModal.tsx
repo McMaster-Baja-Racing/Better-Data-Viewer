@@ -1,4 +1,5 @@
 import styles from './downloadModal.module.scss';
+import baseModalStyles from '@components/ui/baseModal/BaseModal.module.scss';
 import { BaseModal } from '@components/ui/baseModal/BaseModal';
 import { FileTable } from '@components/ui/fileTable/FileTable';
 import { Button } from '@components/ui/button/Button';
@@ -61,7 +62,7 @@ export const DownloadModal = ({ onClose, isOpen }: DownloadModalProps) => {
         <Button 
           onClick={downloadFiles}
           textSize={'2rem'}
-          className={styles.submitButton}
+          className={baseModalStyles.submitButton}
         >
           Download
           <img src={rightArrowIcon} alt="right arrow"/>

@@ -1,5 +1,15 @@
 // File contains common mixins used in the project
 
+@use 'variables' as variables;
+@use 'sass:map';
+
+// Responsive breakpoint mixin
+@mixin respond-to($breakpoint) {
+  @media screen and (max-width: map.get(variables.$breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
 @mixin scrollbar-dark {
   overflow-y: scroll;
 

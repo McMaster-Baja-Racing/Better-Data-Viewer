@@ -1,4 +1,5 @@
 import styles from './PresetFilesModal.module.scss';
+import baseModalStyles from '@components/ui/baseModal/BaseModal.module.scss';
 import { BaseModal } from '@components/ui/baseModal/BaseModal';
 import { FileTable } from '@components/ui/fileTable/FileTable';
 import { Button } from '@components/ui/button/Button';
@@ -60,7 +61,7 @@ export const PresetFilesModal = ({ onClose, isOpen, onSubmit, currentSources }: 
         <Button 
           onClick={handleSubmit}
           textSize={'2rem'}
-          className={styles.submitButton}
+          className={baseModalStyles.submitButton}
         >
           <span>Submit</span>
           <img src={rightArrowIcon} alt="right arrow"/>

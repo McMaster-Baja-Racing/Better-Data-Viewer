@@ -19,14 +19,10 @@
     width: 100%;
     @include mixins.scrollbar-dark;
   }
-
-  .submitButton {
-    margin-top: 1.25rem;
-  }
 }
 
 /* Responsive styles for smaller desktop windows */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1024px) {
   .presetFilesModal {
     padding: 0 1.5rem;
     max-width: 40rem;
@@ -37,31 +33,13 @@
   }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 768px) {
   .presetFilesModal {
     padding: 0 1rem;
     max-width: 100vw;
 
     .tableWrapper {
       height: 18rem;
-    }
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .presetFilesModal {
-    padding: 0 0.5rem;
-
-    .title {
-      margin-bottom: 0.75rem;
-    }
-
-    .tableWrapper {
-      height: 18rem;
-    }
-
-    .submitButton {
-      margin-top: 0.75rem;
     }
   }
 }

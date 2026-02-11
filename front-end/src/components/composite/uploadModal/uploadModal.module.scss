@@ -12,33 +12,16 @@
     all: unset;
     @include fonts.title-large;
   }
-
-  .submitButton {
-    margin-top: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1024px) {
   .uploadModal {
     width: 35rem;
     padding: 0 1.5rem;
-
-    .submitButton {
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
-    }
   }
 }
 
-@media screen and (max-width: 1000px) {
-  .uploadModal {
-    width: 30rem;
-    padding: 0 1rem;
-  }
-}
-
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 768px) {
   .uploadModal {
     width: 90vw;
     max-width: 26rem;

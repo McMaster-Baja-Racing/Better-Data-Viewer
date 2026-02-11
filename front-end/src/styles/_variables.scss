@@ -54,3 +54,10 @@ $z-index: (
   loading: 7,
   graphHeader: 1,
 );
+// Responsive breakpoints
+$breakpoints: (
+  ultrawide: 1600px,
+  desktop: 1400px,
+  tablet: 1024px,
+  mobile: 768px,
+);
