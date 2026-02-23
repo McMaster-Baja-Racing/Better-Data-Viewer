@@ -11,7 +11,6 @@ import {
   Box3,
   Sphere,
   Group,
-  Object3D
 } from 'three';
 import { ApiUtil } from './apiUtils';
 
@@ -88,18 +87,23 @@ export const fetchData = async (bin: string) => {
   return data;
 };
 
-const computeMaxAccel = (data: replayData): number => {
-  let max = 0;
+const computeMeanAccel = (data: replayData): number => {
+  if (data.length === 0) return 1;
+
+  let sum = 0;
   for (const p of data) {
-    max = Math.max(
-      max,
-      Math.abs(p.accelX),
-      Math.abs(p.accelY),
-      Math.abs(p.accelZ)
+    const mag = Math.sqrt(
+      p.accelX * p.accelX +
+      p.accelY * p.accelY +
+      p.accelZ * p.accelZ
     );
+    sum += mag;
   }
-  return max === 0 ? 1 : max;
+
+  const mean = sum / data.length;
+  return mean === 0 ? 1 : mean;
 };
+
 
 export const getBoundingRadius = (obj: Group | undefined) => {
   if (!obj) return 1;
@@ -256,8 +260,8 @@ export class ReplayModelSubscriber {
   };
 
   private boundingRadius: number;
-  private maxAccel: number;
-  private MAX_ARROW_LENGTH = 100;
+  private meanAccel: number;
+  private MEAN_ARROW_LENGTH = 50;
 
   private unsubscribe: () => void;
 
@@ -265,7 +269,7 @@ export class ReplayModelSubscriber {
     this.obj = objRef;
 
     this.boundingRadius = getBoundingRadius(objRef);
-    this.maxAccel = computeMaxAccel(data);
+    this.meanAccel = computeMeanAccel(data);
 
     // Create arrows
     this.accelVectors = {
@@ -321,9 +325,9 @@ export class ReplayModelSubscriber {
     const netVec = new Vector3(ax, ay, az);
 
     const scale = (v: number) =>
-      this.maxAccel === 0
+      this.meanAccel === 0
         ? 0
-        : (Math.abs(v) / this.maxAccel) * this.MAX_ARROW_LENGTH;
+        : (Math.abs(v) / this.meanAccel) * this.MEAN_ARROW_LENGTH;
 
     this.updateArrow(this.accelVectors.x, xVec, scale(ax));
     this.updateArrow(this.accelVectors.y, yVec, scale(ay));
@@ -338,3 +342,34 @@ export class ReplayModelSubscriber {
     this.unsubscribe();
   }
 }
+
+export class ReplayAccelSubscriber {
+  private unsubscribe: () => void;
+
+  constructor(controller: ModelReplayController, onUpdate: (vals: {
+    ax: number;
+    ay: number;
+    az: number;
+    net: number;
+  }) => void) {
+
+    this.unsubscribe = controller.on(event => {
+      if (event.type !== ReplayEventType.Progress) return;
+
+      const p = event.data;
+      const net = Math.sqrt(p.accelX**2 + p.accelY**2 + p.accelZ**2);
+
+      onUpdate({
+        ax: p.accelX,
+        ay: p.accelY,
+        az: p.accelZ,
+        net
+      });
+    });
+  }
+
+  dispose() {
+    this.unsubscribe();
+  }
+}
+
